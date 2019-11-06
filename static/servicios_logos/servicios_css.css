@@ -1,0 +1,370 @@
+.mediaViewInfo {
+	--web-view-name: DESPUES DEL LOGIN ;
+	--web-view-id: DESPUES_DEL_LOGIN_;
+	--web-enable-scale-up: true;
+	--web-scale-on-resize: true;
+	--web-actual-size-on-double-click: true;
+	--web-refresh-for-changes: true;
+	--web-enable-deep-linking: true;
+}
+:root {
+	--web-view-ids: DESPUES_DEL_LOGIN_;
+}
+* {
+	margin: 0;
+	padding: 0;
+}
+#DESPUES_DEL_LOGIN_ {
+	position: absolute;
+	box-sizing: border-box;
+	background: #E5E5E5;
+	width: 1920px;
+	height: 1080px;
+	background-color: rgba(1,2,78,1);
+	overflow: hidden;
+	margin: 0;
+	padding: 0;
+	--web-view-name: DESPUES DEL LOGIN ;
+	--web-view-id: DESPUES_DEL_LOGIN_;
+	--web-enable-scale-up: true;
+	--web-scale-on-resize: true;
+	--web-actual-size-on-double-click: true;
+	--web-refresh-for-changes: true;
+	--web-enable-deep-linking: true;
+}
+#TITULO_ {
+	opacity: 0.6;
+	position: absolute;
+	width: 396.101px;
+	height: 73px;
+	left: 1498.541px;
+	top: 978.309px;
+	overflow: visible;
+}
+#AASANA {
+	filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.859));
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	overflow: visible;
+	width: 222px;
+	white-space: nowrap;
+	text-align: left;
+	font-family: Roboto;
+	font-style: normal;
+	font-weight: bold;
+	font-size: 55px;
+	color: rgba(255,255,255,1);
+}
+#nuclear {
+	filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.502));
+	position: absolute;
+	left: 242.101px;
+	top: 10.17px;
+	overflow: visible;
+	width: 155px;
+	white-space: nowrap;
+	text-align: left;
+	font-family: Roboto;
+	font-style: normal;
+	font-weight: bold;
+	font-size: 46px;
+	color: rgba(255,255,255,1);
+}
+#servicios {
+	position: absolute;
+	width: 768.796px;
+	height: 468.36px;
+	left: 575.627px;
+	top: 409.64px;
+	overflow: visible;
+}
+#GRAVITON {
+	opacity: 0.9;
+	position: absolute;
+	width: 177px;
+	height: 177px;
+	left: 306px;
+	top: 291.36px;
+	overflow: visible;
+}
+.Rect_ngulo_1094 {
+	position: absolute;
+	overflow: visible;
+	width: 177px;
+	height: 177px;
+	left: 0px;
+	top: 0px;
+}
+#GRAVITON_A2_Text_3 {
+	position: absolute;
+	left: 9px;
+	top: 123.651px;
+	overflow: visible;
+	width: 157px;
+	white-space: nowrap;
+	text-align: center;
+	font-family: Arial;
+	font-style: normal;
+	font-weight: bold;
+	font-size: 30px;
+	color: rgba(234,240,245,1);
+}
+#Icon_metro_weather {
+	filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.349));
+}
+.Icon_metro_weather {
+	overflow: visible;
+	position: absolute;
+	top: 15px;
+	left: 23.802px;
+	width: 143.822px;
+	height: 143.822px;
+	transform: matrix(1,0,0,1,0,0);
+}
+#TAUON {
+	opacity: 0.9;
+	position: absolute;
+	width: 177px;
+	height: 177px;
+	left: 0px;
+	top: 291px;
+	overflow: visible;
+}
+.Rect_ngulo_1095 {
+	position: absolute;
+	overflow: visible;
+	width: 177px;
+	height: 177px;
+	left: 0px;
+	top: 0px;
+}
+#gravito {
+	position: absolute;
+	left: 37.152px;
+	top: 124.41px;
+	overflow: visible;
+	width: 105px;
+	white-space: nowrap;
+	text-align: center;
+	font-family: Arial;
+	font-style: normal;
+	font-weight: bold;
+	font-size: 30px;
+	color: rgba(234,240,245,1);
+}
+#Icon_awesome_car_crash {
+	filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.349));
+}
+.Icon_awesome_car_crash {
+	overflow: visible;
+	position: absolute;
+	top: 10.36px;
+	left: 28.373px;
+	width: 138.884px;
+	height: 127.326px;
+	transform: matrix(1,0,0,1,0,0);
+}
+#BARION {
+	opacity: 0.9;
+	position: absolute;
+	width: 177px;
+	height: 177px;
+	left: 591.796px;
+	top: 0px;
+	overflow: visible;
+}
+.Rect_ngulo_1093 {
+	position: absolute;
+	overflow: visible;
+	width: 177px;
+	height: 177px;
+	left: 0px;
+	top: 0px;
+}
+#BARION_A2_Text_5 {
+	filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.2));
+	position: absolute;
+	left: 30px;
+	top: 137.151px;
+	overflow: visible;
+	width: 119px;
+	white-space: nowrap;
+	text-align: center;
+	font-family: Arial;
+	font-style: normal;
+	font-weight: bold;
+	font-size: 30px;
+	color: rgba(255,255,255,1);
+}
+#Icon_awesome_network_wired {
+	filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.349));
+}
+.Icon_awesome_network_wired {
+	overflow: visible;
+	position: absolute;
+	top: 11px;
+	left: 21px;
+	width: 153.832px;
+	height: 126.665px;
+	transform: matrix(1,0,0,1,0,0);
+}
+#UPSILON {
+	opacity: 0.9;
+	position: absolute;
+	width: 177px;
+	height: 177px;
+	left: 306px;
+	top: 0px;
+	overflow: visible;
+}
+.Rect_ngulo_1093_A2_Rectangle_4 {
+	position: absolute;
+	overflow: visible;
+	width: 177px;
+	height: 177px;
+	left: 0px;
+	top: 0px;
+}
+#UPSILON_A2_Text_6 {
+	filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.2));
+	position: absolute;
+	left: 19.912px;
+	top: 136.886px;
+	overflow: visible;
+	width: 135px;
+	white-space: nowrap;
+	text-align: center;
+	font-family: Arial;
+	font-style: normal;
+	font-weight: bold;
+	font-size: 30px;
+	color: rgba(255,255,255,1);
+}
+#Icon_material_headset_mic {
+	filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.349));
+}
+.Icon_material_headset_mic {
+	overflow: visible;
+	position: absolute;
+	top: 10.683px;
+	left: 38.011px;
+	width: 119.045px;
+	height: 135.817px;
+	transform: matrix(1,0,0,1,0,0);
+}
+#BOSON_ {
+	opacity: 0.9;
+	position: absolute;
+	width: 177px;
+	height: 177px;
+	left: 0.373px;
+	top: 2px;
+	overflow: visible;
+}
+.Rect_ngulo_1093_A2_Rectangle_5 {
+	position: absolute;
+	overflow: visible;
+	width: 177px;
+	height: 177px;
+	left: 0px;
+	top: 0px;
+}
+#BOSON {
+	filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.2));
+	position: absolute;
+	left: 32.901px;
+	top: 135.71px;
+	overflow: visible;
+	width: 111px;
+	white-space: nowrap;
+	text-align: center;
+	font-family: Arial;
+	font-style: normal;
+	font-weight: bold;
+	font-size: 30px;
+	color: rgba(255,255,255,1);
+}
+#Icon_awesome_briefcase {
+	filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.349));
+}
+.Icon_awesome_briefcase {
+	overflow: visible;
+	position: absolute;
+	top: 10.016px;
+	left: 22px;
+	width: 150.37px;
+	height: 131.808px;
+	transform: matrix(1,0,0,1,0,0);
+}
+#orbitas {
+	position: absolute;
+	width: 1408.679px;
+	height: 1344.107px;
+	left: 256px;
+	top: -123px;
+	overflow: visible;
+}
+.Elipse_36 {
+	position: absolute;
+	overflow: visible;
+	width: 1393.753px;
+	height: 1142.411px;
+	left: 7px;
+	top: 101px;
+	transform: rotate(-33deg);
+}
+.Elipse_37 {
+	position: absolute;
+	overflow: visible;
+	width: 1408.679px;
+	height: 1095.796px;
+	left: 0px;
+	top: 124px;
+	transform: rotate(210deg);
+}
+.Elipse_38 {
+	position: absolute;
+	overflow: visible;
+	width: 489.296px;
+	height: 1344.107px;
+	left: 459px;
+	top: 0px;
+	transform: rotate(270deg);
+}
+#LOG_IN_ {
+	position: absolute;
+	width: 163px;
+	height: 150px;
+	left: 879px;
+	top: 133px;
+	overflow: visible;
+}
+#User {
+	position: absolute;
+	width: 126.879px;
+	height: 126.879px;
+	left: 19px;
+	top: 12px;
+	overflow: visible;
+}
+.Elipse_32 {
+	position: absolute;
+	overflow: visible;
+	width: 126.879px;
+	height: 126.879px;
+	left: 0px;
+	top: 0px;
+}
+#Trazado_169 {
+	filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.2));
+}
+.Trazado_169 {
+	overflow: visible;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 181px;
+	height: 168px;
+	transform: matrix(1,0,0,1,0,0);
+}

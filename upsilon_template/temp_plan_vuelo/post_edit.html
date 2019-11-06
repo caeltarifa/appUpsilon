@@ -1,0 +1,61 @@
+{% extends 'temp_plan_vuelo/base.html' %}
+
+
+
+
+
+
+{% block content %}
+
+<div class="col-lg-6 about-img wow fadeInRight" style="margin-top: 15%;">
+    <div class="container" style="text-align: center;">
+        <h3 style="color: white;">Identificate</h3>
+        <br>
+        <form action="">
+            <div class="group">
+                <input type="text" required>
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label>Usuario</label>
+            </div>
+
+            <div class="group">
+                <input type="password" required>
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label>Password</label>
+            </div>
+
+            <a href="#about" class="btn-get-started scrollto">Ingresar</a>
+        </form>
+
+
+    </div>
+</div>
+
+
+<div id="wrapper">
+    <canvas id="canvas" width="1950px" height="800px"></canvas>
+    <canvas id="canvasbg" width="1950px" height="800px"></canvas>
+</div>
+
+<h1>Nuevo dato taf</h1>
+<div class="form-group">
+    <form method="POST" class="post-form">
+        {% csrf_token %}
+
+        {% for elemento in form.visible_fields %}
+        <input type="text" placeholder="{{ elemento.label }}" style="border-block-color: red;">
+        {% endfor %}
+
+        <button type="submit" class="save btn btn-primary">GUARDAR</button>
+    </form>
+</div>
+
+<script>
+    function sustituir() {
+        document.getElementById('id_taf').value = "hola mundo";
+    }
+</script>
+
+{% endblock content %}
