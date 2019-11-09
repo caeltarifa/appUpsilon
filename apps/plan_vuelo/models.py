@@ -15,6 +15,18 @@ class Flp_trafico(models.Model):
     visto = models.BooleanField(default=False) #si el modeo¿lo ha sido visto
     visto_por = models.CharField(max_length=20) #sesion que lo ha visto#
 
+class Metar_trafico(models.Model):
+    id = models.AutoField(primary_key=True)
+    id_amhs = models.CharField(max_length=30)
+    fecha_llegada =models.DateField()
+    hora_amhs = models.CharField(max_length=10)
+    prioridad = models.CharField(max_length=2)
+    estacion = models.CharField(max_length=50)
+    hora_clima = models.CharField(max_length=60)
+    texto = models.CharField(max_length=1000)
+    visto = models.BooleanField(default=False) #si el modeo¿lo ha sido visto
+    visto_por = models.CharField(max_length=20) #sesion que lo ha visto#
+    
 class Flp_aprobado(models.Model):
     id_plan = models.CharField(max_length=30)
     fecha_aprob = models.DateField()
@@ -25,3 +37,6 @@ class Flp_aprobado(models.Model):
 class Flp_autor(models.Model):
     nombre = models.CharField(max_length=10)
     apellido = models.CharField(max_length=20)
+
+def __str__(self):
+        return '%s %s' % (self.id_amhs, self.fecha_llegada, self.hora_amhs, self.prioridad, self.id_plan, self.transponder, self.origen, self.texto, self.visto_por)

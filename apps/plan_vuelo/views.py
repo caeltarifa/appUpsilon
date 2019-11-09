@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from django.http import HttpResponse
+from django.db import connection
 
 #from apps.plan_vuelo.forms import Vuelo_Aprobado_form, PostForm
-from apps.plan_vuelo.models import Flp_trafico
+from apps.plan_vuelo.models import Flp_trafico, Metar_trafico
 # Create your views here.
 
 def view_plan_vuelo(request):
@@ -17,7 +18,10 @@ def view_plan_vuelo(request):
 
 def view_admin(request):
     if request.user.is_authenticated:
-        return render(request,'temp_plan_vuelo/admin.html')
+        post=Flp_trafico.objects.raw('select * from Flp_trafico')
+        metar=Metar_trafico.objects.raw('select * from plan_vuelo_Metar_trafico')
+        return render(request, 'temp_plan_vuelo/admin.html', {'post':post,'metar':metar} )
+        #return render(request,'temp_plan_vuelo/admin.html')
     else:
         return redirect('login')
 
