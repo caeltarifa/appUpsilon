@@ -80,9 +80,9 @@ DATABASES = {
    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
 
      'ENGINE': 'django.db.backends.postgresql_psycopg2',
-     'NAME': 'nuclear_db', #nombre de la base de datos
+     'NAME': 'upsilon_db', #nombre de la base de datos
 	 'USER': 'postgres', #usuario de base de datos
-	 'PASSWORD': '123',
+	 'PASSWORD': 'caelamhs',
 	 'HOST': 'localhost',
 	 'PORT': 5432,
     }

@@ -18,8 +18,10 @@ def view_plan_vuelo(request):
 
 def view_admin(request):
     if request.user.is_authenticated:
-        post=Flp_trafico.objects.raw('select * from Flp_trafico')
-        metar=Metar_trafico.objects.raw('select * from plan_vuelo_Metar_trafico')
+        #post=Flp_trafico.objects.raw("select * from plan_vuelo_Flp_trafico where CAST(fecha_llegada AS date) = CAST('2019-10-11' AS date)");
+        post=Flp_trafico.objects.raw("select * from plan_vuelo_flp_trafico where hora_amhs like '12%%%%' order by id_amhs desc ")
+
+        metar=Metar_trafico.objects.raw("select * from plan_vuelo_metar_trafico where hora_amhs like '12%%%%' order by id_amhs desc")
         return render(request, 'temp_plan_vuelo/admin.html', {'post':post,'metar':metar} )
         #return render(request,'temp_plan_vuelo/admin.html')
     else:
