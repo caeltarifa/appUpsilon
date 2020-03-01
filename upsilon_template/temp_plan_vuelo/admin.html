@@ -1,10 +1,18 @@
-{% extends 'temp_plan_vuelo/baseadmin.html' %}
-{% load staticfiles %}
-
+{% extends 'temp_plan_vuelo/baseadmin.html' %} 
+{% load staticfiles %} 
 
 {% block title %}
 <title>Upsilon | Usuario</title>
 {% endblock title %}
+
+
+
+{% block extra_head %}
+    <link rel='stylesheet' href='https://harvesthq.github.io/chosen/chosen.css'>
+    <!-- <link rel="stylesheet" href="{% static 'theme-assets/css/aprobar_plan.css' %}"> -->
+
+{% endblock extra_head %}
+    
 
 
 
@@ -14,7 +22,7 @@
 {% block content %}
 
 <!--BARRA LATERAL O MENU LATERAL-->
-<div class="main-menu menu-fixed menu-light menu-accordion    menu-shadow " data-scroll-to-active="true">
+<div class="main-menu menu-fixed menu-light menu-accordion    menu-shadow " data-scroll-to-active="false">
 
     <div class="main-menu-content">
         <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
@@ -51,7 +59,7 @@
 <section>
     <div class="row justify-content-center">
         <div class="col-10" style="align-content: center;">
-            <div class="card" style="box-shadow: 2px 2px 8px 0 black; height: 60%;">
+            <div class="card" style="box-shadow: 2px 2px 8px 0 black; min-height: 30%;  max-height: 100%; ">
 
                 <div class="card-header">
                     <h4 class="card-title">PLanes Recientes</h4>
@@ -65,17 +73,11 @@
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li class="arrow_box">
-                                        <form>
-                                            <div class="input-group search-box">
-                                                <div class="position-relative has-icon-right full-width">
-                                                    <input class="form-control" id="search" type="text"
-                                                        placeholder="Buscar...">
-                                                    <div class="form-control-position navbar-search-close"><i
-                                                            class="ft-x">
-                                                        </i></div>
-                                                </div>
+                                        <div class="input-group search-box">
+                                            <div class="position-relative has-icon-right full-width">
+                                                <input class="form-control" type="text" id="buscar_flp_table" onkeyup="buscarFlp()" placeholder="Buscar FLP">
                                             </div>
-                                        </form>
+                                        </div>
                                     </li>
                                 </ul>
                             </li>
@@ -91,30 +93,40 @@
                 </div>
                 <!--CONTENIDO DE LA TABLA DE PLANES RECIENTES-->
                 <div class="card-content collapse show" style="height: 75%; overflow-y: auto;">
+
+                    <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    </div>
+                    <!-- /.modal -->
+
                     <div class="table-responsive">
-                        <table class="table table-striped">
+                        <table id="tabla_planes_recientes" class="table table-striped" align="center" style="text-align:center;">
                             <thead>
                                 <tr>
-                                    <th scope="col">id_amhs</th>
-                                    <th scope="col">hora_amhs</th>
-                                    <th scope="col">prioridad</th>
-                                    <th scope="col">origen</th>
-                                    <th scope="col">id_plan</th>
-                                    <th scope="col">texto</th>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">AMHS_recibido</th>
+                                    <th scope="col">Fecha</th>
+                                    <th scope="col">Prioridad</th>
+                                    <th scope="col">Origen</th>
+                                    <th scope="col">Salida</th>
+                                    <th scope="col">FLP.</th>
+                                    <th scope="col"></th>
                                 </tr>
                             </thead>
                             <tbody>
 
                                 {% for elemen in post %}
                                 <tr>
-                                    <th scope="row">{{elemen.id_amhs}}</th>
-                                    <td>{{elemen.hora_amhs}}</td>
-                                    <td>{{elemen.prioridad}}</td>
-                                    <td>{{elemen.origen}}</td>
-                                    <td>{{elemen.id_plan}}</td>
-                                    <td>{{elemen.texto}}</td>
+                                    <th id="{{elemen.id}}" width="5%" scope="row">{{elemen.id}}</th>
+                                    <th width="5%">{{elemen.hora_amhs}}</th>
+                                    <td width="5%">{{elemen.fecha_llegada}}</td>
+                                    <td width="5%">{{elemen.prioridad}}</td>
+                                    <td width="5%">{{elemen.origen|slice:"1:5"}}</td>
+                                    <td width="5%">{{elemen.origen|slice:"5:9"}}</td>
+                                    <td width="25%">{{elemen.id_plan|slice:"5:15"}}</td>
+                                    <td width="15%">
+                                        <button class="btn btn-outline-info" onclick="abrir_modal( '{% url 'view_aprobar_flp' elemen.id%}')">Ver FLP</button>
+                                    </td>
                                 </tr>
-
                                 {% endfor %}
                             </tbody>
                         </table>
@@ -132,7 +144,7 @@
 <section>
     <div class="row justify-content-center">
         <div class="col-10" style="align-content: center;">
-            <div class="card" style="box-shadow: 2px 2px 8px 0 black; height: 60%;">
+            <div class="card" style="box-shadow: 2px 2px 8px 0 black; min-height: 30%;  max-height: 100%;">
                 <div class="card-header">
                     <h4 class="card-title">Planes aprobados</h4>
                     <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
@@ -255,7 +267,7 @@
 <section>
     <div class="row justify-content-center">
         <div class="col-10" style="align-content: center;">
-            <div class="card" style="box-shadow: 2px 2px 8px 0 black; height: 60%;">
+            <div class="card" style="box-shadow: 2px 2px 8px 0 black; min-height: 30%;  max-height: 100%;">
                 <div class="card-header">
                     <h4 class="card-title">NOTAMS</h4>
                     <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
@@ -376,7 +388,7 @@
 <section>
     <div class="row justify-content-center">
         <div class="col-10" style="align-content: center;">
-            <div class="card" style="box-shadow: 2px 2px 8px 0 black; height: 60%;">
+            <div class="card" style="box-shadow: 2px 2px 8px 0 black; min-height: 30%;  max-height: 100%;">
                 <div class="card-header">
                     <h4 class="card-title">METARS</h4>
                     <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
@@ -396,12 +408,12 @@
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th scope="col">id_amhs</th>
-                                    <th scope="col">hora_amhs</th>
-                                    <th scope="col">prioridad</th>
-                                    <th scope="col">estacion</th>
-                                    <th scope="col">hora_clima</th>
-                                    <th scope="col">texto</th>
+                                    <th scope="col" width="50px">id_amhs</th>
+                                    <th scope="col">fecha_hora</th>
+                                    <th scope="col">Prioridad</th>
+                                    <th scope="col">Estacion</th>
+                                    <th scope="col">Hora_clima</th>
+                                    <th scope="col">Mensaje</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -416,8 +428,6 @@
                                     <td>{{metarlinea.texto}}</td>
                                 </tr>
                                 {% endfor %}
-
-
                             </tbody>
                         </table>
                     </div>
@@ -428,9 +438,67 @@
 </section>
 <!--METARS-->
 
-{% endblock content %}
+{% endblock content %} 
+
+
+{% block extrajs %}
+<script src='https://harvesthq.github.io/chosen/chosen.jquery.js'></script>
+<script src="{% static 'theme-assets/js/scripts/aprobar_plan.js' %}"></script>
+
+<script type="text/javascript">
+    //var $ = jQuery.noConflict();
+
+    function abrir_modal(url) {
+        //alert(url);
+        $("#modal").load(url.trim(), function() {
+            $(this).modal('show');
+        });
+    }
+
+    function buscarFlp() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("buscar_flp_table");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("tabla_planes_recientes");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[4];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                txtValue = txtValue.trim();
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+
+        }
+    }
+
+    //DESPLAZAMIENTO SUAVIZADO
+    $('.main-menu-content a').click(function(e){				
+		e.preventDefault();		//evitar el eventos del enlace normal
+		var strAncla=$(this).attr('href'); //id del ancla
+			$('body,html').stop(true,true).animate({				
+				scrollTop: $(strAncla).offset().top
+			},1000);
+		
+    });
+
+    $(document).ready(function () {
+        $('#ocultarx').click(function(){
+            alert("hola mundo");
+        });
+    });
+
+</script>
 
 
 
+{% endblock extrajs %}
 
+
+
+<!-- ////////////////////////////////////////////////////////////////////////////-->
 <!-- ////////////////////////////////////////////////////////////////////////////-->

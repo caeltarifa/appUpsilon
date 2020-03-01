@@ -3,15 +3,13 @@
 <html lang="en">
 
 <head>
+    {% block title %}
     <title>
-        {% block title %}
-        Doc Base
-        {% endblock title %}
+        Upsilon | login
     </title>
+    {% endblock title %}
 
     <meta charset="UTF-8">
-
-
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -28,31 +26,41 @@
     <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,700|Open+Sans:300,300i,400,400i,700,700i"
         rel="stylesheet">
 
-    <!-- Bootstrap CSS File -->
-    <link href="{% static './theme-assets/login/lib/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <!-- Bootstrap CSS File 
+        <link href="{% static './theme-assets/login/lib/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    -->
 
-    <!-- Libraries CSS Files -->
+    <!-- Libraries CSS Files 
+        <link href="{% static 'theme-assets/login/lib/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet">
+        <link href="{% static 'theme-assets/login/lib/ionicons/css/ionicons.min.css' %}" rel="stylesheet">
+    -->
     <link href="{% static 'theme-assets/login/lib/animate/animate.min.css' %}" rel="stylesheet">
-    <link href="{% static 'theme-assets/login/lib/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet">
-    <link href="{% static 'theme-assets/login/lib/ionicons/css/ionicons.min.css' %}" rel="stylesheet">
     <link href="{% static 'theme-assets/login/lib/magnific-popup/magnific-popup.css' %}" rel="stylesheet">
 
     <!-- Main Stylesheet File -->
     <link href="{% static 'theme-assets/login/css/style.css' %}" rel="stylesheet">
     <link href="{% static 'theme-assets/login/css/background-anim.css' %}" rel="stylesheet">
 
-    <!-- =======================================================
-          ======================================================= -->
 
+    <!-- =============LIB FOR TABLE PIB RESPONSIVE==============-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <!--======================================================= -->
+
+    <!-- =============== CALLING AL PIB =======================-->
+    <link href="{% static 'theme-assets/css/pib.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 
 </head>
 
 <body>
 
-
+{% block navbar %}
     <!--==========================
     NAV BAR
-  ============================-->
+    ============================-->
     <header id="header">
         <div class="container">
 
@@ -65,20 +73,22 @@
             <nav id="nav-menu-container">
                 <ul class="nav-menu">
                     <li class="menu-active"><a href="#intro">Inicio</a></li>
+                    <li><a href="#PIB">PIB</a></li>
                     <li><a href="#about">Transito</a></li>
-                    <li><a href="#features">Features</a></li>
                 </ul>
             </nav><!-- #nav-menu-container -->
         </div>
     </header>
-    <!-- #header -->
+    <!-- NAV BAR -->
+{% endblock navbar %}
+    
 
 
 
 
 
     {% block content %}
-    <h1>hola mundo</h1>
+    <h1>Contenido base.html</h1>
     {% endblock content %}
 
 
@@ -90,79 +100,81 @@
 
 
 
-
+{% block footer %}
     <!--==========================
-    PIE DE PAGINA
-  ============================-->
-
-    <footer style="background-color: #5a4502;">
-        <br>
-        <br>
-        <div class="container ">
-            <!-- Logo -->
-            <div class="row justify-content-center" style="text-align: center;">
-                <div class="col-15">
-                    <a href="#">
-                        <!-- <img class="rotating" src="{% static 'assets/images/logo/krypton-gradient.svg' %}" alt=""> -->
-                        <img class="rotating" src="{% static 'theme-assets/krypton-gradient.svg' %}" id="logofooter"
-                            alt="">
-                        <h2 style="color: white;">Nuclear</h2>
-                        <br>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Columns -->
-            <!-- Links group -->
-            <div class="row justify-content-center" style="text-align: center;">
-                <div class="col-5 col-sm-3 ">
-                    <a href="#" style="color: white;">GRAVITON</a>
-                </div>
-
-                <div class="col-2 col-sm-3 ">
-                    <a href="#" style="color: white;">BOSON</a>
-                </div>
-
-                <!-- Force next columns to break to new line -->
-                <!-- <div class="w-100"></div> -->
-
-                <div class="col-2 col-sm-3 ">
-                    <a href="#" style="color: white;">POSITRON</a>
-                </div>
-
-                <div class="col-2 col-sm-3 ">
-                    <a href="#" style="color: white;">TAUON</a>
-                </div>
-
-            </div>
-            <!-- Links group -->
+        PIE DE PAGINA
+    ============================-->
+        <footer id="footer">
             <br>
             <br>
-            <!-- Copyright -->
-            <div class="row justify-content-center">
-                <div class="col-15">
-                    <p style="color: white;" class="k-copyright">© 2019 | Upsilon.</p>
+            <div class="container ">
+                <!-- Logo -->
+                <div class="row justify-content-center" style="text-align: center;">
+                    <div class="col-15">
+                        <a href="#">
+                            <!-- <img class="rotating" src="{% static 'assets/images/logo/krypton-gradient.svg' %}" alt=""> -->
+                            <img class="rotating" src="{% static 'theme-assets/krypton-gradient.svg' %}" id="logofooter"
+                                alt="">
+                            <h2 style="color: white;">Nuclear</h2>
+                            <br>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Columns -->
+                <!-- Links group -->
+                <div class="row justify-content-center" style="text-align: center;">
+                    <div class="col-5 col-sm-3 ">
+                        <a href="https://graviton.aasana.tk" style="color: white;">GRAVITON</a>
+                    </div>
+
+                    <div class="col-2 col-sm-3 ">
+                        <a href="https://boson.aasana.tk" style="color: white;">BOSON</a>
+                    </div>
+
+                    <!-- Force next columns to break to new line -->
+                    <!-- <div class="w-100"></div> -->
+
+                    <div class="col-2 col-sm-3 ">
+                        <a href="http://upsilon.aasana.tk" style="color: white;">UPSILON</a>
+                    </div>
+
+                    <div class="col-2 col-sm-3 ">
+                        <a href="#" style="color: white;">BARION</a>
+                    </div>
+
+                </div>
+                <!-- Links group -->
+                <br>
+                <br>
+                <!-- Copyright -->
+                <div class="row justify-content-center">
+                    <div class="col-15">
+                        <p style="color: white;" class="k-copyright">© 2019 | Upsilon.</p>
+                    </div>
+                </div>
+                <!-- Made by -->
+                <div class="row justify-content-center">
+                    <div class="col-15">
+                        <p class="coded-by" style="color: white;">Diseñado y codificado
+                            <a style="color: white;" href="https://github.com" target="_blank">Cael
+                                Tarifa</a></p>
+                    </div>
                 </div>
             </div>
-            <!-- Made by -->
-            <div class="row justify-content-center">
-                <div class="col-15">
-                    <p class="coded-by" style="color: white;">Diseñado y codificado
-                        <a style="color: white;" href="https://github.com" target="_blank">Cael
-                            Tarifa</a></p>
-                </div>
-            </div>
-        </div>
 
-        <!-- Absolute image -->
-    </footer>
-
+            <!-- Absolute image -->
+        </footer>
     <!-- PIE DE PAGINA -->
+{% endblock footer %}
+    
 
 
 
-    <!-- JavaScript Libraries -->
-    <script src="{% static 'theme-assets/login/lib/jquery/jquery.min.js' %}"></script>
+
+    <!-- JavaScript Libraries 
+        <script src="{% static 'theme-assets/login/lib/jquery/jquery.min.js' %}"></script>
+    -->
     <script src="{% static 'theme-assets/login/lib/jquery/jquery-migrate.min.js' %}"></script>
     <script src="{% static 'theme-assets/login/lib/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'theme-assets/login/lib/easing/easing.min.js' %}"></script>

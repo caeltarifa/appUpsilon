@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Nuclear | Upsilon</title>
+    <title> Upsilonn | login</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -30,9 +30,12 @@
     <link href="{% static 'theme-assets/login/css/style.css' %}" rel="stylesheet">
     <link href="{% static 'theme-assets/login/css/background-anim.css' %}" rel="stylesheet">
 
-    <!-- =======================================================
-    Theme Name: Avilon
-  ======================================================= -->
+    <!-- =======================================================-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <!--======================================================= -->
 </head>
 
 <body>
@@ -53,7 +56,7 @@
                 <ul class="nav-menu">
                     <li class="menu-active"><a href="#intro">Inicio</a></li>
                     <li><a href="#about">Transito</a></li>
-                    <li><a href="#features">Features</a></li>
+                    <li><a href="#features">PIB</a></li>
                 </ul>
             </nav><!-- #nav-menu-container -->
         </div>
@@ -458,7 +461,7 @@
             this.speedx = Math.cos(this.speedAngle) * this.speed;
             this.speedy = Math.sin(this.speedAngle) * this.speed;
             var spacex = Math.abs((this.x - (this.speedx < 0 ? -1 : 1) * (canvas.width / 2 + this.radius)) / this
-                    .speedx),
+                .speedx),
                 spacey = Math.abs((this.y - (this.speedy < 0 ? -1 : 1) * (canvas.height / 2 + this.radius)) / this
                     .speedy);
             this.ttl = Math.min(spacex, spacey);
@@ -542,7 +545,7 @@
                 for (var i = 0; i < arr.length; i++) {
                     var circle = arr[i];
                     //checking if out of boundaries
-                    if (circle.ttl < 0) {}
+                    if (circle.ttl < 0) { }
                     var xEscape = canvas.width / 2 + circle.radius,
                         yEscape = canvas.height / 2 + circle.radius;
                     if (circle.ttl < -20) arr[i].init(arr[i].background);

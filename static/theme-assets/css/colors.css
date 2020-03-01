@@ -329,7 +329,7 @@ input:focus ~ .bg-black
 body.vertical-layout[data-color=bg-chartbg] .navbar-container,
 body.vertical-layout[data-color=bg-chartbg] .content-wrapper-before
 {
-    background-color: #262d47 !important;
+    background-color: #289ec9 !important; /* COLOR DEL FONDO DE LA BARRA NAV*/
 }
 
 body.horizontal-layout[data-color=bg-chartbg] .navbar-horizontal
@@ -18124,3 +18124,6 @@ input:focus ~ .bg-transparent
 {
     border-top-width: 5px !important;
 }
+
+
+

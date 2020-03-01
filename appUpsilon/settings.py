@@ -25,7 +25,7 @@ SECRET_KEY = 'sb%@$i%e)zwtv=v_-p$^tc@%=%^kt7@becs*s0*m&tkhq^wp5c'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['212.115.109.148','upsilon.aasana.tk']
 
 
 # Application definition
@@ -82,7 +82,7 @@ DATABASES = {
      'ENGINE': 'django.db.backends.postgresql_psycopg2',
      'NAME': 'upsilon_db', #nombre de la base de datos
 	 'USER': 'postgres', #usuario de base de datos
-	 'PASSWORD': 'caelamhs',
+	 'PASSWORD': 'nuclearaasana',
 	 'HOST': 'localhost',
 	 'PORT': 5432,
     }

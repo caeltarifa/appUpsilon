@@ -1,0 +1,452 @@
+<!-- {% load staticfiles %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <title>Strip ATS</title>
+</head>
+
+
+
+<body> -->
+
+<!-- SE RECIBE aero, plan, detalles de la ficha, ruta del fpl, rutas all, puntosall   -->
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    {{aero}}
+                </h2>
+            </div>
+
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row">
+
+                        <div class="col-sm" id="plan_vuelo">
+                            {{plan}}
+                        </div>
+
+                        <div class="col-sm-7">
+
+                            <!-- LISTA DE PUNTOS Y RUTAS --- FILA PARA ELEGIR LA RUTA A USAR -->
+                            {% for resul_ruta in ruta %}
+                                <div class="python_gen" style="align-content: center;">
+                                    {% if forloop.first %}
+                                        <div class="row" style="margin-left:70px;">
+                                            <button id="agregar_ruta" class=" btn btn-outline-warning" style="width:45px;border-radius:50px;text-align:center;padding:9px 0px;font-size: 19px;" >
+                                                <!-- <i class="ficon ft-plus" aria-hidden="true" ></i> --> +
+                                            </button>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <button id="quitar_ruta" class=" btn btn-outline-danger" style="width:45px;border-radius:50px;text-align:center;padding: 9px 0px;font-size: 19px;" >
+                                            <!-- onclick="javascript:eliminarStrip('lista_ruta_opcional1')"> -->
+                                                -
+                                            </button>
+                                        </div>
+                                        <br>
+                                    {% endif %}
+                                    <div class="row" id="{% cycle 'lista_ruta11' 'lista_ruta22' 'lista_ruta33' 'lista_ruta44' %}">
+
+                                        <div id="{% cycle 'output_ruta11' 'output_ruta22' 'output_ruta33' 'output_ruta44' %}"></div>
+                                        <select id="{% cycle 'sel_ruta11' 'sel_ruta22' 'sel_ruta33' 'sel_ruta44' %}" onchange="mostrarPuntosActuales()" data-placeholder="RUTA" >
+                                            {% for ruta_x in todaruta %}
+                                                {% if ruta_x.nombre_ruta == resul_ruta.nombre_ruta %}
+                                                <option value="{{ruta_x.ruta}}" selected>{{ruta_x.nombre_ruta}}</option>    
+                                                {% endif %}
+                                                <option value="{{ruta_x.ruta}}">{{ruta_x.nombre_ruta}}</option>
+                                            {% endfor %}
+                                        </select>
+                                        
+                                        <div id="{% cycle 'output_inicio11' 'output_inicio22' 'output_inicio33' 'output_inicio44' %}"></div>
+                                        <select id="{% cycle 'sel_inicio11' 'sel_inicio22' 'sel_inicio33' 'sel_inicio44'  %}" data-placeholder="INICIO" onchange="obtenerRutaFinal()" multiple >
+                                            {% for punto in todopuntos  %}
+                                                {% if resul_ruta.id_ruta == punto.ruta.id_ruta %}
+                                                    <option value="{{punto.puntoInicial}}">{{punto.puntoInicial}}</option>                                                
+                                                {% endif %}
+                                            {% endfor %}
+                                        </select>      
+    
+                                        
+                                            
+                                    </div>
+                                </div>
+                            {% endfor %}
+
+                            <!-- LISTA DE PUNTOS Y RUTAS OPCIONALES --- FILA PARA ELEGIR LA RUTA A USAR -->
+                            <div id="agregando"></div>
+                            <div class="row" id="lista_ruta_opcional1" >
+                                <div id="output_ruta1"></div>
+                                <select id="sel_ruta1"  data-placeholder="RUTA">
+                                    <option value="0" selected disabled>RUTA</option>
+                                    {% for ruta_x in todaruta %}
+                                        <option value="">{{ruta_x.nombre_ruta}}</option>
+                                    {% endfor %}
+                                </select>
+                                
+                                <div id="output_inicio1" ></div>
+                                <select id="sel_inicio1" data-placeholder="INICIO" class="chosen-select_inicio1" multiple>
+                                    {% for punto in todopuntos  %}    
+                                    <option value="{{punto.puntoInicial}}">{{punto.puntoInicial}}</option>                                                
+                                    {% endfor %}
+                                </select>      
+                                
+                            </div>
+                            
+                            <div class="row" id="lista_ruta_opcional2">
+                                <div id="output_ruta2"></div>
+                                <select id="sel_ruta2" data-placeholder="RUTA">
+                                    {% for ruta_x in todaruta %}
+                                        {% if ruta_x.nombre_ruta == resul_ruta.nombre_ruta %}
+                                        <option value="" selected>{{ruta_x.nombre_ruta}}</option>    
+                                        {% endif %}
+                                        <option value="">{{ruta_x.nombre_ruta}}</option>
+                                    {% endfor %}
+                                </select>
+                                
+                                <div id="output2"></div>
+                                <select id="sel_inicio2" data-placeholder="INICIO" name="tags[]"  class="chosen-select" multiple>
+                                    {% for punto in todopuntos  %}    
+                                    <option value="{{punto.puntoInicial}}">{{punto.puntoInicial}}</option>                                                
+                                    {% endfor %}
+                                </select>
+                                
+                            </div>
+
+                            <div class="row" id="lista_ruta_opcional3">
+                                <div id="output_ruta3"></div>
+                                <select id="sel_ruta3" data-placeholder="RUTA">
+                                    <option value="0" selected disabled>RUTA</option>
+                                    {% for ruta_x in todaruta %}
+                                        {% if ruta_x.nombre_ruta == resul_ruta.nombre_ruta %}
+                                        <option value="" selected>{{ruta_x.nombre_ruta}}</option>    
+                                        {% endif %}
+                                        <option value="">{{ruta_x.nombre_ruta}}</option>
+                                    {% endfor %}
+                                </select>
+                                
+                                <div id="output_inicio3"></div>
+                                <select id="sel_inicio3" data-placeholder="INICIO" name="tags[]"  class="chosen-select" multiple>
+                                    {% for punto in todopuntos  %}    
+                                    <option value="{{punto.puntoInicial}}">{{punto.puntoInicial}}</option>                                                
+                                    {% endfor %}
+                                </select>    
+                                
+                            </div>
+
+                            <div class="row">
+                                <input type="text" class="nivelvuelo" id="nivelvueloid"
+                                onkeyup="repetirNivel()" placeholder="Nivel" maxlength="4">
+
+                                <input type="text" class="tiempoestimado" id="tiempoestimadoid"
+                                onkeyup="calculoTiempo()" placeholder="Tiempo" maxlength="4">
+
+                                <input type="text" class="transponder" id="transponderid"
+                                onkeyup="transponder()" placeholder="Transponder" maxlength="4" >
+                            </div>
+                            
+                            
+                            <!-- CHECKBOX PARA DETERMINAR SI ES NACIONAL O INTERNACIONAL -->
+                            <div id="toggles">
+                                <input type="checkbox" name="checkbox1" id="checkbox3" class="ios-toggle" />
+                                <label for="checkbox3" class="checkbox-label" data-off="NACIONAL" data-on="INTERNACIONAL"></label>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <h4>
+                {% for r in ruta %}
+                    {{r.nombre_ruta}}<br>
+                {% endfor %}
+                    </h4>
+
+            </div>
+
+
+
+            <div id="muestra">
+                <!-- imprimiendo el numero de tablas o strips para la visualizacion de puntos de notificacion -->
+
+                <table class="strip" id='HOLA' border="1px" width="100%"
+                            style="height:80px; text-align:center;  border-collapse: collapse;" align="center">
+                            <tr style="border-top: 1px solid white;">
+                                <td rowspan="2" width="75px">
+                                    <strong>{{aero|slice:"5:11"}}</strong> <br> {{ficha.avion}} <br>
+                                    {{ficha.velocidad}}</td>
+
+                                <td width="35px"> <strong>D</strong> <br> {{ficha.salida}} </td>
+
+                                <td width="35px"></td>
+
+                                <td width="40px" style="border-bottom: 1px solid white;">
+                                    <hr class="incline-line">
+                                    </hr>
+                                </td>
+
+                                <td width="60px" style="border-left: 1px solid white">{{punto_ruta}}</td>
+
+                                <td width="50px" rowspan="2" valign="top">{{ficha.nivel}}</td>
+
+                                <td width="50px" style="border-right: 1px solid white">{{ficha.origen}}</td>
+
+                                <td width="50px" style="border-right: 1px solid white;">UM415</td>
+
+                                <td width="50px">{{ficha.destino}}</td>
+
+                                <td width="50px"></td>
+
+                                <td width="25px" rowspan="2" style="border-right: 1.5px solid white;">
+                                    <button onclick="javascript:eliminarStrip('HOLA')" type="button" class="close"
+                                        aria-label="Close" style="color:red;">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </td>
+
+                            </tr>
+                            <tr style="border-bottom: 1.5px dashed;">
+                                <td>
+                                    <hr class="incline-line">
+                                    </hr>
+                                </td>
+
+                                <td>
+                                    <hr class="incline-line">
+                                    </hr>
+                                </td>
+
+                                <!--TIEMPÓ-->
+                                <td>
+                                    <font size="1.5">
+                                        <input type="text" class="tiempoestimado" id="tiempoestimadoid"
+                                                placeholder="0120" style="width: 40px;">
+                                    </font>
+                                </td>
+
+                                <td>
+                                    <hr class="incline-line2">
+                                    </hr>
+                                </td>
+
+                                <td style="border-right: 1px solid white;">
+                                    <font size="0.9">SEL/AEKM</font>
+                                    <br>
+                                    <font size="0.9">REG/CCCXE</font>
+                                </td>
+
+                                <td style="border-right: 1px solid white;"></td>
+
+                                <td>
+                                    <br>
+                                    <font size="0.9">
+                                        SQ/
+                                        <input type="text" name="" class="transponder" id="transponderid"
+                                            onkeyup="transponder()" placeholder="7896" style="width: 33px;">
+                                    </font>
+                                </td>
+
+                                <td style="border-right: 1px solid white">
+                                    <br>
+                                    <font size=0.9>
+                                        <strong>ATC-003</strong>
+                                    </font>
+                                </td>
+
+                            </tr>
+                        </table>
+                        
+            </div>
+
+
+            <div class="modal-footer">
+                <button class="btn btn-danger " type="button" data-dismiss="modal">Cancelar</button>
+                <button class="btn btn-primary" onclick="javascript:imprim2();">Aprobar</button>
+            </div>
+
+        </div>
+    </div>
+    
+    <script>
+        function calculoTiempo(){
+            var val=document.getElementsByClassName('tiempoestimado')[0].value
+            var x=document.getElementsByClassName('tiempoestimado');
+            // alert(val)
+            
+            if (Number.isInteger(parseInt(val)) && val.length==4 && parseInt(val)>=0 && parseInt(val.substring(0,2))<=23 && parseInt(val.substring(2,4))<=59 ) {
+                elemx= '{{plan}}'
+                alert(elemx);
+                for (let index = 1; index < x.length; index++) {
+                x[index].value=val
+                }
+            }else{
+                for (let index = 1; index < x.length; index++) {
+                x[index].value='####'
+                }
+            }
+        }
+        //EVENT ONCHANGE FOR OPTION SELECTED
+        
+        // var selectruta=document.getElementById('sel_ruta11');
+        // selectruta.addEventListener('change',
+        //     function(){
+        //         alert( this.options[selectruta.selectedIndex].text );
+        //     }
+        // );
+        
+        function mostrarPuntosActuales(){
+            //alert(document.getElementById('sel_ruta11').innerHTML)
+            rutaselected=document.getElementById('sel_ruta11').options[document.getElementById('sel_ruta11').selectedIndex].text;
+            full_route=document.getElementById('sel_ruta11').options[document.getElementById('sel_ruta11').selectedIndex].value;
+            full_route=full_route.split(';;')
+
+            cadena='';
+            for (let index = 0; index < full_route.length; index++) {
+                if (!Number.isInteger(parseInt(full_route[index]))) {
+                    cadena=cadena + '<option>'+full_route[index]+'</option>'
+                }                
+            }
+            //SHOWING PONTS UPDATED FROM THE LAST CHANGE IN THE ROUTE
+            $('#sel_inicio11').empty();
+            $('#sel_inicio11').append($(cadena));
+            $('#sel_inicio11').trigger("chosen:updated");
+
+        };
+        //----------------------------------
+        function obtenerRutaFinal(){
+            inicio_fin=$('#sel_inicio11').val();
+            if (inicio_fin.length==1) {
+                vector=[]
+                vector.push(inicio_fin[0].trim());
+                document.getElementById('muestra').innerHTML='';
+            }
+            if (inicio_fin.length>=2) {
+                //control for getting data from select multiple for preserve ordered in the select
+                if(vector.indexOf(inicio_fin[1])==-1){
+                    vector.push(inicio_fin[1].trim());
+                }else{
+                    vector.push(inicio_fin[0].trim());
+                }
+                
+                inicio_fin=vector;
+                ruta=document.getElementById('sel_ruta11').options[document.getElementById('sel_ruta11').selectedIndex].text;
+                full_route=document.getElementById('sel_ruta11').options[document.getElementById('sel_ruta11').selectedIndex].value;
+                full_route=full_route.split(';;');
+                if( full_route.indexOf(inicio_fin[0]) < full_route.indexOf(inicio_fin[1]) ){
+                    ruta_final = full_route.slice(full_route.indexOf(inicio_fin[0]), full_route.indexOf(inicio_fin[1])+1);
+                    //alert(ruta_final);
+                }else{
+                    ruta_final = full_route.slice(full_route.indexOf(inicio_fin[1]),full_route.indexOf(inicio_fin[0])+1);
+                    ruta_final.reverse()
+                    //alert(ruta_final);
+                }
+
+                velocidad='{{ficha.velocidad}}';
+                transmision='{{ficha.transmision}}';
+                matricula='{{ficha.matricula}}';ruta_final.push('0');
+                for (let index = 0; index < ruta_final.length-1; index++) {
+                    //----------------------------------------------------
+                    if(index%2==0){
+                        table_inicio = '<table class="strip" id="'+ruta_final[index]+'" border="1px" width="100%" style="height:80px; text-align:center;  border-collapse: collapse;" align="center">';
+                        tr1 ='<tr style="border-top: 1px solid white;"> <td rowspan="2" width="75px"><strong>'+'{{aero|slice:"5:11"}}'+'</strong> <br>'+ '{{ficha.avion}}' + '<br>'+velocidad+'</td><td width="35px"> <strong>D</strong> <br>'+ '{{ficha.salida}}'+ '</td><td width="35px"></td><td width="40px" style="border-bottom: 1px solid white;"><hr class="incline-line"></hr></td><td width="60px" style="border-left: 1px solid white" class="ruta_en_strip" name="'+ruta_final[index+1]+'">'+ruta_final[index]+'</td><td width="50px" rowspan="2" valign="top">'+'{{ficha.nivel}}'+'</td><td width="50px" style="border-right: 1px solid white">'+'{{ficha.origen}}'+'</td><td width="50px" style="border-right: 1px solid white;">'+ruta+'</td><td width="50px">'+'{{ficha.destino}}'+'</td><td width="50px"></td><td width="25px" rowspan="2" style="border-right: 1.5px solid white;"><button onclick="javascript:eliminarStrip('+"'"+ruta_final[index]+"'"+')" type="button" class="close" aria-label="Close" style="color:red;"> <span aria-hidden="true">&times;</span> </button> </td> </tr>';
+                        tr2 ='<tr style="border-bottom: 1.5px dashed;"><td><hr class="incline-line"></hr></td><td><hr class="incline-line"></hr></td><!--TIEMPÓ--><td><font size="1.5"><input type="text" class="tiempoestimado" id="tiempoestimadoid" placeholder="0120" style="width: 40px;"></font></td><td><hr class="incline-line2"></hr></td><td style="border-right: 1px solid white;"><font size="0.9">SEL/' +transmision+ '</font><br><font size="0.9">REG/'+matricula+ '</font></td><td style="border-right: 1px solid white;"></td><td><br><font size="0.9">SQ/<input type="text" name="" class="transponder" id="transponderid" placeholder="7896" style="width: 33px;"></font></td><td style="border-right: 1px solid white"><br><font size=0.9><strong>ATC-003</strong></font></td></tr></table>';
+                        document.getElementById('muestra').innerHTML+=table_inicio+tr1+tr2;
+                        //0 1x 2 3x 4 5x 6
+                    }
+                    //----------------------------------------------------
+                }
+            }
+        }
+
+        //ELEGIR UNA RUTA, OPCIONAL, AL CARGAR LA PAGINA EN HIDE
+        $(function(){
+            $('#lista_ruta_opcional1').hide();
+            $('#lista_ruta_opcional2').hide();
+            $('#lista_ruta_opcional3').hide();
+        });
+
+        //MOSTRADOS LOS ELEMENTOS OCULTOS
+        var s=0;
+        $('#agregar_ruta').click(function(){
+            //$('#lista_ruta_opcional1').show();
+            s=s+1;
+            if(s+document.getElementsByClassName('python_gen').length<=4){
+                var cadena='#lista_ruta_opcional'+s
+                $(cadena).show(200);
+                //alert(cadena);
+            }else{
+                s--;
+            }
+        });
+        
+        //OCULTANDO LOS ELEMENTOS MOSTRADOS
+        $('#quitar_ruta').click(function(){
+            if(s>=1){
+                //devuelvo las etiquetas select al valor predeterminado
+                $('#sel_ruta'+s).val(' ');
+                $('#sel_ruta'+s).trigger("chosen:updated");
+                $('#sel_inicio'+s).val(' ');
+                $('#sel_inicio'+s).trigger("chosen:updated");
+                var cadena='#lista_ruta_opcional'+s
+                $(cadena).hide(200);
+            }else{
+                s=1;
+            }
+            s--;
+            
+        });
+
+        //CHOSEN FOR THE FIRST OPTIONAL RUTA LIST
+        document.getElementById('output_ruta11').innerHTML = location.search;
+        $("#sel_ruta11").chosen({width: '90px'});
+        document.getElementById('output_inicio11').innerHTML = location.search;
+        $("#sel_inicio11").chosen({width: '200px',max_selected_options:2});
+
+        if ($('#output_ruta22').length) {
+            document.getElementById('output_ruta22').innerHTML = location.search;
+            $("#sel_ruta22").chosen({width: '90px'});
+            document.getElementById('output_inicio22').innerHTML = location.search;
+            $("#sel_inicio22").chosen({width: '200px',max_selected_options:2});
+        }
+
+        if ($('#output_ruta33').length) {
+            document.getElementById('output_ruta33').innerHTML = location.search;
+            $("#sel_ruta33").chosen({width: '90px'});
+            document.getElementById('output_inicio33').innerHTML = location.search;
+            $("#sel_inicio33").chosen({width: '200px',max_selected_options:2});
+        }
+
+        if ($('#output_ruta44').length) {
+            document.getElementById('output_ruta44').innerHTML = location.search;
+            $("#sel_ruta44").chosen({width: '90px'});
+            document.getElementById('output_inicio44').innerHTML = location.search;
+            $("#sel_inicio44").chosen({width: '200px',max_selected_options:2});
+        }
+
+        
+        //----------------------------------------
+        
+        //CHOSEN FOR THE FIRST OPTIONAL RUTA LIST
+        document.getElementById('output_ruta1').innerHTML = location.search;
+        $("#sel_ruta1").chosen({width: '90px'});
+        document.getElementById('output_inicio1').innerHTML = location.search;
+        $("#sel_inicio1").chosen({width: '200px',max_selected_options:2});
+
+        //CHOSEN FOR THE SECOND OPTIONAL RUTA LIST
+        document.getElementById('output_ruta2').innerHTML = location.search;
+        $("#sel_ruta2").chosen({width: '90px'});
+        document.getElementById('output_inicio1').innerHTML = location.search;
+        $("#sel_inicio2").chosen({width: '200px',max_selected_options:2});
+
+        //CHOSEN FOR THE THIRD OPTIONAL RUTA LIST
+        document.getElementById('output_ruta3').innerHTML = location.search;
+        $("#sel_ruta3").chosen({width: '90px'});
+        document.getElementById('output_inicio3').innerHTML = location.search;
+        $("#sel_inicio3").chosen({width: '200px',max_selected_options:2});
+
+    </script>
+    
+<!--  
+</body>
+
+</html> -->

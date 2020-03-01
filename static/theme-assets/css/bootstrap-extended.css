@@ -1763,7 +1763,7 @@ select.form-control
 }
 .navbar-light .navbar-nav .active.nav-link
 {
-    background-color: rgba(0, 0, 0, .03);
+    background-color: red;
 }
 .navbar-light .navbar-nav .disabled.nav-link
 {
