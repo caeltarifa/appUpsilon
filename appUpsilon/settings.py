@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'apps.plan_vuelo',
+    'apps.generacion_fpl',
 ]
 
 MIDDLEWARE = [
@@ -133,4 +134,5 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR,'static'),)
 
 
 # Redirect to home URL after login (Default redirects to /accounts/profile/)
-LOGIN_REDIRECT_URL = '/plan_vuelo/admin'
+LOGIN_REDIRECT_URL = '/'
+#LOGIN_REDIRECT_URL = '/plan_vuelo/admin'

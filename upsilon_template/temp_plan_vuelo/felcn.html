@@ -6,18 +6,14 @@
 {% endblock title %}
 
 
-
 {% block extra_head %}
     <link rel='stylesheet' href='https://harvesthq.github.io/chosen/chosen.css'>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!-- <link rel="stylesheet" href="{% static 'theme-assets/css/aprobar_plan.css' %}"> -->
 
 {% endblock extra_head %}
-    
-
-
 
 <!-- ////////////////////////////////////////////////////////////////////////////-->
-
 
 {% block navbar %}
     <!--MENU SUPERIOR fixed-top-->
@@ -44,7 +40,7 @@
                                     <a class="navbar-brand" href="{% url 'view_admin' %}">
                                         <!-- <img class="brand-logo" alt="Chameleon admin logo"
                                 src="theme-assets/images/logo/logo.png" /> -->
-                                        <h1 class="brand-text " style="color: white;">Upsilon | {{user.get_username}}</h1>
+                                        <h1 class="brand-text " style="color: white;">AASANALP | Upsilon  | {{user.get_username}} | {{id_empresa}}</h1>
                                     </a>
                                 </li>
                                 <!--LOGO DE PAGINA-->
@@ -127,17 +123,6 @@
                                     </div>
                                 </li>
                             </ul>
-
-                            <!--TABLERO DRAG AND DROP-->
-                            <ul class="nav navbar-nav float-right">
-                                <li class="nav-item d-none d-md-block">
-                                    <a class="nav-link" href="{% url 'view_tablero' %}">
-                                        TABLERO
-                                    </a>
-                                </li>
-                            </ul>
-                            <!--TABLERO DRAG AND DROP-->
-
                             
                             
                             <!--TABLERO DRAG AND DROP-->
@@ -211,7 +196,7 @@
 
 <br>
 
-<!-- Plan de vuelos recientes -->
+<!-- PLAN DE VUELOS SOLICITADOS -->
 <div id="_planes_recientes"></div><br><br><br><br>
 <section>
     <div class="row justify-content-center">
@@ -219,7 +204,7 @@
             <div class="card" style="box-shadow: 2px 2px 8px 0 black; min-height: 30%;  max-height: 100%; ">
 
                 <div class="card-header">
-                    <h4 class="card-title">PLanes Recientes</h4>
+                    <h3 class="card-title">FPL PENDIENTES </h3>
                     <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
                     <div class="heading-elements">
                         <ul class="list-inline mb-0">
@@ -239,7 +224,7 @@
                                 </ul>
                             </li>
                             <!--BUSCAR-->
-
+                            
                             <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
                             <li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
                             <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
@@ -259,31 +244,39 @@
                         <table id="tabla_planes_recientes" class="table table-striped" align="center" style="text-align:center;">
                             <thead>
                                 <tr>
-                                    <th scope="col">ID</th>
-                                    <th scope="col">AMHS_recibido</th>
-                                    <th scope="col">Fecha</th>
-                                    <th scope="col">Prioridad</th>
-                                    <th scope="col">Origen</th>
-                                    <th scope="col">Salida</th>
-                                    <th scope="col">FLP.</th>
-                                    <th scope="col"></th>
+                                    <th scope="col">Nro. Formulario</th>
+                                    <th scope="col">Fecha y hora</th>
+                                    <th scope="col">Despachador</th>
+                                    <th scope="col">Estado</th>
+                                    <th scope="col"><i class="material-icons">flight_takeoff</i></th>
+                                    <th scope="col">Aceptar/Rechazar</th>
+                                    <th scope="col">Documento FPL</th>
                                 </tr>
                             </thead>
                             <tbody>
-
-                                {% for elemen in post %}
-                                <tr>
-                                    <th id="{{elemen.id}}" width="5%" scope="row">{{elemen.id}}</th>
-                                    <th width="5%">{{elemen.hora_amhs}}</th>
-                                    <td width="5%">{{elemen.fecha_llegada}}</td>
-                                    <td width="5%">{{elemen.prioridad}}</td>
-                                    <td width="5%">{{elemen.origen|slice:"1:5"}}</td>
-                                    <td width="5%">{{elemen.origen|slice:"5:9"}}</td>
-                                    <td width="25%">{{elemen.id_plan|slice:"5:15"}}</td>
-                                    <td width="15%">
-                                        <button class="btn btn-outline-info" onclick="abrir_modal( '{% url 'view_aprobar_flp' elemen.id%}')">Ver FLP</button>
-                                    </td>
-                                </tr>
+                                {% for solicitado in solicitados %}
+                                    <tr readonly>
+                                        <th width="3%" scope="row">{{solicitado.nro_formulario}}/{{solicitado.fecha_presentacion|date:'Y'}} </th>
+                                        <th width="3%">{{solicitado.fecha_presentacion|date:'d/m/y'}} <br> {{solicitado.hora_presentacion}}</th>
+                                        <td width="3%">{{solicitado.nombre}} &nbsp; {{solicitado.apellido}} </td>
+                                        <td width="3%">
+                                            {{solicitado.nombre_estado}}
+                                        </td>
+                                        <td width="3%">
+                                            BOV645
+                                        </td>
+                                        
+                                        <td width="10%">
+                                            <!-- ACEPTAR -->
+                                            <button class="btn btn-outline-success" onclick="abrir_modal('{% url 'view_aprobar_codigo_felcn' %}?idpresentado={{solicitado.id_fpl_presentado}}')" ><i class="material-icons">check_circle</i></button>
+                                            {{solicitado.id_fpl_presentado}}
+                                            {{solicitado.fk_estado_id}}
+                                        </td>
+                                        
+                                        <td width="15%">
+                                            <a class="btn btn-outline-info" onclick="abrir_modal('{% url 'view_mostrar_fpl_empresa' %}?idpresentado={{solicitado.id_fpl_presentado}}')"> <i class="material-icons">insert_drive_file</i> </a>
+                                        </td>
+                                    </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
@@ -293,7 +286,7 @@
         </div>
     </div>
 </section>
-<!-- Planes de vuelo recientes -->
+<!-- PLAN DE VUELOS SOLICITADOS -->
 
 
 <!-- Plan de vuelos aprobados -->
@@ -303,7 +296,7 @@
         <div class="col-10" style="align-content: center;">
             <div class="card" style="box-shadow: 2px 2px 8px 0 black; min-height: 30%;  max-height: 100%;">
                 <div class="card-header">
-                    <h4 class="card-title">Planes aprobados</h4>
+                    <h4 class="card-title">PLANES APROBADOS</h4>
                     <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
                     <div class="heading-elements">
                         <ul class="list-inline mb-0">
@@ -340,72 +333,6 @@
                                     <td>Thornton</td>
                                     <td>@fat</td>
                                 </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -426,7 +353,7 @@
         <div class="col-10" style="align-content: center;">
             <div class="card" style="box-shadow: 2px 2px 8px 0 black; min-height: 30%;  max-height: 100%;">
                 <div class="card-header">
-                    <h4 class="card-title">NOTAMS</h4>
+                    <h4 class="card-title">PLANES RECHAZADOS</h4>
                     <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
                     <div class="heading-elements">
                         <ul class="list-inline mb-0">

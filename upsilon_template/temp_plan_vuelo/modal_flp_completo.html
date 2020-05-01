@@ -1,0 +1,621 @@
+<!-- {% load staticfiles %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <title>Strip ATS</title>
+</head>
+
+<body> 
+-->
+
+<!-- SE RECIBE aero, plan, detalles de la ficha, ruta del fpl, rutas all, puntosall   -->
+    <div class="modal-dialog  modal-dialog-centered modal-xl " role="document" style="width: 62.5%; margin:auto;" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    PLAN VUELO
+                </h2>
+            </div>
+
+            <div class="modal-body">
+                
+                
+                <!--        C E N T R A L     P A R K     I N I C I O           -->
+                <!-- Cuerpo -->  
+                <table border="0" style="border-radius: 60px ; -moz-border-radius: 60px;" >
+                    <tr>
+                        <td>
+                            <!--   ini  P A N E L       C E N T R A L   -->
+                            <div id="principal">
+                                <!-- 
+                                    AQUI COMIENZA EL  FORMULARIO DE PLAN DE VUELO 
+                                -->
+                                
+                                <table border="1" align="center" bgcolor="#E0E0E0" 
+                                style="border-collapse: collapse;border: 1px solid black; ">
+                                    <tr>
+                                        <td colspan="2" style="padding: 2px;">
+                                            <table border="0" width="100%" cellpadding="0" bgcolor="White">
+                                                <tr class="fuenteTituloPequeno">
+                                                    <td width="30%" align="Left">&nbsp;AASANA</td>
+                                                    
+                                                    <td width="40%" align="center">
+                                                        FLIGHT PLAN
+                                                        <br>
+                                                        PLAN DE VUELO
+                                                    </td>
+                                                    
+                                                    <td width="30%" align="Right">
+                                                        Form Nro: XX/XX/XX &nbsp;
+                                                        <br>
+                                                        Fecha/Date: XXXX-XX-XX &nbsp;
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td colspan="2" style="padding: 5px;">
+                                            <!-- PARTE COMUNICACIONAL -->
+                                            
+                                            <!-- <form action="{% url 'view_solicitar_comunicacional' %}" method="post">
+
+                                                {% csrf_token %}
+                                                <table border="0" width="100%" cellpadding="0">
+                                                    <tr class="fuenteTituloPequeno">
+                                                        <td width="120">PRIORITY</td>
+                                                        <td>ADDRESSEE(S)</td>
+                                                        <td width="50">&nbsp;</td>
+                                                    </tr>
+                                                    <tr class="fuenteMin">
+                                                        <td>Prioridad</td>
+                                                        <td>Destinatario(s)</td>
+                                                        <td>&nbsp;</td>
+                                                    </tr>
+                                                    <tr class="fuenteTituloMediano">
+                                                        <td valign="top" align="center"> << = F F &rarr; </td>
+                                                        
+                                                        <td>
+                                                            {{formulario.direcciones_amhs}}
+                                                        </td>
+
+                                                        <td valign="bottom"> <<= </td>
+                                                    </tr>
+                                                    
+                                                    <tr class="fuenteTituloPequeno">
+                                                        <td>FILING TIME</td>
+                                                        <td>ORIGINATOR</td>
+                                                        <td>&nbsp;</td>
+                                                    </tr>
+                                                    
+                                                    <tr class="fuenteMin">
+                                                        <td>Hora de Depósito</td>
+                                                        <td>Remitente</td>
+                                                        <td>&nbsp;</td>
+                                                    </tr>
+                                                    
+                                                    <tr class="fuenteTituloMediano">
+                                                        <td>
+                                                        <input id="fecha_amhs" name="" size="2" maxlength="2" type="text" value="">
+                                                        <input id="hora_amhs" name="" size="4" maxlength="4" type="text" value="">
+                                                        </td>
+                                                        <td>
+                                                        <input id="remitente" name="" size="8" maxlength="8" type="text" value="">
+                                                        <<=
+                                                        </td>
+                                                        <td>&nbsp;</td>
+                                                    </tr>
+                                                    <tr class="fuenteTituloPequeno">
+                                                        <td colspan="2">SPECIFIC IDENTIFICATION OF ADDRESSEE(S) AND/OR ORIGINATOR</td>
+                                                        <td>&nbsp;</td>
+                                                    </tr>
+                                                    <tr class="fuenteMin">
+                                                        <td colspan="2">Identificación exacta del (de los) destinatario(s) y/o del remitente</td> 
+                                                        <td>&nbsp;</td>
+                                                    </tr>
+                                                </table>
+                                            </form> -->
+                                        
+                                        </td>
+                                    </tr>  
+                                    <!-- TEXT AREA INNECESARIA 
+                                    <tr>
+                                        <td colspan="2">
+                                            <textarea name="" rows="1" cols="90" style="height: 20px;background-color:#E0E0E0;border: none;font-family:Verdana;font-size: 13px;"></textarea>
+                                        </td>
+                                    </tr> -->
+                                    <tr>
+                                        <td style="padding: 5px;" colspan="2">
+                                            <!-- PARTE OPERACIONAL -->
+
+                                            <form action="{% url 'view_solicitar_operacional' %}" method="post">
+                                                {% csrf_token %}
+                                                <table border="0" width="100%" cellpadding="0">
+                                                    <tr class="fuenteTituloPequeno">
+                                                        <td>3 &nbsp; MESSAGE TYPE</td>
+                                                        <td>7 &nbsp; AIRCRAFT IDENTIFICATION</td>
+                                                        <td>8 &nbsp; FLIGHT RULES</td>
+                                                        <td>TYPE OF FLIGHT</td>
+                                                        <td>&nbsp;</td>
+                                                    </tr>
+
+                                                    <tr class="fuenteMin">
+                                                        <td>Tipo de mensaje</td>
+                                                        <td>Identificación de aeronave</td>
+                                                        <td>Reglas de vuelo</td>
+                                                        <td>Tipo de vuelo</td>
+                                                        <td>&nbsp;</td>
+                                                    </tr>
+
+                                                    <tr class="fuenteTituloMediano">
+                                                        <td> <<=(FPL</td>
+                                                        <td>- 
+                                                            {{form_operacional.id_aeronave}}
+                                                        <td>- 
+                                                            {{form_operacional.regla_vuelo}}
+                                                        </td>
+                                                        <td>- 
+                                                            {{form_operacional.tipo_vuelo}}
+                                                        </td>
+                                                        <td><<=</td>
+                                                    </tr>
+                                                </table>
+                                                
+                                                <table border="0" width="100%" cellpadding="0">
+                                                    <tr class="fuenteTituloPequeno">
+                                                        <td>9 &nbsp; NUMBER</td>
+                                                        <td>TYPE OF AIRCRAFT</td>
+                                                        <td>WAKE TURBULENCE CAT.</td>
+                                                        <td>10 &nbsp; EQUIPMENT</td>
+                                                        <td>&nbsp;</td>
+                                                    </tr>
+
+                                                    <tr class="fuenteMin">
+                                                        <td>Número</td>
+                                                        <td>Tipo de aeronave</td>
+                                                        <td>Cat. de estela turbulenta</td>
+                                                        <td>Equipo</td>
+                                                        <td>&nbsp;</td>
+                                                    </tr>
+                                                    
+                                                    <tr class="fuenteTituloMediano">
+                                                        <td>-
+                                                            {{form_operacional.numero}}     
+                                                        <td>
+                                                            {{form_operacional.tipo_aeronave}}
+                                                        
+                                                        <td>/ 
+                                                            {{form_operacional.estela_turbulenta}}
+                                                        </td>
+
+                                                        <td>
+                                                            - 
+                                                            {{form_operacional.equipoA}}
+                                                            / 
+                                                            {{form_operacional.equipoB}}
+                                                        </td>
+                                                        <td><<=</td>
+                                                    </tr>
+                                                </table>
+                                                
+                                                <table border="0" width="100%" cellpadding="0">
+                                                    <tr class="fuenteTituloPequeno">
+                                                        <td width="200">13 &nbsp; DEPATURE AERODROME</td>
+                                                        <td width="100">TIME</td>
+                                                        <td>&nbsp;</td>
+                                                    </tr>
+                                                    <tr class="fuenteMin">
+                                                        <td>Aerodromo de salida</td>
+                                                        <td>hora</td>
+                                                        <td></td>
+                                                    </tr>
+                                                    <tr class="fuenteTituloMediano">
+                                                        <td>-
+                                                            {{form_operacional.aerodromo_salida}} 
+                                                        <td>
+                                                            {{form_operacional.hora_salida}}
+                                                        </td>
+                                                        <td><<= </td>
+                                                    </tr>
+                                                </table>
+                                                
+                                                <table border="0" width="100%" cellpadding="0">
+                                                    <tr class="fuenteTituloPequeno">
+                                                        <td width="130">15 &nbsp; CRUISING SPEED</td>
+                                                        <td width="110">LEVEL</td>
+                                                        <td>ROUTE</td>
+                                                        <td>&nbsp;</td>
+                                                    </tr>
+                                                    <tr class="fuenteMin">
+                                                        <td>Velocidad de crucero</td>
+                                                        <td>Nivel</td>
+                                                        <td>Ruta</td>
+                                                        <td></td>
+                                                    </tr>
+                                                    <tr class="fuenteTituloMediano">
+                                                        <td valign="top"> -
+                                                            {{form_operacional.velocidad_crucero_cat}}
+                                                            {{form_operacional.velocidad_crucero}}
+                                                        </td>
+                                                        <td valign="top">
+                                                            {{form_operacional.nivel_cat}}
+                                                            {{form_operacional.nivel}}
+                                                        </td>
+                                                        <td>
+                                                            {{form_operacional.ruta}}
+                                                        </td>
+                                                        <td valign="bottom"><<= </td>
+                                                    </tr>
+                                                </table>
+                                                
+                                                <table border="0" width="100%"  cellpadding="0">
+                                                    <tr class="fuenteTituloPequeno">
+                                                        <td width="60">&nbsp</td>
+                                                        <td width="200">16 &nbsp; DESTINATION AERODROME</td>
+                                                        <td>TOTAL EET</td>
+                                                        <td>ALTN AERODROME</td>
+                                                        <td>2 ND. ALT AERODROME</td>
+                                                        <td>&nbsp;</td>
+                                                    </tr>
+                                                    <tr class="fuenteMin">
+                                                        <td></td>
+                                                        <td>Aeródromo de destino</td>
+                                                        <td>
+                                                        EET total<br>HR. MIN.
+                                                        </td>
+                                                        <td>Aeródromo Alt.</td>
+                                                        <td>2do Aeródromo Alt.</td>
+                                                        <td>&nbsp;</td>
+                                                    </tr>
+                                                    <tr class="fuenteTituloMediano">
+                                                        <td></td>
+                                                        <td>- 
+                                                            {{form_operacional.aerodromo_destino}}
+                                                        <td>
+                                                            {{form_operacional.total_eet}}
+                                                        <td>
+                                                            {{form_operacional.aerodromo_alterno}}
+                                                        <td>
+                                                            {{form_operacional.aerodromo_alterno2}}
+                                                        <td><<=</td>
+                                                    </tr>
+                                                </table>
+                                                
+                                                <table border="0" width="100%" cellpadding="0">
+                                                    <tr class="fuenteTituloPequeno">
+                                                        <td width="30">&nbsp;</td>
+                                                        <td>18 &nbsp; OTHER INFORMATION</td>
+                                                        <td>&nbsp;</td>
+                                                    </tr>
+                                                    <tr class="fuenteMin">
+                                                        <td></td>
+                                                        <td>Otros datos</td>
+                                                        <td></td>
+                                                    </tr>
+                                                    <tr class="fuenteTituloMediano">
+                                                        <td align="right" valign="top">-&nbsp;</td>
+                                                        <td valign="top">
+                                                            {{form_operacional.otros_datos}}
+                                                        </td>
+                                                        <td valign="bottom">) <<= </td>
+                                                    </tr>
+                                                </table>
+                                                <button type="submit">SIGUIENTE</button>
+                                            </form>
+                                            
+                                            <!-- PARTE SUPLEMENTARIA -->
+                                            <!-- <form action="{% url 'view_solicitar_suplementaria' %}" method="post">
+                                                <table border="0" width="100%" cellpadding="0">
+                                                    <tr class="fuenteTituloPequeno">
+                                                        <td align="center">SUPLEMENTARY INFORMATION (NOT TO BE TRANSMITTED IN FPL MESSAGES)</td>
+                                                    </tr>
+                                                    <tr class="fuenteMin">
+                                                        <td align="center">Información suplementaria ( en los mensajes FPL no hay que transmitir estos datos )</td>
+                                                    </tr>
+                                                </table>
+                                                
+                                                <table border="0" width="100%" cellpadding="0">
+                                                    <tr class="fuenteTituloPequeno">
+                                                        <td width="30">&nbsp;19</td>
+                                                        <td>ENDURANCE</td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td colspan="3">EMERGENCY RADIO</td>
+                                                    </tr>
+                                                    <tr class="fuenteMin">
+                                                        <td></td>
+                                                        <td>Autonomia</td>
+                                                        <td></td>
+                                                        <td><b>PERSONS ON BOARD</b></td>
+                                                        <td></td>
+                                                        <td colspan="3">Equipo de Radio emergencia</td>
+                                                    </tr>
+                                                    <tr class="fuenteMin">
+                                                        <td></td>
+                                                        <td>HR. MIN</td>
+                                                        <td></td>
+                                                        <td>Personas a bordo</td>
+                                                        <td></td>
+                                                        <td>UHF</td>
+                                                        <td>VHF</td>
+                                                        <td>ELT</td>
+                                                    </tr>
+                                                    <tr class="fuenteTituloMediano">
+                                                        <td>- E/</td>
+                                                        <td>
+                                                            {{form_suplementaria.autonomia_hr_min }}
+                                                        </td>
+                                                        <td width="40">&rarr; P/</td>
+                                                        <td>
+                                                            {{form_suplementaria.personas_bordo }}
+                                                        </td>
+                                                        <td width="40">&rarr; R/</td>
+                                                        <td>
+                                                            {{form_suplementaria.equipo_radio_uhf }}
+                                                        </td>
+                                                        <td>
+                                                            {{form_suplementaria.equipo_radio_vhf }}
+                                                        </td>
+                                                        <td>
+                                                            {{form_suplementaria.equipo_radio_elt}}
+                                                        </td>
+                                                    </tr>
+                                                </table>
+        
+                                                <table border="0" width="90%" cellpadding="0" align="center">
+                                                    <tr class="fuenteTituloPequeno">
+                                                        <td>&nbsp;</td>
+                                                        <td colspan="5">SURVIVAL EQUIPMENT / Equipo de supervivencia</td>
+                                                        <td>&nbsp;</td>
+                                                        <td colspan="5">JACKETS / Chalecos</td>
+                                                    </tr>
+                                                    <tr class="fuenteMin">
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td>POLAR</td>
+                                                        <td>DESERT</td>
+                                                        <td>MARITIME</td>
+                                                        <td>JUNGLE</td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td>LIGHT</td>
+                                                        <td>FLOURES</td>
+                                                        <td></td>
+                                                        <td></td>
+                                                    </tr>
+                                                    <tr class="fuenteMin">
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td>Polar</td>
+                                                        <td>Desértico</td>
+                                                        <td>Marítimo</td>
+                                                        <td>Selva</td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td>Luz</td>
+                                                        <td>Flour</td>
+                                                        <td>UHF</td>
+                                                        <td>VHF</td>
+                                                    </tr>
+                                                    <tr class="fuenteTituloMediano">
+                                                        <td>&rarr;</td>
+                                                        <td>
+                                                            /
+                                                            {{form_suplementaria.equipo_superv}}
+                                                        </td>
+                                                        <td>
+                                                            {{form_suplementaria.equipo_superv_polar}}
+                                                        </td>
+                                                        <td>
+                                                            {{form_suplementaria.equipo_superv_deser}}
+                                                        </td>
+                                                        <td>
+                                                            {{form_suplementaria.equipo_superv_mar}}
+                                                        </td>
+                                                        <td>
+                                                            {{form_suplementaria.equipo_superv_jung}}
+                                                        </td>
+                                                        <td>&rarr;</td>
+                                                        <td width="50">
+                                                            /
+                                                            {{form_suplementaria.chaleco}}
+                                                        </td>
+                                                        <td width="50">
+                                                            {{form_suplementaria.chaleco_luz}}
+                                                        </td>
+                                                        <td width="50">
+                                                            {{form_suplementaria.chaleco_fluor}}
+                                                        </td>
+                                                        <td width="50">
+                                                            {{form_suplementaria.chaleco_uhf}}
+                                                        </td>
+                                                        <td width="50">
+                                                            {{form_suplementaria.chaleco_vhf}}
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                                
+                                                <table border="0" width="80%" cellpadding="0">
+                                                    <tr class="fuenteTituloPequeno">
+                                                        <td>&nbsp;</td>
+                                                        <td colspan="8">DINCHIES / Botes neumáticos</td>
+                                                    </tr>
+                                                    <tr class="fuenteMin" align="center">
+                                                        <td></td>
+                                                        <td>NUMBER</td>
+                                                        <td></td>
+                                                        <td>CAPACITY</td>
+                                                        <td></td>
+                                                        <td>COVER</td>
+                                                        <td></td>
+                                                        <td>COLEUR</td>
+                                                        <td></td>
+                                                    </tr>
+                                                    <tr class="fuenteMin" align="center">
+                                                        <td></td>
+                                                        <td>Número</td>
+                                                        <td></td>
+                                                        <td>Capacidad</td>
+                                                        <td></td>
+                                                        <td>Cubierta</td>
+                                                        <td></td>
+                                                        <td>Color</td>
+                                                        <td></td>
+                                                    </tr>
+                                                    <tr class="fuenteTituloMediano" align="center">
+                                                        <td> &rarr; D / </td>
+                                                        <td>
+                                                            <input name="numeroBotes" size="2" maxlength="2" type="text" value="">
+                                                            {{form_suplementaria.nro_botes}}
+                                                        </td>
+                                                        <td> &rarr; </td>
+                                                        <td>
+                                                            {{form_suplementaria.capacidad_botes}}
+                                                        </td>
+                                                        <td> &rarr; </td>
+                                                        <td> C </td>
+                                                        <td> &rarr; </td>
+                                                        <td>
+                                                            {{form_suplementaria.color_bote}}
+                                                        </td>
+                                                        <td> <<= </td>
+                                                    </tr>
+                                                </table>
+                                                
+                                                <table border="0" width="100%" cellpadding="0">
+                                                    <tr class="fuenteTituloPequeno">
+                                                        <td width="40">&nbsp;</td>
+                                                        <td align="left">AIRCRAFT COLEUR AND MARKINGS</td>
+                                                    </tr>
+                                                    <tr class="fuenteMin">
+                                                        <td></td>
+                                                        <td align="left">Color y marcas de la aeronave</td>
+                                                    </tr>
+                                                    <tr class="fuenteTituloMediano">
+                                                        <td> &nbsp;&nbsp;&nbsp;&nbsp;A / </td>
+                                                        <td align="left">
+                                                            {{form_suplementaria.color_marca_avion}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="fuenteTituloPequeno">
+                                                        <td>&nbsp;</td>
+                                                        <td align="left">REMARKS</td>
+                                                    </tr>
+                                                    <tr class="fuenteMin">
+                                                        <td></td>
+                                                        <td align="left">Observaciones</td>
+                                                    </tr>
+                                                    <tr class="fuenteTituloMediano">
+                                                        <td> &rarr; N / </td>
+                                                        <td align="left">
+                                                            {{form_suplementaria.obs}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="fuenteTituloPequeno">
+                                                        <td>&nbsp;</td>
+                                                        <td align="left">PILOT -IN -COMMAND</td>
+                                                    </tr>
+                                                    <tr class="fuenteMin">
+                                                        <td></td>
+                                                        <td align="left">Piloto al mando</td>
+                                                    </tr>
+                                                    <tr class="fuenteTituloMediano">
+                                                        <td> &nbsp;&nbsp;&nbsp;&nbsp;C / </td>
+                                                        <td align="left">
+                                                            {{form_suplementaria.piloto}}
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                <font class="fuenteTituloPequeno">
+                                                    FILED BY - Presentado por:
+                                                </font>    
+                                            </form> -->
+                                        </td>
+                                    </tr>
+
+                                    <tr bgcolor ="#F5F5F5">
+                                        <td width="230" align="center" >
+                                            <textarea name="presentadoPor" rows="2" cols="25" type="text" style="border: none;font-family:Verdana;font-size: 13px;"></textarea>
+                                        </td>
+                                        
+                                        <td style="padding: 2px;" >
+                                            <font class="fuenteTituloPequeno">
+                                                SPACE RESERVED FOR ADDITIONAL REQUIREMENTS
+                                            </font>
+                                            <br>
+                                            <font class="fuenteMin">
+                                                Espacio reservado para requisitos adicionales
+                                            </font>
+                                            <br>
+                                            <textarea name="requerimientoAdicional" rows="1" cols="80" type="text" style="border: none;font-family:Verdana;font-size: 13px;"></textarea>
+                                            {{form_suplementaria.requisitos_adic}}
+                                        </td>
+                                    </tr>
+                                    
+                                </table>
+        
+                                <!-- <div id="EstiloNoMostrarImpresion">
+                                    <br>
+                                    <center>
+                                        <input type="submit" style="height:35px; background-color:#5189A7;"  value="Enviar los Datos Registrados">
+                                    </center>
+                                    <br>
+                                </div> -->
+
+                                
+    
+                            </div>                     
+                            <!--   fin  P A N E L       C E N T R A L   -->
+                        </td>
+                    </tr>
+                </table>
+                <!--        C E N T R A L     P A R K     F I N           -->
+
+
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-danger " type="button" data-dismiss="modal">Cancelar</button>
+                <button class="btn btn-primary" onclick="javascript:imprim2();">Aprobar</button>
+            </div>
+
+        </div>
+    </div>
+    
+    <script>
+        function dataSent() {
+            //parte comunicacional
+            comunicacional=document.getElementById('destinatarios').value.trim()+'&='+document.getElementById('fecha_amhs').value+'&='+document.getElementById('hora_amhs').value+'&='+document.getElementById('remitente').value
+            
+            operacional=document.getElementById('identif_aeronave').value +'&='+ document.getElementById('regla_vuelo').value + '&=' + document.getElementById('tipo_vuelo').value + '&=' + document.getElementById('numero').value+'&='+ document.getElementById('tipoAeronave').value+'&='+ document.getElementById('turbulencia').value;
+            var equipo = document.getElementById('equipoA').value+'%'+document.getElementById('equipoB').value
+            
+            operacional=operacional+ '&=' +equipo+ '&=' +document.getElementById('aerodromo_salida').value+ '&=' +document.getElementById('hora_salida').value+ '&=' +document.getElementById('velocidad_crucero_cat').value+ '&=' +document.getElementById('velocidad_crucero_numero').value+ '&=' +document.getElementById('nivel_cat').value+ '&=' +document.getElementById('nivel_numero').value+ '&=' + document.getElementById('ruta').value+ '&=' +document.getElementById('aerodromo_destino').value+ '&=' +document.getElementById('eet_total').value+ '&=' +document.getElementById('aerod_ater1').value+ '&=' +document.getElementById('aerod_ater2').value+ '&=' +document.getElementById('otros_datos').value
+            //alert(operacional)
+
+            var requestTo=comunicacional+'&&'+operacional
+            alert(requestTo)
+            url='/generacion_fpl/save_popup/'+requestTo+'/'
+            $("#modal").load(url, function() {
+                $(this).modal('show');
+            });
+
+            // comunicacional=document.getElementById('destinatarios').value.trim()+'&='+document.getElementById('fecha_amhs').value.trim()+'&='+document.getElementById('hora_amhs').value.trim()+'&='+document.getElementById('remitente').value.trim()
+            
+            // operacional=document.getElementById('identif_aeronave').value +'&='+ document.getElementById('regla_vuelo').value + '&=' + document.getElementById('tipo_vuelo').value + '&=' + document.getElementById('numero').value+'&='+ document.getElementById('tipoAeronave').value+'&='+ document.getElementById('turbulencia').value;
+            // var equipo = document.getElementById('equipoA').value+'/'+document.getElementById('equipoB').value
+            
+            // operacional=operacional+ '&=' +equipo+ '&=' +document.getElementById('aerodromo_salida').value+ '&=' +document.getElementById('hora_salida').value+ '&=' +document.getElementById('velocidad_crucero_cat').value+ '&=' +document.getElementById('velocidad_crucero_numero').value+ '&=' +document.getElementById('nivel_cat').value+ '&=' +document.getElementById('nivel_numero').value+ '&=' + document.getElementById('ruta').value+ '&=' +document.getElementById('aerodromo_destino').value+ '&=' +document.getElementById('eet_total').value+ '&=' +document.getElementById('aerod_ater1').value+ '&=' +document.getElementById('aerod_ater2').value+ '&=' +document.getElementById('otros_datos').value
+            
+        }
+
+    </script>
+    <!--  
+        
+    </body>
+
+</html> -->

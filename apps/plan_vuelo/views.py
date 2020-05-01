@@ -2,14 +2,12 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from django.http import HttpResponse
 from django.db import connection
+from django.contrib.auth.models import Group
 
 import datetime
 
 from django.db.models import Q
 from django.shortcuts import render_to_response
-
-
-
 
 
 #from apps.plan_vuelo.forms import Vuelo_Aprobado_form, PostForm
@@ -18,6 +16,7 @@ from apps.plan_vuelo.models import Flp_trafico, Metar_trafico, EntrePuntos_flp,R
 
 def view_plan_vuelo(request):
     if request.user.is_authenticated:
+
         if request.user.is_active:
             return render(request, 'registration/already_logged.html')
         else:
@@ -26,9 +25,11 @@ def view_plan_vuelo(request):
         return redirect('login')
 
 def view_admin(request):
-    if request.user.is_authenticated:
-        #post=Flp_trafico.objects.raw("select * from plan_vuelo_Flp_trafico where CAST(fecha_llegada AS date) = CAST('2019-10-11' AS date)");
-        #post=Flp_trafico.objects.raw("select id, hora_amhs, prioridad, origen, id_plan from plan_vuelo_flp_trafico where hora_amhs like '"+str(datetime.datetime.now().day)+"%%%%' order by id_amhs desc limit 100")
+    controladores=Group.objects.get(name='CONTROLADORES')
+    if request.user.is_authenticated and request.user.groups.filter(name='CONTROLADORES').exists():
+        ###post=Flp_trafico.objects.raw("select * from plan_vuelo_Flp_trafico where CAST(fecha_llegada AS date) = CAST('2019-10-11' AS date)");
+        ###post=Flp_trafico.objects.raw("select id, hora_amhs, prioridad, origen, id_plan from plan_vuelo_flp_trafico where hora_amhs like '"+str(datetime.datetime.now().day)+"%%%%' order by id_amhs desc limit 100")
+        
         post=Flp_trafico.objects.raw("select * from plan_vuelo_flp_trafico where id_plan like '%%-IS' order by fecha_llegada desc limit 100")
 
         metar=Metar_trafico.objects.raw("select * from plan_vuelo_metar_trafico order by fecha_llegada desc limit 100")
@@ -176,11 +177,10 @@ def view_aprobar_flp(request, id_plancompleto):
         }
         
         #return render_to_response('temp_plan_vuelo/aprobar_plan.html', context)
-        return render(request, 'temp_plan_vuelo/aprobar_plan.html', context )
+        return render(request, 'temp_plan_vuelo/aprobar_plan.html', context ) #retorno el modal y el contexto
     else:
         return redirect('accounts/login/')
     
-
 
 
 

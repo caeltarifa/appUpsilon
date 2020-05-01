@@ -18,21 +18,20 @@ from django.urls import path, include
 from django.contrib import admin
 
 #vistas para la pagina principal
-from .views import view_pagina_principal, control_acceso_login
+from .views import view_pagina_principal#, control_acceso_login
 
 #paginas de la aplicacion "plan_vuelo"
 #from apps.plan_vuelo.views import post_detail
 
 
 urlpatterns = [
-    path('', view_pagina_principal,name='index_principal'),
     path('admin/', admin.site.urls),
+    path(r'', view_pagina_principal,name='view_pagina_principal'),
     
+    path('generacion_fpl/', include('apps.generacion_fpl.urls')),
     path('plan_vuelo/', include('apps.plan_vuelo.urls')),
     #path('plan_vuelo/postdetail/<int:pk>/', post_detail , name='post_detail')
-
     #path('accounts/login/', control_acceso_login ,name='acceso_login'),
-
 ]
 
 

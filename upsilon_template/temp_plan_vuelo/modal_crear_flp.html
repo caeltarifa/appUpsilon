@@ -1,0 +1,144 @@
+<!-- {% load staticfiles %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <title>Strip ATS</title>
+</head>
+
+
+
+<body> 
+-->
+
+<!-- SE RECIBE aero, plan, detalles de la ficha, ruta del fpl, rutas all, puntosall   -->
+    <div class="modal-dialog  modal-dialog-centered modal-xl " role="document" style="width: 62.5%; margin:auto;" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    CREAR FPL
+                </h2>
+            </div>
+
+            <div class="modal-body">
+                
+                NOMBRE TRABAJADOR
+                <select name="" id="trabajadores" onchange="trabajador();">
+                    {% for tra in trabajadores %}
+                        <option value="{{tra.ci}}">{{tra.nombre}} ---{{tra.apellido}}</option>
+                    {% endfor %}
+                </select>
+
+                <!-- Cuerpo -->  
+                <form action="{% url 'view_creacion_fpl_presentado' %}" method="post"  >
+                    <table border="0" style="border-radius: 60px ; -moz-border-radius: 60px;" width="100%">
+                        <tr>
+                            <td>
+                                {% csrf_token %}
+                                <table border="1" align="center" bgcolor="#E0E0E0" style="border-collapse: collapse;border: 1px solid black; " width="100%">
+                                    <tr>
+                                        <td colspan="2" style="padding: 2px;">
+                                            <table border="0" width="100%"  cellpadding="0" bgcolor="White">
+                                                <tr class="fuenteTituloPequeno">
+                                                    
+                                                    <td width="30%" align="Left">&nbsp;
+                                                        <img src="{% static 'theme-assets/logo_aasana.jpg' %} " style="width:30%;height:30%" />
+                                                        <h5>A.A.S.A.N.A.</h5>
+                                                    </td>
+                                                    
+                                                    <td width="30%" align="center">
+                                                        <h6>
+                                                            <br>
+                                                            FLIGHT PLAN
+                                                            <br>
+                                                            PLAN DE VUELO
+                                                        </h6>
+                                                    </td>
+                                                    
+                                                    <td width="40%" align="Right">
+                                                        <h6>
+                                                            Form Nro: {{form_fpl.nro_formulario}}/{{hoy|slice:"0:4"}}
+                                                            <br>
+                                                            Fecha/Date:  &nbsp; {{form_fpl.fecha_presentacion}}
+                                                            <br>
+                                                            Hora/Time: &nbsp; {{form_fpl.hora_presentacion}}
+                                                        </h6>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>        
+                                    
+                                </table> 
+                            </td>
+                        </tr>
+                      
+                    </table>
+
+                    
+                    <br>
+                    Despachador: {{form_fpl.fk_despachador}}<br>
+                    Estado: {{form_fpl.fk_estado}}
+                    
+                    <div class="modal-footer">
+                        <button class="btn btn-danger " type="button" data-dismiss="modal">Cancelar</button>
+                        <button class="btn btn-primary" type="submit">Crear</button>
+                    </div>
+                    
+                </form> 
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        $(document).ready(function () {
+            nro_trab=document.getElementById('trabajadores').value;
+            document.getElementById('despachador').value=nro_trab;
+
+            document.getElementById('numeroForm').value='{{numeroform}}';
+
+            document.getElementById('fechaForm').value='{{hoy}}';
+
+            document.getElementById('horaForm').value='{{hora}}';
+
+            $('#estado').hide();
+            $('#despachador').hide();
+        });
+
+        function trabajador(){
+            nro_trab=document.getElementById('trabajadores').value;
+            document.getElementById('despachador').value=nro_trab;
+        }
+
+        function dataSent() {
+            //parte comunicacional
+            comunicacional=document.getElementById('destinatarios').value.trim()+'&='+document.getElementById('fecha_amhs').value+'&='+document.getElementById('hora_amhs').value+'&='+document.getElementById('remitente').value
+            
+            operacional=document.getElementById('identif_aeronave').value +'&='+ document.getElementById('regla_vuelo').value + '&=' + document.getElementById('tipo_vuelo').value + '&=' + document.getElementById('numero').value+'&='+ document.getElementById('tipoAeronave').value+'&='+ document.getElementById('turbulencia').value;
+            var equipo = document.getElementById('equipoA').value+'%'+document.getElementById('equipoB').value
+            
+            operacional=operacional+ '&=' +equipo+ '&=' +document.getElementById('aerodromo_salida').value+ '&=' +document.getElementById('hora_salida').value+ '&=' +document.getElementById('velocidad_crucero_cat').value+ '&=' +document.getElementById('velocidad_crucero_numero').value+ '&=' +document.getElementById('nivel_cat').value+ '&=' +document.getElementById('nivel_numero').value+ '&=' + document.getElementById('ruta').value+ '&=' +document.getElementById('aerodromo_destino').value+ '&=' +document.getElementById('eet_total').value+ '&=' +document.getElementById('aerod_ater1').value+ '&=' +document.getElementById('aerod_ater2').value+ '&=' +document.getElementById('otros_datos').value
+            //alert(operacional)
+
+            var requestTo=comunicacional+'&&'+operacional
+            alert(requestTo)
+            url='/generacion_fpl/save_popup/'+requestTo+'/'
+            $("#modal").load(url, function() {
+                $(this).modal('show');
+            });
+
+            // comunicacional=document.getElementById('destinatarios').value.trim()+'&='+document.getElementById('fecha_amhs').value.trim()+'&='+document.getElementById('hora_amhs').value.trim()+'&='+document.getElementById('remitente').value.trim()
+            
+            // operacional=document.getElementById('identif_aeronave').value +'&='+ document.getElementById('regla_vuelo').value + '&=' + document.getElementById('tipo_vuelo').value + '&=' + document.getElementById('numero').value+'&='+ document.getElementById('tipoAeronave').value+'&='+ document.getElementById('turbulencia').value;
+            // var equipo = document.getElementById('equipoA').value+'/'+document.getElementById('equipoB').value
+            
+            // operacional=operacional+ '&=' +equipo+ '&=' +document.getElementById('aerodromo_salida').value+ '&=' +document.getElementById('hora_salida').value+ '&=' +document.getElementById('velocidad_crucero_cat').value+ '&=' +document.getElementById('velocidad_crucero_numero').value+ '&=' +document.getElementById('nivel_cat').value+ '&=' +document.getElementById('nivel_numero').value+ '&=' + document.getElementById('ruta').value+ '&=' +document.getElementById('aerodromo_destino').value+ '&=' +document.getElementById('eet_total').value+ '&=' +document.getElementById('aerod_ater1').value+ '&=' +document.getElementById('aerod_ater2').value+ '&=' +document.getElementById('otros_datos').value
+            
+        }
+
+    </script>
+    <!--  
+        
+    </body>
+
+</html> -->

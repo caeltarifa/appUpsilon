@@ -1,0 +1,119 @@
+<!-- {% load staticfiles %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <title>Strip ATS</title>
+</head>
+
+
+
+<body> 
+-->
+
+<!-- SE RECIBE aero, plan, detalles de la ficha, ruta del fpl, rutas all, puntosall   -->
+    <div class="modal-dialog  modal-dialog-centered modal-sm " role="document" style="width: 62.5%; margin:auto;" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    ¿Quién eres?
+                </h2>
+            </div>
+            
+            <div class="modal-body">
+                
+                <div id="snackbar"> 
+                    Verificando solicitud ...  
+                </div>
+
+                <!-- Cuerpo -->  
+                <div class="row justify-content-center">
+                    <div col="col-md-4">
+                        <select class="custom-select" id="trabajadores" onchange="desplaz();">
+                            <option value="0">Oficial de policia</option>
+                            {% for tra in trabajadores %}
+                                <option value="{{tra.ci}}">{{tra.nombre|upper}} {{tra.apellido|upper}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                
+                <br>
+                <br>
+
+                <div class="row justify-content-center">
+                    <input autofocus class="token" type="password" id="num1" maxlength="1" size="1" onkeyup="javascript:cambiarFocus1()" style="width: 50px; height: 50px; text-align: center;">&nbsp;&nbsp;
+                    <input class="token" type="password" id="num2" maxlength="1" size="1" onkeyup="javascript:cambiarFocus2()" style="width: 50px; height: 50px; text-align: center;">&nbsp;&nbsp;
+                    <input class="token" type="password" id="num3" maxlength="1" size="1" onkeyup="javascript:cambiarFocus3()" style="width: 50px; height: 50px; text-align: center;">&nbsp;&nbsp;
+                    <input class="token" type="password" id="num4" maxlength="1" size="1" onkeyup="javascript:cambiarFocus4()" style="width: 50px; height: 50px; text-align: center;">
+                </div>
+                
+                <br><br>
+
+                <div class="row justify-content-center">
+                    <h2>
+                        <i class="material-icons">flight_takeoff</i> {{aeronave.id_aeronave}}
+                    </h2>                    
+                </div>
+
+                <div class="row justify-content-center">
+                    <small>Presentado: {{quien.fecha_presentacion|date:'d-m-Y'}} {{quien.hora_presentacion}}</small>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        $(document).ready(function () {
+            nro=document.getElementById('trabajadores').value;
+            document.getElementById('despachador').value=nro;
+        });
+
+        function desplaz(){
+            x=document.getElementById('num1').focus();
+        }
+
+        function cambiarFocus1(){
+            if (document.getElementById('num1').value!='') {
+                x=document.getElementById('num2').focus();
+            }
+        }
+        function cambiarFocus2(){
+            if (document.getElementById('num2').value!='') {
+                x=document.getElementById('num3').focus();
+            }
+        }
+        function cambiarFocus3(){
+            if (document.getElementById('num3').value!='') {
+                x=document.getElementById('num4').focus();
+            }
+        }
+        function cambiarFocus4(){
+            if (document.getElementById('num1').value!=''&&document.getElementById('num2').value!=''&&document.getElementById('num3').value!=''&&document.getElementById('num4').value!=''&&document.getElementById('trabajadores').value!=0) {
+                myFunction(document.getElementById('num1').value, document.getElementById('num2').value, document.getElementById('num3').value, document.getElementById('num4').value, document.getElementById('trabajadores').value)
+            }
+        }
+
+
+        function myFunction(a,b,c,d,id) {
+            var x = document.getElementById("snackbar");
+            x.className = "show";
+            setTimeout(function(){ x.className = x.className.replace("show", ""); }, 2000);
+
+            setTimeout(function(){
+                x='{% url 'view_aprobar_codigo' %}'
+                y='?codigo='+a.toString()+b.toString()+c.toString()+d.toString()+'&idtra='+id.toString()+'&idpresentado='+'{{id_presentado}}'
+
+                //alert(x+y)
+                 window.location.href=x+y
+                 }, 2000);
+        }
+
+    </script>
+    <!--  
+        
+    </body>
+
+</html> -->
