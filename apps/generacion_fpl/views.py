@@ -14,11 +14,19 @@ from django.shortcuts import render_to_response
 from apps.plan_vuelo.models import Flp_trafico, Metar_trafico, EntrePuntos_flp,Ruta_flp, Empresa_institucion, Trabajador
 from apps.generacion_fpl.models import Comunicacional, Operacional, Suplementaria, Plan_vuelo_presentado
 from apps.generacion_fpl.form_com import ComunicacionalForm, OperacionalForm, SuplementariaForm, Plan_presentadoForm
+
+#importando el modelo para acceder a datos de recursos humanos
+from apps.trabajadoresATS.models import TrabajadoresATS, CuentasATS
+
 # Create your views here.
 
 def view_admin_ais(request):
     if request.user.is_authenticated:
-        return render(request, 'temp_plan_vuelo/aroais.html')
+        trabajadores= TrabajadoresATS.objects.using('aasana_bd').raw("select * from trabajadores limit 5 ")
+        cuentas= CuentasATS.objects.using('aasana_bd').raw("select * from cuentas limit 5 ")
+        respuesta= CuentasATS.objects.using('aasana_bd').raw("select id_cuenta, password from cuentas where id_cuenta=1 ")[0]
+
+        return render(request, 'temp_plan_vuelo/aroais.html', {'trabajadores':trabajadores, 'cuentas':cuentas, 'respuesta':respuesta} )
     else:
         return redirect('login')
 
@@ -30,6 +38,11 @@ def view_admin_felcn(request):
         usuariox=str(request.user.username).split('@')
         
         #preguntando si el nombre_usuario es igual a algun nombre empresa_institucion y obteniendo su id_empresa
+        
+        #preguntando si es usuario rutorizado
+        if not Empresa_institucion.objects.filter(nombre_emp_inst=usuariox[0]).exists():
+            return render(request, 'temp_plan_vuelo/no_autorizado.html')
+
         id_empresa=Empresa_institucion.objects.filter(nombre_emp_inst=usuariox[0])[0].id_emp_inst
         trabajadores=Trabajador.objects.values('ci', 'nombre', 'apellido').filter(empresa_institucion_id=int(id_empresa))
         
@@ -45,7 +58,13 @@ def view_admin_felcn(request):
 
 def view_admin_empresa(request):
     if request.user.is_authenticated:
-        id_empresa=Empresa_institucion.objects.filter(nombre_emp_inst=request.user.username)[0].id_emp_inst
+        usuariox=str(request.user.username).split('@')
+        
+        #preguntando si existe el usuario en la tabla 'Empresa_institucion'
+        if not Empresa_institucion.objects.filter(nombre_emp_inst=usuariox[0]).exists():
+            return render(request, 'temp_plan_vuelo/no_autorizado.html')
+
+        id_empresa=Empresa_institucion.objects.filter(nombre_emp_inst=usuariox[0])[0].id_emp_inst
         trabajadores=Trabajador.objects.values('ci', 'nombre','apellido').filter(empresa_institucion_id=int(id_empresa))
         
         #OBTENIENDO PLANES DE VUELOS CREADOS, SOLICITADOS Y CANCELADOS
@@ -86,8 +105,9 @@ def view_admin_comunicaciones(request):
 def view_creacion_fpl_presentado(request):
     if request.user.is_authenticated:
         
-        id_empresax=request.GET.get('id_empresa',False)
-        id_empresa=Empresa_institucion.objects.filter(nombre_emp_inst=request.user.username)[0].id_emp_inst
+        usuariox=str(request.user.username).split('@')
+
+        id_empresa=Empresa_institucion.objects.filter(nombre_emp_inst=usuariox[0])[0].id_emp_inst
         trabajadores=Trabajador.objects.values('ci', 'nombre','apellido').filter(empresa_institucion_id=int(id_empresa))
         
         if request.method == 'POST':
@@ -96,7 +116,6 @@ def view_creacion_fpl_presentado(request):
                 form_fpl.save()
             return redirect('/')
         else:
-            
             form_fpl=Plan_presentadoForm()
             numeroform=Plan_vuelo_presentado.objects.all().count()+1
             

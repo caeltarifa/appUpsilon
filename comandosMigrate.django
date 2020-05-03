@@ -1,0 +1,131 @@
+ 1181  python3 manage.py migrate
+ 1184  python3 manage.py migrate generacion_fpl
+ 1197  python3 manage.py migrate generacion_fpl
+ 1199  python3 manage.py migrate
+ 1202  python3 manage.py migrate
+ 1205  python3 manage.py migrate
+ 1210  python3 manage.py migrate
+ 1211  python3 manage.py migrate plan_vuelo
+ 1212  python3 manage.py migrate generacion_fpl
+ 1214  python3 manage.py migrate
+ 1219  python3 manage.py migrate
+ 1224  python3 manage.py migrate
+ 1327  python3 manage.py migrate generacion_fpl
+ 1364  python3 manage.py migrate
+ 1365  python3 manage.py migrate generacion_fpl
+ 1367  python3 manage.py migrate generacion_fpl
+ 1374  python3 manage.py migrate generacion_fpl
+ 1392  python3 manage.py migrate generacion_fpl --run-syndb
+ 1393  python3 manage.py migrate generacion_fpl --run-syncdb
+ 1395  python3 manage.py migrate generacion_fpl --run-syncdb
+ 1396  python3 manage.py migrate generacion_fpl
+ 1397  python3 manage.py migrate
+ 1398  python3 manage.py migrate generacion_fpl --run-syncdb
+ 1399  python3 manage.py migrate generacion_fpl
+ 1400  python3 manage.py migrate 
+ 1401  python3 manage.py migrate --run-syncdb
+ 1402  python3 manage.py migrate 
+ 1404  python3 manage.py migrate 
+ 1406  python3 manage.py migrate 
+ 1407  python3 manage.py migrate --run-syncdb
+ 1408  python3 manage.py migrate
+ 1411  python3 manage.py migrate  generacional_fpl
+ 1415  python3 manage.py migrate  generacional_fpl --run-syncdb
+ 1416  python3 manage.py migrate  generacion_fpl --run-syncdb
+ 1418  python3 manage.py migrate --run-migrate
+ 1419  python3 manage.py migrate --run-syncdb
+ 1420  python3 manage.py migrate plan_vuelo --run-syncdb
+ 1421  python3 manage.py migrate plan_vuelo
+ 1422  python3 manage.py migrate plan_ --run-syncdb
+ 1424  python3 manage.py migrate --run-syncdb
+ 1426  python3 manage.py migrate --run-syncdb
+ 1429  python3 manage.py migrate generacion_fpl --run-syncdb
+ 1436  python3 manage.py migrate generacion_fpl
+ 1438  python3 manage.py migrate generacion_fpl
+ 1439  python3 manage.py migrate generacion_fpl --run-syncdb
+ 1441  python3 manage.py migrate generacion_fpl --run-syncdb
+ 1442  python3 manage.py migrate generacion_fpl
+ 1445  python3 manage.py migrate generacion_fpl
+ 1447  python3 manage.py migrate generacion_fpl --run-syncdb
+ 1449  python3 manage.py migrate generacion_fpl --run-syncdb
+ 1453  python3 manage.py migrate generacion_fpl --run-syncdb
+ 1455  python3 manage.py migrate generacion_fpl --run-syncdb
+ 1458  python3 manage.py migrate generacion_fpl --run-syncdb
+ 1463  python3 manage.py migrate
+ 1470  python3  manage.py  migrate
+ 1471  python3 manage.py migrate
+ 1479  python3 manage.py migrate generacion_fpl
+ 1480  python3 manage.py migrate 
+ 1481  python3 manage.py migrate generacion_fpl --run-syncdb
+ 1482  python3 manage.py migrate --run-syncdb
+ 1483  python3 manage.py migrate generacion_fpl --run-syncdb
+ 1484  python3 manage.py migrate generacion_fp
+ 1485  python3 manage.py migrate generacion_fpl
+ 1486  python3 manage.py migrate generacion_fpl --run-syncdb
+ 1489  python3 manage.py sqlmigrate generacion_fpl
+ 1490  python3 manage.py sqlmigrate -h generacion_fpl
+ 1491  python3 manage.py migrate generacion_fpl zero
+ 1492  python3 manage.py migrate plan_vuelo  zero
+ 1493  python3 manage.py migrate 
+ 1494  python3 manage.py migrate inspectdb
+ 1501  python3 manage.py migrate generacion_fpl --run-syncdb
+ 1506  python3 manage.py migrate generacion_fpl
+ 1508  python3 manage.py migrate generacion_fpl --run-syncdb
+ 1509  python3 manage.py migrate generacion_fpl
+ 1510  python3 manage.py migrate generacion_fpl --run-syncdb
+ 1511  python3 manage.py migrate generacion_fpl
+ 1516  python3 manage.py migrate generacion_fpl --run-syncdb
+ 1517  python3 manage.py migrate --run-syncdb
+ 1518  python3 manage.py migrate generacion_fpl --run-syncdb
+ 1521  python3 manage.py migrate generacion_fpl --run-syncdb
+ 1524  python3 manage.py migrate --run-syncdb
+ 1525  python3 manage.py migrate generacion_fpl --run-syncdb
+ 1526  python3 manage.py migrate --run-syncdb generacion_fpl
+ 1528  python3 manage.py migrate generacion_fpl --run-syncdb
+ 1529  python3 manage.py migrate generacion_fpl
+ 1530  python3 manage.py migrate generacion_fpl --run-syncdb
+ 1532  python3 manage.py migrate generacion_fpl --run-syncdb
+ 1533  python3 manage.py migrate generacion_fpl --run_syncdb
+ 1534  python3 manage.py migrate generacion_fpl --run-syncdb
+ 1577  python3 manage.py migrate --run-syncdb
+ 1579  python3 manage.py migrate --run-syncdb
+ 1581  python3 manage.py migrate --run-syncdb
+ 1583  python3 manage.py migrate --run-syncdb
+ 1585  python3 manage.py migrate generacion_fpl --run-syncdb
+ 1586  python3 manage.py migrate --run-syncdb
+ 1589  python3 manage.py migrate generacion_fpl --run-syncdb
+ 1605  python3 manage.py migrate --run-syncdb
+ 1606  python3 manage.py migrate generacion_fpl --run-syncdb 
+ 1608  python3 manage.py migrate generacion_fpl --run-syncdb 
+ 1609  python3 manage.py migrate --run-syncdb
+ 1612  python3 manage.py migrate --run-syncdb
+ 1613  python3 manage.py migrate generacion_fpl --run-syncdb
+ 1659  python3 manage.py migrate --run-syndb
+ 1660  python3 manage.py migrate --run-syncdb
+ 1663  python3 manage.py migrate --run-syncdb
+ 1664  python3 manage.py migrate generacion_fpl --run-syncdb
+ 1666  python3 manage.py migrate generacion_fpl --run-syncdb
+ 1667  python3 manage.py migrate generacion_fpl
+ 1668  python3 manage.py migrate generacion_fpl --run-syncdb
+ 1670  python3 manage.py migrate generacion_fpl --run-syncdb
+ 1672  python3 manage.py migrate generacion_fpl
+ 1673  python3 manage.py migrate generacion_fpl --run-syncdb
+ 1675  python3 manage.py migrate generacion_fpl --run-syncdb
+ 1676  python3 manage.py migrate --run-syncdb
+ 1679  python3 manage.py migrate --run-syncdb
+ 1680  python3 manage.py migrate generacion_fpl --run-syncdb
+ 1681  python3 manage.py migrate --run-syncdb
+ 1682  python3 manage.py migrate generacion_fpl --run-syncdb
+ 1684  python3 manage.py migrate generacion_fpl --run-syncdb
+ 1686  python3 manage.py migrate generacion_fpl --run-syncdb
+ 1688  python3 manage.py migrate generacion_fpl 
+ 1690  python3 manage.py migrate
+ 1693  python3 manage.py migrate
+ 1694  python3 manage.py migrate generacion_fpl
+ 1695  python3 manage.py migrate generacion_fpl --run-syncdb
+ 1696  python3 manage.py migrate
+ 1699  python3 manage.py migrate generacion_fpl --run-syncdb
+ 1705  python3 manage.py migrate generacion_fpl
+ 1706  python3 manage.py migrate generacion_fpl --run-syncdb
+ 2031  history | grep migrate
+ 2032  history | grep migrate > comandosMigrate.django

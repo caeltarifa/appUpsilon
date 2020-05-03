@@ -6,7 +6,6 @@
 {% endblock title %}
 
 
-
 {% block extra_head %}
     <link rel='stylesheet' href='https://harvesthq.github.io/chosen/chosen.css'>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -275,7 +274,7 @@
                             <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
                             <li><a data-action="close"><i class="ft-x"></i></a></li>
                             <li>
-                                <button class="btn btn-outline-success" onclick="abrir_modal( '{% url 'view_creacion_fpl_presentado' %}?id_empresa={{id_empresa}}')">NUEVO</button>
+                                <button class="btn btn-outline-success" onclick="abrir_modal( '{% url 'view_creacion_fpl_presentado' %}')">NUEVO</button>
                             </li>
                         </ul>
                     </div>

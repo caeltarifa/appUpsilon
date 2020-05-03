@@ -10,27 +10,32 @@ from apps.plan_vuelo.models import Flp_trafico
 # Create your views here.
 
 def view_pagina_principal(request):
-    #asd
+    
+    #### IMPORTANTE --- :user: adminupsilon pertenece a todos los grupos
+    
     if request.user.is_authenticated: 
-        #preguntando si pertenece al grupo de CONTROLADORES
+        #preguntando si el 'usuario autenticado' pertenece al grupo de CONTROLADORES
         if request.user.groups.filter(name='CONTROLADORES').exists():
             if request.user.username in 'aroaislp@aasana':
                 return redirect('view_admin_ais')
         
-        #preguntando si pertenece al grupo de aerolineas
+        #preguntando si el 'usuario autenticado' pertenece al grupo de aerolineas
         if request.user.groups.filter(name='AEROLINEA').exists():
             if request.user.username in 'AMASZONAS':
                 return redirect('view_admin_amaszonas')
+            
             if request.user.username in 'ECOJET':
                 return redirect('view_admin_ecojet')
-            if request.user.username in 'AVIANCA':
+            
+            if request.user.username in 'aviancalp@aasana':
                 return redirect('view_admin_avianca')
         
-        #preguntando si pertenece al grupo de FELCN
+        #preguntando si el 'usuario autenticado' pertenece al grupo de FELCN
         if request.user.groups.filter(name='FELCN').exists():
-            return redirect('view_admin_felcn')
+            if request.user.username in 'felcnlp@aasana':
+                return redirect('view_admin_felcn')
         
-        #preguntando si pertenece al grupo de COMUNICACIONES
+        #preguntando si el 'usuario autenticado' pertenece al grupo de COMUNICACIONES
         if request.user.groups.filter(name='COMUNICACIONES').exists():
             if request.user.username in 'ccamlp@aasana':
                 return redirect('view_admin_comunicaciones')

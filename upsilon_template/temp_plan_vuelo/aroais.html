@@ -10,9 +10,7 @@
 {% block extra_head %}
     <link rel='stylesheet' href='https://harvesthq.github.io/chosen/chosen.css'>
     <!-- <link rel="stylesheet" href="{% static 'theme-assets/css/aprobar_plan.css' %}"> -->
-
 {% endblock extra_head %}
-    
 
 
 
@@ -270,6 +268,57 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                <div>
+                                {% for trabajador in trabajadores %}
+                                <tr>
+                                    <td>
+                                        <img src="{% static 'fotografias/' %}{{trabajador.foto.url}}" style="width:50px;height:50px;border-radius:50%" />
+                                    </td>
+                                    <td>{{trabajador.ci}}</td>
+                                    <td>{{trabajador.ci_extension}}</td>
+                                    <td>{{trabajador.a_paterno}}</td>
+                                    <td>{{trabajador.a_materno}}</td>
+                                    <td>{{trabajador.a_casada}}</td>
+                                    <td>{{trabajador.p_nombre}}</td>
+                                    <td>{{trabajador.s_nombre}}</td>
+                                    <td>{{trabajador.nacionalidad}}</td>
+                                    <td>{{trabajador.sexo}}</td>
+                                    <td>{{trabajador.id_item}}</td>
+                                    <td>{{trabajador.id_seccion}}</td>
+                                    <td>{{trabajador.id_seccionactual}}</td>
+                                    <td>{{trabajador.tipo_trabajador}}</td>
+                                    <td>{{trabajador.correo}}</td>
+                                    <td>{{trabajador.fecha_nac}}</td>
+                                    <td>{{trabajador.telefono}}</td>
+                                    <td>{{trabajador.celular}}</td>
+                                    <td>{{trabajador.direccion}}</td>
+                                    <td>{{trabajador.id_sueldo}}</td>
+                                    <td>{{trabajador.id_cargo}}</td>
+                                    <td>{{trabajador.activo}}</td>
+                                    <td>{{trabajador.areat}}</td>
+                                </tr>
+                                {% endfor %}
+
+                                <br>
+                                    <tr>
+                                        RESPUESTA: {{respuesta.password}}
+                                    </tr>
+                                <br>
+
+                                {% for cuenta in cuentas %}
+                                <tr>
+                                    <td>{{cuenta.id_cuenta}}</td>
+                                    <td>{{cuenta.id_trabajador}}</td>
+                                    <td>{{cuenta.usuario}}</td>
+                                    <td>{{cuenta.password}}</td>
+                                    <td>{{cuenta.activo}}</td>
+                                    <td>{{cuenta.createdAt}}</td>
+                                    <td>{{cuenta.updatedAt}}</td>
+                                    <td>{{cuenta.id_rol}}</td>
+                                    <td>{{cuenta.resetPasswordToken}}</td>
+                                    <td>{{cuenta.resetPasswordExpires}}</td>
+                                </tr>
+                                {% endfor %}
 
                                 {% for elemen in post %}
                                 <tr>
@@ -294,6 +343,7 @@
     </div>
 </section>
 <!-- Planes de vuelo recientes -->
+
 
 
 <!-- Plan de vuelos aprobados -->

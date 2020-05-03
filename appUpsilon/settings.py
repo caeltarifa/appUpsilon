@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'apps.plan_vuelo',
     'apps.generacion_fpl',
+    'apps.trabajadoresATS',
 ]
 
 MIDDLEWARE = [
@@ -86,8 +87,21 @@ DATABASES = {
 	 'PASSWORD': 'nuclearaasana',
 	 'HOST': 'localhost',
 	 'PORT': 5432,
-    }
+    },
+    'aasana_bd': {
+   #     'ENGINE': 'django.db.backends.sqlite3',
+   #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+
+     'ENGINE': 'django.db.backends.postgresql_psycopg2',
+     'NAME': 'aasana_bd', #nombre de la base de datos
+         'USER': 'postgres', #usuario de base de datos
+         'PASSWORD': 'nuclearaasana',
+         'HOST': 'localhost',
+         'PORT': 5432,
+    },
 }
+
+DATABASE_ROUTERS = ['apps.trabajadoresATS.routers.MirrhhRouter',]
 
 
 # Password validation
@@ -128,9 +142,13 @@ USE_TZ = True
 
 STATIC_URL =  '/static/'
 
-
-
-STATICFILES_DIRS = (os.path.join(BASE_DIR,'static'),)
+############################################################################################################
+#                                   STATICFILES_DIRS                                                       #
+#  la carpeta 'fotografias/' tiene acceso directo y esta vinculada a                                       #
+#  la carpeta  /var/www/nuclear/appBoson/sistema_aasana/back-end/server/uploads/fotografias                #
+#                                                                                                          #
+############################################################################################################
+STATICFILES_DIRS = (os.path.join(BASE_DIR,'static'),'fotografias/',)
 
 
 # Redirect to home URL after login (Default redirects to /accounts/profile/)

@@ -47,8 +47,8 @@ class Trabajador(models.Model):
     activo=models.BooleanField(default=True)
     empresa_institucion = models.ForeignKey(Empresa_institucion, on_delete=models.PROTECT)
     cargo=models.ManyToManyField(Cargo)
-    correo=models.EmailField(max_length=30)
-    codigo=models.CharField(max_length=4)
+    correo=models.EmailField(max_length=30,blank=True)
+    codigo=models.CharField(max_length=4,blank=True)
     def __str__(self):
         return '{}/{}'.format(self.nombre, self.apellido, self.empresa_institucion.nombre_emp_inst)
 
