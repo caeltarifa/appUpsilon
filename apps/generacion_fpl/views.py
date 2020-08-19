@@ -9,13 +9,25 @@ import time
 from django.db.models import Q
 from django.shortcuts import render_to_response
 
+
+
+############# LIBRERIA PARA AUTENTICAR USUARIOS ##############
+from django.contrib.auth import authenticate
+from django.contrib.auth.hashers import check_password
+##############################################################
+
+
+
+
+
+
 # Create your views here.
 
 from apps.plan_vuelo.models import Flp_trafico, Metar_trafico, EntrePuntos_flp,Ruta_flp, Empresa_institucion, Trabajador
 from apps.generacion_fpl.models import Comunicacional, Operacional, Suplementaria, Plan_vuelo_presentado
 from apps.generacion_fpl.form_com import ComunicacionalForm, OperacionalForm, SuplementariaForm, Plan_presentadoForm
 
-#importando el modelo para acceder a datos de recursos humanos
+#importando el modelo para acceder a datos de recursos humanos RRHH
 from apps.trabajadoresATS.models import TrabajadoresATS, CuentasATS
 
 # Create your views here.
@@ -23,8 +35,13 @@ from apps.trabajadoresATS.models import TrabajadoresATS, CuentasATS
 def view_admin_ais(request):
     if request.user.is_authenticated:
         trabajadores= TrabajadoresATS.objects.using('aasana_bd').raw("select * from trabajadores limit 5 ")
+
         cuentas= CuentasATS.objects.using('aasana_bd').raw("select * from cuentas limit 5 ")
-        respuesta= CuentasATS.objects.using('aasana_bd').raw("select id_cuenta, password from cuentas where id_cuenta=1 ")[0]
+
+        respuesta= CuentasATS.objects.using('aasana_bd').raw("select id_cuenta, password, usuario from cuentas where id_cuenta=1 ")[0]
+        
+        respuesta=respuesta.usuario + '----'+ respuesta.password
+
 
         return render(request, 'temp_plan_vuelo/aroais.html', {'trabajadores':trabajadores, 'cuentas':cuentas, 'respuesta':respuesta} )
     else:

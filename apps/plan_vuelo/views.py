@@ -30,7 +30,8 @@ def view_admin(request):
         ###post=Flp_trafico.objects.raw("select * from plan_vuelo_Flp_trafico where CAST(fecha_llegada AS date) = CAST('2019-10-11' AS date)");
         ###post=Flp_trafico.objects.raw("select id, hora_amhs, prioridad, origen, id_plan from plan_vuelo_flp_trafico where hora_amhs like '"+str(datetime.datetime.now().day)+"%%%%' order by id_amhs desc limit 100")
         
-        post=Flp_trafico.objects.raw("select * from plan_vuelo_flp_trafico where id_plan like '%%-IS' order by fecha_llegada desc limit 100")
+        post=Flp_trafico.objects.raw("select * from plan_vuelo_flp_trafico where id_plan like '%%-%%' order by hora_amhs desc limit 100")
+        #post=Flp_trafico.objects.raw("select distinct on(no_dupli.id_amhs) total.id,total.id_amhs,total.fecha_llegada,total.hora_amhs,total.prioridad,total.id_plan,total.transponder,total.origen,total.texto from (select id_amhs as x ,id,id_amhs,fecha_llegada,hora_amhs,prioridad,id_plan,transponder,origen,texto from plan_vuelo_flp_trafico) as total, plan_vuelo_flp_trafico as no_dupli where x like no_dupli.id_amhs limit 85")
 
         metar=Metar_trafico.objects.raw("select * from plan_vuelo_metar_trafico order by fecha_llegada desc limit 100")
         return render(request, 'temp_plan_vuelo/admin.html', {'post':post,'metar':metar} )

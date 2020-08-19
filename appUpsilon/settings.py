@@ -11,6 +11,12 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+######## BCRYPT PARA CIFRAR Y VALIDAR CONTRASEÑAS #########
+#
+import bcrypt
+#
+###########################################################
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -93,7 +99,7 @@ DATABASES = {
    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
 
      'ENGINE': 'django.db.backends.postgresql_psycopg2',
-     'NAME': 'aasana_bd', #nombre de la base de datos
+     'NAME': 'boson_db', #nombre de la base de datos
          'USER': 'postgres', #usuario de base de datos
          'PASSWORD': 'nuclearaasana',
          'HOST': 'localhost',
@@ -121,6 +127,26 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+
+
+################# LIBRERIAS PARA USAR ALGORITMOS DE CIFRAR PASSWORD ###############
+#
+#
+PASSWORD_HASHERS = (
+    'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
+    'django.contrib.auth.hashers.BCryptPasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
+    'django.contrib.auth.hashers.SHA1PasswordHasher',
+    'django.contrib.auth.hashers.MD5PasswordHasher',
+    'django.contrib.auth.hashers.CryptPasswordHasher',
+)
+#
+#
+####################################################################################
+
+
 
 
 # Internationalization
