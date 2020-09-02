@@ -12,25 +12,57 @@
 
 <!-- SE RECIBE aero, plan, detalles de la ficha, ruta del fpl, rutas all, puntosall   -->
     <div class="modal-dialog modal-lg" role="document">
+        
         <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">
-                    {{aero}}
-                </h2>
+            
+            
+            <div class="modal-header" style="height: 65px;">
+                <label>
+                    <span style="font-size: 25px;">
+                        {{avion}}
+                    </span>
+                    
+                    <button class="btn btn-outline-primary" onclick="javascript:imprimirfpl();" style="height: 25px; width:30px; padding: 0%;">
+                        <i>
+                            <span class="material-icons md-18">
+                                local_printshop
+                            </span>
+                        </i>
+                    </button>
+                </label>
+
+                <button class="btn btn-outline-danger " data-dismiss="modal" style="height: 35px; width: 35px; padding: 5px 5px;border-radius:50px;">
+                    
+                    <span class="material-icons md-18">
+                        cancel
+                    </span>
+                </button>
             </div>
 
             <div class="modal-body">
                 <div class="container">
                     <div class="row">
 
-                        <div class="col-sm" id="plan_vuelo">
-                            {{plan}}
+                        <div class="col-md-6" >
+
+                            <div id="plan_vuelo_aftn">
+                                id_mensaje: &nbsp; &nbsp; {{id_mensaje}} <br>
+                                aftn1: {{aftn1}}<br>
+                                aftn2: {{aftn2}}<br>
+                                id_aeronave: {{id_aeronave}}<br>
+                                reglas_vuelo: {{reglas_vuelo}}<br>
+                                aeropuerto_salida: {{aeropuerto_salida}}<br>
+                                ruta: {{rutafpl}}<br>
+                                aeropuerto_destino: {{aeropuerto_destino}}<br>
+                                otros: {{otros}}<br>
+                            </div>
+
                         </div>
 
-                        <div class="col-sm-7">
+                        <div class="col-md-4">
 
                             <!-- LISTA DE PUNTOS Y RUTAS --- FILA PARA ELEGIR LA RUTA A USAR -->
-                            {% for resul_ruta in ruta %}
+                            {% for resul_ruta in rutas_detectadas %}
                                 <div class="python_gen" style="align-content: center;">
                                     {% if forloop.first %}
                                         <div class="row" style="margin-left:70px;">
@@ -65,15 +97,15 @@
                                                 {% endif %}
                                             {% endfor %}
                                         </select>      
-    
-                                        
                                             
                                     </div>
                                 </div>
                             {% endfor %}
 
+                            
                             <!-- LISTA DE PUNTOS Y RUTAS OPCIONALES --- FILA PARA ELEGIR LA RUTA A USAR -->
                             <div id="agregando"></div>
+
                             <div class="row" id="lista_ruta_opcional1" >
                                 <div id="output_ruta1"></div>
                                 <select id="sel_ruta1"  data-placeholder="RUTA">
@@ -84,7 +116,7 @@
                                 </select>
                                 
                                 <div id="output_inicio1" ></div>
-                                <select id="sel_inicio1" data-placeholder="INICIO" class="chosen-select_inicio1" multiple>
+                                <select id="sel_inicio1" data-placeholder="Inicio y Fin" class="chosen-select_inicio1" multiple>
                                     {% for punto in todopuntos  %}    
                                     <option value="{{punto.puntoInicial}}">{{punto.puntoInicial}}</option>                                                
                                     {% endfor %}
@@ -123,7 +155,6 @@
                                         <option value="">{{ruta_x.nombre_ruta}}</option>
                                     {% endfor %}
                                 </select>
-                                
                                 <div id="output_inicio3"></div>
                                 <select id="sel_inicio3" data-placeholder="INICIO" name="tags[]"  class="chosen-select" multiple>
                                     {% for punto in todopuntos  %}    
@@ -133,18 +164,6 @@
                                 
                             </div>
 
-                            <div class="row">
-                                <input type="text" class="nivelvuelo" id="nivelvueloid"
-                                onkeyup="repetirNivel()" placeholder="Nivel" maxlength="4">
-
-                                <input type="text" class="tiempoestimado" id="tiempoestimadoid"
-                                onkeyup="calculoTiempo()" placeholder="Tiempo" maxlength="4">
-
-                                <input type="text" class="transponder" id="transponderid"
-                                onkeyup="transponder()" placeholder="Transponder" maxlength="4" >
-                            </div>
-                            
-                            
                             <!-- CHECKBOX PARA DETERMINAR SI ES NACIONAL O INTERNACIONAL -->
                             <div id="toggles">
                                 <input type="checkbox" name="checkbox1" id="checkbox3" class="ios-toggle" />
@@ -153,14 +172,46 @@
 
                         </div>
 
+                        <div class="col-md-2">
+                            <input type="text" class="transponder" id="transponderid"
+                            onkeyup="transponder()" placeholder="Transponderx" maxlength="4" style="width: 100px;">
+                            <br><br>
+                            <input type="text" class="tiempoestimado" id="tiempoestimadoid"
+                            onkeyup="calculoTiempo()" placeholder="Tiempo" maxlength="4" style="width: 100px;">
+                            <br><br>
+                            <input type="text" class="nivelvuelo" id="nivelvueloid"
+                            onkeyup="repetirNivel()" placeholder="Nivel" maxlength="4" style="width: 100px;" autofocus="autofocus" />
+                        </div>
+
                     </div>
                 </div>
 
-                <h4>
-                {% for r in ruta %}
-                    {{r.nombre_ruta}}<br>
-                {% endfor %}
-                    </h4>
+                Rutas detectadas: &nbsp;
+                <div>
+                    {% for x in rutas_detectadas %}
+                        {{x.nombre_ruta}}
+                    {% endfor %}
+                </div>
+
+                Puntos detectadas: &nbsp;
+                <div>
+                    {% for x in puntos_detectados %}
+                    {{x}}
+                        {% if x %}
+                            {{x|first}}
+                            {{x|last}}
+                        {% else %}
+                            --vacio--
+                        {% endif %}
+
+                    {% endfor %}
+                </div>
+
+                {% with primero=puntos_detectados|first %}
+                    {{primero|first}}
+                    {{primero|last}}
+                {% endwith %}
+                
 
             </div>
 
@@ -173,10 +224,10 @@
                             style="height:80px; text-align:center;  border-collapse: collapse;" align="center">
                             <tr style="border-top: 1px solid white;">
                                 <td rowspan="2" width="75px">
-                                    <strong>{{aero|slice:"5:11"}}</strong> <br> {{ficha.avion}} <br>
-                                    {{ficha.velocidad}}</td>
+                                    <strong>{{avion}}</strong> <br> {{reglas_vuelo}} <br>
+                                    {{velocidad}}</td>
 
-                                <td width="35px"> <strong>D</strong> <br> {{ficha.salida}} </td>
+                                <td width="35px"> <strong>D</strong> <br> {{salida}} </td>
 
                                 <td width="35px"></td>
 
@@ -187,13 +238,13 @@
 
                                 <td width="60px" style="border-left: 1px solid white">{{punto_ruta}}</td>
 
-                                <td width="50px" rowspan="2" valign="top">{{ficha.nivel}}</td>
+                                <td width="50px" rowspan="2" valign="top">{{nivel}}</td>
 
-                                <td width="50px" style="border-right: 1px solid white">{{ficha.origen}}</td>
+                                <td width="50px" style="border-right: 1px solid white">{{origen}}</td>
 
                                 <td width="50px" style="border-right: 1px solid white;">UM415</td>
 
-                                <td width="50px">{{ficha.destino}}</td>
+                                <td width="50px">{{destino}}</td>
 
                                 <td width="50px"></td>
 
@@ -230,9 +281,9 @@
                                 </td>
 
                                 <td style="border-right: 1px solid white;">
-                                    <font size="0.9">SEL/AEKM</font>
+                                    <font size="0.9">SEL/{{transmision}}</font>
                                     <br>
-                                    <font size="0.9">REG/CCCXE</font>
+                                    <font size="0.9">REG/{{matricula}}</font>
                                 </td>
 
                                 <td style="border-right: 1px solid white;"></td>
@@ -258,16 +309,30 @@
                         
             </div>
 
-
+            
             <div class="modal-footer">
-                <button class="btn btn-danger " type="button" data-dismiss="modal">Cancelar</button>
-                <button class="btn btn-primary" onclick="javascript:imprim2();">Aprobar</button>
+                <button class="btn btn-primary" onclick="imprim2()">Aprobar</button>
             </div>
 
         </div>
     </div>
     
     <script>
+
+        function imprimirfpl() {
+            var mywindow = window.open('', 'PRINT');
+            mywindow.document.write('<!DOCTYPE html><html><head>');
+            mywindow.document.write('<style>		@page{   margin: 30;    		}		 body { margin: 3mm 17mm 5mm 0mm; }     .incline-line{      width: 100%;      margin: none;      margin-top: 0%;      margin-bottom: 0%;      transform: rotate(156deg);      border-color: black;    } .incline-line2{      width: 100%;      margin: none;      margin-top: 0%;      margin-bottom: 0%;      transform: rotate(164deg);      border-color: black;    } button { display:none; }</style>');
+            mywindow.document.write('</head><body >');
+            mywindow.document.write(document.getElementById('plan_vuelo_aftn').innerHTML);
+            mywindow.document.write('</body></html>');
+            mywindow.document.close(); // necesario para IE >= 10
+            mywindow.focus(); // necesario para IE >= 10
+            mywindow.print();
+            mywindow.close();
+            return true;
+        };
+
         function calculoTiempo(){
             var val=document.getElementsByClassName('tiempoestimado')[0].value
             var x=document.getElementsByClassName('tiempoestimado');
@@ -275,7 +340,6 @@
             
             if (Number.isInteger(parseInt(val)) && val.length==4 && parseInt(val)>=0 && parseInt(val.substring(0,2))<=23 && parseInt(val.substring(2,4))<=59 ) {
                 elemx= '{{plan}}'
-                alert(elemx);
                 for (let index = 1; index < x.length; index++) {
                 x[index].value=val
                 }
@@ -310,7 +374,7 @@
             $('#sel_inicio11').empty();
             $('#sel_inicio11').append($(cadena));
             $('#sel_inicio11').trigger("chosen:updated");
-
+            
         };
         //----------------------------------
         function obtenerRutaFinal(){
@@ -332,6 +396,8 @@
                 ruta=document.getElementById('sel_ruta11').options[document.getElementById('sel_ruta11').selectedIndex].text;
                 full_route=document.getElementById('sel_ruta11').options[document.getElementById('sel_ruta11').selectedIndex].value;
                 full_route=full_route.split(';;');
+
+
                 if( full_route.indexOf(inicio_fin[0]) < full_route.indexOf(inicio_fin[1]) ){
                     ruta_final = full_route.slice(full_route.indexOf(inicio_fin[0]), full_route.indexOf(inicio_fin[1])+1);
                     //alert(ruta_final);
@@ -341,17 +407,17 @@
                     //alert(ruta_final);
                 }
 
-                velocidad='{{ficha.velocidad}}';
-                transmision='{{ficha.transmision}}';
-                matricula='{{ficha.matricula}}';ruta_final.push('0');
+                velocidad='{{velocidad}}';
+                transmision='{{transmision}}';
+                matricula='{{matricula}}';ruta_final.push('0');
                 for (let index = 0; index < ruta_final.length-1; index++) {
                     //----------------------------------------------------
                     if(index%2==0){
                         table_inicio = '<table class="strip" id="'+ruta_final[index]+'" border="1px" width="100%" style="height:80px; text-align:center;  border-collapse: collapse;" align="center">';
-                        tr1 ='<tr style="border-top: 1px solid white;"> <td rowspan="2" width="75px"><strong>'+'{{aero|slice:"5:11"}}'+'</strong> <br>'+ '{{ficha.avion}}' + '<br>'+velocidad+'</td><td width="35px"> <strong>D</strong> <br>'+ '{{ficha.salida}}'+ '</td><td width="35px"></td><td width="40px" style="border-bottom: 1px solid white;"><hr class="incline-line"></hr></td><td width="60px" style="border-left: 1px solid white" class="ruta_en_strip" name="'+ruta_final[index+1]+'">'+ruta_final[index]+'</td><td width="50px" rowspan="2" valign="top">'+'{{ficha.nivel}}'+'</td><td width="50px" style="border-right: 1px solid white">'+'{{ficha.origen}}'+'</td><td width="50px" style="border-right: 1px solid white;">'+ruta+'</td><td width="50px">'+'{{ficha.destino}}'+'</td><td width="50px"></td><td width="25px" rowspan="2" style="border-right: 1.5px solid white;"><button onclick="javascript:eliminarStrip('+"'"+ruta_final[index]+"'"+')" type="button" class="close" aria-label="Close" style="color:red;"> <span aria-hidden="true">&times;</span> </button> </td> </tr>';
-                        tr2 ='<tr style="border-bottom: 1.5px dashed;"><td><hr class="incline-line"></hr></td><td><hr class="incline-line"></hr></td><!--TIEMPÓ--><td><font size="1.5"><input type="text" class="tiempoestimado" id="tiempoestimadoid" placeholder="0120" style="width: 40px;"></font></td><td><hr class="incline-line2"></hr></td><td style="border-right: 1px solid white;"><font size="0.9">SEL/' +transmision+ '</font><br><font size="0.9">REG/'+matricula+ '</font></td><td style="border-right: 1px solid white;"></td><td><br><font size="0.9">SQ/<input type="text" name="" class="transponder" id="transponderid" placeholder="7896" style="width: 33px;"></font></td><td style="border-right: 1px solid white"><br><font size=0.9><strong>ATC-003</strong></font></td></tr></table>';
+                        tr1 ='<tr style="border-top: 1px solid white;"> <td rowspan="2" width="75px"><strong>'+'{{avion}}'+'</strong> <br>'+ '{{reglas_vuelo}}' + '<br>'+velocidad+'</td><td width="35px"> <strong>D</strong> <br>'+ '{{salida}}'+ '</td><td width="35px"></td><td width="40px" style="border-bottom: 1px solid white;"><hr class="incline-line"></hr></td><td width="60px" style="border-left: 1px solid white" class="ruta_en_strip" name="'+ruta_final[index+1]+'">'+ruta_final[index]+'</td><td width="50px" rowspan="2" valign="top">'+'{{nivel}}'+'</td><td width="50px" style="border-right: 1px solid white">'+'{{origen}}'+'</td><td width="50px" style="border-right: 1px solid white;">'+ruta+'</td><td width="50px">'+'{{destino}}'+'</td><td width="50px"></td><td width="25px" rowspan="2" style="border-right: 1.5px solid white;"><button onclick="javascript:eliminarStrip('+"'"+ruta_final[index]+"'"+')" type="button" class="close" aria-label="Close" style="color:red;"> <span aria-hidden="true">&times;</span> </button> </td> </tr>';
+                        tr2 ='<tr style="border-bottom: 1.5px dashed;"><td><hr class="incline-line"></hr></td><td><hr class="incline-line"></hr></td><!--TIEMPÓ--><td><font size="1.5"><input type="text" class="tiempoestimado" id="tiempoestimadoid" placeholder="0120" style="width: 40px;"></font></td><td><hr class="incline-line2"></hr></td><td style="border-right: 1px solid white;"><font size="0.9">SEL/' +transmision+ '</font><br><font size="0.9">REG/'+matricula+ '</font></td><td style="border-right: 1px solid white;"></td><td><br><font size="0.9">SQ/<input type="text" name="" class="transponder" id="transponderid" placeholder="7896" style="width: 33px;">   </font></td><td style="border-right: 1px solid white"><br><font size=0.9><strong>ATC-003</strong></font></td></tr></table>';
                         document.getElementById('muestra').innerHTML+=table_inicio+tr1+tr2;
-                        //0 1x 2 3x 4 5x 6
+                        //0 1x 2 3x 4 5x 6 <span class="transponder" id="transponderid"></span> 
                     }
                     //----------------------------------------------------
                 }
@@ -363,7 +429,18 @@
             $('#lista_ruta_opcional1').hide();
             $('#lista_ruta_opcional2').hide();
             $('#lista_ruta_opcional3').hide();
+
+            //limpiar las fichas al momento de trabajar un plan de vuelo
+            document.getElementById("muestra").innerHTML="";
+            //ejecutamos para que se carguen los puntos de la ruta en contrada en el chosen multiple
+            mostrarPuntosActuales();
+            
+            
         });
+
+     
+
+
 
         //MOSTRADOS LOS ELEMENTOS OCULTOS
         var s=0;

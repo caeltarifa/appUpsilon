@@ -1,0 +1,89 @@
+<!-- SE RECIBE    -->
+<div class="modal-dialog  modal-dialog-centered modal-sm " role="document" style="width: 62.5%; margin:auto;" >
+    <div class="modal-content">
+        <div class="modal-body">
+            
+            <br><br>
+            
+            <div class="row justify-content-center">
+                <h4>
+                    {{persona.nombre}} &nbsp; {{persona.apellido}}
+                </h4>
+                &nbsp; &nbsp; &nbsp;
+                <span class="material-icons md-48">
+                    fingerprint
+                </span> 
+            </div>
+
+            <div class="row justify-content-center">
+                <input autofocus class="token" type="password" id="num1" maxlength="1" size="1" onkeyup="javascript:cambiarFocus1()" style="width: 50px; height: 50px; text-align: center;">&nbsp;&nbsp;
+                <input class="token" type="password" id="num2" maxlength="1" size="1" onkeyup="javascript:cambiarFocus2()" style="width: 50px; height: 50px; text-align: center;">&nbsp;&nbsp;
+                <input class="token" type="password" id="num3" maxlength="1" size="1" onkeyup="javascript:cambiarFocus3()" style="width: 50px; height: 50px; text-align: center;">&nbsp;&nbsp;
+                <input class="token" type="password" id="num4" maxlength="1" size="1" onkeyup="javascript:cambiarFocus4()" style="width: 50px; height: 50px; text-align: center;">
+            </div>
+            
+            <br><br>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function(){
+        cambiarFocus1();
+
+        nro=document.getElementById('trabajadores').value;
+        document.getElementById('despachador').value=nro;
+
+    });
+
+    function desplaz(){
+        x=document.getElementById('num1').focus();
+    }
+
+    function cambiarFocus1(){
+        if (document.getElementById('num1').value!='') {
+            x=document.getElementById('num2').focus();
+        }
+    }
+    function cambiarFocus2(){
+        if (document.getElementById('num2').value!='') {
+            x=document.getElementById('num3').focus();
+        }
+    }
+    function cambiarFocus3(){
+        if (document.getElementById('num3').value!='') {
+            x=document.getElementById('num4').focus();
+        }
+    }
+    function cambiarFocus4(){
+        if (document.getElementById('num1').value!=''&&document.getElementById('num2').value!=''&&document.getElementById('num3').value!=''&&document.getElementById('num4').value!='') {
+            myFunction(document.getElementById('num1').value, document.getElementById('num2').value, document.getElementById('num3').value, document.getElementById('num4').value)
+        }
+    }
+
+
+    function myFunction(a,b,c,d) {
+        param="{{persona.ci}}" + ":" +a+b+c+d;
+        alert(param)
+        $.ajax({
+            type:'GET',
+            url: '{% url 'view_validar_passwd' %}?parametro='+param,
+            //data:$(this).serialize(),
+            success: function (request){
+                console.log(request.respuesta);
+                if (! request.respuesta) {
+                    document.getElementById('num1').value='';
+                    document.getElementById('num2').value='';
+                    document.getElementById('num3').value='';
+                    document.getElementById('num4').value='';
+                }
+            },
+            error: function (e) {
+                console.log(e);
+            }   
+        })
+    }
+
+
+</script>

@@ -1,0 +1,599 @@
+{% extends 'temp_plan_vuelo/baseadmin.html' %}
+{% load static %}
+
+
+{% block title %}
+    <title>Upsilon | Panel</title>
+{% endblock title %}
+    
+
+
+{% block extra_head %}
+    <style>
+        .buttons {
+            display: -webkit-flex; 
+            display: -ms-flexbox; 
+            display: flex; 
+            -webkit-align-items: flex-start; 
+            -ms-flex-align: start; 
+            align-items: stretch;
+            margin-left:15%;
+            margin-right:15%;
+            }
+
+        /* PASTE BELOW IN CSS */
+
+        .buttons * {
+        transition: all .5s ease;
+        }
+
+        .buttons {
+        -webkit-justify-content: space-between;
+        -ms-flex-pack: justify;
+        justify-content: space-between;
+        -webkit-flex-wrap: wrap;
+        -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+        }
+
+        .butFrame {
+        overflow: hidden;
+        text-align: center;
+        position: relative;
+        display: block;
+        cursor: pointer;
+        color: #fff;
+        background: #fff;
+        font-size: 1em;
+        font-family: inherit;
+        cursor: pointer;
+        border-radius: 80px;
+        margin: 40px;
+        padding: 25px 5px;
+        -webkit-flex: 1 250px;
+        -ms-flex: 1 250px;
+        flex: 1 250px;
+        border: 6px solid white;
+        }
+
+        .buttons .butFrame .butHeading {
+        color: #3b3838;
+        padding: 0px 0 20px;
+        font-weight: 400;
+        font-family: inherit;
+        font-size: 1.2em;
+        text-transform: uppercase;
+        }
+
+        .buttons .butFrame img {
+        width: 100%;
+        max-width: 80px;
+        height: auto;
+        vertical-align: bottom;
+        }
+
+        .buttons .butFrame .butText {
+        padding: 10px 0;
+        color: #999;
+        }
+
+        /* HOVER STYLES */
+
+        .buttons .butFrame:hover {
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 1);
+        border: 6px solid #ff4600;
+        }
+
+        .butFrame:hover,
+        .butFrame:active {
+        animation: bounce 0.6s ease;
+        -webkit-animation: bounce 0.6s ease;
+        }
+
+        @keyframes bounce {
+        0% {
+            top: 0px;
+        }
+        25% {
+            top: -10px;
+        }
+        50% {
+            top: 5px;
+        }
+        75% {
+            top: -5px;
+        }
+        100% {
+            top: 0px;
+        }
+        }
+
+        @-webkit-keyframes bounce {
+        0% {
+            top: 0px;
+        }
+        25% {
+            top: -10px;
+        }
+        50% {
+            top: 5px;
+        }
+        75% {
+            top: -5px;
+        }
+        100% {
+            top: 0px;
+        }
+        }
+
+        /* MEDIA QUERIES */
+
+        @media all and (max-width: 950px) and (min-width: 701px){
+            .butFrame {
+                display:block;
+                -webkit-flex: 1 50%;   
+                -ms-flex: 1 50%;   
+                flex: 1 50%;
+            }
+        }
+
+        @media all and (max-width: 700px) and (min-width: 0px){
+            .butFrame {
+                display:block;
+                -webkit-flex: 1 100%;   
+                -ms-flex: 1 100%;   
+                flex: 1 100%;
+            }
+        }
+
+        
+        
+        /* -------------- MENU DE APPS EN DROPDOWNS -------------- */
+        #buttonapps{
+        position: relative;
+        margin-top: 35%;
+        left: 50%;
+        transform: translate(-50%, -25%);
+
+        }
+
+        #buttonapps:after {
+        content: " ";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translate(-50%);
+        width: 0;
+        height: 0;
+        border-left: 15px solid transparent;
+        border-right: 15px solid transparent;
+        border-bottom: 15px solid #34495e;
+        transition: 0.2s 0s;
+        }
+
+        #buttonapps.clicked:after{
+        border-width: 0px;
+        transition: 0.2s 0.2s;
+        }
+
+        .navapps{
+        position: absolute;
+        top: calc(100% + 15px);
+        left: 50%;
+        transform: translateX(-50%);
+        width: 300px;
+        height: 300px;
+        transition: 0.3s 0.3s;
+        font-size: 0;
+        background: #34495e;
+        }
+
+        #buttonapps.clicked .navapps{
+        height: 0px;
+        visibility:hidden;
+        transition: 0.2s 0s;
+        }
+
+        .refapps{
+        width: calc(100% / 3);
+        height: calc(100% / 3);
+        display: inline-block;
+        font-size: initial;
+        transition: 0.2s 0.2s;
+        }
+
+        #buttonapps.clicked .navapps .refapps{
+        font-size: 0;
+        transition: 0s 0s;
+        }
+
+        .navapps #icons{
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);
+        color: rgba(255, 255, 255, 0.7);
+        transition: color 0.4s;
+        }
+
+        .navapps .refapps:hover  #icons{
+        color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* -------------- MENU DE APPS EN DROPDOWNS -------------- */
+
+    </style>
+
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+{% endblock extra_head %}
+    
+
+
+{% block navbar %}
+    <!--MENU SUPERIOR fixed-top-->
+    <header id="header">
+        <div class="container">
+            <nav class="header-navbar navbar-expand-md navbar navbar-with-menu navbar-without-dd-arrow fixed-top navbar-semi-light">
+                <div class="navbar-wrapper">
+                    <div class="navbar-container content">
+                        <div class="collapse navbar-collapse show" id="navbar-mobile" >
+
+                            <!--VERSION MOVIL -->
+                            <ul class="nav navbar-nav mr-auto float-left">
+
+                                <!--TOGGLE MENU VERSION MOVIL-->
+                                <li class="nav-item d-block d-md-none">
+                                    <a class="nav-link nav-menu-main menu-toggle hidden-xs" href="#">
+                                        <i class="ft-menu"></i></a>
+                                </li>
+                                <!--TOGGLE MENU VERSION MOVIL-->
+
+                                <!--LOGO DE PAGINA-->
+                                <li class="mr-auto">
+                                    <a class="navbar-brand" href="{% url 'view_admin_coordinacion' %}">
+                                        <!-- <img class="brand-logo" alt="Chameleon admin logo"
+                                src="theme-assets/images/logo/logo.png" /> -->
+                                        <h1 class="brand-text " style="color: white;">Upsilon </h1>
+                                    </a>
+                                </li>
+                                <!--LOGO DE PAGINA-->
+
+                            </ul>
+                            <!--VERSION MOVIL -->
+
+
+                            <!--EQUIPO DE USUARIOS-->
+                            <ul class="nav navbar-nav float-right" >
+                                <!--BUSCAR-->
+                                <li class="nav-item dropdown navbar-search" >
+                                    <a class="nav-link dropdown-toggle hide" data-toggle="dropdown" href="#">
+                                        <span class="material-icons md-24">
+                                            groups
+                                        </span>
+                                    </a>
+
+                                    <ul class="dropdown-menu dropdown-menu-right" style="background-color: #ffffff;">
+                                        <li class="arrow_box_right">
+                                            <form>
+                                                <div class="input-group search-box">
+                                                    <div class="position-relative has-icon-right full-width">
+                                                        <input class="form-control" id="search" type="text"
+                                                            placeholder="Buscar...">
+                                                        <div class="form-control-position">
+                                                            <span class="material-icons">
+                                                                account_circle
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </li>
+
+                                        {% for persona in equipo_trabajo %}
+                                        <div class="dropdown-divider"></div>
+                                            <li>
+                                                <div class="input-group">
+                                                    <a class="dropdown-item" onclick="abrir_modal( '{% url 'view_identificacion' id_trabajador=persona.ci%}')" >
+                                                        <i class="ft-user"></i> 
+                                                        {{persona.nombre}}
+                                                        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                                                        <span class="material-icons">
+                                                            fingerprint
+                                                        </span>
+                                                    </a>
+                                                </div>
+                                            </li>
+                                        {% endfor %}    
+                                    </ul>
+                                </li>
+                                <!--BUSCAR-->
+
+                            </ul>
+                            <!--EQUIPO DE USUARIOS-->
+
+
+                            <!--MENU APPS 2-->
+                            <ul class="nav navbar-nav float-right" >
+
+                                <!--BUSCAR-->
+                                <li class="nav-item dropdown navbar-search" >
+                                    
+                                    <a class="nav-link dropdown-toggle hide" data-toggle="dropdown" href="#">
+                                        <span class="material-icons white md-24">
+                                            apps
+                                        </span>
+                                    </a>
+
+                                    <ul class="dropdown-menu dropdown-menu-right" style="background-color: #ffffff;">
+                                        
+                                        <li class="arrow_box_right">
+                                            <div class="container">
+                                                <div class="row">
+                                                  <div class="col-sm-6 bg-success">
+                                                    <a class="dropdown-item" href="#">
+                                                        <span class="material-icons  md-24">
+                                                            apps
+                                                        </span>
+                                                    </a>
+                                                  </div>
+                                                  <div class="col-sm-6 bg-warning">
+                                                    <a class="dropdown-item" href="#">
+                                                        <span class="material-icons  md-24">
+                                                            apps
+                                                        </span>
+                                                    </a>
+                                                  </div>
+                                                </div>
+                                            </div>
+                                        </li>
+
+                                        <div class="dropdown-divider"></div>
+
+                                        <li >
+                                            <div class="container">
+                                                <div class="row">
+                                                  <div class="col-sm-6 bg-success">
+                                                    <a class="dropdown-item" href="#">
+                                                        <span class="material-icons  md-24">
+                                                            apps
+                                                        </span>
+                                                    </a>
+                                                  </div>
+                                                  <div class="col-sm-6 bg-warning">
+                                                    <a class="dropdown-item" href="#">
+                                                        <span class="material-icons  md-24">
+                                                            apps
+                                                        </span>
+                                                    </a>
+                                                  </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                       
+                                        <div class="dropdown-divider"></div>
+
+                                        <li class="nav-item d-none d-md-block bg-success">
+                                            <a class="nav-link" href="{% url 'view_tablero' %}">
+                                                TABLERO
+                                                <span class="material-icons">
+                                                    people_alt
+                                                </span>
+                                            </a>
+                                        </li>
+
+                                     
+                                    </ul>
+                                </li>
+                                <!--BUSCAR-->
+
+                            </ul>
+                            <!-- MENU APPS 2-->
+                            
+                            
+                            <!--AVATAR PAGINA
+                                <ul class="nav navbar-nav float-right">
+    
+                                    <li class="dropdown dropdown-user nav-item">
+                                        <a class="dropdown-toggle nav-link dropdown-user-link" href="#"
+                                            data-toggle="dropdown">
+                                            <span class="avatar avatar-online">
+                                                <img src="{% static 'theme-assets/images/portrait/small/avatar-s-19.png' %}"
+                                                    alt="avatar">
+                                                <i></i>
+                                            </span>
+                                        </a>
+    
+                                        <div class="dropdown-menu dropdown-menu-right">
+                                            <div class="arrow_box_right">
+                                                <a class="dropdown-item" href="#">
+                                                    <span class="avatar avatar-online">
+                                                        <img src="{% static 'theme-assets/images/portrait/small/avatar-s-19.png' %}"
+                                                            alt="avatar">
+                                                        <span class="user-name text-bold-700 ml-1">
+    
+                                                            {% block name %}
+    
+                                                            {% if user.is_active %}
+                                                            {{user.get_username}}
+                                                            {% endif %}
+    
+                                                            {% endblock name %}
+    
+                                                        </span>
+                                                    </span>
+                                                </a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item" href="#">
+                                                    <i class="ft-user"></i> 
+                                                    Editar perfil 
+                                                </a>
+                                               
+                                            
+                                                <div class="dropdown-divider"></div>
+    
+                                                <a class="dropdown-item" href="{% url 'logout' %}">
+                                                    <i class="ft-power"></i> Cerrar sesion</a>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            
+                            -->                           
+                            <!--AVATAR PAGINA --> 
+
+
+                            <!--MENU APLICACIONES
+                                <ul class="nav navbar-nav float-right" style="padding: 0px 10px;">
+                                    <button class="btn btn-info buttonapps" id="buttonapps">
+                                        <span class="material-icons white md-24">
+                                            apps
+                                        </span>
+                                        
+                                        <nav class="navapps" id="navapps">
+                                            <a href="#" class="refapps">
+                                                <span class="material-icons white md-24" id="icons">apps</span>
+                                            </a>
+                                            
+                                            <a href="#" class="refapps">
+                                                <span class="material-icons white md-24" id="icons">apps</span>
+                                            </a>
+                                            
+                                            <a href="#" class="refapps">
+                                                <span class="material-icons white md-24" id="icons">apps</span>
+                                            </a>
+                                            <br>
+                                            <a href="#" class="refapps">
+                                                <span class="material-icons white md-24" id="icons">apps</span>
+                                            </a>
+                                            
+                                            <a href="#" class="refapps">
+                                                <span class="material-icons white md-24" id="icons">apps</span>
+                                            </a>
+    
+                                            <a href="#" class="refapps">
+                                                <span class="material-icons white md-24" id="icons">apps</span>
+                                            </a>
+                                            <br>
+                                            <a href="#" class="refapps">
+                                                <span class="material-icons white md-24" id="icons">apps</span>
+                                            </a>
+    
+                                            <a href="#" class="refapps">
+                                                <span class="material-icons white md-24" id="icons">apps</span>
+                                            </a>
+                                        </nav>
+                                    </button>
+                                </ul>
+                            
+                            -->
+                            <!--MENU APLICACIONES-->
+                            
+                            <!--CERRAR SESION-->
+                            <ul class="nav navbar-nav float-right" style="padding: 0px 10px;">
+
+                                <li class="dropdown dropdown-user nav-item">
+                                    <a class="dropdown-toggle nav-link dropdown-user-link" href="#"
+                                        data-toggle="dropdown">
+                                        <span class="material-icons">
+                                            power_settings_new
+                                        </span>
+                                    </a>
+
+                                    
+
+                                    <div class="dropdown-menu dropdown-menu-right" >
+                                        <div class="arrow_box_right" >
+                                            <a class="dropdown-item" href="{% url 'logout' %}" >
+                                                <i class="ft-power"></i> 
+                                                Cerrar Upsilon
+                                            </a>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                            <!--CERRAR SESION-->
+
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+    <!--MENU SUPERIOR fixed-top-->
+{% endblock navbar %}
+    
+
+
+{% block content %}
+<!-- /.modal -->
+<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+</div>
+<!-- /.modal -->
+
+<div style="margin-top:1%;"  >
+    <h1 align="center">
+        ACC COORDINACION
+    </h1>
+    
+    <div class="buttons">
+        
+        <div class="butFrame bounce" onClick="window.location='#'">
+            <a href="{% url 'view_admin_coordinacion' %}">
+                <img src="http://www.neodigital.com.au/thumbnailsmall/Button1.jpg" />
+                <div class="butHeading">Trafico AMHS y aprobar FPL</div>
+            </a>
+        </div>
+    
+        <div class="butFrame bounce" onClick="window.location='#'">
+          <img src="http://www.neodigital.com.au/thumbnailsmall/Button5.jpg" />
+          <div class="butHeading">fpl aprobados</div>
+        </div>
+    
+    </div>
+    
+    
+    <div class="buttons">
+        
+        <div class="butFrame bounce" onClick="window.location='#'">
+          <img src="http://www.neodigital.com.au/thumbnailsmall/Button6.jpg" />
+          <div class="butHeading">rutas</div>
+        </div>
+    
+        <div class="butFrame bounce" onClick="window.location='#'">
+          <img src="http://www.neodigital.com.au/thumbnailsmall/Button5.jpg" />
+          <div class="butHeading">PIB</div>
+        </div>
+    
+    </div>
+
+</div>
+
+
+
+
+{% endblock content %}
+    
+
+
+
+
+{% block extrajs %}
+<script>
+    $(function(){
+        $("#buttonapps").trigger("click");
+    });
+
+    $("#buttonapps").click(function(){
+        $(this).toggleClass("clicked");
+    });
+
+    function abrir_modal(url) {
+        //alert(url);
+        $("#modal").load(url.trim(), function() {
+            $(this).modal('show');
+        });
+    }
+
+</script>
+{% endblock extrajs %}
+    

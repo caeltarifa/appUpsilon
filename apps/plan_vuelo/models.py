@@ -3,30 +3,18 @@ from django.db import models
 # Create your models here.
 #from apps.generacion_fpl.models import Empresa_institucion
 
-class Flp_trafico(models.Model):
-    id = models.AutoField(primary_key=True)
-    id_amhs = models.CharField(max_length=30)
-    fecha_llegada =models.DateField()
-    hora_amhs = models.CharField(max_length=10)
-    prioridad = models.CharField(max_length=2)
-    id_plan = models.CharField(max_length=50)
-    transponder = models.CharField(max_length=60)
-    origen = models.CharField(max_length=20)
-    texto = models.CharField(max_length=250)
-    visto = models.BooleanField(default=False) #si el modeo¿lo ha sido visto
-    visto_por = models.CharField(max_length=20) #sesion que lo ha visto#
 
-class Metar_trafico(models.Model):
-    id = models.AutoField(primary_key=True)
-    id_amhs = models.CharField(max_length=30)
-    fecha_llegada =models.DateField()
-    hora_amhs = models.CharField(max_length=10)
-    prioridad = models.CharField(max_length=2)
-    estacion = models.CharField(max_length=50)
-    hora_clima = models.CharField(max_length=60)
-    texto = models.CharField(max_length=1000)
-    visto = models.BooleanField(default=False) #si el modeo¿lo ha sido visto
-    visto_por = models.CharField(max_length=20) #sesion que lo ha visto#
+#class Metar_trafico(models.Model):
+#    id = models.AutoField(primary_key=True)
+#    id_amhs = models.CharField(max_length=30)
+#    fecha_llegada =models.DateField()
+#    hora_amhs = models.CharField(max_length=10)
+#    prioridad = models.CharField(max_length=2)
+#    estacion = models.CharField(max_length=50)
+#    hora_clima = models.CharField(max_length=60)
+#    texto = models.CharField(max_length=1000)
+#    visto = models.BooleanField(default=False) #si el modeo¿lo ha sido visto
+#    visto_por = models.CharField(max_length=20) #sesion que lo ha visto#
 
 class Empresa_institucion(models.Model):
     id_emp_inst=models.AutoField(primary_key=True)
@@ -37,8 +25,20 @@ class Empresa_institucion(models.Model):
 class Cargo(models.Model):
     id_cargo=models.AutoField(primary_key=True)
     nombre_cargo=models.CharField(max_length=35)
+    empresa = models.ForeignKey(Empresa_institucion, on_delete=models.PROTECT)
     def __str__(self):
         return self.nombre_cargo
+
+class Flp_trafico(models.Model):
+    id_mensaje = models.CharField(max_length=22)
+    aftn1 = models.CharField(max_length=11)
+    aftn2 = models.CharField(max_length=15)
+    id_aeronave = models.CharField(max_length=50)
+    reglas_vuelo = models.CharField(max_length=50)
+    aeropuerto_salida = models.CharField(max_length=9)
+    ruta = models.CharField(max_length=100)
+    aeropuerto_destino = models.CharField(max_length=30)
+    otros = models.CharField(max_length=500) #si el modeo¿lo ha sido visto
 
 class Trabajador(models.Model):
     ci=models.IntegerField(primary_key=True)
@@ -59,25 +59,30 @@ class Flp_aprobado(models.Model):
         on_delete=models.PROTECT,
         primary_key=True,
     )
-    metar_trafico = models.OneToOneField(
-        Metar_trafico,
-        on_delete=models.PROTECT,
-        primary_key=False,
-    )
     controlador = models.OneToOneField(
         Trabajador,
         on_delete=models.PROTECT,
-        primary_key=False,
     )
-    fecha_aprob = models.DateField()
-    hora_aprob = models.TimeField(auto_now=True, auto_now_add=False)
+    fecha_aprobacion = models.DateField()
+    hora_aprobacion = models.TimeField(auto_now=True, auto_now_add=False)
     transponder = models.IntegerField()
     ruta_usada = models.CharField(max_length=250) #almacena punto1-ruta-punto2, punto3-ruta-punto4, 
-    puntos_de_ficha = models.CharField(max_length=400) #almacena los puntos usados en los unicodeips y longitude: 'punto1 23 punto2 34 punto3 56 punto4'
-    matricula = models.CharField(max_length=400) #almacena matricula de avion
+    puntos_de_ficha = models.CharField(max_length=200) #almacena los puntos usados en los unicodeips y longitude: 'punto1 23 punto2 34 punto3 56 punto4'
+    matricula = models.CharField(max_length=10) #almacena matricula de avion
     def __unicode__(self):
         return '%s %s' % (self.id_flp_aprobado, self.metar_trafico, self.controlador)
 
+class Ruta_guardada(models.Model):
+    id_ruta=models.AutoField(primary_key=True)
+    rutas = models.CharField(max_length=30)
+    puntos_limite = models.CharField(max_length=60)
+    def __unicode__(self):
+        return self.id_ruta, self.rutas
+    
+        #{
+        #    'id_ruta': self.id_ruta,
+        #    'rutas': self.rutas,
+        #}
 
 ##RUTA , SEGMENTO DE LA RUTA Y DISTANCIAS ENTRE PUNTOS DE LA RUTA
 class Ruta_flp(models.Model):

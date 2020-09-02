@@ -30,6 +30,7 @@ function imprim2() {
   return true;
 };
 
+
 function eliminarStrip(id) {
   imagen = document.getElementById(id);
   if (!imagen) {
@@ -39,14 +40,6 @@ function eliminarStrip(id) {
       padre.removeChild(imagen);
   }
 
-};
-
-function transponder() {
-  var val=document.getElementsByClassName('transponder')[0].value
-  var x=document.getElementsByClassName('transponder');
-  for (let index = 1; index < x.length; index++) {
-      x[index].value=val
-  }
 };
 
 

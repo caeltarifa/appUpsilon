@@ -1,5 +1,5 @@
 {% extends 'temp_plan_vuelo/baseadmin.html' %} 
-{% load staticfiles %} 
+{% load static %} 
 
 {% block title %}
 <title>Upsilon | Usuario</title>
@@ -10,7 +10,7 @@
 {% block extra_head %}
     <link rel='stylesheet' href='https://harvesthq.github.io/chosen/chosen.css'>
     <!-- <link rel="stylesheet" href="{% static 'theme-assets/css/aprobar_plan.css' %}"> -->
-
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 {% endblock extra_head %}
     
 
@@ -41,7 +41,7 @@
 
                                 <!--LOGO DE PAGINA-->
                                 <li class="mr-auto">
-                                    <a class="navbar-brand" href="{% url 'view_admin' %}">
+                                    <a class="navbar-brand" href="{% url 'view_admin_coordinacion' %}">
                                         <!-- <img class="brand-logo" alt="Chameleon admin logo"
                                 src="theme-assets/images/logo/logo.png" /> -->
                                         <h1 class="brand-text " style="color: white;">Upsilon | {{user.get_username}}</h1>
@@ -219,10 +219,16 @@
             <div class="card" style="box-shadow: 2px 2px 8px 0 black; min-height: 30%;  max-height: 100%; ">
 
                 <div class="card-header">
-                    <h4 class="card-title">PLanes Recientes</h4>
+                    <h3 class="card-title">Planes Recientes</h3>
                     <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
                     <div class="heading-elements">
                         <ul class="list-inline mb-0">
+                            <li>
+                                <button class="btn-primary" id="update_fpl1">Actualizar</button>
+                            </li>
+
+                            <li><a data-action="reload" ><i class="ft-rotate-cw" id="update_fpl1"></i></a></li>
+
                             <!--BUSCAR-->
                             <li class="nav-item dropdown navbar-search">
                                 <a class="nav-link dropdown-toggle hide" data-toggle="dropdown" href="#">
@@ -241,7 +247,6 @@
                             <!--BUSCAR-->
 
                             <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
-                            <li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
                             <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
                             <li><a data-action="close"><i class="ft-x"></i></a></li>
                         </ul>
@@ -249,8 +254,12 @@
                     <br>
                 </div>
                 <!--CONTENIDO DE LA TABLA DE PLANES RECIENTES-->
+               
+               
+               
                 <div class="card-content collapse show" style="height: 75%; overflow-y: auto;">
 
+                    <!-- /.modal -->
                     <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                     </div>
                     <!-- /.modal -->
@@ -259,32 +268,34 @@
                         <table id="tabla_planes_recientes" class="table table-striped" align="center" style="text-align:center;">
                             <thead>
                                 <tr>
-                                    <th scope="col">ID</th>
-                                    <th scope="col">AMHS_recibido</th>
-                                    <th scope="col">Fecha</th>
-                                    <th scope="col">Prioridad</th>
+                                    <th scope="col">ID AMHS</th>
+                                    <th scope="col">Tiempo</th>
+                                    <th scope="col">FPL</th>
                                     <th scope="col">Origen</th>
-                                    <th scope="col">Salida</th>
-                                    <th scope="col">FLP.</th>
+                                    <th scope="col">Destino</th>
+                                    <th scope="col">Tiempo de vuelo</th>
                                     <th scope="col"></th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="toUpdate_fpl">
 
-                                {% for elemen in post %}
+                                {% for fpl in lista_fpl %}
                                 <tr>
-                                    <th id="{{elemen.id}}" width="5%" scope="row">{{elemen.id}}</th>
-                                    <th width="5%">{{elemen.hora_amhs}}</th>
-                                    <td width="5%">{{elemen.fecha_llegada}}</td>
-                                    <td width="5%">{{elemen.prioridad}}</td>
-                                    <td width="5%">{{elemen.origen|slice:"1:5"}}</td>
-                                    <td width="5%">{{elemen.origen|slice:"5:9"}}</td>
-                                    <td width="25%">{{elemen.id_plan|slice:"5:15"}}</td>
+                                    <th id="{{elemen.id}}" width="5%" scope="row">{{fpl.id_amhs}}</th>
+                                    <th width="5%">{{fpl.hora_amhs}} <br> {{fpl.fecha|slice:"2:"}} </th>
+                                    <td width="5%">{{fpl.id_aeronave|slice:"5:11"}}</td>
+                                    <td width="5%">{{fpl.aeropuerto_salida|slice:"1:5"}} <br> {{fpl.aeropuerto_salida|slice:"5:10"}}</td>
+                                    <td width="5%">{{fpl.aeropuerto_destino|slice:"1:5"}}</td>
+                                    <td width="5%">{{fpl.aeropuerto_destino|slice:"5:9"}}</td>
                                     <td width="15%">
-                                        <button class="btn btn-outline-info" onclick="abrir_modal( '{% url 'view_aprobar_flp' elemen.id%}')">Ver FLP</button>
+                                        <!--
+                                        -->
+                                        <button class="btn btn-outline-info" onclick="abrir_modal( '{% url 'view_aprobar_flp' id_plancompleto=fpl.id_mensaje%}')">Ver FLP</button>
+
                                     </td>
                                 </tr>
                                 {% endfor %}
+                                
                             </tbody>
                         </table>
                     </div>
@@ -296,6 +307,8 @@
 <!-- Planes de vuelo recientes -->
 
 
+
+
 <!-- Plan de vuelos aprobados -->
 <div id="_planes_aprobados"></div><br><br><br><br>
 <section>
@@ -304,6 +317,7 @@
             <div class="card" style="box-shadow: 2px 2px 8px 0 black; min-height: 30%;  max-height: 100%;">
                 <div class="card-header">
                     <h4 class="card-title">Planes aprobados</h4>
+                    
                     <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
                     <div class="heading-elements">
                         <ul class="list-inline mb-0">
@@ -321,10 +335,13 @@
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">First Name</th>
-                                    <th scope="col">Last Name</th>
-                                    <th scope="col">Username</th>
+                                    <th scope="col">ID AMHS</th>
+                                    <th scope="col">Tiempo</th>
+                                    <th scope="col">FPL</th>
+                                    <th scope="col">Origen</th>
+                                    <th scope="col">Destino</th>
+                                    <th scope="col">Tiempo de vuelo</th>
+                                    <th scope="col"></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -333,78 +350,6 @@
                                     <td>Mark</td>
                                     <td>Otto</td>
                                     <td>@mdo</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">2</th>
-                                    <td>Jacob</td>
-                                    <td>Thornton</td>
-                                    <td>@fat</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -633,21 +578,83 @@
         }
     }
 
+    //REQUESTO TO SERVER FOR UPDATE DATA
+    function loadXMLDoc() {
+        var xmlhttp = new XMLHttpRequest();
+        //xmlhttp.responseType='json'
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                //myFunction(JSON.parse(xmlhttp.responseText));
+                myFunction(this);
+            }else{
+                console.log("no encontrado ,...")
+            }
+        };
+        xmlhttp.open("get", "{% url 'view_update_flp' %}", true);
+        xmlhttp.send();
+    }
+    
+    function myFunction(xml) {
+        documentoXML=xml.responseText;
+        console.log(documentoXML);
+        //console.log(">>>>>",documentoXML.getElementsByTagName("mensaje"));
+    }
+
+    //END TO REQUEST
+
+
     //DESPLAZAMIENTO SUAVIZADO
     $('.main-menu-content a').click(function(e){				
 		e.preventDefault();		//evitar el eventos del enlace normal
 		var strAncla=$(this).attr('href'); //id del ancla
 			$('body,html').stop(true,true).animate({				
 				scrollTop: $(strAncla).offset().top
-			},1000);
-		
+			},1000);		
     });
 
     $(document).ready(function () {
         $('#ocultarx').click(function(){
             alert("hola mundo");
         });
+
     });
+
+    //ACTIVAR EL UPDATE FPL 
+        $("#update_fpl1").click(function(e){
+            e.preventDefault();
+            $.ajax({
+                //url:$(this).attr('action'),
+                //type:$(this).attr('method'),
+                //data:$(this).serialize(),
+                type:'GET',
+                url:'{% url 'view_update_flp' %}',
+                //data:$(this).serialize(),
+                success: function (respuesta){
+                    console.log(respuesta[0].id_mensaje);
+                    concatenado="";
+                    var a,b,c,d,e,f,g,h,i,j,k;
+                    for (let index = 0; index < respuesta.length; index++) {
+                                    a = "<tr>";
+                                    b = '<th id="{{elemen.id}}" width="5%" scope="row">' + respuesta[index].id_amhs + '</th>';
+                                    c = '<th width="5%">' + respuesta[index].hora_amhs + "<br>" + respuesta[index].fecha + "</th>";
+                                    d = '<td width="5%">' + respuesta[index].id_aeronave + '</td>';
+                                    e = '<td width="5%">' + respuesta[index].aeropuerto_salida + '<br>' + respuesta[index].aeropuerto_salida + '</td>';
+                                    f = '<td width="5%">' + respuesta[index].aeropuerto_destino + '</td>';
+                                    g = '<td width="5%">' + respuesta[index].aeropuerto_destino + '</td>';
+                                    h = '<td width="15%">';
+                                    i =  '<button class="btn btn-outline-info"' +  'onclick="'+ 'abrir_modal(' + "'/plan_vuelo/admin_popup/" + respuesta[index].id_mensaje+ "/'" + ')"'  + '>' +'Ver FLP</button>';
+                                    j = "</td>";
+                                    k = "</tr>";
+                                    concatenado=concatenado+ (a+b+c+d+e+f+g+h+i+j+k)
+                    }
+                    document.getElementById('toUpdate_fpl').innerHTML=concatenado;
+                    
+                }   
+            })
+
+            return false;
+        });
+
 
 </script>
 

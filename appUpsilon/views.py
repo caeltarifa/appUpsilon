@@ -15,7 +15,7 @@ def view_pagina_principal(request):
     
     if request.user.is_authenticated: 
         #preguntando si el 'usuario autenticado' pertenece al grupo de CONTROLADORES
-        if request.user.groups.filter(name='CONTROLADORES').exists():
+        if request.user.groups.filter(name='AROAISLP').exists():
             if request.user.username in 'aroaislp@aasana':
                 return redirect('view_admin_ais')
         
@@ -40,12 +40,16 @@ def view_pagina_principal(request):
             if request.user.username in 'ccamlp@aasana':
                 return redirect('view_admin_comunicaciones')
 
+        if request.user.groups.filter(name='CONTROLADORESLP').exists():
+            if request.user.username in 'acc_coordinacion@aasana':
+                return redirect('view_panel_coordinacion')
+
         #RETURN POR DEFECTO
-        return redirect('view_admin')
+        return render(request, 'temp_plan_vuelo/prohibido.html' )#,'metar':metar} )
+
     else:
         return redirect('accounts/login/')
 
-    #return render(request, 'temp_plan_vuelo/index.html')
 
 # def control_acceso_login(request):
 #     if request.user.is_authenticated or request.user.is_active:

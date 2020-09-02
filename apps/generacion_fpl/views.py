@@ -7,7 +7,7 @@ from datetime import datetime
 import time
 
 from django.db.models import Q
-from django.shortcuts import render_to_response
+#from django.shortcuts import render_to_response
 
 
 
@@ -23,7 +23,7 @@ from django.contrib.auth.hashers import check_password
 
 # Create your views here.
 
-from apps.plan_vuelo.models import Flp_trafico, Metar_trafico, EntrePuntos_flp,Ruta_flp, Empresa_institucion, Trabajador
+from apps.plan_vuelo.models import Flp_trafico, EntrePuntos_flp,Ruta_flp, Empresa_institucion, Trabajador
 from apps.generacion_fpl.models import Comunicacional, Operacional, Suplementaria, Plan_vuelo_presentado
 from apps.generacion_fpl.form_com import ComunicacionalForm, OperacionalForm, SuplementariaForm, Plan_presentadoForm
 
@@ -99,7 +99,7 @@ def view_admin_empresa(request):
         #rechazados=Plan_vuelo_presentado.objects.raw('select * from generacion_fpl_plan_vuelo_presentado where fk_despachador_id in (select ci from plan_vuelo_trabajador where fk_despachador_id=ci and empresa_institucion_id='+str(id_empresa)+' and (fk_estado_id=6 or fk_estado_id=4));')
 
         #OBTENIENDO EL METAR 
-        metar=Metar_trafico.objects.raw("select * from plan_vuelo_metar_trafico order by fecha_llegada desc limit 50")
+        #---metar=Metar_trafico.objects.raw("select * from plan_vuelo_metar_trafico order by fecha_llegada desc limit 50")
 
 
         return render(request, 'temp_plan_vuelo/adminempresa.html', {'id_empresa':id_empresa, 'solicitados':solicitados,'rechazados':rechazados , 'aprobados':aprobados, 'metar':metar, 'trabajadores':trabajadores} )
