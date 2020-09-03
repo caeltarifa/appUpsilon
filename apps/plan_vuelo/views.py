@@ -12,7 +12,7 @@ from django.db.models import Q
 
 
 #from apps.plan_vuelo.forms import Vuelo_Aprobado_form, PostForm
-from apps.plan_vuelo.models import Flp_trafico, EntrePuntos_flp,Ruta_flp, Trabajador
+from apps.plan_vuelo.models import Flp_trafico, EntrePuntos_flp,Ruta_flp, Trabajador, Ruta_guardada
 Ruta_flp2=Ruta_flp()
 EntrePuntos_flp2=EntrePuntos_flp()
 
@@ -84,6 +84,13 @@ def view_aprobar_flp(request, id_plancompleto):
             
             context.update(ficha)
 
+            rutas_guardadas=Ruta_guardada.objects.filter(origen= ficha['origen'], destino=ficha['destino'])
+
+            context.update({
+                'rutas_guardadas':rutas_guardadas,
+            })
+            
+
         else:
             context={
                 'id_mensaje': 'NOT FOUND ERROR 404'
@@ -93,7 +100,10 @@ def view_aprobar_flp(request, id_plancompleto):
         equipo_activo={
             'equipo_activo':equipo_activo,
             }
+            
         context.update(equipo_activo)
+
+
         #obteniendo el cuerpo del plan de vuelo tipoavion, velocidad, nivel
 
         return render(request, 'temp_plan_vuelo/aprobar_plan.html', context  ) #retorno el modal y el contexto

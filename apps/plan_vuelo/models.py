@@ -30,7 +30,7 @@ class Cargo(models.Model):
         return self.nombre_cargo
 
 class Flp_trafico(models.Model):
-    id_mensaje = models.CharField(max_length=22)
+    id_mensaje = models.CharField(max_length=22,primary_key=True)
     aftn1 = models.CharField(max_length=11)
     aftn2 = models.CharField(max_length=15)
     id_aeronave = models.CharField(max_length=50)

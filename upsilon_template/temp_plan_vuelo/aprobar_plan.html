@@ -32,9 +32,9 @@
                 <div class="container">
                     <div class="row">
 
-                        <div class="col-md-6" >
+                        <div class="col-md-5" >
 
-                            <div id="plan_vuelo_aftn">
+                            <div id="plan_vuelo_aftn" style="font-size:12px">
                                 id_mensaje: &nbsp; &nbsp; {{id_mensaje}} <br>
                                 aftn1: {{aftn1}}<br>
                                 aftn2: {{aftn2}}<br>
@@ -48,24 +48,42 @@
 
                         </div>
 
-                        <div class="col-md-4">
+                        <div class="col-md-5">
+
+                            <div class="container" style="align-items: center;">
+                                <div class="row">
+                                    <span style="font-size:20px;"> 
+                                        {{origen}}
+                                    </span>
+                                    <span class="material-icons" style="transform: rotate(90deg); font: size 50px;" >
+                                        flight
+                                    </span>
+                                    _____________
+                                    &nbsp;
+                                    <span style="font-size:20px;"> 
+                                        {{destino}}
+                                    </span>
+                                </div>
+                                <br>
+                            </div>
+
+
+                            <div class="form-group">
+                                <select placeholder="asas " class="form-control" id="sel1" name="sellist1">
+                                    <option disabled selected>Elige ruta guardada</option>
+                                    
+                                    {% for save in rutas_guardadas %}
+                                        <option value="{{save.id_ruta}}"> {{save.rutas}}</option>
+                                    {% endfor %}
+                                </select>
+                                
+                              </div>
+
 
                             <!-- LISTA DE PUNTOS Y RUTAS --- FILA PARA ELEGIR LA RUTA A USAR -->
                             {% for resul_ruta in rutas_detectadas %}
                                 <div class="python_gen" style="align-content: center;">
-                                    {% if forloop.first %}
-                                        <div class="row" style="margin-left:70px;">
-                                            <button id="agregar_ruta" class=" btn btn-outline-warning" style="width:45px;border-radius:50px;text-align:center;padding:9px 0px;font-size: 19px;" >
-                                                <!-- <i class="ficon ft-plus" aria-hidden="true" ></i> --> +
-                                            </button>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                            <button id="quitar_ruta" class=" btn btn-outline-danger" style="width:45px;border-radius:50px;text-align:center;padding: 9px 0px;font-size: 19px;" >
-                                            <!-- onclick="javascript:eliminarStrip('lista_ruta_opcional1')"> -->
-                                                -
-                                            </button>
-                                        </div>
-                                        <br>
-                                    {% endif %}
+                                   
                                     <div class="row" id="{% cycle 'lista_ruta11' 'lista_ruta22' 'lista_ruta33' 'lista_ruta44' %}">
 
                                         <div id="{% cycle 'output_ruta11' 'output_ruta22' 'output_ruta33' 'output_ruta44' %}"></div>
@@ -116,6 +134,7 @@
                             <div class="row" id="lista_ruta_opcional2">
                                 <div id="output_ruta2"></div>
                                 <select id="sel_ruta2" data-placeholder="RUTA">
+                                    <option value="0" selected disabled>RUTA</option>
                                     {% for ruta_x in todaruta %}
                                         {% if ruta_x.nombre_ruta == resul_ruta.nombre_ruta %}
                                         <option value="" selected>{{ruta_x.nombre_ruta}}</option>    
@@ -153,15 +172,16 @@
                                 
                             </div>
 
-                            <!-- CHECKBOX PARA DETERMINAR SI ES NACIONAL O INTERNACIONAL -->
-                            <div id="toggles">
-                                <input type="checkbox" name="checkbox1" id="checkbox3" class="ios-toggle" />
-                                <label for="checkbox3" class="checkbox-label" data-off="NACIONAL" data-on="INTERNACIONAL"></label>
-                            </div>
+                            <br>
 
-                            <button id="recordarid" class="btn btn-outline-success">Recordar +</button>
+                        
+
+
 
                         </div>
+
+
+
 
                         <div class="col-md-2">
                             <input type="text" class="transponder" id="transponderid"
@@ -191,6 +211,7 @@
                                         <div class="radio" >
                                             <label>
                                             <input style="width: 10px; height: 10px;" type="radio" name="optradio" >
+                                            &nbsp;
                                             {{persona.nombre}} 
                                             </label>
                                         </div>
@@ -232,7 +253,6 @@
                     {{primero|first}}
                     {{primero|last}}
                 {% endwith %}
-                
 
             </div>
 
@@ -447,53 +467,27 @@
 
         //ELEGIR UNA RUTA, OPCIONAL, AL CARGAR LA PAGINA EN HIDE
         $(function(){
-            $('#lista_ruta_opcional1').hide();
-            $('#lista_ruta_opcional2').hide();
-            $('#lista_ruta_opcional3').hide();
+            //$('#lista_ruta_opcional1').hide();
+            //$('#lista_ruta_opcional2').hide();
+            //$('#lista_ruta_opcional3').hide();
 
             //limpiar las fichas al momento de trabajar un plan de vuelo
             document.getElementById("muestra").innerHTML="";
             //ejecutamos para que se carguen los puntos de la ruta en contrada en el chosen multiple
             mostrarPuntosActuales();
             
+
             
         });
 
+        $('#recordarid').click(function () {
+            confirm("hola")
+        })
      
 
 
 
-        //MOSTRADOS LOS ELEMENTOS OCULTOS
-        var s=0;
-        $('#agregar_ruta').click(function(){
-            //$('#lista_ruta_opcional1').show();
-            s=s+1;
-            if(s+document.getElementsByClassName('python_gen').length<=4){
-                var cadena='#lista_ruta_opcional'+s
-                $(cadena).show(200);
-                //alert(cadena);
-            }else{
-                s--;
-            }
-        });
         
-        //OCULTANDO LOS ELEMENTOS MOSTRADOS
-        $('#quitar_ruta').click(function(){
-            if(s>=1){
-                //devuelvo las etiquetas select al valor predeterminado
-                $('#sel_ruta'+s).val(' ');
-                $('#sel_ruta'+s).trigger("chosen:updated");
-                $('#sel_inicio'+s).val(' ');
-                $('#sel_inicio'+s).trigger("chosen:updated");
-                var cadena='#lista_ruta_opcional'+s
-                $(cadena).hide(200);
-            }else{
-                s=1;
-            }
-            s--;
-            
-        });
-
         //CHOSEN FOR THE FIRST OPTIONAL RUTA LIST
         document.getElementById('output_ruta11').innerHTML = location.search;
         $("#sel_ruta11").chosen({width: '90px'});
