@@ -16,10 +16,10 @@
             </div>
 
             <div class="row justify-content-center">
-                <input autofocus class="token" type="password" id="num1" maxlength="1" size="1" onkeyup="javascript:cambiarFocus1()" style="width: 50px; height: 50px; text-align: center;">&nbsp;&nbsp;
-                <input class="token" type="password" id="num2" maxlength="1" size="1" onkeyup="javascript:cambiarFocus2()" style="width: 50px; height: 50px; text-align: center;">&nbsp;&nbsp;
-                <input class="token" type="password" id="num3" maxlength="1" size="1" onkeyup="javascript:cambiarFocus3()" style="width: 50px; height: 50px; text-align: center;">&nbsp;&nbsp;
-                <input class="token" type="password" id="num4" maxlength="1" size="1" onkeyup="javascript:cambiarFocus4()" style="width: 50px; height: 50px; text-align: center;">
+                <input style="font-size: 30px; text-align: center;" autofocus class="token" type="password" id="num1" maxlength="1" size="1" onkeyup="javascript:cambiarFocus1()" style="width: 50px; height: 50px; text-align: center;">&nbsp;&nbsp;
+                <input style="font-size: 30px; text-align: center;" class="token" type="password" id="num2" maxlength="1" size="1" onkeyup="javascript:cambiarFocus2()" style="width: 50px; height: 50px; text-align: center;">&nbsp;&nbsp;
+                <input style="font-size: 30px; text-align: center;" class="token" type="password" id="num3" maxlength="1" size="1" onkeyup="javascript:cambiarFocus3()" style="width: 50px; height: 50px; text-align: center;">&nbsp;&nbsp;
+                <input style="font-size: 30px; text-align: center;" class="token" type="password" id="num4" maxlength="1" size="1" onkeyup="javascript:cambiarFocus4()" style="width: 50px; height: 50px; text-align: center;">
             </div>
             
             <br><br>
@@ -30,7 +30,7 @@
 
 <script>
     $(function(){
-        cambiarFocus1();
+        x=document.getElementById('num1').focus();
 
         nro=document.getElementById('trabajadores').value;
         document.getElementById('despachador').value=nro;
@@ -64,19 +64,27 @@
 
 
     function myFunction(a,b,c,d) {
-        param="{{persona.ci}}" + ":" +a+b+c+d;
-        alert(param)
+        param="{{persona.ci}}" + ":" +a+b+c+d ;
         $.ajax({
             type:'GET',
             url: '{% url 'view_validar_passwd' %}?parametro='+param,
             //data:$(this).serialize(),
             success: function (request){
-                console.log(request.respuesta);
                 if (! request.respuesta) {
                     document.getElementById('num1').value='';
+                    $("#num1").css("border-color", "red");
                     document.getElementById('num2').value='';
+                    $("#num2").css("border-color", "red");
                     document.getElementById('num3').value='';
+                    $("#num3").css("border-color", "red");
                     document.getElementById('num4').value='';
+                    $("#num4").css("border-color", "red");
+                    
+                    x=document.getElementById('num1').focus();
+                }else{
+                    location.reload();
+                    //window.location.replace($(location).attr('href'));
+                    //window.location.href=("http://");
                 }
             },
             error: function (e) {

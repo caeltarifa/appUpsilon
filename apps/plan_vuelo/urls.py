@@ -1,6 +1,6 @@
 from django.conf.urls import url, include
 from django.urls import path, re_path
-from apps.plan_vuelo.views import view_plan_vuelo, view_panel_coordinacion, view_admin_coordinacion , view_aprobar_flp, view_tablero, view_update_flp, view_template_prueba, view_identificacion, view_validar_passwd # view_form_plan_vuelo, post_new, post_detail
+from apps.plan_vuelo.views import view_plan_vuelo, view_panel_coordinacion, view_admin_coordinacion , view_aprobar_flp, view_tablero, view_update_flp, view_template_prueba, view_identificacion, view_validar_passwd, view_cerrar_sesion # view_form_plan_vuelo, post_new, post_detail
 
 urlpatterns = [
     path('planvuelo/',view_plan_vuelo, name='index_plan'),
@@ -16,7 +16,10 @@ urlpatterns = [
     path('admin_popup/<path:id_plancompleto>/',view_aprobar_flp, name='view_aprobar_flp'),
     
     path('identificacion/<int:id_trabajador>/', view_identificacion, name="view_identificacion"),
-    path('identificacions/aaaa', view_validar_passwd, name="view_validar_passwd"),
+    path('identificacion/validar', view_validar_passwd, name="view_validar_passwd"),
+
+    path('identificacion/terminaractividad', view_cerrar_sesion, name="view_cerrar_sesion"),
+    
 
     path('adminy/template_prueba/',view_template_prueba, name='view_template_prueba'),
 

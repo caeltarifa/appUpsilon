@@ -272,12 +272,12 @@
                                         </span>
                                     </a>
 
-                                    <ul class="dropdown-menu dropdown-menu-right" style="background-color: #ffffff;">
+                                    <ul  class="dropdown-menu dropdown-menu-right" style="background-color: #ffffff;">
                                         <li class="arrow_box_right">
                                             <form>
                                                 <div class="input-group search-box">
                                                     <div class="position-relative has-icon-right full-width">
-                                                        <input class="form-control" id="search" type="text"
+                                                        <input class="form-control" id="busca_personas" type="text"
                                                             placeholder="Buscar...">
                                                         <div class="form-control-position">
                                                             <span class="material-icons">
@@ -288,22 +288,44 @@
                                                 </div>
                                             </form>
                                         </li>
-
-                                        {% for persona in equipo_trabajo %}
-                                        <div class="dropdown-divider"></div>
-                                            <li>
-                                                <div class="input-group">
-                                                    <a class="dropdown-item" onclick="abrir_modal( '{% url 'view_identificacion' id_trabajador=persona.ci%}')" >
-                                                        <i class="ft-user"></i> 
-                                                        {{persona.nombre}}
-                                                        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                                                        <span class="material-icons">
-                                                            fingerprint
-                                                        </span>
-                                                    </a>
-                                                </div>
-                                            </li>
-                                        {% endfor %}    
+                                        
+                                        <div id="grupo_trabajo">
+                                            {% for persona in equipo_trabajo %}
+                                                <div class="dropdown-divider"></div>
+                                                <li>
+                                                    <div class="input-group">
+                                                        
+                                                        {% if persona.activo %}
+                                                            <a id="{{persona.ci}}" class="dropdown-item" onclick="cerrar_sesion( '{% url 'view_cerrar_sesion' %}?id_trabajador={{persona.ci}}')" >
+                                                                <i class="ft-user"></i> 
+                                                                {{persona.nombre}}
+                                                                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                                                                <button class="btn btn-outline-danger">
+                                                                    <span class="material-icons">
+                                                                        close
+                                                                    </span>    
+                                                                </button>
+                                                            </a>
+                                                        {% else %}
+                                                            <a class="dropdown-item" onclick="abrir_modal( '{% url 'view_identificacion' id_trabajador=persona.ci%}')" >
+                                                                <i class="ft-user"></i> 
+                                                                {{persona.nombre}}
+                                                                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    
+                                                                <button class="btn btn-outline-primary"> 
+                                                                    <span class="material-icons">
+                                                                        fingerprint
+                                                                    </span>
+                                                                </button>
+    
+                                                            </a>
+                                                        {% endif %}
+                                                            
+                                                        
+                                                    </div>
+                                                </li>
+                                            {% endfor %}    
+                                        </div>
                                     </ul>
                                 </li>
                                 <!--BUSCAR-->
@@ -580,18 +602,52 @@
 {% block extrajs %}
 <script>
     $(function(){
+
         $("#buttonapps").trigger("click");
+
+        //FILTER FOR THE SEARCH PERSONS IN NAVBAR
+        $("#busca_personas").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#grupo_trabajo li").filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+        //FILTER FOR THE SEARCH PERSONS IN NAVBAR
+        
     });
 
     $("#buttonapps").click(function(){
         $(this).toggleClass("clicked");
     });
 
+    
+    
     function abrir_modal(url) {
         //alert(url);
         $("#modal").load(url.trim(), function() {
             $(this).modal('show');
         });
+    }
+
+    function cerrar_sesion(urlx) {
+        //alert(urlx)
+        $.ajax({
+            type:'GET',
+            url: urlx,
+            //data:$(this).serialize(),
+            success: function (request){
+                console.log(request.respuesta);
+                if (request.respuesta) {
+                    location.reload();
+                }else{
+                    console.log("HUBO UN ERROR AL CERRAR SESION");
+                }
+            },
+            error: function (e) {
+                console.log(e);
+            }   
+        })
+        
     }
 
 </script>

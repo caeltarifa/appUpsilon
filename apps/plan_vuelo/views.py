@@ -16,6 +16,7 @@ from apps.plan_vuelo.models import Flp_trafico, EntrePuntos_flp,Ruta_flp, Trabaj
 Ruta_flp2=Ruta_flp()
 EntrePuntos_flp2=EntrePuntos_flp()
 
+
 # Create your views here.
 
 def view_plan_vuelo(request):
@@ -29,7 +30,7 @@ def view_plan_vuelo(request):
 
 def view_panel_coordinacion(request):
     if request.user.is_authenticated and request.user.groups.filter(name='CONTROLADORESLP').exists():
-        equipo_coordinacion = Trabajador.objects.raw("select ci, nombre, apellido from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and activo=true and empresa_institucion_id=1 order by apellido")
+        equipo_coordinacion = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and empresa_institucion_id=1 order by activo")
         return render(request, 'temp_plan_vuelo/index_coordinacion.html' ,{'equipo_trabajo': equipo_coordinacion} )#,'metar':metar} )
     else:
         return redirect('login')
@@ -43,9 +44,10 @@ def view_admin_coordinacion(request):
         
         #----metar=Metar_trafico.objects.raw("select * from plan_vuelo_metar_trafico order by fecha_llegada desc limit 100")
 
-        #-----------------equipo_coordinacion = Trabajador.objects.raw("select * from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id)")
+        equipo_coordinacion = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and empresa_institucion_id=1 order by activo")
 
-        return render(request, 'temp_plan_vuelo/progreso_vuelo.html', {'lista_fpl':lista_fpl} )#,'metar':metar} )
+
+        return render(request, 'temp_plan_vuelo/progreso_vuelo.html', {'lista_fpl':lista_fpl , 'equipo_trabajo': equipo_coordinacion} )#,'metar':metar} )
         #return render(request,'temp_plan_vuelo/admin.html')
     else:
         return redirect('login')
@@ -53,8 +55,8 @@ def view_admin_coordinacion(request):
 def view_aprobar_flp(request, id_plancompleto):
     if request.user.is_authenticated and request.user.is_active:        
         #plan_completo = Flp_trafico.objects.filter(id_mensaje=id_plancompleto)[0]
-        if Flp_trafico.objects.filter(id_mensaje=id_plancompleto).exists():
-            plan_completo = Flp_trafico.objects.filter(id_mensaje=id_plancompleto)
+        if Flp_trafico.objects.filter(id_mensaje=str(id_plancompleto)).exists():
+            plan_completo = Flp_trafico.objects.filter(id_mensaje=str(id_plancompleto))
             fpl=plan_completo[0]
             context=serializar_fpl(plan_completo[0])
 
@@ -87,9 +89,14 @@ def view_aprobar_flp(request, id_plancompleto):
                 'id_mensaje': 'NOT FOUND ERROR 404'
             }
         
+        equipo_activo = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and activo=true and empresa_institucion_id=1 order by activo")
+        equipo_activo={
+            'equipo_activo':equipo_activo,
+            }
+        context.update(equipo_activo)
         #obteniendo el cuerpo del plan de vuelo tipoavion, velocidad, nivel
 
-        return render(request, 'temp_plan_vuelo/aprobar_plan.html', context ) #retorno el modal y el contexto
+        return render(request, 'temp_plan_vuelo/aprobar_plan.html', context  ) #retorno el modal y el contexto
     else:
         return redirect('accounts/login/')
     
@@ -156,6 +163,9 @@ def view_validar_passwd(request):
 
             if persona.exists():
                 if str(persona[0].codigo) in str(passwd):
+                    persona=Trabajador.objects.get(ci=codigo_trabajador)
+                    persona.activo=True
+                    persona.save()
                     return JsonResponse({'respuesta':True}, status=200)
 
         return JsonResponse({'respuesta':False}, status=200)
@@ -163,6 +173,22 @@ def view_validar_passwd(request):
         return redirect('accounts/login/')
 
 
+def view_cerrar_sesion(request):
+    if request.user.is_authenticated and request.user.is_active:
+        if request.is_ajax and request.method =="GET":
+            carnet = request.GET.get('id_trabajador')
+            
+            persona=Trabajador.objects.filter(ci=carnet)
+
+            if persona.exists():
+                persona=Trabajador.objects.get(ci=carnet)
+                persona.activo=False
+                persona.save()
+                return JsonResponse({'respuesta':True}, status=200)
+
+        return JsonResponse({'respuesta':False}, status=200)
+    else:
+        return redirect('accounts/login/')
 
 
 
