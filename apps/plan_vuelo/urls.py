@@ -1,6 +1,9 @@
 from django.conf.urls import url, include
 from django.urls import path, re_path
-from apps.plan_vuelo.views import view_plan_vuelo, view_panel_coordinacion, view_admin_coordinacion , view_aprobar_flp, view_tablero, view_update_flp, view_template_prueba, view_identificacion, view_validar_passwd, view_cerrar_sesion # view_form_plan_vuelo, post_new, post_detail
+from apps.plan_vuelo.views import view_plan_vuelo, view_panel_coordinacion, view_admin_coordinacion , view_aprobar_flp, view_tablero, view_update_flp, view_template_prueba, view_identificacion, view_validar_passwd, view_cerrar_sesion , view_recordar_ruta, view_rutas_guardadas
+from apps.plan_vuelo.views import view_restaurar_ruta, view_archivar_ruta
+
+ # view_form_plan_vuelo, post_new, post_detail
 
 urlpatterns = [
     path('planvuelo/',view_plan_vuelo, name='index_plan'),
@@ -28,4 +31,10 @@ urlpatterns = [
     #url(r'^admin_popup/(?P<id_plancompleto>.+)/?$',view_aprobar_flp, name='view_aprobar_flp'),
     
     #path('generacion_fpl/', include('apps.generacion_fpl.urls')),
+
+
+    path('rutasguardadas/', view_rutas_guardadas, name="view_rutas_guardadas"),
+    path('rutasguardadas/restaurar', view_restaurar_ruta, name='view_restaurar_ruta'),
+    path('rutasguardadas/archivar', view_archivar_ruta, name='view_archivar_ruta'),
+    path('recordarruta/', view_recordar_ruta, name='view_recordar_ruta'),
 ]

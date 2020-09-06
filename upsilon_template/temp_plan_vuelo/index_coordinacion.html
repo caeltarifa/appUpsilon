@@ -10,6 +10,7 @@
 
 {% block extra_head %}
     <style>
+        /* -------------- CARDS OF BUTTONS, MAIN MENU FOR INDEX -------------- */
         .buttons {
             display: -webkit-flex; 
             display: -ms-flexbox; 
@@ -145,6 +146,7 @@
                 flex: 1 100%;
             }
         }
+        /* -------------- CARDS OF BUTTONS, MAIN MENU FOR INDEX -------------- */
 
         
         
@@ -567,8 +569,10 @@
         </div>
     
         <div class="butFrame bounce" onClick="window.location='#'">
-          <img src="http://www.neodigital.com.au/thumbnailsmall/Button5.jpg" />
-          <div class="butHeading">fpl aprobados</div>
+            <a href="{% url 'view_admin_coordinacion' %}">
+                <img src="http://www.neodigital.com.au/thumbnailsmall/Button5.jpg" />
+                <div class="butHeading">fpl aprobados</div>
+            </a>
         </div>
     
     </div>
@@ -577,8 +581,10 @@
     <div class="buttons">
         
         <div class="butFrame bounce" onClick="window.location='#'">
-          <img src="http://www.neodigital.com.au/thumbnailsmall/Button6.jpg" />
-          <div class="butHeading">rutas</div>
+            <a href="{% url 'view_rutas_guardadas' %}">
+                <img src="http://www.neodigital.com.au/thumbnailsmall/Button6.jpg" />
+                <div class="butHeading">rutas</div>
+            </a>
         </div>
     
         <div class="butFrame bounce" onClick="window.location='#'">

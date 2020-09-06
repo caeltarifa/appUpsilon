@@ -78,6 +78,7 @@ class Ruta_guardada(models.Model):
     destino = models.CharField(max_length=4)
     rutas = models.CharField(max_length=30)
     puntos_limite = models.CharField(max_length=60)
+    archivada = models.BooleanField(default=False)
     def __unicode__(self):
         return self.id_ruta, self.rutas
     

@@ -427,21 +427,25 @@
                     <i class="ft-home"></i>
                 </a>
             </li>
+
             <li class=" nav-item">
                 <a href="#_planes_aprobados">
-                    <i class="ft-pie-chart"></i>
+                    <i class="ft-trash"></i>
                 </a>
             </li>
+
             <li class=" nav-item">
                 <a href="#_notams">
-                    <i class="ft-droplet"></i>
+                    <i class="ft-plus"></i>
                 </a>
             </li>
+
             <li class=" nav-item">
                 <a href="#_metars">
-                    <i class="ft-layers"></i>
+                    <i class="ft-edit"></i>
                 </a>
             </li>
+            
         </ul>
     </div>
 
@@ -458,7 +462,7 @@
             <div class="card" style="box-shadow: 2px 2px 8px 0 black; min-height: 30%;  max-height: 100%; ">
 
                 <div class="card-header">
-                    <h3 class="card-title">Planes Recientes</h3>
+                    <h3 class="card-title">RUTAS VIGENTES</h3>
                     <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
                     <div class="heading-elements">
                         <ul class="list-inline mb-0">
@@ -507,34 +511,57 @@
                         <table id="tabla_planes_recientes" class="table table-striped" align="center" style="text-align:center;">
                             <thead>
                                 <tr>
-                                    <th scope="col">ID AMHS</th>
-                                    <th scope="col">Tiempo</th>
-                                    <th scope="col">FPL</th>
+                                    <th scope="col">#</th>
                                     <th scope="col">Origen</th>
-                                    <th scope="col">Destino</th>
-                                    <th scope="col">Tiempo de vuelo</th>
+                                    <th scope="col">Ruta</th>
+                                    <th scope="col"></th>
                                     <th scope="col"></th>
                                 </tr>
                             </thead>
                             <tbody id="toUpdate_fpl">
+                                {% for rutavig in rutas_vigentes %}
+                                <tr >
+                                    <th width="10%"id="{{rutavig.id_ruta}}" scope="row">{{forloop.counter}}</th>
+                                    <th width="50%">
+                                        <div class="container" style=" margin-left:15%;">
+                                            <div class="row">
+                                                <span style="font-size:15px;"> 
+                                                    {{rutavig.origen}}
+                                                </span>
+                                                &nbsp;&nbsp;
+                                                <span class="material-icons" style="transform: rotate(90deg); font: size 50px;" >
+                                                    flight
+                                                </span>
+                                                _____________
+                                                &nbsp;&nbsp;
+                                                <span style="font-size:15px;"> 
+                                                    {{rutavig.destino}}
+                                                </span>
+                                            </div>
+                                            <br>
+                                        </div>
+                                    </th>
+                                    <td width="30%">
+                                        {{rutavig.rutas}} <br> {{rutavig.puntos_limite}}
+                                    </td>
+                                    
+                                    <td width="5%">
+                                        <button class="btn btn-outline-info" onclick="abrir_modal( )">
+                                            <span class="material-icons" style="transform: rotate(0deg); font: size 50px;" >
+                                                edit
+                                            </span>
+                                        </button>
+                                    </td>
 
-                                {% for fpl in lista_fpl %}
-                                <tr>
-                                    <th id="{{elemen.id}}" width="5%" scope="row">{{fpl.id_amhs}}</th>
-                                    <th width="5%">{{fpl.hora_amhs}} <br> {{fpl.fecha|slice:"2:"}} </th>
-                                    <td width="5%">{{fpl.id_aeronave|slice:"5:11"}}</td>
-                                    <td width="5%">{{fpl.aeropuerto_salida|slice:"1:5"}} <br> {{fpl.aeropuerto_salida|slice:"5:10"}}</td>
-                                    <td width="5%">{{fpl.aeropuerto_destino|slice:"1:5"}}</td>
-                                    <td width="5%">{{fpl.aeropuerto_destino|slice:"5:9"}}</td>
-                                    <td width="15%">
-                                        <!--
-                                        -->
-                                        <button class="btn btn-outline-info" onclick="abrir_modal( '{% url 'view_aprobar_flp' id_plancompleto=fpl.id_mensaje%}')">Ver FLP</button>
-
+                                    <td width="5%">
+                                        <button class="btn btn-outline-info" onclick="restore_route('{{rutavig.id_ruta}}','archivar')">
+                                            <span class="material-icons red">
+                                                delete
+                                            </span>
+                                        </button>
                                     </td>
                                 </tr>
                                 {% endfor %}
-                                
                             </tbody>
                         </table>
                     </div>
@@ -555,7 +582,7 @@
         <div class="col-10" style="align-content: center;">
             <div class="card" style="box-shadow: 2px 2px 8px 0 black; min-height: 30%;  max-height: 100%;">
                 <div class="card-header">
-                    <h4 class="card-title">Planes aprobados</h4>
+                    <h4 class="card-title">RUTAS ARCHIVADAS</h4>
                     
                     <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
                     <div class="heading-elements">
@@ -571,25 +598,51 @@
                 </div>
                 <div class="card-content collapse show" style="height: 75%; overflow-y: auto;">
                     <div class="table-responsive">
-                        <table class="table table-striped">
+                        <table id="tabla_planes_recientes" class="table table-striped" align="center" style="text-align:center;">
                             <thead>
                                 <tr>
-                                    <th scope="col">ID AMHS</th>
-                                    <th scope="col">Tiempo</th>
-                                    <th scope="col">FPL</th>
+                                    <th scope="col">#</th>
                                     <th scope="col">Origen</th>
-                                    <th scope="col">Destino</th>
-                                    <th scope="col">Tiempo de vuelo</th>
+                                    <th scope="col">Ruta</th>
                                     <th scope="col"></th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>Mark</td>
-                                    <td>Otto</td>
-                                    <td>@mdo</td>
+                            <tbody id="toUpdate_fpl">
+                                {% for rutavig in rutas_archivadas %}
+                                <tr >
+                                    <th width="10%"id="{{rutavig.id_ruta}}" scope="row"> {{forloop.counter}} </th>
+                                    <th width="50%">
+                                        <div class="container" style=" margin-left:15%;">
+                                            <div class="row">
+                                                <span style="font-size:15px;"> 
+                                                    {{rutavig.origen}}
+                                                </span>
+                                                &nbsp;&nbsp;
+                                                <span class="material-icons" style="transform: rotate(90deg); font: size 50px;" >
+                                                    flight
+                                                </span>
+                                                _____________
+                                                &nbsp;&nbsp;
+                                                <span style="font-size:15px;"> 
+                                                    {{rutavig.destino}}
+                                                </span>
+                                            </div>
+                                            <br>
+                                        </div>
+                                    </th>
+                                    <td width="20%">
+                                        {{rutavig.rutas}} <br> {{rutavig.puntos_limite}}
+                                    </td>
+                                    <td width="20%">
+                                        <button class="btn btn-outline-info" onclick="restore_route('{{rutavig.id_ruta}}','restaurar')">
+                                            <span class="material-icons green" style="color: #36d131;">
+                                                restore_from_trash
+                                            </span>
+                                        </button>
+                                    </td>
                                 </tr>
+
+                                {% endfor %}
                             </tbody>
                         </table>
                     </div>
@@ -603,14 +656,14 @@
 
 
 
-<!--NOTAMS-->
+<!--NUEVO-->
 <div id="_notams"></div><br><br><br><br>
 <section>
     <div class="row justify-content-center">
         <div class="col-10" style="align-content: center;">
             <div class="card" style="box-shadow: 2px 2px 8px 0 black; min-height: 30%;  max-height: 100%;">
                 <div class="card-header">
-                    <h4 class="card-title">NOTAMS</h4>
+                    <h4 class="card-title">NUEVO</h4>
                     <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
                     <div class="heading-elements">
                         <ul class="list-inline mb-0">
@@ -624,114 +677,117 @@
 
                 </div>
                 <div class="card-content collapse show" style="height: 75%; overflow-y: auto;">
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">First Name</th>
-                                    <th scope="col">Last Name</th>
-                                    <th scope="col">Username</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>Mark</td>
-                                    <td>Otto</td>
-                                    <td>@mdo</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">2</th>
-                                    <td>Jacob</td>
-                                    <td>Thornton</td>
-                                    <td>@fat</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    
+
+                    <div class="container" id="contenidoid">
+                        <div class="row align-items-center ">
+                            
+                            
+                            <div class="col-md-4" style="margin-left:35%">
+
+                                <div class="form-group">
+                                    <label for="usr">Origen:</label>
+                                    <input type="text" class="form-control" id="guardar_origenid" >
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="usr">Destino:</label>
+                                    <input type="text" class="form-control" id="guardar_destinoid">
+                                </div>
+
+                                <div id="seccionagregarid" style=" padding:10px 13px;" >
+    
+                                    <!-- LISTA DE PUNTOS Y RUTAS OPCIONALES --- FILA PARA ELEGIR LA RUTA A USAR -->
+                                    <div class="row" id="lista_ruta1" >
+                                        <div id="output_ruta1"></div>
+                                        <select id="sel_ruta1"  data-placeholder="RUTA" onchange="mostrarPuntosActuales('sel_ruta1')">
+                                            <option value="0" >RUTA</option>
+                                            {% for ruta_x in todaruta %}
+                                            <option value="{{ruta_x.ruta}}">{{ruta_x.nombre_ruta}}</option>                                        
+                                            {% endfor %}
+                                        </select>
+    
+                                        <div id="output_inicio1" ></div>
+                                            <select id="sel_inicio1" data-placeholder="Inicio y Fin" class="chosen-select_inicio1" multiple>
+                                                {% for punto in todopuntos  %}    
+                                                <option value="{{punto.puntoInicial}}">{{punto.puntoInicial}}</option>                                                
+                                                {% endfor %}
+                                            </select>      
+                                    </div>
+    <br>
+                                    <div class="row" id="lista_ruta2">
+                                        <div id="output_ruta2"></div>
+                                        <select id="sel_ruta2" data-placeholder="RUTA" onchange="mostrarPuntosActuales('sel_ruta2')">
+                                            <option value="0" >RUTA</option>
+                                            {% for ruta_x in todaruta %}
+                                            <option value="{{ruta_x.ruta}}">{{ruta_x.nombre_ruta}}</option>                                        
+                                            {% endfor %}
+                                        </select>
+    
+                                        <div id="output2"></div>
+                                        <select id="sel_inicio2" data-placeholder="INICIO" name="tags[]"  class="chosen-select" multiple>
+                                            {% for punto in todopuntos  %}    
+                                            <option value="{{punto.puntoInicial}}">{{punto.puntoInicial}}</option>                                                
+                                            {% endfor %}
+                                        </select>
+    
+                                    </div>
+    <br>
+                                    <div class="row" id="lista_ruta3">
+                                        <div id="output_ruta3"></div>
+                                        <select id="sel_ruta3" data-placeholder="RUTA">
+                                            <option value="0" >RUTA</option>
+                                            {% for ruta_x in todaruta %}
+                                            <option value="{{ruta_x.ruta}}">{{ruta_x.nombre_ruta}}</option>                                        
+                                            {% endfor %}
+                                        </select>
+    
+                                        <div id="output_inicio3"></div>
+                                        <select id="sel_inicio3" data-placeholder="INICIO" name="tags[]"  class="chosen-select" multiple>
+                                            {% for punto in todopuntos  %}    
+                                            <option value="{{punto.puntoInicial}}">{{punto.puntoInicial}}</option>                                                
+                                            {% endfor %}
+                                        </select>    
+                                    </div>
+    <br>
+                                    <br>
+                                    <div class="row" style="align-items:center;">
+                                        
+                                        <button class="btn btn-outline-info" id="recordarid">
+                                            Guardar Ruta
+                                        </button>
+                                        &nbsp;&nbsp;&nbsp;
+                                        <div id="mensaje_rutaid"></div>
+                                    </div>
+                                </div>
+
+                                <br>
+                                <br>
+                                <br>
+    
+                            </div>
+
+    
+                        </div>
                     </div>
+
+
                 </div>
             </div>
         </div>
     </div>
 </section>
-<!--NOTAMS-->
+<!--NUEVO-->
 
 
-<!--METARS-->
+<!--EDITAR-->
 <div id="_metars"></div><br><br><br><br>
 <section>
     <div class="row justify-content-center">
         <div class="col-10" style="align-content: center;">
             <div class="card" style="box-shadow: 2px 2px 8px 0 black; min-height: 30%;  max-height: 100%;">
                 <div class="card-header">
-                    <h4 class="card-title">METARS</h4>
+                    <h4 class="card-title">EDITAR</h4>
                     <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
                     <div class="heading-elements">
                         <ul class="list-inline mb-0">
@@ -745,39 +801,19 @@
 
                 </div>
                 <div class="card-content collapse show" style="height: 75%; overflow-y: auto;">
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th scope="col" width="50px">id_amhs</th>
-                                    <th scope="col">fecha_hora</th>
-                                    <th scope="col">Prioridad</th>
-                                    <th scope="col">Estacion</th>
-                                    <th scope="col">Hora_clima</th>
-                                    <th scope="col">Mensaje</th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                    
+                    
 
-                                {% for metarlinea in metar %}
-                                <tr>
-                                    <th scope="row">{{metarlinea.id_amhs}}</th>
-                                    <td>{{metarlinea.hora_amhs}}</td>
-                                    <td>{{metarlinea.prioridad}}</td>
-                                    <td>{{metarlinea.estacion}}</td>
-                                    <td>{{metarlinea.hora_clima}}</td>
-                                    <td>{{metarlinea.texto}}</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
+
+
+
+
                 </div>
             </div>
         </div>
     </div>
 </section>
-<!--METARS-->
+<!--EDITAR-->
 
 {% endblock content %} 
 
@@ -817,30 +853,6 @@
         }
     }
 
-    //REQUESTO TO SERVER FOR UPDATE DATA
-    function loadXMLDoc() {
-        var xmlhttp = new XMLHttpRequest();
-        //xmlhttp.responseType='json'
-        xmlhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                //myFunction(JSON.parse(xmlhttp.responseText));
-                myFunction(this);
-            }else{
-                console.log("no encontrado ,...")
-            }
-        };
-        xmlhttp.open("get", "{% url 'view_update_flp' %}", true);
-        xmlhttp.send();
-    }
-    
-    function myFunction(xml) {
-        documentoXML=xml.responseText;
-        console.log(documentoXML);
-        //console.log(">>>>>",documentoXML.getElementsByTagName("mensaje"));
-    }
-
-    //END TO REQUEST
-
 
     //DESPLAZAMIENTO SUAVIZADO
     $('.main-menu-content a').click(function(e){				
@@ -853,47 +865,12 @@
 
     $(document).ready(function () {
         $('#ocultarx').click(function(){
-            alert("hola mundo");
+            alert("text");
         });
 
     });
 
-    //ACTIVAR EL UPDATE FPL 
-        $("#update_fpl1").click(function(e){
-            e.preventDefault();
-            $.ajax({
-                //url:$(this).attr('action'),
-                //type:$(this).attr('method'),
-                //data:$(this).serialize(),
-                type:'GET',
-                url:'{% url 'view_update_flp' %}',
-                //data:$(this).serialize(),
-                success: function (respuesta){
-                    console.log(respuesta[0].id_mensaje);
-                    concatenado="";
-                    var a,b,c,d,e,f,g,h,i,j,k;
-                    for (let index = 0; index < respuesta.length; index++) {
-                                    a = "<tr>";
-                                    b = '<th id="{{elemen.id}}" width="5%" scope="row">' + respuesta[index].id_amhs + '</th>';
-                                    c = '<th width="5%">' + respuesta[index].hora_amhs + "<br>" + respuesta[index].fecha + "</th>";
-                                    d = '<td width="5%">' + respuesta[index].id_aeronave + '</td>';
-                                    e = '<td width="5%">' + respuesta[index].aeropuerto_salida + '<br>' + respuesta[index].aeropuerto_salida + '</td>';
-                                    f = '<td width="5%">' + respuesta[index].aeropuerto_destino + '</td>';
-                                    g = '<td width="5%">' + respuesta[index].aeropuerto_destino + '</td>';
-                                    h = '<td width="15%">';
-                                    i =  '<button class="btn btn-outline-info"' +  'onclick="'+ 'abrir_modal(' + "'/plan_vuelo/admin_popup/" + respuesta[index].id_mensaje+ "/'" + ')"'  + '>' +'Ver FLP</button>';
-                                    j = "</td>";
-                                    k = "</tr>";
-                                    concatenado=concatenado+ (a+b+c+d+e+f+g+h+i+j+k)
-                    }
-                    document.getElementById('toUpdate_fpl').innerHTML=concatenado;
-                    
-                }   
-            });
-
-            return false;
-        });
-
+    
 
 </script>
 
@@ -950,6 +927,174 @@
         })
         
     }
+
+</script>
+
+
+<script>
+    function restore_route(ruta, tipo){
+        if (tipo=="restaurar") {
+            urltosend="{% url 'view_restaurar_ruta' %}"
+        } else {
+            urltosend="{% url 'view_archivar_ruta' %}"
+        }
+
+        $.ajax({
+                type:'GET',
+                url: urltosend,
+                data:{'ruta':ruta},
+                success: function (request){
+                    if (request.estado) {
+                        location.reload();
+                    }else{
+                        Alert("HUBO UN ERROR AL PROCESAR");
+                    }
+                },
+                error: function (e) {
+                    console.log(e);
+                }   
+            })
+    }
+</script>
+
+<script>
+    //----------------------------------------
+        
+    //CHOSEN FOR THE FIRST OPTIONAL RUTA LIST
+    document.getElementById('output_ruta1').innerHTML = location.search;
+    $("#sel_ruta1").chosen({width: '90px'});
+    document.getElementById('output_inicio1').innerHTML = location.search;
+    $("#sel_inicio1").chosen({width: '200px',max_selected_options:2});
+
+    //CHOSEN FOR THE SECOND OPTIONAL RUTA LIST
+    document.getElementById('output_ruta2').innerHTML = location.search;
+    $("#sel_ruta2").chosen({width: '90px'});
+    document.getElementById('output_inicio1').innerHTML = location.search;
+    $("#sel_inicio2").chosen({width: '200px',max_selected_options:2});
+
+    //CHOSEN FOR THE THIRD OPTIONAL RUTA LIST
+    document.getElementById('output_ruta3').innerHTML = location.search;
+    $("#sel_ruta3").chosen({width: '90px'});
+    document.getElementById('output_inicio3').innerHTML = location.search;
+    $("#sel_inicio3").chosen({width: '200px',max_selected_options:2});
+</script>
+
+
+
+<script>
+    //RECORDAR RUTA MODIFICADA
+    $('#recordarid').click(function () {
+
+        error=false
+
+        rutas="";
+        seleccionados="";
+
+        if(document.getElementById('guardar_origenid').value == "" ){
+                $('#guardar_origenid').css({'border': '2px solid transparent','border-color':'red'})
+                error=true
+        }else{
+            $('#guardar_origenid').css({'border': '','border-color':''})
+        }
+
+        if(document.getElementById('guardar_destinoid').value == "" ){
+                $('#guardar_destinoid').css({'border': '2px solid transparent','border-color':'red'})
+                error=true
+        }else{
+            $('#guardar_destinoid').css({'border': '','border-color':''})
+        }
+
+
+
+        //OPTIONAL ROUTES FOR FLIGTH PLAN
+        if ($("#sel_ruta1 option:selected").text() !="" && $("#sel_ruta1 option:selected").text()!='RUTA' ) {
+
+            seleccionadosx=""
+            $('#sel_inicio1 :selected').each(function(){
+                seleccionadosx=seleccionadosx + $(this).text() +";";
+            });
+            //THEN TO ASK IF THE TEXTBOX OF POINTS IS DISTINCT TO "" EMPTY
+            if(seleccionadosx.split(";").length-1 < 2){
+                $('#lista_ruta1').css({'border': '2px solid transparent','border-color':'red'})
+                error=true
+            }else{
+                $('#lista_ruta1').css({'border': '','border-color':''})
+                seleccionados=seleccionados+seleccionadosx;
+                rutas=rutas + $("#sel_ruta1 option:selected").text()+";"
+            }
+        }else{
+            $('#lista_ruta1').css({'border': '2px solid transparent','border-color':'red'})
+            error=true
+        }
+
+
+        if ($("#sel_ruta2 option:selected").text() !="" && $("#sel_ruta2 option:selected").text()!='RUTA' ) {
+
+            seleccionadosx=""
+            $('#sel_inicio2 :selected').each(function(){
+                seleccionadosx=seleccionadosx + $(this).text() +";";
+            });
+            //THEN TO ASK IF THE TEXTBOX OF POINTS IS DISTINCT TO "" EMPTY
+            if(seleccionadosx.split(";").length-1 < 2){
+                $('#lista_ruta2').css({'border': '2px solid transparent','border-color':'red'})
+                error=true
+            }else{
+                $('#lista_ruta2').css({'border': '','border-color':''})
+                seleccionados=seleccionados+seleccionadosx;
+                rutas=rutas + $("#sel_ruta2 option:selected").text()+";"
+            }
+        }else{
+            $('#lista_ruta2').css({'border': '','border-color':''})
+        }
+
+        
+        if ($("#sel_ruta3 option:selected").text() !="" && $("#sel_ruta3 option:selected").text()!='RUTA' ) {
+
+            seleccionadosx=""
+            $('#sel_inicio3 :selected').each(function(){
+                seleccionadosx=seleccionadosx + $(this).text() +";";
+            });
+            //THEN TO ASK IF THE TEXTBOX OF POINTS IS DISTINCT TO "" EMPTY
+            if(seleccionadosx.split(";").length-1 < 2){
+                $('#lista_ruta3').css({'border': '2px solid transparent','border-color':'red'})
+                error=true
+            }else{
+                $('#lista_ruta3').css({'border': '','border-color':''})
+                seleccionados=seleccionados+seleccionadosx;
+                rutas=rutas + $("#sel_ruta3 option:selected").text()+";"
+            }
+        }else{
+            $('#lista_ruta3').css({'border': '','border-color':''})
+        }
+
+
+        datasend={
+            "origen":"{{origen}}",
+            "destino":"{{destino}}",
+            "rutas":rutas,
+            "puntos":seleccionados
+            
+        }
+
+        if(!error && rutas!="" && seleccionados!=""){
+            $.ajax({
+                type:'GET',
+                url: '{% url 'view_recordar_ruta' %}',
+                data: datasend,
+                //data:$(this).serialize(),
+                success: function (request){
+                    if (request.estado) {
+                        $('#mensaje_rutaid').text('Guardado exitoso')
+                        $('#mensaje_rutaid').css('color','green')
+                        location.reload();
+                    }else{
+                        $('#mensaje_rutaid').text('Verifique los datos de la ruta o la ruta ya existe')
+                        $('#mensaje_rutaid').css('color','red')
+                    }
+                }   
+            });
+        }
+    })
 
 </script>
 

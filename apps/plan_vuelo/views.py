@@ -84,7 +84,7 @@ def view_aprobar_flp(request, id_plancompleto):
             
             context.update(ficha)
 
-            rutas_guardadas=Ruta_guardada.objects.filter(origen= ficha['origen'], destino=ficha['destino'])
+            rutas_guardadas=Ruta_guardada.objects.filter(origen= ficha['origen'], destino=ficha['destino'], archivada=False)
 
             context.update({
                 'rutas_guardadas':rutas_guardadas,
@@ -200,13 +200,86 @@ def view_cerrar_sesion(request):
     else:
         return redirect('accounts/login/')
 
+def view_recordar_ruta(request):
+    #muestra las rutas recordadas para un origen y destino dado 
+    if request.user.is_authenticated and request.user.is_active:
+        dic={'estado':False}
+
+        if request.is_ajax and request.method =="GET":
+            getorigen = request.GET.dict()['origen']
+            getdestino = request.GET.dict()['destino']
+            getrutas = request.GET.dict()['rutas']
+            getpuntos = request.GET.dict()['puntos']
+
+            getrutas=getrutas[:len(getrutas)-1]
+            getpuntos=getpuntos[:len(getpuntos)-1]
+
+            consulta=Ruta_guardada.objects.filter(origen=getorigen, destino=getdestino,rutas = getrutas,puntos_limite = getpuntos)
+
+            if not consulta.exists():
+                objetoruta=Ruta_guardada(
+                    origen = getorigen,
+                    destino = getdestino,
+                    rutas = getrutas,
+                    puntos_limite = getpuntos
+                )
+                objetoruta.save()
+                dic={'estado':True}
+        
+        return JsonResponse(dic, status=200)
+    else:
+        return redirect('accounts/login/')
 
 
 
 
+def view_rutas_guardadas(request):
+    #muestra las rutas guardas, archivadas y vigentes
+    if request.user.is_authenticated and request.user.groups.filter(name='CONTROLADORESLP').exists():
+        equipo_coordinacion = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and empresa_institucion_id=1 order by activo")
+
+        rutas_archivadas=Ruta_guardada.objects.filter(archivada=True)
+        rutas_vigentes=Ruta_guardada.objects.filter(archivada=False)
+
+        return render(request, 'temp_plan_vuelo/rutas_guardadas.html' ,{'equipo_trabajo': equipo_coordinacion, 'rutas_archivadas': rutas_archivadas, 'rutas_vigentes': rutas_vigentes,'todaruta': Ruta_flp.objects.all(),'todopuntos': EntrePuntos_flp.objects.all(),} )#,'metar':metar} )
+    else:
+        return redirect('login')
 
 
+def view_restaurar_ruta(request):
+    #cambia de estado en las rutas, dado un id_ruta para restaurar
+    if request.user.is_authenticated and request.user.groups.filter(name='CONTROLADORESLP').exists():
+        response={
+            'estado': False,
+        }
+        if request.is_ajax and request.method =="GET":
+            getid_ruta = request.GET.dict()['ruta']
+            if Ruta_guardada.objects.filter(id_ruta=getid_ruta).exists():
+                Ruta_guardada.objects.filter(id_ruta=getid_ruta).update(archivada=False)
+                response={
+                    'estado': True,
+                }            
+        return JsonResponse(response, status=200)
+    else:
+        return redirect('login')
 
+
+def view_archivar_ruta(request):
+    #cambia de estado en las rutas, dado un id_ruta para eliminar o archivar
+    if request.user.is_authenticated and request.user.groups.filter(name='CONTROLADORESLP').exists():
+        response={
+            'estado': False,
+        }
+        if request.is_ajax and request.method =="GET":
+            getid_ruta = request.GET.dict()['ruta']
+            if Ruta_guardada.objects.filter(id_ruta=getid_ruta).exists():
+                Ruta_guardada.objects.filter(id_ruta=getid_ruta).update(archivada=True)
+                response={
+                    'estado': True,
+                }            
+        return JsonResponse(response, status=200)
+    else:
+        return redirect('login')
 
 
 
