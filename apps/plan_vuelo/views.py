@@ -69,7 +69,7 @@ def view_aprobar_flp(request, id_plancompleto):
                 'origen':fpl.aeropuerto_salida[1:5],
                 'salida':fpl.aeropuerto_salida[5:],
                 'destino':fpl.aeropuerto_destino[1:5],
-                'matricula':Ruta_flp2.getMatricula(fpl.otros),
+                'matricula': fpl.id_aeronave.split('-')[1] if Ruta_flp2.getMatricula(fpl.otros)=='NFound' else Ruta_flp2.getMatricula(fpl.otros),
                 'transmision':Ruta_flp2.getTransmision(fpl.otros),
                 #'ruta': lista_rutas,
                 
