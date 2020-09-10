@@ -1,3 +1,4 @@
+/*
 $(document).ready(function () {
   var lbltext = document.getElementById('plan_vuelo').innerHTML;
   array = lbltext.split("-");
@@ -14,7 +15,7 @@ $(document).ready(function () {
 
 });
 
-
+*/
 
 function imprim2() {
   var mywindow = window.open('', 'PRINT');
