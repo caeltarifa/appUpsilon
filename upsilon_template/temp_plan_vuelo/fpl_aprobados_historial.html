@@ -462,7 +462,7 @@
             <div class="card" style="box-shadow: 2px 2px 8px 0 black; min-height: 30%;  max-height: 100%; ">
 
                 <div class="card-header">
-                    <h3 class="card-title">RUTAS VIGENTES</h3>
+                    <h3 class="card-title">PLANES DE VUELO APROBAODS</h3>
                     <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
                     <div class="heading-elements">
                         <ul class="list-inline mb-0">
@@ -511,57 +511,34 @@
                         <table id="tabla_planes_recientes" class="table table-striped" align="center" style="text-align:center;">
                             <thead>
                                 <tr>
-                                    <th scope="col">#</th>
+                                    <th scope="col">ID AMHS</th>
                                     <th scope="col">Origen</th>
-                                    <th scope="col">Ruta</th>
-                                    <th scope="col"></th>
+                                    <th scope="col">Destino</th>
+                                    <th scope="col">fecha</th>
+                                    <th scope="col">hora</th>
+                                    <th scope="col">nombre</th>
                                     <th scope="col"></th>
                                 </tr>
                             </thead>
                             <tbody id="toUpdate_fpl">
-                                {% for rutavig in rutas_vigentes %}
-                                <tr >
-                                    <th width="10%"id="{{rutavig.id_ruta}}" scope="row">{{forloop.counter}}</th>
-                                    <th width="50%">
-                                        <div class="container" style=" margin-left:15%;">
-                                            <div class="row">
-                                                <span style="font-size:15px;"> 
-                                                    {{rutavig.origen}}
-                                                </span>
-                                                &nbsp;&nbsp;
-                                                <span class="material-icons" style="transform: rotate(90deg); font: size 50px;" >
-                                                    flight
-                                                </span>
-                                                _____________
-                                                &nbsp;&nbsp;
-                                                <span style="font-size:15px;"> 
-                                                    {{rutavig.destino}}
-                                                </span>
-                                            </div>
-                                            <br>
-                                        </div>
-                                    </th>
-                                    <td width="30%">
-                                        {{rutavig.rutas}} <br> {{rutavig.puntos_limite}}
-                                    </td>
-                                    
-                                    <td width="5%">
-                                        <button class="btn btn-outline-info" onclick="abrir_modal( )">
-                                            <span class="material-icons" style="transform: rotate(0deg); font: size 50px;" >
-                                                edit
-                                            </span>
-                                        </button>
-                                    </td>
 
-                                    <td width="5%">
-                                        <button class="btn btn-outline-info" onclick="restore_route('{{rutavig.id_ruta}}','archivar')">
-                                            <span class="material-icons red">
-                                                delete
-                                            </span>
-                                        </button>
+                                {% for fpl in aprobados_historial %}
+                                <tr>
+                                    <th id="{{elemen.id}}" width="5%" scope="row">{{fpl.id_flpaprobado_id}}</th>
+                                    <th width="5%">{{fpl.id_aeronave}}</th>
+                                    <td width="5%"><pre> {{fpl.aeropuerto_salida}}  -- {{fpl.aeropuerto_destino|slice:"1:5"}} </pre></td>
+                                    <td width="5%">{{fpl.fecha_aprobacion}} <br> {{fpl.aeropuerto_salida|slice:"5:10"}}</td>
+                                    <td width="5%">{{fpl.hora_aprobacion}}</td>
+                                    <td width="5%">{{fpl.nombre}} <br> {{fpl.apellido}} </td>
+                                    <td width="15%">
+                                        <!--
+                                        -->
+                                        <button class="btn btn-outline-info" onclick="abrir_modal( '% url 'view_aprobar_flp' id_plancompleto=fpl.id_mensaje%')">Ver FLP</button>
+
                                     </td>
                                 </tr>
                                 {% endfor %}
+                                
                             </tbody>
                         </table>
                     </div>
@@ -571,8 +548,6 @@
     </div>
 </section>
 <!-- Planes de vuelo recientes -->
-
-
 
 
 <!-- Plan de vuelos aprobados -->
@@ -597,63 +572,13 @@
 
                 </div>
                 <div class="card-content collapse show" style="height: 75%; overflow-y: auto;">
-                    <div class="table-responsive">
-                        <table id="tabla_planes_recientes" class="table table-striped" align="center" style="text-align:center;">
-                            <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Origen</th>
-                                    <th scope="col">Ruta</th>
-                                    <th scope="col"></th>
-                                </tr>
-                            </thead>
-                            <tbody id="toUpdate_fpl">
-                                {% for rutavig in rutas_archivadas %}
-                                <tr >
-                                    <th width="10%"id="{{rutavig.id_ruta}}" scope="row"> {{forloop.counter}} </th>
-                                    <th width="50%">
-                                        <div class="container" style=" margin-left:15%;">
-                                            <div class="row">
-                                                <span style="font-size:15px;"> 
-                                                    {{rutavig.origen}}
-                                                </span>
-                                                &nbsp;&nbsp;
-                                                <span class="material-icons" style="transform: rotate(90deg); font: size 50px;" >
-                                                    flight
-                                                </span>
-                                                _____________
-                                                &nbsp;&nbsp;
-                                                <span style="font-size:15px;"> 
-                                                    {{rutavig.destino}}
-                                                </span>
-                                            </div>
-                                            <br>
-                                        </div>
-                                    </th>
-                                    <td width="20%">
-                                        {{rutavig.rutas}} <br> {{rutavig.puntos_limite}}
-                                    </td>
-                                    <td width="20%">
-                                        <button class="btn btn-outline-info" onclick="restore_route('{{rutavig.id_ruta}}','restaurar')">
-                                            <span class="material-icons green" style="color: #36d131;">
-                                                restore_from_trash
-                                            </span>
-                                        </button>
-                                    </td>
-                                </tr>
-
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
+                    FDFD
                 </div>
             </div>
         </div>
     </div>
 </section>
 <!-- Planes de vuelo aprobados -->
-
-
 
 
 <!--NUEVO-->

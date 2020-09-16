@@ -41,8 +41,16 @@ def view_pagina_principal(request):
                 return redirect('view_admin_comunicaciones')
 
         if request.user.groups.filter(name='CONTROLADORESLP').exists():
-            if request.user.username in 'acc_coordinacion@aasana':
+            if request.user.username in 'acc_coordinacionlp@aasana':
                 return redirect('view_panel_coordinacion')
+        
+        if request.user.groups.filter(name='EJECUTIVOSLP').exists():
+            if request.user.username in 'acc_ejecutivolp@aasana':
+                return redirect('view_panel_ejecutivo')
+
+        if request.user.groups.filter(name='SUPERVISORESLP').exists():
+            if request.user.username in 'acc_supervisorlp@aasana':
+                return redirect('view_panel_supervisor')
 
         #RETURN POR DEFECTO
         return render(request, 'temp_plan_vuelo/prohibido.html' )#,'metar':metar} )

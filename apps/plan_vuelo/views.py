@@ -7,12 +7,13 @@ from django.contrib.auth.models import Group
 
 import datetime
 
+
 from django.db.models import Q
 #from django.shortcuts import render_to_response
 
 
 #from apps.plan_vuelo.forms import Vuelo_Aprobado_form, PostForm
-from apps.plan_vuelo.models import Flp_trafico, EntrePuntos_flp,Ruta_flp, Trabajador, Ruta_guardada
+from apps.plan_vuelo.models import Flp_trafico, EntrePuntos_flp,Ruta_flp, Trabajador, Ruta_guardada, Flp_aprobado
 Ruta_flp2=Ruta_flp()
 EntrePuntos_flp2=EntrePuntos_flp()
 
@@ -29,7 +30,7 @@ def view_plan_vuelo(request):
         return redirect('login')
 
 def view_panel_coordinacion(request):
-    if request.user.is_authenticated and request.user.groups.filter(name='CONTROLADORESLP').exists():
+    if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='CONTROLADORESLP').exists():
         equipo_coordinacion = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and empresa_institucion_id=1 order by activo")
         return render(request, 'temp_plan_vuelo/index_coordinacion.html' ,{'equipo_trabajo': equipo_coordinacion} )#,'metar':metar} )
     else:
@@ -38,7 +39,10 @@ def view_panel_coordinacion(request):
 def view_admin_coordinacion(request):
     controladores=Group.objects.get(name='CONTROLADORESLP')
     if request.user.is_authenticated and request.user.groups.filter(name='CONTROLADORESLP').exists():
-        lista_fpl=Flp_trafico.objects.raw("select id_mensaje as id, id_mensaje, substring(id_mensaje, 1, 7) as id_amhs, substring(id_mensaje, 15,22) as fecha, substring(aftn2, 1,6) as hora_amhs, aftn1, aftn2, id_aeronave, reglas_vuelo, aeropuerto_salida, ruta, aeropuerto_destino, otros from plan_vuelo_flp_trafico order by id_amhs desc limit 90;")
+        lista_fpl=Flp_trafico.objects.raw("select id_mensaje as id, id_mensaje, substring(id_mensaje, 1, 7) as id_amhs, substring(id_mensaje, 15,22) as fecha, substring(aftn2, 1,6) as hora_amhs, aftn1, aftn2, id_aeronave, reglas_vuelo, aeropuerto_salida, ruta, aeropuerto_destino, otros from plan_vuelo_flp_trafico where aprobado=false order by id_amhs desc limit 90;")
+        
+        lista_fpl_aprobado = Flp_trafico.objects.raw("select id_mensaje as id, id_mensaje, substring(id_mensaje, 1, 7) as id_amhs, substring(id_mensaje, 15,22) as fecha, substring(aftn2, 1,6) as hora_amhs, aftn1, aftn2, id_aeronave, reglas_vuelo, aeropuerto_salida, ruta, aeropuerto_destino, otros from plan_vuelo_flp_trafico where aprobado=true order by id_amhs desc limit 90;")
+
         #id_mensaje, id_amhs, fecha, hora_amhs, aftn1, aftn2, id_aeronave, reglas_vuelo, aeropuerto_salida, ruta, aeropuerto_destino, otros
         #eliminando los planes de vuelo que no tengas IS
         
@@ -47,13 +51,13 @@ def view_admin_coordinacion(request):
         equipo_coordinacion = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and empresa_institucion_id=1 order by activo")
 
 
-        return render(request, 'temp_plan_vuelo/progreso_vuelo.html', {'lista_fpl':lista_fpl , 'equipo_trabajo': equipo_coordinacion} )#,'metar':metar} )
+        return render(request, 'temp_plan_vuelo/progreso_vuelo.html', {'lista_fpl':lista_fpl ,'lista_fpl_aprobado':lista_fpl_aprobado , 'equipo_trabajo': equipo_coordinacion} )#,'metar':metar} )
         #return render(request,'temp_plan_vuelo/admin.html')
     else:
         return redirect('login')
 
 def view_aprobar_flp(request, id_plancompleto):
-    if request.user.is_authenticated and request.user.is_active:        
+    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='CONTROLADORESLP').exists():        
         #plan_completo = Flp_trafico.objects.filter(id_mensaje=id_plancompleto)[0]
         if Flp_trafico.objects.filter(id_mensaje=str(id_plancompleto)).exists():
             plan_completo = Flp_trafico.objects.filter(id_mensaje=str(id_plancompleto))
@@ -117,11 +121,12 @@ def view_aprobar_flp(request, id_plancompleto):
 ##VIEW FOR TO SEND DATA FOR THE TEMPLATE
 import json
 def view_update_flp (request):
-    if request.user.is_authenticated and request.user.is_active:
+    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='CONTROLADORESLP').exists():
         if request.is_ajax and request.method =="GET":
-            lista_fpl=Flp_trafico.objects.raw("select id_mensaje, substring(id_mensaje, 1, 7) as id_amhs, substring(id_mensaje, 15,22) as fecha, substring(aftn2, 1,6) as hora_amhs, aftn1, aftn2, id_aeronave, reglas_vuelo, aeropuerto_salida, ruta, aeropuerto_destino, otros from plan_vuelo_flp_trafico order by id_amhs desc limit 90;")
-            lista_fpl = [serializar_fpl(fpl) for fpl in lista_fpl]
+            lista_fpl=Flp_trafico.objects.raw("select id_mensaje, substring(id_mensaje, 1, 7) as id_amhs, substring(id_mensaje, 15,22) as fecha, substring(aftn2, 1,6) as hora_amhs, aftn1, aftn2, id_aeronave, reglas_vuelo, aeropuerto_salida, ruta, aeropuerto_destino, otros from plan_vuelo_flp_trafico where aprobado=false order by id_amhs desc limit 90;")
+            lista_fpl = [serializar_fpl_update(fpl) for fpl in lista_fpl]
             return HttpResponse(json.dumps(lista_fpl), content_type='application/json')
+            #return HttpResponse({'lista_fpl':lista_fpl}, content_type='application/json')
         return JsonResponse({'respuesta':"ningun resultado"}, status=400)
     else:
         return redirect('accounts/login/')
@@ -137,12 +142,27 @@ def serializar_fpl(fpl):
         'rutafpl':fpl.ruta ,
         'aeropuerto_destino':fpl.aeropuerto_destino ,
         'otros':fpl.otros ,
+    }
 
+def serializar_fpl_update(fpl):
+    return {
+        'id_mensaje' : fpl.id_mensaje, 
+        'id_amhs' : fpl.id_amhs, 
+        'fecha' : fpl.fecha, 
+        'hora_amhs' : fpl.hora_amhs, 
+        'aftn1' : fpl.aftn1, 
+        'aftn2' : fpl.aftn2, 
+        'id_aeronave' : fpl.id_aeronave, 
+        'reglas_vuelo' : fpl.reglas_vuelo, 
+        'aeropuerto_salida' : fpl.aeropuerto_salida, 
+        'ruta' : fpl.ruta, 
+        'aeropuerto_destino' : fpl.aeropuerto_destino, 
+        'otros' : fpl.otros,
     }
 
 
 def view_identificacion(request, id_trabajador):
-    if request.user.is_authenticated and request.user.is_active:        
+    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='CONTROLADORESLP').exists():        
         if Trabajador.objects.filter(ci=int(id_trabajador)).exists():
             persona = Trabajador.objects.filter(ci=id_trabajador)[0]
             persona = {
@@ -162,7 +182,7 @@ def view_identificacion(request, id_trabajador):
 
 
 def view_validar_passwd(request):
-    if request.user.is_authenticated and request.user.is_active:
+    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='CONTROLADORESLP').exists():
         if request.is_ajax and request.method =="GET":
             cadena = request.GET.get('parametro')
             
@@ -184,7 +204,7 @@ def view_validar_passwd(request):
 
 
 def view_cerrar_sesion(request):
-    if request.user.is_authenticated and request.user.is_active:
+    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='CONTROLADORESLP').exists():
         if request.is_ajax and request.method =="GET":
             carnet = request.GET.get('id_trabajador')
             
@@ -202,7 +222,7 @@ def view_cerrar_sesion(request):
 
 def view_recordar_ruta(request):
     #muestra las rutas recordadas para un origen y destino dado 
-    if request.user.is_authenticated and request.user.is_active:
+    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='CONTROLADORESLP').exists():
         dic={'estado':False}
 
         if request.is_ajax and request.method =="GET":
@@ -235,7 +255,7 @@ def view_recordar_ruta(request):
 
 def view_rutas_guardadas(request):
     #muestra las rutas guardas, archivadas y vigentes
-    if request.user.is_authenticated and request.user.groups.filter(name='CONTROLADORESLP').exists():
+    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='CONTROLADORESLP').exists():
         equipo_coordinacion = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and empresa_institucion_id=1 order by activo")
 
         rutas_archivadas=Ruta_guardada.objects.filter(archivada=True)
@@ -248,7 +268,7 @@ def view_rutas_guardadas(request):
 
 def view_restaurar_ruta(request):
     #cambia de estado en las rutas, dado un id_ruta para restaurar
-    if request.user.is_authenticated and request.user.groups.filter(name='CONTROLADORESLP').exists():
+    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='CONTROLADORESLP').exists():
         response={
             'estado': False,
         }
@@ -265,8 +285,8 @@ def view_restaurar_ruta(request):
 
 
 def view_archivar_ruta(request):
-    #cambia de estado en las rutas, dado un id_ruta para eliminar o archivar
-    if request.user.is_authenticated and request.user.groups.filter(name='CONTROLADORESLP').exists():
+    #verificamos si el fpl no esta aprobado y luego guardamos
+    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='CONTROLADORESLP').exists():
         response={
             'estado': False,
         }
@@ -285,13 +305,104 @@ def view_archivar_ruta(request):
 
 
 
+def view_guardar_aprobacion(request):
+    #cambia de estado en las rutas, dado un id_ruta para eliminar o archivar
+    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='CONTROLADORESLP').exists():
+        response={
+            'estado': 'NFound',
+        }
+        if request.is_ajax and request.method =="GET":
+            get_id_fpl = request.GET.dict()['fpl']
+
+            if Flp_trafico.objects.filter(id_mensaje=get_id_fpl).exists():
+                get_tiempos = request.GET.dict()['tiempos']
+                get_puntos = request.GET.dict()['puntos']
+                get_rutas = request.GET.dict()['rutas']
+                get_matricula = request.GET.dict()['matricula']
+                get_nivel = request.GET.dict()['nivel']
+                get_frecuencia = request.GET.dict()['frecuencia']
+                get_ci = request.GET.dict()['persona']
+                get_transponder = request.GET.dict()['transponder']
+
+                if not Flp_trafico.objects.filter(id_mensaje=get_id_fpl)[0].aprobado:
+                    objFpltrafico = Flp_trafico.objects.filter(id_mensaje=str(get_id_fpl) )[0]
+                    objAprobado = Flp_aprobado(
+                        id_flpaprobado = objFpltrafico,
+                        controlador = Trabajador.objects.filter(ci=get_ci)[0],
+                        transponder = int(get_transponder),
+                        ruta_usada = get_rutas,
+                        puntos_de_ficha = get_puntos,
+                        matricula = get_matricula,
+                        tiempos = get_tiempos,
+                        frecuencias = get_frecuencia,
+                        nivel = get_nivel,
+                    )
+                    objAprobado.save()
+
+                    Flp_trafico.objects.filter(id_mensaje=get_id_fpl).update(aprobado=True)
+
+                    response={
+                        'estado': 'server200',
+                    }
+                else:
+                    response={
+                        'estado': 'server400',
+                    }            
+        return JsonResponse(response, status=200)
+    else:
+        return redirect('login')
+
+
+def view_historial_aprobacion(request):
+    #muestra las rutas guardas, archivadas y vigentes
+    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='CONTROLADORESLP').exists():
+        equipo_coordinacion = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and empresa_institucion_id=1 order by activo")
+
+        aprobados_historial = Flp_aprobado.objects.raw('select id_flpaprobado_id,id_aeronave,  aeropuerto_salida, aeropuerto_destino,fecha_aprobacion, hora_aprobacion, nombre, apellido from (select id_flpaprobado_id, id_aeronave, aeropuerto_salida, aeropuerto_destino,controlador_id,fecha_aprobacion, hora_aprobacion from plan_vuelo_flp_trafico inner join plan_vuelo_flp_aprobado on id_mensaje like id_flpaprobado_id) as t1 inner join plan_vuelo_trabajador on t1.controlador_id = plan_vuelo_trabajador.ci order by fecha_aprobacion, hora_aprobacion desc')
+        #id_mensaje       | aeropuerto_salida | aeropuerto_destino  | fecha_aprobacion | hora_aprobacion | nombre  | apellido  
+
+        return render(request, 'temp_plan_vuelo/fpl_aprobados_historial.html' ,{'equipo_trabajo': equipo_coordinacion, 'aprobados_historial': aprobados_historial } )#,'metar':metar} )
+    else:
+        return redirect('login')
+
+# VIEW_EJECUTIVO ################################################################################################################
+def view_panel_ejecutivo(request):
+    #muestra el panel principal ejecutivo
+    if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='EJECUTIVOSLP').exists():
+        equipo_coordinacion = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and empresa_institucion_id=1 order by activo")
+        return render(request, 'temp_plan_vuelo/index_ejecutivo.html' ,{'equipo_trabajo': equipo_coordinacion} )#,'metar':metar} )
+    else:
+        return redirect('login')
+
+def view_aip(request):
+    #muestra el panel principal ejecutivo
+    if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='EJECUTIVOSLP').exists():
+        equipo_coordinacion = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and empresa_institucion_id=1 order by activo")
+        return render(request, 'temp_plan_vuelo/temp_aip/temp_aip.html' ,{'equipo_trabajo': equipo_coordinacion} )#,'metar':metar} )
+    else:
+        return redirect('login')
 
 
 
 
 
 
+# VIEW_SUPERVISOR ################################################################################################################
+def view_panel_supervisor(request):
+    #muestra el panel principal ejecutivo
+    if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='SUPERVISORESLP').exists():
+        equipo_coordinacion = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and empresa_institucion_id=1 order by activo")
+        return render(request, 'temp_plan_vuelo/index_supervisor.html' ,{'equipo_trabajo': equipo_coordinacion} )#,'metar':metar} )
+    else:
+        return redirect('login')
 
+def view_servicio_met(request):
+    #muestra el panel principal ejecutivo
+    if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='SUPERVISORESLP').exists():
+        equipo_coordinacion = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and empresa_institucion_id=1 order by activo")
+        return render(request, 'temp_plan_vuelo/temp_servicio_met/servicio_met.html' ,{'equipo_trabajo': equipo_coordinacion} )#,'metar':metar} )
+    else:
+        return redirect('login')
 
 
 

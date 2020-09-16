@@ -1,0 +1,392 @@
+{% extends 'temp_plan_vuelo/baseadmin.html' %}
+{% load static %}
+
+
+{% block title %}
+    <title>Upsilon | Met</title>
+{% endblock title %}
+    
+
+
+{% block extra_head %}
+    <style>
+        /* -------------- CARDS OF BUTTONS, MAIN MENU FOR INDEX -------------- */
+        .buttons {
+            display: -webkit-flex; 
+            display: -ms-flexbox; 
+            display: flex; 
+            -webkit-align-items: flex-start; 
+            -ms-flex-align: start; 
+            align-items: stretch;
+            margin-left:15%;
+            margin-right:15%;
+            }
+
+        /* PASTE BELOW IN CSS */
+
+        .buttons * {
+        transition: all .5s ease;
+        }
+
+        .buttons {
+        -webkit-justify-content: space-between;
+        -ms-flex-pack: justify;
+        justify-content: space-between;
+        -webkit-flex-wrap: wrap;
+        -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+        }
+
+        .butFrame {
+        overflow: hidden;
+        text-align: center;
+        position: relative;
+        display: block;
+        cursor: pointer;
+        color: #fff;
+        background: #fff;
+        font-size: 1em;
+        font-family: inherit;
+        cursor: pointer;
+        border-radius: 80px;
+        margin: 10px;
+        padding: 10px 5px;
+        -webkit-flex: 1 250px;
+        -ms-flex: 1 250px;
+        flex: 1 250px;
+        border: 6px solid white;
+        }
+
+        .buttons .butFrame .butHeading {
+        color: #3b3838;
+        padding: 0px 0 20px;
+        font-weight: 400;
+        font-family: inherit;
+        font-size: 1.2em;
+        text-transform: uppercase;
+        }
+
+        .buttons .butFrame img {
+        width: 100%;
+        max-width: 80px;
+        height: auto;
+        vertical-align: bottom;
+        }
+
+        .buttons .butFrame .butText {
+        padding: 10px 0;
+        color: #999;
+        }
+
+        /* HOVER STYLES */
+
+        .buttons .butFrame:hover {
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 1);
+        border: 6px solid #ff4600;
+        }
+
+        .butFrame:hover,
+        .butFrame:active {
+        animation: bounce 0.6s ease;
+        -webkit-animation: bounce 0.6s ease;
+        }
+
+        @keyframes bounce {
+        0% {
+            top: 0px;
+        }
+        25% {
+            top: -10px;
+        }
+        50% {
+            top: 5px;
+        }
+        75% {
+            top: -5px;
+        }
+        100% {
+            top: 0px;
+        }
+        }
+
+        @-webkit-keyframes bounce {
+        0% {
+            top: 0px;
+        }
+        25% {
+            top: -10px;
+        }
+        50% {
+            top: 5px;
+        }
+        75% {
+            top: -5px;
+        }
+        100% {
+            top: 0px;
+        }
+        }
+
+        /* MEDIA QUERIES */
+
+        @media all and (max-width: 950px) and (min-width: 701px){
+            .butFrame {
+                display:block;
+                -webkit-flex: 1 50%;   
+                -ms-flex: 1 50%;   
+                flex: 1 50%;
+            }
+        }
+
+        @media all and (max-width: 700px) and (min-width: 0px){
+            .butFrame {
+                display:block;
+                -webkit-flex: 1 100%;   
+                -ms-flex: 1 100%;   
+                flex: 1 100%;
+            }
+        }
+        /* -------------- CARDS OF BUTTONS, MAIN MENU FOR INDEX -------------- */
+
+        
+        
+        /* -------------- MENU DE APPS EN DROPDOWNS RADIOBUTTON-------------- */
+        #buttonapps{
+        position: relative;
+        margin-top: 35%;
+        left: 50%;
+        transform: translate(-50%, -25%);
+
+        }
+
+        #buttonapps:after {
+        content: " ";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translate(-50%);
+        width: 0;
+        height: 0;
+        border-left: 15px solid transparent;
+        border-right: 15px solid transparent;
+        border-bottom: 15px solid #34495e;
+        transition: 0.2s 0s;
+        }
+
+        #buttonapps.clicked:after{
+        border-width: 0px;
+        transition: 0.2s 0.2s;
+        }
+
+        .navapps{
+        position: absolute;
+        top: calc(100% + 15px);
+        left: 50%;
+        transform: translateX(-50%);
+        width: 300px;
+        height: 300px;
+        transition: 0.3s 0.3s;
+        font-size: 0;
+        background: #34495e;
+        }
+
+        #buttonapps.clicked .navapps{
+        height: 0px;
+        visibility:hidden;
+        transition: 0.2s 0s;
+        }
+
+        .refapps{
+        width: calc(100% / 3);
+        height: calc(100% / 3);
+        display: inline-block;
+        font-size: initial;
+        transition: 0.2s 0.2s;
+        }
+
+        #buttonapps.clicked .navapps .refapps{
+        font-size: 0;
+        transition: 0s 0s;
+        }
+
+        .navapps #icons{
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);
+        color: rgba(255, 255, 255, 0.7);
+        transition: color 0.4s;
+        }
+
+        .navapps .refapps:hover  #icons{
+        color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* -------------- MENU DE APPS EN DROPDOWNS -------------- */
+
+	    #map { position: absolute; top: 0; bottom: 30px; width: 100%; }
+
+    </style>
+
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+
+
+
+
+<meta charset="utf-8" />
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+<script src="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js"></script>
+<link href="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css" rel="stylesheet" />
+
+{% endblock extra_head %}
+
+
+
+{% block content %}
+<!-- /.modal -->
+<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+</div>
+<!-- /.modal -->
+
+<div style="margin-top:1%;"  >
+    
+    <div style="margin-top:1%; height: 600px;"  >
+        <div id="map"></div>
+        <script>
+            mapboxgl.accessToken = 'pk.eyJ1IjoiY2FlbHQiLCJhIjoiY2tmNGx4MDY3MDBnNTJ5cDh2aHhjOTQyciJ9.juIQGQyyJdwT0cIfnbFA3Q';
+            var map = new mapboxgl.Map({
+                container: 'map',
+                style: 'mapbox://styles/mapbox/streets-v11',
+                center: [-122.486052, 37.830348],
+                zoom: 15
+            });
+            
+            map.on('load', function () {
+            map.addSource('route', {
+                'type': 'geojson',
+                'data': {
+                'type': 'Feature',
+                'properties': {},
+                'geometry': {
+                'type': 'LineString',
+                'coordinates': [
+                [-122.48369693756104, 37.83381888486939],
+                [-122.48348236083984, 37.83317489144141],
+                [-122.48339653015138, 37.83270036637107],
+                [-122.48356819152832, 37.832056363179625],
+                [-122.48404026031496, 37.83114119107971],
+                [-122.48404026031496, 37.83049717427869],
+                [-122.48348236083984, 37.829920943955045],
+                [-122.48356819152832, 37.82954808664175],
+                [-122.48507022857666, 37.82944639795659],
+                [-122.48610019683838, 37.82880236636284],
+                [-122.48695850372314, 37.82931081282506],
+                [-122.48700141906738, 37.83080223556934],
+                [-122.48751640319824, 37.83168351665737],
+                [-122.48803138732912, 37.832158048267786],
+                [-122.48888969421387, 37.83297152392784],
+                [-122.48987674713133, 37.83263257682617],
+                [-122.49043464660643, 37.832937629287755],
+                [-122.49125003814696, 37.832429207817725],
+                [-122.49163627624512, 37.832564787218985],
+                [-122.49223709106445, 37.83337825839438],
+                [-122.49378204345702, 37.83368330777276]
+                ]
+                }
+                }
+            });
+                map.addLayer({
+                    'id': 'route',
+                    'type': 'line',
+                    'source': 'route',
+                    'layout': {
+                    'line-join': 'round',
+                    'line-cap': 'round'
+                    },
+                    'paint': {
+                    'line-color': '#888',
+                    'line-width': 8
+                    }
+                });
+            });
+        </script> 
+    </div>
+
+    <div id="concatenar">
+        INICIO
+    </div>
+    
+
+</div>
+
+
+
+
+{% endblock content %}
+    
+
+
+
+
+{% block extrajs %}
+<script>
+    $(function(){
+
+        $("#buttonapps").trigger("click");
+
+        //FILTER FOR THE SEARCH PERSONS IN NAVBAR
+        $("#busca_personas").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#grupo_trabajo li").filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+        //FILTER FOR THE SEARCH PERSONS IN NAVBAR
+
+
+        var tiempo = 1000;
+        // intervalo
+        var interval = setInterval(function() {
+            document.getElementById('concatenar').innerHTML+="hola "
+        }, tiempo);
+        
+    });
+
+    $("#buttonapps").click(function(){
+        $(this).toggleClass("clicked");
+    });
+
+    
+    
+    function abrir_modal(url) {
+        //alert(url);
+        $("#modal").load(url.trim(), function() {
+            $(this).modal('show');
+        });
+    }
+
+    function cerrar_sesion(urlx) {
+        //alert(urlx)
+        $.ajax({
+            type:'GET',
+            url: urlx,
+            //data:$(this).serialize(),
+            success: function (request){
+                console.log(request.respuesta);
+                if (request.respuesta) {
+                    location.reload();
+                }else{
+                    console.log("HUBO UN ERROR AL CERRAR SESION");
+                }
+            },
+            error: function (e) {
+                console.log(e);
+            }   
+        })
+        
+    }
+
+
+</script>
+{% endblock extrajs %}
+    

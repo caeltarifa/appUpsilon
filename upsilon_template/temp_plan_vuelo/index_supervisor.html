@@ -49,8 +49,8 @@
         font-family: inherit;
         cursor: pointer;
         border-radius: 80px;
-        margin: 40px;
-        padding: 25px 5px;
+        margin: 10px;
+        padding: 10px 5px;
         -webkit-flex: 1 250px;
         -ms-flex: 1 250px;
         flex: 1 250px;
@@ -150,7 +150,7 @@
 
         
         
-        /* -------------- MENU DE APPS EN DROPDOWNS -------------- */
+        /* -------------- MENU DE APPS EN DROPDOWNS RADIOBUTTON-------------- */
         #buttonapps{
         position: relative;
         margin-top: 35%;
@@ -255,7 +255,7 @@
                                     <a class="navbar-brand" href="{% url 'view_admin_coordinacion' %}">
                                         <!-- <img class="brand-logo" alt="Chameleon admin logo"
                                 src="theme-assets/images/logo/logo.png" /> -->
-                                        <h1 class="brand-text " style="color: white;">Upsilon </h1>
+                                        <h1 class="brand-text " style="color: white;">Upsilon | supervisor </h1>
                                     </a>
                                 </li>
                                 <!--LOGO DE PAGINA-->
@@ -556,7 +556,7 @@
 
 <div style="margin-top:1%;"  >
     <h1 align="center">
-        ACC COORDINACION
+        ACC SUPERVISOR
     </h1>
     
     <div class="buttons">
@@ -597,15 +597,39 @@
     <div class="buttons">
         
         <div class="butFrame bounce" onClick="window.location='#'">
-            <a href="url view">
+            <a href="% url 'view_rutas_guardadas' %">
                 <img src="http://www.neodigital.com.au/thumbnailsmall/Button6.jpg" />
-                <div class="butHeading">Salidas y llegadas</div>
+                <div class="butHeading">VUELOS DE SALIDA Y LLEGADA</div>
             </a>
         </div>
     
-       
+        <div class="butFrame bounce" onClick="window.location='#'">
+            <a href="{% url 'view_servicio_met' %}">
+                <img src="http://www.neodigital.com.au/thumbnailsmall/Button6.jpg" />
+                <div class="butHeading">SERVICIO METEOROLOGICO</div>
+            </a>
+        </div>
     
     </div>
+
+    <div class="buttons">
+        
+        <div class="butFrame bounce" onClick="window.location='#'">
+            <a href="{% url 'view_aip' %}">
+                <img src="http://www.neodigital.com.au/thumbnailsmall/Button6.jpg" />
+                <div class="butHeading">AIP</div>
+            </a>
+        </div>
+    
+        <div class="butFrame bounce" onClick="window.location='#'">
+            <a href="% url 'view_servicio_met' %">
+                <img src="http://www.neodigital.com.au/thumbnailsmall/Button6.jpg" />
+                <div class="butHeading">AERONAVES HABILITADAS</div>
+            </a>
+        </div>
+    
+    </div>
+    
 
 </div>
 

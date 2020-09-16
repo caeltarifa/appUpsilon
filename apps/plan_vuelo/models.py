@@ -39,6 +39,7 @@ class Flp_trafico(models.Model):
     ruta = models.CharField(max_length=100)
     aeropuerto_destino = models.CharField(max_length=30)
     otros = models.CharField(max_length=500) #si el modeo¿lo ha sido visto
+    aprobado = models.BooleanField(default=False)
 
 class Trabajador(models.Model):
     ci=models.IntegerField(primary_key=True)
@@ -54,21 +55,22 @@ class Trabajador(models.Model):
 
 class Flp_aprobado(models.Model):
     #id_aprobado = models.AutoField(primary_key=True)
-    id_flp_aprobado = models.OneToOneField(
+    id_flpaprobado = models.OneToOneField(
         Flp_trafico,
+        related_name='xxxx',
         on_delete=models.PROTECT,
         primary_key=True,
     )
-    controlador = models.OneToOneField(
-        Trabajador,
-        on_delete=models.PROTECT,
-    )
-    fecha_aprobacion = models.DateField()
+    controlador = models.ForeignKey(Trabajador,on_delete=models.PROTECT,)
+    fecha_aprobacion = models.DateField(auto_now=True, auto_now_add=False)
     hora_aprobacion = models.TimeField(auto_now=True, auto_now_add=False)
     transponder = models.IntegerField()
     ruta_usada = models.CharField(max_length=250) #almacena punto1-ruta-punto2, punto3-ruta-punto4, 
     puntos_de_ficha = models.CharField(max_length=200) #almacena los puntos usados en los unicodeips y longitude: 'punto1 23 punto2 34 punto3 56 punto4'
     matricula = models.CharField(max_length=10) #almacena matricula de avion
+    tiempos = models.CharField(max_length=100)
+    frecuencias = models.CharField(max_length=10)
+    nivel = models.CharField(max_length=6)
     def __unicode__(self):
         return '%s %s' % (self.id_flp_aprobado, self.metar_trafico, self.controlador)
 

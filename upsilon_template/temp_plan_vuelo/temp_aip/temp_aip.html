@@ -1,0 +1,615 @@
+{% extends 'temp_plan_vuelo/baseadmin.html' %}
+{% load static %}
+
+
+{% block title %}
+    <title>Upsilon | Met</title>
+{% endblock title %}
+    
+
+
+{% block extra_head %}
+    <style>
+        /* -------------- CARDS OF BUTTONS, MAIN MENU FOR INDEX -------------- */
+        .buttons {
+            display: -webkit-flex; 
+            display: -ms-flexbox; 
+            display: flex; 
+            -webkit-align-items: flex-start; 
+            -ms-flex-align: start; 
+            align-items: stretch;
+            margin-left:15%;
+            margin-right:15%;
+            }
+
+        /* PASTE BELOW IN CSS */
+
+        .buttons * {
+        transition: all .5s ease;
+        }
+
+        .buttons {
+        -webkit-justify-content: space-between;
+        -ms-flex-pack: justify;
+        justify-content: space-between;
+        -webkit-flex-wrap: wrap;
+        -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+        }
+
+        .butFrame {
+        overflow: hidden;
+        text-align: center;
+        position: relative;
+        display: block;
+        cursor: pointer;
+        color: #fff;
+        background: #fff;
+        font-size: 1em;
+        font-family: inherit;
+        cursor: pointer;
+        border-radius: 80px;
+        margin: 10px;
+        padding: 10px 5px;
+        -webkit-flex: 1 250px;
+        -ms-flex: 1 250px;
+        flex: 1 250px;
+        border: 6px solid white;
+        }
+
+        .buttons .butFrame .butHeading {
+        color: #3b3838;
+        padding: 0px 0 20px;
+        font-weight: 400;
+        font-family: inherit;
+        font-size: 1.2em;
+        text-transform: uppercase;
+        }
+
+        .buttons .butFrame img {
+        width: 100%;
+        max-width: 80px;
+        height: auto;
+        vertical-align: bottom;
+        }
+
+        .buttons .butFrame .butText {
+        padding: 10px 0;
+        color: #999;
+        }
+
+        /* HOVER STYLES */
+
+        .buttons .butFrame:hover {
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 1);
+        border: 6px solid #ff4600;
+        }
+
+        .butFrame:hover,
+        .butFrame:active {
+        animation: bounce 0.6s ease;
+        -webkit-animation: bounce 0.6s ease;
+        }
+
+        @keyframes bounce {
+        0% {
+            top: 0px;
+        }
+        25% {
+            top: -10px;
+        }
+        50% {
+            top: 5px;
+        }
+        75% {
+            top: -5px;
+        }
+        100% {
+            top: 0px;
+        }
+        }
+
+        @-webkit-keyframes bounce {
+        0% {
+            top: 0px;
+        }
+        25% {
+            top: -10px;
+        }
+        50% {
+            top: 5px;
+        }
+        75% {
+            top: -5px;
+        }
+        100% {
+            top: 0px;
+        }
+        }
+
+        /* MEDIA QUERIES */
+
+        @media all and (max-width: 950px) and (min-width: 701px){
+            .butFrame {
+                display:block;
+                -webkit-flex: 1 50%;   
+                -ms-flex: 1 50%;   
+                flex: 1 50%;
+            }
+        }
+
+        @media all and (max-width: 700px) and (min-width: 0px){
+            .butFrame {
+                display:block;
+                -webkit-flex: 1 100%;   
+                -ms-flex: 1 100%;   
+                flex: 1 100%;
+            }
+        }
+        /* -------------- CARDS OF BUTTONS, MAIN MENU FOR INDEX -------------- */
+
+        
+        
+        /* -------------- MENU DE APPS EN DROPDOWNS RADIOBUTTON-------------- */
+        #buttonapps{
+        position: relative;
+        margin-top: 35%;
+        left: 50%;
+        transform: translate(-50%, -25%);
+
+        }
+
+        #buttonapps:after {
+        content: " ";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translate(-50%);
+        width: 0;
+        height: 0;
+        border-left: 15px solid transparent;
+        border-right: 15px solid transparent;
+        border-bottom: 15px solid #34495e;
+        transition: 0.2s 0s;
+        }
+
+        #buttonapps.clicked:after{
+        border-width: 0px;
+        transition: 0.2s 0.2s;
+        }
+
+        .navapps{
+        position: absolute;
+        top: calc(100% + 15px);
+        left: 50%;
+        transform: translateX(-50%);
+        width: 300px;
+        height: 300px;
+        transition: 0.3s 0.3s;
+        font-size: 0;
+        background: #34495e;
+        }
+
+        #buttonapps.clicked .navapps{
+        height: 0px;
+        visibility:hidden;
+        transition: 0.2s 0s;
+        }
+
+        .refapps{
+        width: calc(100% / 3);
+        height: calc(100% / 3);
+        display: inline-block;
+        font-size: initial;
+        transition: 0.2s 0.2s;
+        }
+
+        #buttonapps.clicked .navapps .refapps{
+        font-size: 0;
+        transition: 0s 0s;
+        }
+
+        .navapps #icons{
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);
+        color: rgba(255, 255, 255, 0.7);
+        transition: color 0.4s;
+        }
+
+        .navapps .refapps:hover  #icons{
+        color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* -------------- MENU DE APPS EN DROPDOWNS -------------- */
+
+        #map { position: absolute; top: 0; bottom: -30px; width: 100%; }
+
+    </style>
+
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+
+
+
+
+<meta charset="utf-8" />
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+<script src="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js"></script>
+<link href="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css" rel="stylesheet" />
+
+{% endblock extra_head %}
+
+
+
+{% block content %}
+<!-- /.modal -->
+<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+</div>
+<!-- /.modal -->
+<style>
+    .mapboxgl-popup {
+    max-width: 400px;
+    font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+    }
+
+    /* ______________________ SLIDE PANEL RIRGHT AND LEFT _______________*/
+    .rounded-rect {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 0 50px -25px black;
+    }
+
+    .flex-center {
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .flex-center.left {
+        left: 0px;
+    }
+
+    .flex-center.right {
+        right: 0px;
+    }
+
+    .sidebar-content {
+        position: absolute;
+        width: 95%;
+        height: 95%;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 32px;
+        color: gray;
+    }
+
+    .sidbear-toggle {
+        position: absolute;
+        width: 1.3em;
+        height: 1.3em;
+        overflow: visible;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .sidbear-toggle.left {
+        right: -1.5em;
+    }
+
+    .sidbear-toggle.right {
+        left: -1.5em;
+    }
+
+    .sidbear-toggle:hover {
+        color: #0aa1cf;
+        cursor: pointer;
+    }
+
+    .sidebar {
+        transition: transform 1s;
+        z-index: 1;
+        width: 300px;
+        height: 100%;
+    }
+
+    /*
+  The sidebar styling has them "expanded" by default, we use CSS transforms to push them offscreen
+  The toggleSidebar() function removes this class from the element in order to expand it.
+    */
+    .left.collapsed {
+        transform: translateX(-295px);
+    }
+
+    .right.collapsed {
+        transform: translateX(295px);
+    }
+</style>
+
+<div style="margin-top:1%; height: 700px;"  >
+    
+    <div id="map">
+
+        <div id="left" class="sidebar flex-center left collapsed">
+            <div class="sidebar-content rounded-rect flex-center">
+                <div class="container">
+                    Left Sidebar
+                    <br><br>
+                    ds
+                    <br><br>
+                    <input type="text" placeholder="assa" style="width:130px;">
+                    <br>
+                    <form action="" style="width:90px;">
+                        <input type="color" name="" id="" style="width:90px;">
+                        <input type="date" name="" id="" style="width:90px;">
+                        <input type="email" name="" id="" style="width:90px;">
+                        <input type="button" value="ENVIAR" style="width:90px;">
+                    </form>
+                </div>
+
+                <div
+                    class="sidbear-toggle rounded-rect left"
+                    onclick="toggleSidebar('left')"
+                >
+                    &rarr;
+                </div>
+
+            </div>
+        </div>
+        <div id="right" class="sidebar flex-center right collapsed">
+            <div class="sidebar-content rounded-rect flex-center">
+                Right Sidebar
+                <div
+                    class="sidbear-toggle rounded-rect right"
+                    onclick="toggleSidebar('right')"
+                >
+                    &larr;
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+    <script>
+        mapboxgl.accessToken = 'pk.eyJ1IjoiY2FlbHQiLCJhIjoiY2tmNGx4MDY3MDBnNTJ5cDh2aHhjOTQyciJ9.juIQGQyyJdwT0cIfnbFA3Q';
+        var map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/streets-v11',
+            center: [-68.1312175,-16.5243897],
+            zoom: 5.15
+        });
+        
+        map.on('load', function () {
+            map.loadImage(
+                'https://docs.mapbox.com/mapbox-gl-js/assets/custom_marker.png',
+                // Add an image to use as a custom marker
+                function (error, image) {
+                    if (error) throw error;
+                    map.addImage('custom-marker', image);
+                    
+                    map.addSource('places', {
+                        'type': 'geojson',
+                        'data': {
+                        'type': 'FeatureCollection',
+                        'features': [
+                        {
+                        'type': 'Feature',
+                        'properties': {
+                        'description':
+                        '<strong>Make it Mount Pleasant</strong><p>Make it Mount Pleasant is a handmade and vintage market and afternoon of live entertainment and kids activities. 12:00-6:00 p.m.</p>'
+                        },
+                        'geometry': {
+                        'type': 'Point',
+                        'coordinates': [-68.1314651,-17.543168 ]
+                        }
+                    },
+                        {
+                        'type': 'Feature',
+                        'properties': {
+                        'description':
+                        '<strong>Mad Men Season Five Finale Watch Party</strong><p>Head to Lounge 201 (201 Massachusetts Avenue NE) Sunday for a Mad Men Season Five Finale Watch Party, complete with 60s costume contest, Mad Men trivia, and retro food and drink. 8:00-11:00 p.m. $10 general admission, $20 admission and two hour open bar.</p>'
+                        },
+                        'geometry': {
+                        'type': 'Point',
+                        'coordinates': [-68.1494651,-16.5103168]
+                        }
+                    },
+                        {
+                        'type': 'Feature',
+                        'properties': {
+                        'description':
+                        '<strong>Big Backyard Beach Bash and Wine Fest</strong><p>EatBar (2761 Washington Boulevard Arlington VA) is throwing a Big Backyard Beach Bash and Wine Fest on Saturday, serving up conch fritters, fish tacos and crab sliders, and Red Apron hot dogs. 12:00-3:00 p.m. $25.</p>'
+                        },
+                        'geometry': {
+                        'type': 'Point',
+                        'coordinates': [-68.154651, -19.493168 ]
+                        }
+                    }
+                    ]
+                    }
+                    });
+                    
+                        // Add a layer showing the places.
+                        map.addLayer({
+                            'id': 'places',
+                            'type': 'symbol',
+                            'source': 'places',
+                            'layout': {
+                            'icon-image': 'custom-marker',
+                            'icon-allow-overlap': true
+                            }
+                        });
+                }
+            );
+
+
+            /*_________ ROUTE LINE  _________*/
+            map.addSource('route', {
+                'type': 'geojson',
+                'data': {
+                    'type': 'Feature',
+                    'properties': {},
+                    'geometry': {
+                        'type': 'LineString',
+                        'coordinates': [
+                            
+                            [-68.1314651,-17.543168],
+                            [-68.1494651,-16.5103168],
+                            [-68.154651, -19.493168]
+                        ]
+                    }
+                }
+            });
+
+            map.addLayer({
+                'id': 'route',
+                'type': 'line',
+                'source': 'route',
+                'layout': {
+                    'line-join': 'round',
+                    'line-cap': 'round'
+                },
+                'paint': {
+                    'line-color': '#888',
+                    'line-width': 8
+                }
+            });
+            /*_________ ROUTE LINE  _________*/
+
+
+            
+                // Create a popup, but don't add it to the map yet.
+                var popup = new mapboxgl.Popup({
+                    closeButton: false,
+                    closeOnClick: false
+                });
+                
+                map.on('mouseenter', 'places', function (e) {
+                    // Change the cursor style as a UI indicator.
+                    map.getCanvas().style.cursor = 'pointer';
+                    
+                    var coordinates = e.features[0].geometry.coordinates.slice();
+                    var description = e.features[0].properties.description;
+                
+                    // Ensure that if the map is zoomed out such that multiple
+                    // copies of the feature are visible, the popup appears
+                    // over the copy being pointed to.
+                    while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                    coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+                    }
+                
+                    // Populate the popup and set its coordinates
+                    // based on the feature found.
+                    popup.setLngLat(coordinates).setHTML(description).addTo(map);
+                });
+            
+                map.on('mouseleave', 'places', function () {
+                map.getCanvas().style.cursor = '';
+                popup.remove();
+                });
+            });
+
+
+
+
+            function toggleSidebar(id) {
+                var elem = document.getElementById(id);
+                var classes = elem.className.split(' ');
+                var collapsed = classes.indexOf('collapsed') !== -1;
+
+                var padding = {};
+
+                if (collapsed) {
+                    // Remove the 'collapsed' class from the class list of the element, this sets it back to the expanded state.
+                    classes.splice(classes.indexOf('collapsed'), 1);
+
+                    padding[id] = 300; // In px, matches the width of the sidebars set in .sidebar CSS class
+                    map.easeTo({
+                        padding: padding,
+                        duration: 1000 // In ms, CSS transition duration property for the sidebar matches this value
+                    });
+                } else {
+                    padding[id] = 0;
+                    // Add the 'collapsed' class to the class list of the element
+                    classes.push('collapsed');
+
+                    map.easeTo({
+                        padding: padding,
+                        duration: 1000
+                    });
+                }
+
+                // Update the class list on the element
+                elem.className = classes.join(' ');
+            }
+    </script>
+
+
+
+        {% endblock content %}
+            
+
+
+
+
+        {% block extrajs %}
+        <script>
+            $(function(){
+
+                $("#buttonapps").trigger("click");
+
+                //FILTER FOR THE SEARCH PERSONS IN NAVBAR
+                $("#busca_personas").on("keyup", function() {
+                    var value = $(this).val().toLowerCase();
+                    $("#grupo_trabajo li").filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                    });
+                });
+                //FILTER FOR THE SEARCH PERSONS IN NAVBAR
+
+
+        
+                
+            });
+
+            $("#buttonapps").click(function(){
+                $(this).toggleClass("clicked");
+            });
+
+            
+            
+            function abrir_modal(url) {
+                //alert(url);
+                $("#modal").load(url.trim(), function() {
+                    $(this).modal('show');
+                });
+            }
+
+            function cerrar_sesion(urlx) {
+                //alert(urlx)
+                $.ajax({
+                    type:'GET',
+                    url: urlx,
+                    //data:$(this).serialize(),
+                    success: function (request){
+                        console.log(request.respuesta);
+                        if (request.respuesta) {
+                            location.reload();
+                        }else{
+                            console.log("HUBO UN ERROR AL CERRAR SESION");
+                        }
+                    },
+                    error: function (e) {
+                        console.log(e);
+                    }   
+                })
+                
+        }
+
+
+</script>
+{% endblock extrajs %}
+    

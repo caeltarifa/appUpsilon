@@ -3,6 +3,15 @@ from django.urls import path, re_path
 from apps.plan_vuelo.views import view_plan_vuelo, view_panel_coordinacion, view_admin_coordinacion , view_aprobar_flp, view_tablero, view_update_flp, view_template_prueba, view_identificacion, view_validar_passwd, view_cerrar_sesion , view_recordar_ruta, view_rutas_guardadas
 from apps.plan_vuelo.views import view_restaurar_ruta, view_archivar_ruta
 
+from apps.plan_vuelo.views import view_guardar_aprobacion, view_historial_aprobacion
+# EJECUTIVO ################################################################################################################
+from apps.plan_vuelo.views import view_panel_ejecutivo, view_aip
+
+
+# SUPERVISOR ################################################################################################################
+from apps.plan_vuelo.views import view_panel_supervisor, view_servicio_met
+
+
  # view_form_plan_vuelo, post_new, post_detail
 
 urlpatterns = [
@@ -32,9 +41,24 @@ urlpatterns = [
     
     #path('generacion_fpl/', include('apps.generacion_fpl.urls')),
 
-
+    #gestion de rutas
     path('rutasguardadas/', view_rutas_guardadas, name="view_rutas_guardadas"),
     path('rutasguardadas/restaurar', view_restaurar_ruta, name='view_restaurar_ruta'),
     path('rutasguardadas/archivar', view_archivar_ruta, name='view_archivar_ruta'),
     path('recordarruta/', view_recordar_ruta, name='view_recordar_ruta'),
+
+    #aprobacion de plan de vuelo
+    path('aprobarfpl/', view_guardar_aprobacion, name="view_guardar_aprobacion"),
+    path('historialaprobados/', view_historial_aprobacion, name="view_historial_aprobacion"),
+    
+    #################################################################################################################
+    path('ejecutivo/', view_panel_ejecutivo, name="view_panel_ejecutivo"), #redirije al panel de control de ejecutivo
+
+
+
+    #################################################################################################################
+    path('supervisor/', view_panel_supervisor, name="view_panel_supervisor"), #redirije al panel de control de ejecutivo
+    path('supervisor/servicio_met', view_servicio_met, name="view_servicio_met"), #
+    path('supervisor/aip', view_aip, name="view_aip"), #
+
 ]
