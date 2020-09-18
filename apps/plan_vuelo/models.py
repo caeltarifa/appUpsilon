@@ -176,8 +176,8 @@ class Ruta_flp(models.Model):
 class EntrePuntos_flp(models.Model):
     id_segmento=models.AutoField(primary_key=True)
     ruta=models.ForeignKey(Ruta_flp, on_delete=models.CASCADE)
-    puntoInicial=models.CharField(max_length=35)
-    puntoFinal=models.CharField(max_length=35)
+    puntoinicial=models.CharField(max_length=35)
+    puntofinal=models.CharField(max_length=35)
     distancia=models.IntegerField()
     nivelCrucero=models.CharField(max_length=6)
     
@@ -186,3 +186,14 @@ class EntrePuntos_flp(models.Model):
 
     class Meta:
         ordering = ['id_segmento','ruta']
+
+class Punto_satelital(models.Model):
+    nombrepunto = models.CharField(max_length=10,primary_key=True)
+    latitude = models.FloatField()
+    longitude = models.FloatField()
+    
+    def __unicode__(self):
+        return self.nombrepunto
+
+    class Meta:
+        ordering = ['nombrepunto']

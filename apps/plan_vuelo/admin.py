@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from apps.plan_vuelo.models import Empresa_institucion,Flp_trafico,Ruta_flp,EntrePuntos_flp, Ruta_guardada,Cargo,Trabajador,Flp_aprobado
+from apps.plan_vuelo.models import Empresa_institucion,Flp_trafico,Ruta_flp,EntrePuntos_flp, Ruta_guardada,Cargo,Trabajador,Flp_aprobado, Punto_satelital
 
 # Register your models here.
 admin.site.register(Empresa_institucion)
@@ -12,5 +12,4 @@ admin.site.register(Ruta_guardada)
 admin.site.register(Cargo)
 admin.site.register(Trabajador)
 admin.site.register(Flp_aprobado)
-
-
+admin.site.register(Punto_satelital)

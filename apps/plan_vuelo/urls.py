@@ -5,7 +5,7 @@ from apps.plan_vuelo.views import view_restaurar_ruta, view_archivar_ruta
 
 from apps.plan_vuelo.views import view_guardar_aprobacion, view_historial_aprobacion
 # EJECUTIVO ################################################################################################################
-from apps.plan_vuelo.views import view_panel_ejecutivo, view_aip
+from apps.plan_vuelo.views import view_panel_ejecutivo, view_aip, view_obtener_dibujo_ruta
 
 
 # SUPERVISOR ################################################################################################################
@@ -53,12 +53,14 @@ urlpatterns = [
     
     #################################################################################################################
     path('ejecutivo/', view_panel_ejecutivo, name="view_panel_ejecutivo"), #redirije al panel de control de ejecutivo
+    path('aip/', view_aip, name="view_aip"), #
+    path('aip/dibujoruta', view_obtener_dibujo_ruta, name="view_obtener_dibujo_ruta"), #
+    
 
 
 
     #################################################################################################################
     path('supervisor/', view_panel_supervisor, name="view_panel_supervisor"), #redirije al panel de control de ejecutivo
-    path('supervisor/servicio_met', view_servicio_met, name="view_servicio_met"), #
-    path('supervisor/aip', view_aip, name="view_aip"), #
+    path('servicio_met/', view_servicio_met, name="view_servicio_met"), #
 
 ]

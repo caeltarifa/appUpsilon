@@ -13,7 +13,7 @@ from django.db.models import Q
 
 
 #from apps.plan_vuelo.forms import Vuelo_Aprobado_form, PostForm
-from apps.plan_vuelo.models import Flp_trafico, EntrePuntos_flp,Ruta_flp, Trabajador, Ruta_guardada, Flp_aprobado
+from apps.plan_vuelo.models import Flp_trafico, EntrePuntos_flp,Ruta_flp, Trabajador, Ruta_guardada, Flp_aprobado, Punto_satelital
 Ruta_flp2=Ruta_flp()
 EntrePuntos_flp2=EntrePuntos_flp()
 
@@ -374,13 +374,60 @@ def view_panel_ejecutivo(request):
     else:
         return redirect('login')
 
+#from traffic.data import airways
+
 def view_aip(request):
     #muestra el panel principal ejecutivo
     if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='EJECUTIVOSLP').exists():
         equipo_coordinacion = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and empresa_institucion_id=1 order by activo")
-        return render(request, 'temp_plan_vuelo/temp_aip/temp_aip.html' ,{'equipo_trabajo': equipo_coordinacion} )#,'metar':metar} )
+
+        puntos_satelitales = Punto_satelital.objects.raw('select * from plan_vuelo_punto_satelital')
+        puntos_satelitales = [serializar_punto_satelital(punto) for punto in puntos_satelitales]
+
+        return render(request, 'temp_plan_vuelo/temp_aip/temp_aip.html' ,{'equipo_trabajo': equipo_coordinacion , 'puntos_satelitales' : puntos_satelitales,'todaruta': Ruta_flp.objects.all()} )#,'metar':metar} )
     else:
         return redirect('login')
+
+def serializar_punto_satelital(punto):
+    return {
+        'nombrepunto' : punto.nombrepunto,
+        'latitude' : str(punto.latitude).replace(",","."),
+        'longitude' : str(punto.longitude).replace(",","."),
+    }
+
+
+def view_obtener_dibujo_ruta(request):
+    #muestra las rutas recordadas para un origen y destino dado 
+    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='EJECUTIVOSLP').exists():
+        dic={'estado':False, 'lineas':[[{'longitude': 'null', 'latitude':'null'}]]}
+
+        if request.is_ajax and request.method =="GET":
+            get_vector_rutas = request.GET.dict()['seleccionados']
+            get_vector_rutas = str(get_vector_rutas).split(',')
+
+            #posiones=[{'longitude': longitude, 'latitude':latitude}]
+            lineas=[]
+            for rutax in get_vector_rutas:
+                if rutax !='' and Ruta_flp.objects.filter(nombre_ruta=rutax).exists():
+                    vector_puntos = Ruta_flp.objects.filter(nombre_ruta=rutax)[0].ruta.split(';;')
+                    lineas.append(obterner_posiciones(vector_puntos))
+                    dic={'estado':True, 'lineas':lineas,}
+        return JsonResponse(dic, status=200)
+    else:
+        return redirect('accounts/login/')
+
+def obterner_posiciones(vector_puntos):
+    posiciones=[]
+    for punto in vector_puntos:
+        if Punto_satelital.objects.filter(nombrepunto=str(punto)).exists():
+            x = Punto_satelital.objects.filter(nombrepunto=punto)[0]
+            posiciones.append({
+                'longitude': str(x.longitude).replace(",","."),
+                'latitude': str(x.latitude).replace(",","."),
+            })
+    return posiciones
+
+
 
 
 
