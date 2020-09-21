@@ -26,7 +26,7 @@ from .views import view_pagina_principal#, control_acceso_login
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path(r'', view_pagina_principal,name='view_pagina_principal'),
+    path('', view_pagina_principal,name='view_pagina_principal'),
     
     path('generacion_fpl/', include('apps.generacion_fpl.urls')),
     path('plan_vuelo/', include('apps.plan_vuelo.urls')),

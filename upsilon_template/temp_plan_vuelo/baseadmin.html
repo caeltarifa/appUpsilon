@@ -99,10 +99,10 @@
 
                                     <!--LOGO DE PAGINA-->
                                     <li class="mr-auto">
-                                        <a class="navbar-brand" href="{% url 'view_admin_coordinacion' %}">
+                                        <a class="navbar-brand" href="{% url 'view_pagina_principal' %}">
                                             <!-- <img class="brand-logo" alt="Chameleon admin logo"
                                     src="theme-assets/images/logo/logo.png" /> -->
-                                            <h1 class="brand-text " style="color: white;">Upsilon | supervisor </h1>
+                                            <h1 class="brand-text " style="color: white;">Upsilon | {{user.get_username}} </h1>
                                         </a>
                                     </li>
                                     <!--LOGO DE PAGINA-->
@@ -110,7 +110,75 @@
                                 </ul>
                                 <!--VERSION MOVIL -->
 
+                                
+                                <!--NOTIFICACION NOTAM Y SPECI        -->                           
+                                <ul class="nav navbar-nav float-right">
+                                    <li class="dropdown dropdown-user nav-item">
+                                        <a class="dropdown-toggle nav-link dropdown-user-link" href="#"
+                                            data-toggle="dropdown">
+                                            <span class="avatar avatar-online">
+                                                <span class="material-icons">
+                                                    notifications
+                                                </span>
+                                                <!--
+                                                    <img src="{% static 'theme-assets/images/portrait/small/avatar-s-2.png' %}" alt="avatar">
+                                                -->
+                                                <i style="background-color: red;"></i>
+                                            </span>
+                                        </a>
+    
+                                        <ul  class="dropdown-menu dropdown-menu-right" style="background-color: #ffffff;">
+                                            <li class="arrow_box_right">
+                                                <h4>
+                                                    &nbsp; &nbsp; 
+                                                    Notams
+                                                </h4> 
+                                            </li>
+                                            
+                                            <div id="grupo_notams">
+                                                {% for persona in equipo_trabajo %}
+                                                    <li>
+                                                        <div class="input-group">
+                                                            
+                                                            {% if persona.activo %}
+                                                                <a id="{{persona.ci}}" class="dropdown-item" onclick="cerrar_sesion( '{% url 'view_cerrar_sesion' %}?id_trabajador={{persona.ci}}')" >
+                                                                    <i class="ft-user"></i> 
+                                                                    {{persona.nombre}}
+                                                                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                                                                    <button class="btn btn-outline-danger">
+                                                                        <span class="material-icons">
+                                                                            close
+                                                                        </span>    
+                                                                    </button>
+                                                                </a>
+                                                            {% else %}
+                                                                <a class="dropdown-item" onclick="abrir_modal( '{% url 'view_identificacion' id_trabajador=persona.ci%}')" >
+                                                                    <i class="ft-user"></i> 
+                                                                    {{persona.nombre}}
+                                                                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+        
+                                                                    <button class="btn btn-outline-primary"> 
+                                                                        <span class="material-icons">
+                                                                            fingerprint
+                                                                        </span>
+                                                                    </button>
+        
+                                                                </a>
+                                                            {% endif %}
+                                                                
+                                                            
+                                                        </div>
+                                                    </li>
+                                                    <div class="dropdown-divider"></div>
+                                                {% endfor %}
+                                            </div>
+                                        </ul>
+                                    </li>
+                                </ul>
+                                <!--NOTIFICACION NOTAM Y SPECI   --> 
 
+
+                                
                                 <!--EQUIPO DE USUARIOS-->
                                 <ul class="nav navbar-nav float-right" >
                                     <!--BUSCAR-->
@@ -261,58 +329,6 @@
                                 <!-- MENU APPS 2-->
                                 
                                 
-                                <!--AVATAR PAGINA
-                                    <ul class="nav navbar-nav float-right">
-        
-                                        <li class="dropdown dropdown-user nav-item">
-                                            <a class="dropdown-toggle nav-link dropdown-user-link" href="#"
-                                                data-toggle="dropdown">
-                                                <span class="avatar avatar-online">
-                                                    <img src="{% static 'theme-assets/images/portrait/small/avatar-s-19.png' %}"
-                                                        alt="avatar">
-                                                    <i></i>
-                                                </span>
-                                            </a>
-        
-                                            <div class="dropdown-menu dropdown-menu-right">
-                                                <div class="arrow_box_right">
-                                                    <a class="dropdown-item" href="#">
-                                                        <span class="avatar avatar-online">
-                                                            <img src="{% static 'theme-assets/images/portrait/small/avatar-s-19.png' %}"
-                                                                alt="avatar">
-                                                            <span class="user-name text-bold-700 ml-1">
-        
-                                                                {% block name %}
-        
-                                                                {% if user.is_active %}
-                                                                {{user.get_username}}
-                                                                {% endif %}
-        
-                                                                {% endblock name %}
-        
-                                                            </span>
-                                                        </span>
-                                                    </a>
-                                                    <div class="dropdown-divider"></div>
-                                                    <a class="dropdown-item" href="#">
-                                                        <i class="ft-user"></i> 
-                                                        Editar perfil 
-                                                    </a>
-                                                
-                                                
-                                                    <div class="dropdown-divider"></div>
-        
-                                                    <a class="dropdown-item" href="{% url 'logout' %}">
-                                                        <i class="ft-power"></i> Cerrar sesion</a>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                
-                                -->                           
-                                <!--AVATAR PAGINA --> 
-
-
                                 <!--MENU APLICACIONES
                                     <ul class="nav navbar-nav float-right" style="padding: 0px 10px;">
                                         <button class="btn btn-info buttonapps" id="buttonapps">
@@ -512,6 +528,81 @@
     <script src="{% static 'theme-assets/js/scripts/pages/dashboard-lite.js' %}" type="text/javascript">
     </script>
     <!-- END PAGE LEVEL JS-->
+
+
+
+    <!--JAVASCRIPT PARA CONTROL DE SESIONES-->
+    <script>
+        $(function(){
+                //FILTER FOR THE SEARCH PERSONS IN NAVBAR
+                $("#busca_personas").on("keyup", function() {
+                    var value = $(this).val().toLowerCase();
+                    $("#grupo_trabajo li").filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                    });
+                });
+                //FILTER FOR THE SEARCH PERSONS IN NAVBAR
+                
+                setInterval(() => {
+                    new_notams_update();
+                }, 1000);
+        });
+
+        function new_notams_update() {
+            $.ajax({
+                type:'GET',
+                url: "{% url 'view_update_notam_realtime' %}",
+                //data:$(this).serialize(),
+                success: function (request){
+                    for (let i = 0; i < request.length; i++) {
+                        const objnotam = request[i];
+                            a1 = '<li>'
+                            a2 = '    <div class="input-group">'
+                            a3 = '      <a id="id_mensaje" class="dropdown-item" onclick="" >'
+                            a5 = objnotam.idnotam + "<br>" + objnotam.resumen 
+                            a6 = '         &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;'
+                            a7 = '         <button class="btn btn-outline-danger">'
+                            a8 = '             <span class="material-icons">'
+                            a9 = '                 close'
+                            a10 = '            </span>    '
+                            a11 = '        </button>'
+                            a12 = '     </a>'
+                            a13 = '    </div>'
+                            a14 = '</li>'
+                            a15 = '<div class="dropdown-divider"></div>'
+                        document.getElementById('grupo_notams').innerHTML=notam_content=a1 + a2 + a3 + a5 + a6 + a7 + a8 + a9 + a10 + a11 + a12 + a13 + a14 + a15;
+                    }
+                    boton_todos='<a class="btn btn-outline-info" style="margin-left: 30%;"> Ver todos</a>'
+                    document.getElementById('grupo_notams').innerHTML=notam_content+=boton_todos;
+                },
+                error: function (e) {
+                    console.log(e);
+                }   
+            })
+
+        }
+            
+        function cerrar_sesion(urlx) {
+            //alert(urlx)
+            $.ajax({
+                type:'GET',
+                url: urlx,
+                //data:$(this).serialize(),
+                success: function (request){
+                    console.log(request.respuesta);
+                    if (request.respuesta) {
+                        location.reload();
+                    }else{
+                        console.log("HUBO UN ERROR AL CERRAR SESION");
+                    }
+                },
+                error: function (e) {
+                    console.log(e);
+                }   
+            })
+        }
+
+    </script>
     
     {% block extrajs %} {% endblock extrajs %}
 

@@ -13,7 +13,7 @@ from django.db.models import Q
 
 
 #from apps.plan_vuelo.forms import Vuelo_Aprobado_form, PostForm
-from apps.plan_vuelo.models import Flp_trafico, EntrePuntos_flp,Ruta_flp, Trabajador, Ruta_guardada, Flp_aprobado, Punto_satelital
+from apps.plan_vuelo.models import Flp_trafico, EntrePuntos_flp,Ruta_flp, Trabajador, Ruta_guardada, Flp_aprobado, Punto_satelital, Notam_trafico
 Ruta_flp2=Ruta_flp()
 EntrePuntos_flp2=EntrePuntos_flp()
 
@@ -39,7 +39,7 @@ def view_panel_coordinacion(request):
 def view_admin_coordinacion(request):
     controladores=Group.objects.get(name='CONTROLADORESLP')
     if request.user.is_authenticated and request.user.groups.filter(name='CONTROLADORESLP').exists():
-        lista_fpl=Flp_trafico.objects.raw("select id_mensaje as id, id_mensaje, substring(id_mensaje, 1, 7) as id_amhs, substring(id_mensaje, 15,22) as fecha, substring(aftn2, 1,6) as hora_amhs, aftn1, aftn2, id_aeronave, reglas_vuelo, aeropuerto_salida, ruta, aeropuerto_destino, otros from plan_vuelo_flp_trafico where aprobado=false order by id_amhs desc limit 90;")
+        lista_fpl=Flp_trafico.objects.raw("select id_mensaje as id, id_mensaje, substring(id_mensaje, 1, 7) as id_amhs, substring(id_mensaje, 15,22) as fecha, substring(aftn2, 1,6) as hora_amhs, aftn1, aftn2, id_aeronave, reglas_vuelo, aeropuerto_salida, ruta, aeropuerto_destino, otros from plan_vuelo_flp_trafico where aprobado=false order by id_amhs asc limit 90;")
         
         lista_fpl_aprobado = Flp_trafico.objects.raw("select id_mensaje as id, id_mensaje, substring(id_mensaje, 1, 7) as id_amhs, substring(id_mensaje, 15,22) as fecha, substring(aftn2, 1,6) as hora_amhs, aftn1, aftn2, id_aeronave, reglas_vuelo, aeropuerto_salida, ruta, aeropuerto_destino, otros from plan_vuelo_flp_trafico where aprobado=true order by id_amhs desc limit 90;")
 
@@ -56,6 +56,10 @@ def view_admin_coordinacion(request):
     else:
         return redirect('login')
 
+
+
+
+#######################   CONTROL DE APROBACION DE FPLs ##################
 def view_aprobar_flp(request, id_plancompleto):
     if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='CONTROLADORESLP').exists():        
         #plan_completo = Flp_trafico.objects.filter(id_mensaje=id_plancompleto)[0]
@@ -114,197 +118,6 @@ def view_aprobar_flp(request, id_plancompleto):
     else:
         return redirect('accounts/login/')
     
-
-
-
-
-##VIEW FOR TO SEND DATA FOR THE TEMPLATE
-import json
-def view_update_flp (request):
-    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='CONTROLADORESLP').exists():
-        if request.is_ajax and request.method =="GET":
-            lista_fpl=Flp_trafico.objects.raw("select id_mensaje, substring(id_mensaje, 1, 7) as id_amhs, substring(id_mensaje, 15,22) as fecha, substring(aftn2, 1,6) as hora_amhs, aftn1, aftn2, id_aeronave, reglas_vuelo, aeropuerto_salida, ruta, aeropuerto_destino, otros from plan_vuelo_flp_trafico where aprobado=false order by id_amhs desc limit 90;")
-            lista_fpl = [serializar_fpl_update(fpl) for fpl in lista_fpl]
-            return HttpResponse(json.dumps(lista_fpl), content_type='application/json')
-            #return HttpResponse({'lista_fpl':lista_fpl}, content_type='application/json')
-        return JsonResponse({'respuesta':"ningun resultado"}, status=400)
-    else:
-        return redirect('accounts/login/')
-
-def serializar_fpl(fpl):
-    return {
-        'id_mensaje':fpl.id_mensaje ,
-        'aftn1':fpl.aftn1 ,
-        'aftn2':fpl.aftn2 ,
-        'id_aeronave':fpl.id_aeronave ,
-        'reglas_vuelo':fpl.reglas_vuelo ,
-        'aeropuerto_salida':fpl.aeropuerto_salida ,
-        'rutafpl':fpl.ruta ,
-        'aeropuerto_destino':fpl.aeropuerto_destino ,
-        'otros':fpl.otros ,
-    }
-
-def serializar_fpl_update(fpl):
-    return {
-        'id_mensaje' : fpl.id_mensaje, 
-        'id_amhs' : fpl.id_amhs, 
-        'fecha' : fpl.fecha, 
-        'hora_amhs' : fpl.hora_amhs, 
-        'aftn1' : fpl.aftn1, 
-        'aftn2' : fpl.aftn2, 
-        'id_aeronave' : fpl.id_aeronave, 
-        'reglas_vuelo' : fpl.reglas_vuelo, 
-        'aeropuerto_salida' : fpl.aeropuerto_salida, 
-        'ruta' : fpl.ruta, 
-        'aeropuerto_destino' : fpl.aeropuerto_destino, 
-        'otros' : fpl.otros,
-    }
-
-
-def view_identificacion(request, id_trabajador):
-    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='CONTROLADORESLP').exists():        
-        if Trabajador.objects.filter(ci=int(id_trabajador)).exists():
-            persona = Trabajador.objects.filter(ci=id_trabajador)[0]
-            persona = {
-                'nombre': persona.nombre,
-                'apellido': persona.apellido, 
-                'ci': persona.ci,
-            }
-        else:
-            persona={
-                'nombre': "Nfound",
-                'apellido': "Nfound apellido",
-            }
-        
-        return render(request, 'temp_plan_vuelo/modal_identificacion.html', {'persona': persona} ) #retorno el modal y el contexto
-    else:
-        return redirect('accounts/login/')
-
-
-def view_validar_passwd(request):
-    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='CONTROLADORESLP').exists():
-        if request.is_ajax and request.method =="GET":
-            cadena = request.GET.get('parametro')
-            
-            codigo_trabajador=cadena.split(":")[0]
-            passwd=cadena.split(":")[1]
-
-            persona=Trabajador.objects.filter(ci=codigo_trabajador)
-
-            if persona.exists():
-                if str(persona[0].codigo) in str(passwd):
-                    persona=Trabajador.objects.get(ci=codigo_trabajador)
-                    persona.activo=True
-                    persona.save()
-                    return JsonResponse({'respuesta':True}, status=200)
-
-        return JsonResponse({'respuesta':False}, status=200)
-    else:
-        return redirect('accounts/login/')
-
-
-def view_cerrar_sesion(request):
-    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='CONTROLADORESLP').exists():
-        if request.is_ajax and request.method =="GET":
-            carnet = request.GET.get('id_trabajador')
-            
-            persona=Trabajador.objects.filter(ci=carnet)
-
-            if persona.exists():
-                persona=Trabajador.objects.get(ci=carnet)
-                persona.activo=False
-                persona.save()
-                return JsonResponse({'respuesta':True}, status=200)
-
-        return JsonResponse({'respuesta':False}, status=200)
-    else:
-        return redirect('accounts/login/')
-
-def view_recordar_ruta(request):
-    #muestra las rutas recordadas para un origen y destino dado 
-    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='CONTROLADORESLP').exists():
-        dic={'estado':False}
-
-        if request.is_ajax and request.method =="GET":
-            getorigen = request.GET.dict()['origen']
-            getdestino = request.GET.dict()['destino']
-            getrutas = request.GET.dict()['rutas']
-            getpuntos = request.GET.dict()['puntos']
-
-            getrutas=getrutas[:len(getrutas)-1]
-            getpuntos=getpuntos[:len(getpuntos)-1]
-
-            consulta=Ruta_guardada.objects.filter(origen=getorigen, destino=getdestino,rutas = getrutas,puntos_limite = getpuntos)
-
-            if not consulta.exists():
-                objetoruta=Ruta_guardada(
-                    origen = getorigen,
-                    destino = getdestino,
-                    rutas = getrutas,
-                    puntos_limite = getpuntos
-                )
-                objetoruta.save()
-                dic={'estado':True}
-        
-        return JsonResponse(dic, status=200)
-    else:
-        return redirect('accounts/login/')
-
-
-
-
-def view_rutas_guardadas(request):
-    #muestra las rutas guardas, archivadas y vigentes
-    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='CONTROLADORESLP').exists():
-        equipo_coordinacion = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and empresa_institucion_id=1 order by activo")
-
-        rutas_archivadas=Ruta_guardada.objects.filter(archivada=True)
-        rutas_vigentes=Ruta_guardada.objects.filter(archivada=False)
-
-        return render(request, 'temp_plan_vuelo/rutas_guardadas.html' ,{'equipo_trabajo': equipo_coordinacion, 'rutas_archivadas': rutas_archivadas, 'rutas_vigentes': rutas_vigentes,'todaruta': Ruta_flp.objects.all(),'todopuntos': EntrePuntos_flp.objects.all(),} )#,'metar':metar} )
-    else:
-        return redirect('login')
-
-
-def view_restaurar_ruta(request):
-    #cambia de estado en las rutas, dado un id_ruta para restaurar
-    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='CONTROLADORESLP').exists():
-        response={
-            'estado': False,
-        }
-        if request.is_ajax and request.method =="GET":
-            getid_ruta = request.GET.dict()['ruta']
-            if Ruta_guardada.objects.filter(id_ruta=getid_ruta).exists():
-                Ruta_guardada.objects.filter(id_ruta=getid_ruta).update(archivada=False)
-                response={
-                    'estado': True,
-                }            
-        return JsonResponse(response, status=200)
-    else:
-        return redirect('login')
-
-
-def view_archivar_ruta(request):
-    #verificamos si el fpl no esta aprobado y luego guardamos
-    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='CONTROLADORESLP').exists():
-        response={
-            'estado': False,
-        }
-        if request.is_ajax and request.method =="GET":
-            getid_ruta = request.GET.dict()['ruta']
-            if Ruta_guardada.objects.filter(id_ruta=getid_ruta).exists():
-                Ruta_guardada.objects.filter(id_ruta=getid_ruta).update(archivada=True)
-                response={
-                    'estado': True,
-                }            
-        return JsonResponse(response, status=200)
-    else:
-        return redirect('login')
-
-
-
-
-
 def view_guardar_aprobacion(request):
     #cambia de estado en las rutas, dado un id_ruta para eliminar o archivar
     if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='CONTROLADORESLP').exists():
@@ -352,7 +165,6 @@ def view_guardar_aprobacion(request):
     else:
         return redirect('login')
 
-
 def view_historial_aprobacion(request):
     #muestra las rutas guardas, archivadas y vigentes
     if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='CONTROLADORESLP').exists():
@@ -364,6 +176,221 @@ def view_historial_aprobacion(request):
         return render(request, 'temp_plan_vuelo/fpl_aprobados_historial.html' ,{'equipo_trabajo': equipo_coordinacion, 'aprobados_historial': aprobados_historial } )#,'metar':metar} )
     else:
         return redirect('login')
+#######################   CONTROL DE APROBACION DE FPLs ##################
+
+
+
+
+
+##VIEW FOR TO SEND DATA FOR THE TEMPLATE
+import json
+def view_update_flp (request):
+    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='CONTROLADORESLP').exists():
+        if request.is_ajax and request.method =="GET":
+            lista_fpl=Flp_trafico.objects.raw("select id_mensaje, substring(id_mensaje, 1, 7) as id_amhs, substring(id_mensaje, 15,22) as fecha, substring(aftn2, 1,6) as hora_amhs, aftn1, aftn2, id_aeronave, reglas_vuelo, aeropuerto_salida, ruta, aeropuerto_destino, otros from plan_vuelo_flp_trafico where aprobado=false order by id_amhs asc limit 90;")
+            lista_fpl = [serializar_fpl_update(fpl) for fpl in lista_fpl]
+            return HttpResponse(json.dumps(lista_fpl), content_type='application/json')
+            #return HttpResponse({'lista_fpl':lista_fpl}, content_type='application/json')
+        return JsonResponse({'respuesta':"ningun resultado"}, status=400)
+    else:
+        return redirect('accounts/login/')
+
+def serializar_fpl(fpl):
+    return {
+        'id_mensaje':fpl.id_mensaje ,
+        'aftn1':fpl.aftn1 ,
+        'aftn2':fpl.aftn2 ,
+        'id_aeronave':fpl.id_aeronave ,
+        'reglas_vuelo':fpl.reglas_vuelo ,
+        'aeropuerto_salida':fpl.aeropuerto_salida ,
+        'rutafpl':fpl.ruta ,
+        'aeropuerto_destino':fpl.aeropuerto_destino ,
+        'otros':fpl.otros ,
+    }
+def serializar_fpl_update(fpl):
+    return {
+        'id_mensaje' : fpl.id_mensaje, 
+        'id_amhs' : fpl.id_amhs, 
+        'fecha' : fpl.fecha, 
+        'hora_amhs' : fpl.hora_amhs, 
+        'aftn1' : fpl.aftn1, 
+        'aftn2' : fpl.aftn2, 
+        'id_aeronave' : fpl.id_aeronave, 
+        'reglas_vuelo' : fpl.reglas_vuelo, 
+        'aeropuerto_salida' : fpl.aeropuerto_salida, 
+        'ruta' : fpl.ruta, 
+        'aeropuerto_destino' : fpl.aeropuerto_destino, 
+        'otros' : fpl.otros,
+    }
+
+def view_update_notam_realtime(request):
+    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='CONTROLADORESLP').exists():
+        dic={ 'id_mensaje': False}
+        if request.is_ajax and request.method =="GET":
+            #notams recientes
+            lista_notam = Notam_trafico.objects.filter(nuevo=True).only('id_mensaje','idnotam','resumen')
+            #id_mensaje       |    aftn1    |      aftn2      |          idnotam          |                    resumen                     | aplica_a | valido_desde  |    valido_hasta     |                   mensaje                    | nuevo |          ingresado 
+            lista_notam = [serializar_notam_realtime(notam) for notam in lista_notam]
+            return HttpResponse(json.dumps(lista_notam), content_type='application/json')
+            #return HttpResponse({'lista_fpl':lista_fpl}, content_type='application/json')
+        return JsonResponse(dic, status=400)
+    else:
+        return redirect('accounts/login/')
+
+def serializar_notam_realtime(notam):
+    return {
+        'id_mensaje' : notam.id_mensaje,
+        'idnotam' : notam.idnotam,
+        'resumen' : notam.resumen,
+    }
+
+
+
+#############################   CONTROL DE USUARIOS   #################################
+def view_identificacion(request, id_trabajador):
+    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='CONTROLADORESLP').exists():        
+        if Trabajador.objects.filter(ci=int(id_trabajador)).exists():
+            persona = Trabajador.objects.filter(ci=id_trabajador)[0]
+            persona = {
+                'nombre': persona.nombre,
+                'apellido': persona.apellido, 
+                'ci': persona.ci,
+            }
+        else:
+            persona={
+                'nombre': "Nfound",
+                'apellido': "Nfound apellido",
+            }
+        
+        return render(request, 'temp_plan_vuelo/modal_identificacion.html', {'persona': persona} ) #retorno el modal y el contexto
+    else:
+        return redirect('accounts/login/')
+
+def view_validar_passwd(request):
+    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='CONTROLADORESLP').exists():
+        if request.is_ajax and request.method =="GET":
+            cadena = request.GET.get('parametro')
+            
+            codigo_trabajador=cadena.split(":")[0]
+            passwd=cadena.split(":")[1]
+
+            persona=Trabajador.objects.filter(ci=codigo_trabajador)
+
+            if persona.exists():
+                if str(persona[0].codigo) in str(passwd):
+                    persona=Trabajador.objects.get(ci=codigo_trabajador)
+                    persona.activo=True
+                    persona.save()
+                    return JsonResponse({'respuesta':True}, status=200)
+
+        return JsonResponse({'respuesta':False}, status=200)
+    else:
+        return redirect('accounts/login/')
+
+def view_cerrar_sesion(request):
+    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='CONTROLADORESLP').exists():
+        if request.is_ajax and request.method =="GET":
+            carnet = request.GET.get('id_trabajador')
+            
+            persona=Trabajador.objects.filter(ci=carnet)
+
+            if persona.exists():
+                persona=Trabajador.objects.get(ci=carnet)
+                persona.activo=False
+                persona.save()
+                return JsonResponse({'respuesta':True}, status=200)
+
+        return JsonResponse({'respuesta':False}, status=200)
+    else:
+        return redirect('accounts/login/')
+#############################   CONTROL DE USUARIOS   #################################
+
+
+
+
+
+#############################   CONTROL DE RUTAS   #################################
+def view_recordar_ruta(request):
+    #muestra las rutas recordadas para un origen y destino dado 
+    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='CONTROLADORESLP').exists():
+        dic={'estado':False}
+
+        if request.is_ajax and request.method =="GET":
+            getorigen = request.GET.dict()['origen']
+            getdestino = request.GET.dict()['destino']
+            getrutas = request.GET.dict()['rutas']
+            getpuntos = request.GET.dict()['puntos']
+
+            getrutas=getrutas[:len(getrutas)-1]
+            getpuntos=getpuntos[:len(getpuntos)-1]
+
+            consulta=Ruta_guardada.objects.filter(origen=getorigen, destino=getdestino,rutas = getrutas,puntos_limite = getpuntos)
+
+            if not consulta.exists():
+                objetoruta=Ruta_guardada(
+                    origen = getorigen,
+                    destino = getdestino,
+                    rutas = getrutas,
+                    puntos_limite = getpuntos
+                )
+                objetoruta.save()
+                dic={'estado':True}
+        
+        return JsonResponse(dic, status=200)
+    else:
+        return redirect('accounts/login/')
+
+def view_rutas_guardadas(request):
+    #muestra las rutas guardas, archivadas y vigentes
+    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='CONTROLADORESLP').exists():
+        equipo_coordinacion = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and empresa_institucion_id=1 order by activo")
+
+        rutas_archivadas=Ruta_guardada.objects.filter(archivada=True)
+        rutas_vigentes=Ruta_guardada.objects.filter(archivada=False)
+
+        return render(request, 'temp_plan_vuelo/rutas_guardadas.html' ,{'equipo_trabajo': equipo_coordinacion, 'rutas_archivadas': rutas_archivadas, 'rutas_vigentes': rutas_vigentes,'todaruta': Ruta_flp.objects.all(),'todopuntos': EntrePuntos_flp.objects.all(),} )#,'metar':metar} )
+    else:
+        return redirect('login')
+
+def view_restaurar_ruta(request):
+    #cambia de estado en las rutas, dado un id_ruta para restaurar
+    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='CONTROLADORESLP').exists():
+        response={
+            'estado': False,
+        }
+        if request.is_ajax and request.method =="GET":
+            getid_ruta = request.GET.dict()['ruta']
+            if Ruta_guardada.objects.filter(id_ruta=getid_ruta).exists():
+                Ruta_guardada.objects.filter(id_ruta=getid_ruta).update(archivada=False)
+                response={
+                    'estado': True,
+                }            
+        return JsonResponse(response, status=200)
+    else:
+        return redirect('login')
+
+def view_archivar_ruta(request):
+    #verificamos si el fpl no esta aprobado y luego guardamos
+    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='CONTROLADORESLP').exists():
+        response={
+            'estado': False,
+        }
+        if request.is_ajax and request.method =="GET":
+            getid_ruta = request.GET.dict()['ruta']
+            if Ruta_guardada.objects.filter(id_ruta=getid_ruta).exists():
+                Ruta_guardada.objects.filter(id_ruta=getid_ruta).update(archivada=True)
+                response={
+                    'estado': True,
+                }            
+        return JsonResponse(response, status=200)
+    else:
+        return redirect('login')
+#############################   CONTROL DE RUTAS   #################################
+
+
+
+
+
 
 # VIEW_EJECUTIVO ################################################################################################################
 def view_panel_ejecutivo(request):

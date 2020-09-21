@@ -604,7 +604,6 @@
                 document.getElementById('output_inicio11').innerHTML = location.search;
                 $("#sel_inicio11").chosen({width: '200px',max_selected_options:8});
 
-                $("#buttonapps").trigger("click");
 
                 //FILTER FOR THE SEARCH PERSONS IN NAVBAR
                 $("#busca_personas").on("keyup", function() {
@@ -614,42 +613,15 @@
                     });
                 });
                 //FILTER FOR THE SEARCH PERSONS IN NAVBAR
-
-
         
                 
             });
 
-            $("#buttonapps").click(function(){
-                $(this).toggleClass("clicked");
-            });
-       
             function abrir_modal(url) {
                 //alert(url);
                 $("#modal").load(url.trim(), function() {
                     $(this).modal('show');
                 });
-            }
-
-            function cerrar_sesion(urlx) {
-                //alert(urlx)
-                $.ajax({
-                    type:'GET',
-                    url: urlx,
-                    //data:$(this).serialize(),
-                    success: function (request){
-                        console.log(request.respuesta);
-                        if (request.respuesta) {
-                            location.reload();
-                        }else{
-                            console.log("HUBO UN ERROR AL CERRAR SESION");
-                        }
-                    },
-                    error: function (e) {
-                        console.log(e);
-                    }   
-                })
-                
             }
 
 </script>

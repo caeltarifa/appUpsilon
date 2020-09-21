@@ -1,6 +1,7 @@
 from django.conf.urls import url, include
 from django.urls import path, re_path
 from apps.plan_vuelo.views import view_plan_vuelo, view_panel_coordinacion, view_admin_coordinacion , view_aprobar_flp, view_tablero, view_update_flp, view_template_prueba, view_identificacion, view_validar_passwd, view_cerrar_sesion , view_recordar_ruta, view_rutas_guardadas
+from apps.plan_vuelo.views import view_update_notam_realtime
 from apps.plan_vuelo.views import view_restaurar_ruta, view_archivar_ruta
 
 from apps.plan_vuelo.views import view_guardar_aprobacion, view_historial_aprobacion
@@ -21,7 +22,7 @@ urlpatterns = [
     # url(r'^postdetail/<int:pk>/', post_detail , name='post_detail'),
     path('coordinacion/', view_panel_coordinacion, name="view_panel_coordinacion"), #redirije al panel de control de coordinacion
 
-    path('admin_coordinacion/',view_admin_coordinacion, name='view_admin_coordinacion'), #ver pagina de administrador controlador
+    path('progreso_vuelos/',view_admin_coordinacion, name='view_admin_coordinacion'), #ver pagina de administrador controlador
     path('admin/update_flp/',view_update_flp, name='view_update_flp'),
     
     #path('admin_popup/<int:id_plancompleto>/',view_aprobar_flp, name='view_aprobar_flp'),
@@ -63,4 +64,8 @@ urlpatterns = [
     path('supervisor/', view_panel_supervisor, name="view_panel_supervisor"), #redirije al panel de control de ejecutivo
     path('servicio_met/', view_servicio_met, name="view_servicio_met"), #
 
+
+    ######################### NOTAMS REAL TIME
+    path('notamsupdate/', view_update_notam_realtime, name="view_update_notam_realtime"), #
+    
 ]

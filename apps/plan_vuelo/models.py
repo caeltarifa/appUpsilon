@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import datetime
 
 # Create your models here.
 #from apps.generacion_fpl.models import Empresa_institucion
@@ -197,3 +198,23 @@ class Punto_satelital(models.Model):
 
     class Meta:
         ordering = ['nombrepunto']
+
+
+
+
+class Notam_trafico(models.Model):
+    id_mensaje = models.CharField(max_length=22,primary_key=True)
+    aftn1 = models.CharField(max_length=11)
+    aftn2 = models.CharField(max_length=15)
+    idnotam = models.CharField(max_length=35)
+    resumen = models.CharField(max_length=65) #Q
+    aplica_a = models.CharField(max_length=15) #A
+    valido_desde = models.CharField(max_length=20) #B
+    valido_hasta = models.CharField(max_length=20) #C
+    mensaje = models.CharField(max_length=150)
+    nuevo = models.BooleanField(default=True)
+    ingresado = models.DateTimeField(default=datetime.now, blank=True, null=True)
+    def __unicode__(self):
+        return self.idnotam
+    class Meta:
+        ordering = ['idnotam']
