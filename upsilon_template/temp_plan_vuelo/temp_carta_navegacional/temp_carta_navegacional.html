@@ -231,23 +231,18 @@
 
 
 
-
-
-
 <meta charset="utf-8" />
 <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
 <script src="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js"></script>
 <link href="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css" rel="stylesheet" />
+
+<script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>
 
 {% endblock extra_head %}
 
 
 
 {% block content %}
-    <!-- /.modal -->
-    <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    </div>
-    <!-- /.modal -->
     <style>
         .mapboxgl-popup {
         max-width: 400px;
@@ -316,9 +311,9 @@
         }
 
         /*
-    The sidebar styling has them "expanded" by default, we use CSS transforms to push them offscreen
-    The toggleSidebar() function removes this class from the element in order to expand it.
-        */
+        The sidebar styling has them "expanded" by default, we use CSS transforms to push them offscreen
+        The toggleSidebar() function removes this class from the element in order to expand it.
+            */
         .left.collapsed {
             transform: translateX(-295px);
         }
@@ -326,12 +321,25 @@
         .right.collapsed {
             transform: translateX(295px);
         }
+        /* ------------------------------------------ FUNCTION FOR DISTANCE CALCULUS ---------------------------------------------- */
+     
+
+        .distance-container > * {
+            background-color: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            font-size: 15px;
+            line-height: 18px;
+            display: block;
+            margin: 0;
+            padding: 5px 10px;
+            border-radius: 3px;
+        }
+        /* ------------------------------------------ FUNCTION FOR DISTANCE CALCULUS ---------------------------------------------- */
+
     </style>
 
-    <div style="margin-top:1%; height: 700px;"  >
-        
+    <div style="margin-top:1%; height: 700px;"  >        
         <div id="map">
-
             <div id="left" class="sidebar flex-center left collapsed">
                 <div class="sidebar-content rounded-rect flex-center">
                     <div class="container">
@@ -347,7 +355,10 @@
 
                         <br><br>
                         <button class="btn btn-success" onclick="imprimirMapa()">Imprimir</button>
-
+                        
+                        <br>
+                        <br>
+                        <div id="distance" class="distance-container"></div>
                     </div>
 
                     <div
@@ -360,25 +371,35 @@
 
                 </div>
             </div>
-            <div id="right" class="sidebar flex-center right collapsed">
-                <div class="sidebar-content rounded-rect flex-center">
-                    Right Sidebar
-                    <div
-                        class="sidbear-toggle rounded-rect right"
-                        onclick="toggleSidebar('right')"
-                    >
-                        &larr;
+            <!--
+                <div id="right" class="sidebar flex-center right collapsed">
+                    <div class="sidebar-content rounded-rect flex-center">
+                        Right Sidebar
+                        <div
+                            class="sidbear-toggle rounded-rect right"
+                            onclick="toggleSidebar('right')"
+                        >
+                            &larr;
+                        </div>
                     </div>
                 </div>
-            </div>
-
+            -->
         </div>
+        
 
     </div>
 
 
-    <script>
 
+{% endblock content %}
+            
+
+
+
+
+{% block extrajs %}
+    <script>
+        
         vector_puntos=[]
         {% for punto in puntos_satelitales %}
             a=parseFloat('{{punto.longitude}}')
@@ -470,7 +491,7 @@
                 }
             });
 
-           window.setInterval(function () {
+        window.setInterval(function () {
                 map.getSource('route').setData(
                         {
                             'type': 'Feature',
@@ -550,101 +571,208 @@
             // Update the class list on the element
             elem.className = classes.join(' ');
         }
+
+
     </script>
 
-{% endblock content %}
-            
 
 
+    <script>
+        var distanceContainer = document.getElementById('distance');
 
+        // GeoJSON object to hold our measurement features
+        var geojson = {
+            'type': 'FeatureCollection',
+            'features': []
+        };
 
-        {% block extrajs %}
-
-        <script src='https://harvesthq.github.io/chosen/chosen.jquery.js'></script>
-
-        <script>
-
-            array_lineas=[]
-            function dibujarRuta(id_select_ruta){
-                vector_select=$('#'+id_select_ruta).val();
-                seleccionados=""
-                for (let i = 0; i < vector_select.length; i++) {
-                    seleccionados += vector_select[i] + ",";
-                }
-                datasend={"seleccionados":seleccionados,}
-                $.ajax({
-                    type:'GET',
-                    url: '{% url 'view_obtener_dibujo_ruta' %}',
-                    data: datasend,
-                    //data:$(this).serialize(),
-                    success: function (request){
-                        cjto_lineas=[]
-                        for (let i = 0; i < request.lineas.length; i++) {
-                            linea=[]
-                            for (let j = 0; j < request.lineas[i].length; j++) {
-                                linea.push([request.lineas[i][j].longitude, request.lineas[i][j].latitude])
-                            }
-                            cjto_lineas.push(linea)                            
-                        }
-                        array_lineas=cjto_lineas;
-                    }
-                });
+        // Used to draw a line between points
+        var linestring = {
+            'type': 'Feature',
+            'geometry': {
+                'type': 'LineString',
+                'coordinates': []
             }
+        };
 
-            function reemplazar_punto_mapa() {
-                return array_lineas
-            }
-
-        
-        </script>
-
-        <script>
-            $(function(){
-                //CHOSEN FOR THE FIRST OPTIONAL RUTA LIST
-                document.getElementById('output_inicio11').innerHTML = location.search;
-                $("#sel_inicio11").chosen({width: '200px',max_selected_options:8});
-
-
-                //FILTER FOR THE SEARCH PERSONS IN NAVBAR
-                $("#busca_personas").on("keyup", function() {
-                    var value = $(this).val().toLowerCase();
-                    $("#grupo_trabajo li").filter(function() {
-                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-                    });
-                });
-                //FILTER FOR THE SEARCH PERSONS IN NAVBAR
-        
-                
+        map.on('load', function () {
+            map.addSource('geojson', {
+                'type': 'geojson',
+                'data': geojson
             });
 
-            function abrir_modal(url) {
-                //alert(url);
-                $("#modal").load(url.trim(), function() {
-                    $(this).modal('show');
+            // Add styles to the map
+            map.addLayer({
+                id: 'measure-points',
+                type: 'circle',
+                source: 'geojson',
+                paint: {
+                    'circle-radius': 8,
+                    'circle-color': '#FF5733'
+                },
+                filter: ['in', '$type', 'Point']
+            });
+            map.addLayer({
+                id: 'measure-lines',
+                type: 'line',
+                source: 'geojson',
+                layout: {
+                    'line-cap': 'round',
+                    'line-join': 'round'
+                },
+                paint: {
+                    'line-color': '#07A4D2',
+                    'line-width': 2.5
+                },
+                filter: ['in', '$type', 'LineString']
+            });
+
+            map.on('click', function (e) {
+                var features = map.queryRenderedFeatures(e.point, {
+                    layers: ['measure-points']
                 });
+
+                // Remove the linestring from the group
+                // So we can redraw it based on the points collection
+                if (geojson.features.length > 1) geojson.features.pop();
+
+                // Clear the Distance container to populate it with a new value
+                distanceContainer.innerHTML = '';
+
+                // If a feature was clicked, remove it from the map
+                if (features.length) {
+                    var id = features[0].properties.id;
+                    geojson.features = geojson.features.filter(function (point) {
+                        return point.properties.id !== id;
+                    });
+                } else {
+                    var point = {
+                        'type': 'Feature',
+                        'geometry': {
+                            'type': 'Point',
+                            'coordinates': [e.lngLat.lng, e.lngLat.lat]
+                        },
+                        'properties': {
+                            'id': String(new Date().getTime())
+                        }
+                    };
+
+                    geojson.features.push(point);
+                }
+
+                if (geojson.features.length > 1) {
+                    linestring.geometry.coordinates = geojson.features.map(
+                        function (point) {
+                            return point.geometry.coordinates;
+                        }
+                    );
+
+                    geojson.features.push(linestring);
+
+                    // Populate the distanceContainer with total distance
+                    var value = document.createElement('pre');
+                    value.textContent =
+                        'Distancia total: ' +
+                        turf.length(linestring).toLocaleString() +
+                        ' km';
+                    distanceContainer.appendChild(value);
+                }
+
+                map.getSource('geojson').setData(geojson);
+            });
+        });
+
+        map.on('mousemove', function (e) {
+            var features = map.queryRenderedFeatures(e.point, {
+                layers: ['measure-points']
+            });
+            // UI indicator for clicking/hovering a point on the map
+            map.getCanvas().style.cursor = features.length
+                ? 'pointer'
+                : 'crosshair';
+        });
+
+    </script>
+
+
+    <script src='https://harvesthq.github.io/chosen/chosen.jquery.js'></script>
+
+    <script>
+
+        array_lineas=[]
+        function dibujarRuta(id_select_ruta){
+            vector_select=$('#'+id_select_ruta).val();
+            seleccionados=""
+            for (let i = 0; i < vector_select.length; i++) {
+                seleccionados += vector_select[i] + ",";
             }
+            datasend={"seleccionados":seleccionados,}
+            $.ajax({
+                type:'GET',
+                url: '{% url 'view_obtener_dibujo_ruta' %}',
+                data: datasend,
+                //data:$(this).serialize(),
+                success: function (request){
+                    cjto_lineas=[]
+                    for (let i = 0; i < request.lineas.length; i++) {
+                        linea=[]
+                        for (let j = 0; j < request.lineas[i].length; j++) {
+                            linea.push([request.lineas[i][j].longitude, request.lineas[i][j].latitude])
+                        }
+                        cjto_lineas.push(linea)                            
+                    }
+                    array_lineas=cjto_lineas;
+                }
+            });
+        }
 
-</script>
+        function reemplazar_punto_mapa() {
+            return array_lineas
+        }
 
-<script>
-    function imprimirMapa(){
-        $('#panelleft').trigger('click');
-        //var mywindow = window.open('', 'PRINT');
-        //mywindow.document.write('<!DOCTYPE html><html><head>');
-        //mywindow.document.write('<style>		@page{   margin: 0;    		}		 body { margin: 3mm 17mm 5mm 0mm; }     .incline-line{      width: 100%;      margin: none;      margin-top: 0%;      margin-bottom: 0%;      transform: rotate(156deg);      border-color: black;    } .incline-line2{      width: 100%;      margin: none;      margin-top: 0%;      margin-bottom: 0%;      transform: rotate(164deg);      border-color: black;    } button { display:none; }</style> ');
-        //mywindow.document.write('</head><body >');
-        //mywindow.document.write(document.getElementById('map').innerHTML);
-        //mywindow.document.write('</body></html>');
-        //mywindow.document.close(); // necesario para IE >= 10
-        //mywindow.focus(); // necesario para IE >= 10
-        setTimeout(() => {
-            window.print();
-        }, 500);
-        //mywindow.close();
-        //location.reload();
-        
-        
-    }
-</script>
+    
+    </script>
+
+    <script>
+        $(function(){
+            //CHOSEN FOR THE FIRST OPTIONAL RUTA LIST
+            document.getElementById('output_inicio11').innerHTML = location.search;
+            $("#sel_inicio11").chosen({width: '200px',max_selected_options:8});
+
+
+            //FILTER FOR THE SEARCH PERSONS IN NAVBAR
+            $("#busca_personas").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                $("#grupo_trabajo li").filter(function() {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+            //FILTER FOR THE SEARCH PERSONS IN NAVBAR
+    
+            
+        });
+
+    </script>
+
+    <script>
+        function imprimirMapa(){
+            $('#panelleft').trigger('click');
+            //var mywindow = window.open('', 'PRINT');
+            //mywindow.document.write('<!DOCTYPE html><html><head>');
+            //mywindow.document.write('<style>		@page{   margin: 0;    		}		 body { margin: 3mm 17mm 5mm 0mm; }     .incline-line{      width: 100%;      margin: none;      margin-top: 0%;      margin-bottom: 0%;      transform: rotate(156deg);      border-color: black;    } .incline-line2{      width: 100%;      margin: none;      margin-top: 0%;      margin-bottom: 0%;      transform: rotate(164deg);      border-color: black;    } button { display:none; }</style> ');
+            //mywindow.document.write('</head><body >');
+            //mywindow.document.write(document.getElementById('map').innerHTML);
+            //mywindow.document.write('</body></html>');
+            //mywindow.document.close(); // necesario para IE >= 10
+            //mywindow.focus(); // necesario para IE >= 10
+            setTimeout(() => {
+                window.print();
+            }, 500);
+            //mywindow.close();
+            //location.reload();
+            
+            
+        }
+    </script>
 {% endblock extrajs %}
     

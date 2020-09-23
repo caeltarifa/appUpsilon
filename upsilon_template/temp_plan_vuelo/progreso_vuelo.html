@@ -139,7 +139,7 @@
             <div class="card" style="box-shadow: 2px 2px 8px 0 black; min-height: 30%;  max-height: 100%; ">
 
                 <div class="card-header">
-                    <h3 class="card-title">Planes Recientes</h3>
+                    <h3 class="card-title">FPL ACTUALES</h3>
                     <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
                     <div class="heading-elements">
                         <ul class="list-inline mb-0">
@@ -199,7 +199,7 @@
                             </thead>
                             <tbody id="toUpdate_fpl">
 
-                                {% for fpl in lista_fpl %}
+                                {% for fpl in lista_fpl_hoy %}
                                 <tr>
                                     <th id="{{elemen.id}}" width="5%" scope="row">{{fpl.id_amhs}}</th>
                                     <th width="5%">{{fpl.hora_amhs}} <br> {{fpl.fecha|slice:"2:"}} </th>
@@ -236,7 +236,7 @@
         <div class="col-10" style="align-content: center;">
             <div class="card" style="box-shadow: 2px 2px 8px 0 black; min-height: 30%;  max-height: 100%;">
                 <div class="card-header">
-                    <h4 class="card-title">Planes aprobados</h4>
+                    <h4 class="card-title">FPL APROBADOS</h4>
                     
                     <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
                     <div class="heading-elements">
@@ -303,7 +303,7 @@
         <div class="col-10" style="align-content: center;">
             <div class="card" style="box-shadow: 2px 2px 8px 0 black; min-height: 30%;  max-height: 100%;">
                 <div class="card-header">
-                    <h4 class="card-title">NOTAMS</h4>
+                    <h4 class="card-title">HiSTORIAL FPL</h4>
                     <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
                     <div class="heading-elements">
                         <ul class="list-inline mb-0">
@@ -317,95 +317,43 @@
 
                 </div>
                 <div class="card-content collapse show" style="height: 75%; overflow-y: auto;">
+                    <!-- /.modal -->
+                    <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    </div>
+                    <!-- /.modal -->
+
                     <div class="table-responsive">
-                        <table class="table table-striped">
+                        <table id="tabla_planes_recientes" class="table table-striped" align="center" style="text-align:center;">
                             <thead>
                                 <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">First Name</th>
-                                    <th scope="col">Last Name</th>
-                                    <th scope="col">Username</th>
+                                    <th scope="col">ID AMHS</th>
+                                    <th scope="col">Tiempo</th>
+                                    <th scope="col">FPL</th>
+                                    <th scope="col">Origen</th>
+                                    <th scope="col">Destino</th>
+                                    <th scope="col">Tiempo de vuelo</th>
+                                    <th scope="col"></th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="toUpdate_fpl">
+
+                                {% for fpl in lista_fpl %}
                                 <tr>
-                                    <th scope="row">1</th>
-                                    <td>Mark</td>
-                                    <td>Otto</td>
-                                    <td>@mdo</td>
+                                    <th id="{{elemen.id}}" width="5%" scope="row">{{fpl.id_amhs}}</th>
+                                    <th width="5%">{{fpl.hora_amhs}} <br> {{fpl.fecha|slice:"2:"}} </th>
+                                    <td width="5%">{{fpl.id_aeronave|slice:"5:11"}}</td>
+                                    <td width="5%">{{fpl.aeropuerto_salida|slice:"1:5"}} <br> {{fpl.aeropuerto_salida|slice:"5:10"}}</td>
+                                    <td width="5%">{{fpl.aeropuerto_destino|slice:"1:5"}}</td>
+                                    <td width="5%">{{fpl.aeropuerto_destino|slice:"5:9"}}</td>
+                                    <td width="15%">
+                                        <!--
+                                        -->
+                                        <button class="btn btn-outline-info" onclick="abrir_modal( '{% url 'view_aprobar_flp' id_plancompleto=fpl.id_mensaje%}')">Ver FLP</button>
+
+                                    </td>
                                 </tr>
-                                <tr>
-                                    <th scope="row">2</th>
-                                    <td>Jacob</td>
-                                    <td>Thornton</td>
-                                    <td>@fat</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
+                                {% endfor %}
+                                
                             </tbody>
                         </table>
                     </div>
@@ -496,7 +444,7 @@
         table = document.getElementById("tabla_planes_recientes");
         tr = table.getElementsByTagName("tr");
         for (i = 0; i < tr.length; i++) {
-            td = tr[i].getElementsByTagName("td")[4];
+            td = tr[i].getElementsByTagName("td")[0];
             if (td) {
                 txtValue = td.textContent || td.innerText;
                 txtValue = txtValue.trim();

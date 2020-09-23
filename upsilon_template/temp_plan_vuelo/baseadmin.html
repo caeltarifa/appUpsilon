@@ -45,6 +45,13 @@
         <link rel="stylesheet" type="text/css" href="{% static 'theme-assets/css/pages/dashboard-ecommerce.css' %}">
         <!-- END Page Level CSS-->
         
+        <!--
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>         
+        -->
 
     <style>
         /*--------------------------------------------------------------
@@ -116,14 +123,13 @@
                                     <li class="dropdown dropdown-user nav-item">
                                         <a class="dropdown-toggle nav-link dropdown-user-link" href="#"
                                             data-toggle="dropdown">
-                                            <span class="avatar avatar-online">
+                                            <span class="avatar avatar-online" id="id_notificacion">
                                                 <span class="material-icons">
                                                     notifications
                                                 </span>
                                                 <!--
                                                     <img src="{% static 'theme-assets/images/portrait/small/avatar-s-2.png' %}" alt="avatar">
                                                 -->
-                                                <i style="background-color: red;"></i>
                                             </span>
                                         </a>
     
@@ -131,46 +137,12 @@
                                             <li class="arrow_box_right">
                                                 <h4>
                                                     &nbsp; &nbsp; 
-                                                    Notams
+                                                    Notam & Speci
                                                 </h4> 
                                             </li>
                                             
                                             <div id="grupo_notams">
-                                                {% for persona in equipo_trabajo %}
-                                                    <li>
-                                                        <div class="input-group">
-                                                            
-                                                            {% if persona.activo %}
-                                                                <a id="{{persona.ci}}" class="dropdown-item" onclick="cerrar_sesion( '{% url 'view_cerrar_sesion' %}?id_trabajador={{persona.ci}}')" >
-                                                                    <i class="ft-user"></i> 
-                                                                    {{persona.nombre}}
-                                                                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                                                                    <button class="btn btn-outline-danger">
-                                                                        <span class="material-icons">
-                                                                            close
-                                                                        </span>    
-                                                                    </button>
-                                                                </a>
-                                                            {% else %}
-                                                                <a class="dropdown-item" onclick="abrir_modal( '{% url 'view_identificacion' id_trabajador=persona.ci%}')" >
-                                                                    <i class="ft-user"></i> 
-                                                                    {{persona.nombre}}
-                                                                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-        
-                                                                    <button class="btn btn-outline-primary"> 
-                                                                        <span class="material-icons">
-                                                                            fingerprint
-                                                                        </span>
-                                                                    </button>
-        
-                                                                </a>
-                                                            {% endif %}
-                                                                
-                                                            
-                                                        </div>
-                                                    </li>
-                                                    <div class="dropdown-divider"></div>
-                                                {% endfor %}
+                                                
                                             </div>
                                         </ul>
                                     </li>
@@ -410,6 +382,11 @@
     {% endblock navbar %}
 
 
+    <!-- /.modal -->
+    <div class="modal fade" id="modal_base" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    </div>
+    <!-- /.modal -->
+
 
     <!-- ////////////////////////////////////////////////////////////////////////////-->
     {% block content %}
@@ -545,8 +522,14 @@
                 
                 setInterval(() => {
                     new_notams_update();
-                }, 1000);
+                }, 5000);
         });
+
+        function abrir_modal_base(url) {
+            $("#modal_base").load(url.trim(), function() {
+                $(this).modal('show');
+            });
+        }
 
         function new_notams_update() {
             $.ajax({
@@ -554,26 +537,53 @@
                 url: "{% url 'view_update_notam_realtime' %}",
                 //data:$(this).serialize(),
                 success: function (request){
-                    for (let i = 0; i < request.length; i++) {
-                        const objnotam = request[i];
-                            a1 = '<li>'
-                            a2 = '    <div class="input-group">'
-                            a3 = '      <a id="id_mensaje" class="dropdown-item" onclick="" >'
-                            a5 = objnotam.idnotam + "<br>" + objnotam.resumen 
-                            a6 = '         &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;'
-                            a7 = '         <button class="btn btn-outline-danger">'
-                            a8 = '             <span class="material-icons">'
-                            a9 = '                 close'
-                            a10 = '            </span>    '
-                            a11 = '        </button>'
-                            a12 = '     </a>'
-                            a13 = '    </div>'
-                            a14 = '</li>'
-                            a15 = '<div class="dropdown-divider"></div>'
-                        document.getElementById('grupo_notams').innerHTML=notam_content=a1 + a2 + a3 + a5 + a6 + a7 + a8 + a9 + a10 + a11 + a12 + a13 + a14 + a15;
+                    if (request.length > 0) {
+                        for (let i = 0; i < request.length; i++) {
+                            const objnotam = request[i];
+                                a1 = '<li>'
+                                a2 = '    <div class="input-group">'
+                                id_mensaje='/plan_vuelo/notammodal/?id_notam_mensaje='+objnotam.id_mensaje.toString();
+                                url='/plan_vuelo/notammodal/'+objnotam.id_mensaje+'/';
+                                //alert(url)
+                                a3 = '      <a id="objnotam.id_mensaje" class="dropdown-item" onclick="abrir_modal_base('+"'"+url+"'"+')" >'
+                                a5 =  '<p>'+ '<strong> Hace '+ objnotam.pasado+'</strong>'+ "<br>" + objnotam.idnotam+ "<br>" + objnotam.resumen +'</p>'
+                                a6 = '         &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;'
+                                //a7 = '         <button class="btn btn-outline-danger">'
+                                //a8 = '             <span class="material-icons">'
+                                //a9 = '                 close'
+                                //a10 = '            </span>    '
+                                //a11 = '        </button>'
+                                a12 = '     </a>'
+                                a13 = '    </div>'
+                                a14 = '</li>'
+                                a15 = '<div class="dropdown-divider"></div>'
+                                
+                                document.getElementById('grupo_notams').innerHTML=a1 + a2 + a3 + a5 + a6 + a12 + a13 + a14 + a15;
+
+                                //document.getElementById('grupo_notams').innerHTML=a1 + a2 + a3 + a5 + a6 + a7 + a8 + a9 + a10 + a11 + a12 + a13 + a14 + a15;
+
+                                document.getElementById('id_notificacion').innerHTML+='<i style="background-color: red;"></i>';
+
+                        }
+                    }else{
+                        a1 = '<li>'
+                        a2 = '    <div class="input-group">'
+                        a3 = '      <a id="id_mensaje" class="dropdown-item" onclick="" >'
+                        a5 = '&nbsp; &nbsp; <span class="material-icons"> exposure_zero </span> encontrado'
+                        a6 = '         &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;'
+                        //a7 = '         <button class="btn btn-outline-danger">'
+                        //a8 = '             <span class="material-icons">'
+                        //a9 = '                 close'
+                        //a10 = '            </span>    '
+                        //a11 = '        </button>'
+                        a12 = '     </a>'
+                        a13 = '    </div>'
+                        a14 = '</li>'
+                        a15 = '<div class="dropdown-divider"></div>'
+                        document.getElementById('grupo_notams').innerHTML=a1 + a2 + a3 + a5 + a6 + a12 + a13 + a14 + a15;
                     }
                     boton_todos='<a class="btn btn-outline-info" style="margin-left: 30%;"> Ver todos</a>'
-                    document.getElementById('grupo_notams').innerHTML=notam_content+=boton_todos;
+                    document.getElementById('grupo_notams').innerHTML+=boton_todos;
                 },
                 error: function (e) {
                     console.log(e);

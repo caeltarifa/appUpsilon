@@ -1,0 +1,387 @@
+//api.get_history_by_flight_number('AI101')[-1]
+{
+    'aircraft': {
+        'age': {'availability': 'True'},
+        'availability': {'age': 'True', 'serialNo': 'True'},
+        'model': {'code': 'B77W', 'text': 'Boeing 777-337(ER)'},
+        'registration': 'VT-ALR',
+        'restricted': 'False',
+        'serialNo': 'None'
+    },
+    'airline': {
+        'code': {'iata': 'AI', 'icao': 'AIC'},
+        'name': 'Air India',
+        'short': 'Air India'},
+    'airport': {
+      'destination': {
+            'code': {'iata': 'JFK', 'icao': 'KJFK'},
+            'name': 'New York John F. Kennedy International Airport',
+            'position': {'country': {'code': 'US', 'name': 'United States'},
+            'latitude': '40.639751',
+            'longitude': '-73.7789',
+            'region': {'city': 'New York'}},
+            'timezone': {'abbr': 'EST',
+            'abbrName': 'Eastern Standard Time',
+            'isDst': 'False',
+            'name': 'America/New_York',
+            'offset': '-18000'},
+            'visible': 'True'
+            },
+        'origin': {
+            'code': {'iata': 'DEL', 'icao': 'VIDP'},
+            'name': 'Delhi Indira Gandhi International Airport',
+            'position': {
+                'country': {'code': 'IN', 'name': 'India'},
+                'latitude': '28.5665',
+                'longitude': '77.103081',
+                'region': {'city': 'Delhi'}
+                },
+            'timezone': {
+                'abbr': 'IST',
+                'abbrName': 'India Standard Time',
+                'isDst': 'False',
+                'name': 'Asia/Kolkata',
+                'offset': '19800'
+                },
+            'visible': 'True'
+            },
+        'real': 'None'
+        },
+    'identification': {
+        'callsign': 'AIC101',
+        'codeshare': 'None',
+        'number': {'alternative': 'None', 'default': 'AI101'}
+    },
+  'owner': {'code': {'iata': 'AI', 'icao': 'AIC'}, 'name': 'Air India'},
+  
+  'status': {
+    'ambiguous': 'False',
+    'estimated': 'None',
+    'generic': {
+        'eventTime': {'local': '1519366844', 'utc': '1519384844'},
+        'status': {
+            'color': 'green',
+            'diverted': 'None',
+            'text': 'landed',
+            'type': 'arrival'
+            }
+        },
+    'live': 'False',
+   'text': 'Landed 06:20'
+   },
+
+  'time': {
+    'estimated': {'arrival': 'None', 'departure': 'None'},
+    'other': {
+        'duration': '51900',
+        'eta': '1519384844',
+        'updated': '1519380176'
+        },
+    'real': {'arrival': '1519384844', 'departure': '1519332961'},
+    'scheduled': {'arrival': '1519385700', 'departure': '1519329900'}
+   }
+
+},
+
+
+
+api.get_airport_arrivals('sin')[-1]
+{
+    'flight': {
+        'aircraft': {
+            'age': {'availability': 'True'},
+            'availability': {'age': 'True', 'serialNo': 'True'},
+            'model': {'code': 'A332', 'text': 'Airbus A330-243'},
+            'registration': 'B-6546',
+            'serialNo': 'None'
+        },
+        'airline': {
+            'code': {'iata': 'FM', 'icao': 'CSH'},
+            'name': 'Shanghai Airlines',
+            'short': 'Shanghai Airlines'
+        },
+        'airport': {
+            'destination': {
+                'info': {
+                    'baggage': '43',
+                    'gate': 'None',
+                    'terminal': '3'
+                },
+                'timezone': {
+                    'abbr': '+08',
+                    'abbrName': 'None',
+                    'isDst': 'False',
+                    'name': 'Asia/Singapore',
+                    'offset': '28800'
+                    }
+            },
+            'origin': {
+                'code': {'iata': 'PVG', 'icao': 'ZSPD'},
+                'info': {'baggage': 'None', 'gate': '209', 'terminal': '1'},
+                'name': 'Shanghai Pudong International Airport',
+                'position': {
+                    'country': {'code': 'CN', 'name': 'China'},
+                    'latitude': '31.14337',
+                    'longitude': '121.805199',
+                    'region': {'city': 'Shanghai'}
+                    },
+                'timezone': {
+                    'abbr': 'CST',
+                    'abbrName': 'China Standard Time',
+                    'isDst': 'False',
+                    'name': 'Asia/Shanghai',
+                    'offset': '28800'
+                },
+                'visible': 'True'
+            },
+            'real': 'None'
+        },
+        'identification': {
+            'callsign': 'CES567',
+            'number': {
+                'alternative': 'None', 
+                'default': 'MU567'
+            }
+        },
+        'owner': {
+            'code': {'iata': 'FM', 'icao': 'CSH'},
+            'name': 'Shanghai Airlines'
+        },
+        'status': {
+            'ambiguous': 'False',
+            'estimated': 'None',
+            'generic': {
+                'eventTime': {'local': '1519830256', 'utc': '1519801456'},
+                'status': {
+                    'color': 'green',
+                    'diverted': 'None',
+                    'text': 'estimated',
+                    'type': 'arrival'
+                }
+            },
+            'live': 'True',
+            'text': 'Estimated 15:04'
+        },
+        'time': {
+            'estimated': {'arrival': '1519801456', 'departure': 'None'},
+            'other': {'duration': 'None', 'eta': '1519801456'},
+            'real': {'arrival': 'None', 'departure': '1519782112'},
+            'scheduled': {'arrival': '1519801200', 'departure': '1519780800'}
+        }
+    }
+},
+
+
+//------------------------------------------------------------filtrados
+api.get_airport_arrivals('sin')[-1]
+{
+    'flight': {
+        'aircraft': {
+            'model': {'code': 'A332', 'text': 'Airbus A330-243'},
+            'registration': 'B-6546',
+        },
+        'airline': {
+            'code': {'iata': 'FM', 'icao': 'CSH'},
+            'short': 'Shanghai Airlines'
+        },
+        'airport': {
+            'destination': {
+                'info': {
+                    'baggage': '43',
+                    'terminal': '3'
+                },
+                'timezone': {
+                    'name': 'Asia/Singapore',
+                    }
+            },
+            'origin': {
+                'code': {'iata': 'PVG', 'icao': 'ZSPD'},
+                'info': {'baggage': 'None', 'gate': '209', 'terminal': '1'},
+                'name': 'Shanghai Pudong International Airport',
+                'position': {
+                    'country': {'code': 'CN', 'name': 'China'},
+                    'region': {'city': 'Shanghai'}
+                    },
+                'timezone': {
+                    'abbr': 'CST',
+                    'abbrName': 'China Standard Time',
+                    'name': 'Asia/Shanghai',
+                },
+                'visible': 'True'
+            },
+        },
+        'identification': {
+            'callsign': 'CES567',
+            'number': {
+                'alternative': 'None', 
+                'default': 'MU567'
+            }
+        },
+        'owner': {
+            'code': {'iata': 'FM', 'icao': 'CSH'},
+            'name': 'Shanghai Airlines'
+        },
+        'status': {
+            'live': 'True',
+            'text': 'Estimated 15:04'
+        },
+        'time': {
+            'estimated': {'arrival': '1519801456', 'departure': 'None'},
+            'other': {'duration': 'None', 'eta': '1519801456'},
+            'real': {'arrival': 'None', 'departure': '1519782112'},
+            'scheduled': {'arrival': '1519801200', 'departure': '1519780800'}
+        }
+    }
+},
+
+{
+    'flight': {
+        'identification': {
+            'number': {
+                'default': 'Z8119',
+                 'alternative': 'None'
+                 }, 
+            'callsign': 'AZN119',
+            'codeshare': 'None'
+            }, 
+        'status': {
+            'live': False, 
+            'text': 'Landed 19:34', 
+            'estimated': 'None', 
+            'ambiguous': False, 
+            'generic': {
+                'status': {
+                    'text': 
+                    'landed', 
+                    'type': 
+                    'arrival', 
+                    'color': 'green', 
+                    'diverted': 'None'
+                    }, 
+                    'eventTime': {
+                        'utc_millis': 1600731286000, 
+                        'utc_date': '20200921', 
+                        'utc_time': '2334', 
+                        'utc': 1600731286, 
+                        'local_millis': 1600716886000, 
+                        'local_date': '20200921', 
+                        'local_time': '1934', 
+                        'local': 1600716886
+                        }
+                }
+            }, 
+        'aircraft': {
+            'model': {
+                'code': 'E190', 
+                'text': 'Embraer E190STD'
+                }, 
+                'registration': 'CP-3130', 
+                'country': {
+                    'name': 'Bolivia',
+                        'alpha2': 'BO',
+                        'alpha3': 'BOL'},
+                        'restricted': False, 
+                        'serialNo': 'None', 
+                        'age': {
+                            'availability': True
+                            }, 
+                            'availability': {
+                                'serialNo': True, 
+                                'age': True
+                                }
+            }, 
+        'owner': {
+            'name': 'Amaszonas', 
+            'code': {
+                'iata': 'Z8', 
+                'icao': 'AZN'
+                }
+            }, 
+        'airline': {
+            'name': 'Amaszonas', 
+            'code': {
+                'iata': 'Z8', 
+                'icao': 'AZN'
+                }
+            }, 
+        'airport': {
+            'origin': {
+                'code': {
+                    'iata': 'VVI', 
+                    'icao': 'SLVR'
+                    }, 
+                'timezone': {
+                    'name': 'America/La_Paz', 
+                    'offset': -14400, 
+                    'abbr': '-04', 
+                    'abbrName': 'None', 
+                    'isDst': False
+                    }, 
+                'info': {
+                    'terminal': 'None', 
+                    'baggage': 'None', 
+                    'gate': '4'
+                    }, 
+                'name': 'Santa Cruz Viru Viru International Airport', 
+                'position': {
+                    'latitude': -17.644699, 
+                    'longitude': -63.1353, 
+                    'country': {
+                        'name': 'Bolivia', 
+                        'code': 'BO'
+                        }, 
+                    'region': {'city': 'Santa Cruz'}
+                    }, 
+                'visible': True
+                }, 
+            'destination': {
+                'timezone': {
+                    'name': 'America/La_Paz', 
+                    'offset': -14400, 
+                    'abbr': '-04', 
+                    'abbrName': 'None', 
+                    'isDst': False
+                    }, 
+                'info': {
+                    'terminal': 'None', 
+                    'baggage': 'None', 
+                    'gate': '2'
+                    }
+                }, 
+            'real': 'None'
+        }, 
+        'time': {
+            'scheduled': {
+                'departure_millis': 1600727400000, 
+                'departure_date': '20200921', 
+                'departure_time': '2230', 
+                'departure': 1600727400, 
+                'arrival_millis': 1600733400000, 
+                'arrival_date': '20200922', 
+                'arrival_time': '0010', 
+                'arrival': 1600733400
+                }, 
+            'real': {
+                'departure_millis': 1600727711000, 
+                'departure_date': '20200921', 
+                'departure_time': '2235', 
+                'departure': 1600727711, 
+                'arrival_millis': 1600731286000, 
+                'arrival_date': '20200921', 
+                'arrival_time': '2334', 
+                'arrival': 1600731286
+            }, 
+            'estimated': {
+                'departure': 'None', 
+                'arrival': 'None'
+            }, 
+            'other': {
+                'eta_millis': 1600731286000, 
+                'eta_date': '20200921', 
+                'eta_time': '2334', 
+                'eta': 1600731286, 
+                'duration': 3600
+            }
+        }
+    }   
+}

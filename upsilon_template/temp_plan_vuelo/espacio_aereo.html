@@ -1,0 +1,503 @@
+{% extends 'temp_plan_vuelo/baseadmin.html' %} 
+{% load static %} 
+
+{% block title %}
+<title>Upsilon | Progreso</title>
+{% endblock title %}
+
+
+
+{% block extra_head %}
+    <link rel='stylesheet' href='https://harvesthq.github.io/chosen/chosen.css'>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="{% static 'theme-assets/css/aprobar_plan.css' %}"> -->
+
+
+    <!--STYLE FOR THE AIRPORT MAP-->
+    <style>
+        /*body { margin: 0; padding: 0; }*/
+        #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+
+        #map {
+            position: absolute;
+            left: 25%;
+            top: 0;
+            bottom: 0;
+            width: 75%;
+        }
+        .map-overlay {
+            position: absolute;
+            width: 25%;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+            background-color: #fff;
+            max-height: 100%;
+            overflow: hidden;
+        }
+
+        .map-overlay fieldset {
+            display: none;
+            background: #ddd;
+            border: none;
+            padding: 10px;
+            margin: 0;
+        }
+
+        .map-overlay input {
+            display: block;
+            border: none;
+            width: 100%;
+            border-radius: 3px;
+            padding: 10px;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        .map-overlay .listing {
+            overflow: auto;
+            max-height: 100%;
+        }
+
+        .map-overlay .listing > * {
+            display: block;
+            padding: 5px 10px;
+            margin: 0;
+        }
+
+        .map-overlay .listing a {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            color: #404;
+            text-decoration: none;
+        }
+
+        .map-overlay .listing a:last-child {
+            border: none;
+        }
+
+        .map-overlay .listing a:hover {
+            background: #f0f0f0;
+        }
+
+
+    </style>
+    <!--STYLE FOR THE AIRPORT MAP-->
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <script src="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css" rel="stylesheet" />
+
+
+{% endblock extra_head %}
+    
+
+
+
+<!-- ////////////////////////////////////////////////////////////////////////////-->
+
+
+{% block content %}
+
+<!--BARRA LATERAL O MENU LATERAL-->
+<div class="main-menu menu-fixed menu-light menu-accordion    menu-shadow " data-scroll-to-active="false">
+
+    <div class="main-menu-content">
+        <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
+            <li class="active">
+                <a href="#_planes_recientes">
+                    <i class="ft-home"></i>
+                </a>
+            </li>
+            <li class=" nav-item">
+                <a href="#_planes_aprobados">
+                    <i class="ft-pie-chart"></i>
+                </a>
+            </li>
+            <li class=" nav-item">
+                <a href="#_notams">
+                    <i class="ft-droplet"></i>
+                </a>
+            </li>
+            <li class=" nav-item">
+                <a href="#_metars">
+                    <i class="ft-layers"></i>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+</div>
+<!--BARRA LATERAL O MENU LATERAL-->
+
+<br>
+
+<!-- Plan de vuelos recientes -->
+<div id="_planes_recientes"></div><br><br><br><br>
+<section>
+    <div class="row justify-content-center">
+        <div class="col-10" style="align-content: center;">
+            <div class="card" style="box-shadow: 2px 2px 8px 0 black; height: 500px; ">
+
+                <div class="map-overlay">
+                    <fieldset>
+                        <input
+                            id="feature-filter"
+                            type="text"
+                            placeholder="Filter results by name"
+                        />
+                    </fieldset>
+                    <div id="feature-listing" class="listing"></div>
+                </div>
+               <div id="map"></div>
+
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Planes de vuelo recientes -->
+
+
+
+
+<!-- Plan de vuelos aprobados -->
+<div id="_planes_aprobados"></div><br><br><br><br>
+<section>
+    <div class="row justify-content-center">
+        <div class="col-10" style="align-content: center;">
+            <div class="card" style="box-shadow: 2px 2px 8px 0 black; min-height: 30%;  max-height: 100%;">
+                <div class="card-header">
+                    <h4 class="card-title">SALIDAS</h4>
+                    
+                    <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+                            <li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
+                            <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                            <li><a data-action="close"><i class="ft-x"></i></a></li>
+                        </ul>
+                    </div>
+                    <br>
+
+                </div>
+                <div class="card-content collapse show" style="height: 75%; overflow-y: auto;">
+                   
+                   <div class="table-responsive">
+                        <table id="tabla_planes_recientes" class="table table-striped" align="center" style="text-align:center;">
+                            <thead>
+                                <tr>
+                                    <th scope="col">VUELO</th>
+                                    <th scope="col">AERONAVE</th>
+                                    <th scope="col">AEROLINEA</th>
+                                    <th scope="col">ORIGEN</th>
+                                    <th scope="col">TIEMPO AGENDADO</th>
+                                    <th scope="col">TIEMPO REAL LLEGADA</th>
+                                    <th scope="col">DURACION</th>
+                                    <th scope="col">ESTADO</th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody id="toUpdate_fpl">
+
+                                {% for arriv in lista_llegadas %}
+                                <tr>
+                                    <th id="{{elemen.id}}" width="5%" scope="row">{{arriv.flight.identification.number.default}} <br> {{arriv.flight.identification.callsign}}</th>
+                                    <th width="5%">-{{arriv.flight.aircraft.model.text}} <br> -{{arriv.flight.aircraft.registration}} <br> -{{arriv.flight.aircraft.country.name}} </th>
+                                    <td width="5%">-{{arriv.flight.owner.name}} <br> -{{arriv.flight.owner.code.icao}} <br> -{{arriv.flight.airline.name}} <br> -{{arriv.flight.airline.code.icao}} </td>
+                                    <td width="5%">-{{arriv.flight.airport.origin.name}} <br> -{{arriv.flight.airport.origin.position.region.city}} <br>-{{arriv.flight.airport.origin.position.country.name}}</td>
+                                    <td width="5%">Departure: -{{arriv.flight.time.scheduled.departure_time}} <br> -{{arriv.flight.time.scheduled.departure_date}} <br><br>Arrival: -{{arriv.flight.time.scheduled.arrival_time}} <br> -{{arriv.flight.time.scheduled.arrival_date}} <br> </td>
+                                    <td width="5%">Departure: -{{arriv.flight.time.real.departure_time}} <br> -{{arriv.flight.time.real.departure_date}} <br><br>Arrival: -{{arriv.flight.time.real.arrival_time}} <br> -{{arriv.flight.time.real.arrival_date}} <br> </td></td>
+                                    <td width="10%">-{{arriv.flight.time.other.duration}}</td>
+                                    <td width="10%">
+                                            {% if arriv.flight.status.live %}
+                                                <div class="spinner-grow text-success"></div>
+                                            {%else%}
+                                                <div class="spinner-grow text-danger"></div>
+                                            {% endif %}
+                                        </td>
+                                </tr>
+                                {% endfor %}
+                                
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Planes de vuelo aprobados -->
+
+
+
+
+<!--NOTAMS-->
+<div id="_notams"></div><br><br><br><br>
+<section>
+    <div class="row justify-content-center">
+        <div class="col-10" style="align-content: center;">
+            <div class="card" style="box-shadow: 2px 2px 8px 0 black; min-height: 30%;  max-height: 100%;">
+                <div class="card-header">
+                    <h4 class="card-title">LLEGADAS</h4>
+                    <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+                            <li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
+                            <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                            <li><a data-action="close"><i class="ft-x"></i></a></li>
+                        </ul>
+                    </div>
+                    <br>
+
+                </div>
+                <div class="card-content collapse show" style="height: 75%; overflow-y: auto;">
+                    CONTENIDO 3
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--NOTAMS-->
+
+
+<!--METARS-->
+<div id="_metars"></div><br><br><br><br>
+<section>
+    <div class="row justify-content-center">
+        <div class="col-10" style="align-content: center;">
+            <div class="card" style="box-shadow: 2px 2px 8px 0 black; min-height: 30%;  max-height: 100%;">
+                <div class="card-header">
+                    <h4 class="card-title">BUSQUEDA POR VUELO</h4>
+                    <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+                            <li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
+                            <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                            <li><a data-action="close"><i class="ft-x"></i></a></li>
+                        </ul>
+                    </div>
+                    <br>
+
+                </div>
+                <div class="card-content collapse show" style="height: 75%; overflow-y: auto;">
+                    CONTENIDO 4
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--METARS-->
+
+{% endblock content %} 
+
+
+{% block extrajs %}
+<script src='https://harvesthq.github.io/chosen/chosen.jquery.js'></script>
+
+<script type="text/javascript">
+    function abrir_modal(url) {
+        //alert(url);
+        $("#modal").load(url.trim(), function() {
+            $(this).modal('show');
+        });
+    }
+
+    //DESPLAZAMIENTO SUAVIZADO
+    $('.main-menu-content a').click(function(e){				
+		e.preventDefault();		//evitar el eventos del enlace normal
+		var strAncla=$(this).attr('href'); //id del ancla
+			$('body,html').stop(true,true).animate({				
+				scrollTop: $(strAncla).offset().top
+			},200);		
+    });
+</script>
+
+<script>
+	mapboxgl.accessToken = 'pk.eyJ1IjoiY2FlbHQiLCJhIjoiY2tmNGx4MDY3MDBnNTJ5cDh2aHhjOTQyciJ9.juIQGQyyJdwT0cIfnbFA3Q';
+    var map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/streets-v11',
+        center: [-68, -17.88],
+        maxZoom: 6,
+        minZoom: 1,
+        pitch: 60,
+        zoom: 5
+    });
+
+    // Holds visible airport features for filtering
+    var airports = [];
+
+    // Create a popup, but don't add it to the map yet.
+    var popup = new mapboxgl.Popup({
+        closeButton: false
+    });
+
+    var filterEl = document.getElementById('feature-filter');
+    var listingEl = document.getElementById('feature-listing');
+
+    function renderListings(features) {
+        var empty = document.createElement('p');
+        // Clear any existing listings
+        listingEl.innerHTML = '';
+        if (features.length) {
+            features.forEach(function (feature) {
+                var prop = feature.properties;
+                var item = document.createElement('a');
+                item.href = prop.wikipedia;
+                item.target = '_blank';
+                item.textContent = prop.name + ' (' + prop.abbrev + ')';
+                item.addEventListener('mouseover', function () {
+                    // Highlight corresponding feature on the map
+                    popup
+                        .setLngLat(feature.geometry.coordinates)
+                        .setText(
+                            feature.properties.name +
+                                ' (' +
+                                feature.properties.abbrev +
+                                ')'
+                        )
+                        .addTo(map);
+                });
+                listingEl.appendChild(item);
+            });
+
+            // Show the filter input
+            filterEl.parentNode.style.display = 'block';
+        } else if (features.length === 0 && filterEl.value !== '') {
+            empty.textContent = 'No results found';
+            listingEl.appendChild(empty);
+        } else {
+            empty.textContent = 'Drag the map to populate results';
+            listingEl.appendChild(empty);
+
+            // Hide the filter input
+            filterEl.parentNode.style.display = 'none';
+
+            // remove features filter
+            map.setFilter('airport', ['has', 'abbrev']);
+        }
+    }
+
+    function normalize(string) {
+        return string.trim().toLowerCase();
+    }
+
+    function getUniqueFeatures(array, comparatorProperty) {
+        var existingFeatureKeys = {};
+        // Because features come from tiled vector data, feature geometries may be split
+        // or duplicated across tile boundaries and, as a result, features may appear
+        // multiple times in query results.
+        var uniqueFeatures = array.filter(function (el) {
+            if (existingFeatureKeys[el.properties[comparatorProperty]]) {
+                return false;
+            } else {
+                existingFeatureKeys[el.properties[comparatorProperty]] = true;
+                return true;
+            }
+        });
+
+        return uniqueFeatures;
+    }
+
+    map.on('load', function () {
+        map.addSource('airports', {
+            'type': 'vector',
+            'url': 'mapbox://mapbox.04w69w5j'
+        });
+        map.addLayer({
+            'id': 'airport',
+            'source': 'airports',
+            'source-layer': 'ne_10m_airports',
+            'type': 'symbol',
+            'layout': {
+                'icon-image': 'airport-15',
+                'icon-padding': 0,
+                'icon-allow-overlap': true
+            }
+        });
+
+        map.on('moveend', function () {
+            var features = map.queryRenderedFeatures({ layers: ['airport'] });
+
+            if (features) {
+                var uniqueFeatures = getUniqueFeatures(features, 'iata_code');
+                // Populate features for the listing overlay.
+                renderListings(uniqueFeatures);
+
+                // Clear the input container
+                filterEl.value = '';
+
+                // Store the current features in sn `airports` variable to
+                // later use for filtering on `keyup`.
+                airports = uniqueFeatures;
+            }
+        });
+
+        map.on('mousemove', 'airport', function (e) {
+            // Change the cursor style as a UI indicator.
+            map.getCanvas().style.cursor = 'pointer';
+
+            // Populate the popup and set its coordinates based on the feature.
+            var feature = e.features[0];
+            popup
+                .setLngLat(feature.geometry.coordinates)
+                .setText(
+                    feature.properties.name +
+                        ' (' +
+                        feature.properties.abbrev +
+                        ')'
+                )
+                .addTo(map);
+        });
+
+        map.on('mouseleave', 'airport', function () {
+            map.getCanvas().style.cursor = '';
+            popup.remove();
+        });
+
+        filterEl.addEventListener('keyup', function (e) {
+            var value = normalize(e.target.value);
+
+            // Filter visible features that don't match the input value.
+            var filtered = airports.filter(function (feature) {
+                var name = normalize(feature.properties.name);
+                var code = normalize(feature.properties.abbrev);
+                return name.indexOf(value) > -1 || code.indexOf(value) > -1;
+            });
+
+            // Populate the sidebar with filtered results
+            renderListings(filtered);
+
+            // Set the filter to populate features into the layer.
+            if (filtered.length) {
+                map.setFilter('airport', [
+                    'match',
+                    ['get', 'abbrev'],
+                    filtered.map(function (feature) {
+                        return feature.properties.abbrev;
+                    }),
+                    true,
+                    false
+                ]);
+            }
+        });
+
+        // Call this function on initialization
+        // passing an empty array to render an empty state
+        renderListings([]);
+    });
+
+</script>
+
+
+{% endblock extrajs %}
+
+
+
+<!-- ////////////////////////////////////////////////////////////////////////////-->
+<!-- ////////////////////////////////////////////////////////////////////////////-->

@@ -1,16 +1,18 @@
 from django.conf.urls import url, include
 from django.urls import path, re_path
 from apps.plan_vuelo.views import view_plan_vuelo, view_panel_coordinacion, view_admin_coordinacion , view_aprobar_flp, view_tablero, view_update_flp, view_template_prueba, view_identificacion, view_validar_passwd, view_cerrar_sesion , view_recordar_ruta, view_rutas_guardadas
-from apps.plan_vuelo.views import view_update_notam_realtime
+
+from apps.plan_vuelo.views import view_update_notam_realtime,view_notam_modal
+
 from apps.plan_vuelo.views import view_restaurar_ruta, view_archivar_ruta
 
 from apps.plan_vuelo.views import view_guardar_aprobacion, view_historial_aprobacion
 # EJECUTIVO ################################################################################################################
-from apps.plan_vuelo.views import view_panel_ejecutivo, view_aip, view_obtener_dibujo_ruta
+from apps.plan_vuelo.views import view_panel_ejecutivo, view_carta_navegacional, view_obtener_dibujo_ruta
 
 
 # SUPERVISOR ################################################################################################################
-from apps.plan_vuelo.views import view_panel_supervisor, view_servicio_met
+from apps.plan_vuelo.views import view_panel_supervisor, view_servicio_met, view_aeropuertos_aeronaves
 
 
  # view_form_plan_vuelo, post_new, post_detail
@@ -54,7 +56,7 @@ urlpatterns = [
     
     #################################################################################################################
     path('ejecutivo/', view_panel_ejecutivo, name="view_panel_ejecutivo"), #redirije al panel de control de ejecutivo
-    path('aip/', view_aip, name="view_aip"), #
+    path('cartanavegacional/', view_carta_navegacional, name="view_carta_navegacional"), #
     path('aip/dibujoruta', view_obtener_dibujo_ruta, name="view_obtener_dibujo_ruta"), #
     
 
@@ -63,9 +65,13 @@ urlpatterns = [
     #################################################################################################################
     path('supervisor/', view_panel_supervisor, name="view_panel_supervisor"), #redirije al panel de control de ejecutivo
     path('servicio_met/', view_servicio_met, name="view_servicio_met"), #
+    path('espacioaereo/', view_aeropuertos_aeronaves, name="view_aeropuertos_aeronaves"), #
+    
 
 
     ######################### NOTAMS REAL TIME
     path('notamsupdate/', view_update_notam_realtime, name="view_update_notam_realtime"), #
+    path('notammodal/<path:id_notam_mensaje>/',view_notam_modal, name='view_notam_modal'),
+
     
 ]

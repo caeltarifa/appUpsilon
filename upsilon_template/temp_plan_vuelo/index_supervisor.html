@@ -247,14 +247,14 @@
     
     <div class="buttons">
         
-        <div class="butFrame bounce" onClick="window.location='#'">
+        <div class="butFrame bounce"><!--onClick="window.location='#'"-->
             <a href="{% url 'view_admin_coordinacion' %}">
                 <img src="http://www.neodigital.com.au/thumbnailsmall/Button1.jpg" />
                 <div class="butHeading">Trafico AMHS y aprobar FPL</div>
             </a>
         </div>
     
-        <div class="butFrame bounce" onClick="window.location='#'">
+        <div class="butFrame bounce"><!--onClick="window.location='#'"-->
             <a href="{% url 'view_historial_aprobacion' %}">
                 <img src="http://www.neodigital.com.au/thumbnailsmall/Button5.jpg" />
                 <div class="butHeading">fpl aprobados</div>
@@ -266,14 +266,14 @@
     
     <div class="buttons">
         
-        <div class="butFrame bounce" onClick="window.location='#'">
+        <div class="butFrame bounce"><!--onClick="window.location='#'"-->
             <a href="{% url 'view_rutas_guardadas' %}">
                 <img src="http://www.neodigital.com.au/thumbnailsmall/Button6.jpg" />
                 <div class="butHeading">rutas</div>
             </a>
         </div>
     
-        <div class="butFrame bounce" onClick="window.location='#'">
+        <div class="butFrame bounce"><!--onClick="window.location='#'"-->
           <img src="http://www.neodigital.com.au/thumbnailsmall/Button5.jpg" />
           <div class="butHeading">PIB</div>
         </div>
@@ -282,17 +282,17 @@
 
     <div class="buttons">
         
-        <div class="butFrame bounce" onClick="window.location='#'">
-            <a href="% url 'view_rutas_guardadas' %">
+        <div class="butFrame bounce"> <!--onClick="window.location='#'"-->
+            <a href="{% url 'view_carta_navegacional' %}">
                 <img src="http://www.neodigital.com.au/thumbnailsmall/Button6.jpg" />
-                <div class="butHeading">VUELOS DE SALIDA Y LLEGADA</div>
+                <div class="butHeading">CARTA NAVEGACIONAL</div>
             </a>
         </div>
-    
-        <div class="butFrame bounce" onClick="window.location='#'">
-            <a href="{% url 'view_servicio_met' %}">
+
+        <div class="butFrame bounce"><!--onClick="window.location='#'"-->
+            <a href="{% url 'view_aeropuertos_aeronaves' %}">
                 <img src="http://www.neodigital.com.au/thumbnailsmall/Button6.jpg" />
-                <div class="butHeading">SERVICIO METEOROLOGICO</div>
+                <div class="butHeading">HISTORIAL AEROPUERTOS Y AERONAVES</div>
             </a>
         </div>
     
@@ -301,16 +301,16 @@
     <div class="buttons">
         
         <div class="butFrame bounce" onClick="window.location='#'">
-            <a href="{% url 'view_aip' %}">
-                <img src="http://www.neodigital.com.au/thumbnailsmall/Button6.jpg" />
-                <div class="butHeading">AIP</div>
-            </a>
-        </div>
-    
-        <div class="butFrame bounce" onClick="window.location='#'">
             <a href="% url 'view_servicio_met' %">
                 <img src="http://www.neodigital.com.au/thumbnailsmall/Button6.jpg" />
                 <div class="butHeading">AERONAVES HABILITADAS</div>
+            </a>
+        </div>
+
+        <div class="butFrame bounce" onClick="window.location='#'">
+            <a href="{% url 'view_servicio_met' %}">
+                <img src="http://www.neodigital.com.au/thumbnailsmall/Button6.jpg" />
+                <div class="butHeading">SERVICIO METEOROLOGICO</div>
             </a>
         </div>
     

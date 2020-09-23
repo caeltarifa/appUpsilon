@@ -125,7 +125,7 @@ class Ruta_flp(models.Model):
         if len(listax) > 0:
             contador=0
             for punto in listax:
-                if Ruta_flp.objects.filter(nombre_ruta=punto).exists():
+                if punto != '' and Ruta_flp.objects.filter(nombre_ruta=punto).exists():
                     lista_rutas.append(Ruta_flp.objects.filter(nombre_ruta=punto)[0])
                     puntos_ruta = Ruta_flp.objects.filter(nombre_ruta=punto)[0].ruta.split(";;")
                     if contador==0:

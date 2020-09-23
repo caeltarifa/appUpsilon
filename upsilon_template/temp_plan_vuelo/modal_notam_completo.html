@@ -1,0 +1,30 @@
+
+<!-- SE RECIBE aero, plan, detalles de la ficha, ruta del fpl, rutas all, puntosall   -->
+    <div class="modal-dialog  modal-dialog-centered modal-xl " role="document" style="width: 62.5%; margin:auto;" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    NOTAM 
+                </h2>
+            </div>
+
+            <div class="modal-body">
+                <div class="container">
+                    {{notam_completo.id_mensaje}}<br>
+                    {{notam_completo.aftn1}}<br>
+                    {{notam_completo.aftn2}}<br>
+                    {{notam_completo.idnotam}}<br>
+                    {{notam_completo.resumen}}<br>
+                    {{notam_completo.aplica_a}}<br>
+                    {{notam_completo.valido_desde}}<br>
+                    {{notam_completo.valido_hasta}}<br>
+                    {{notam_completo.mensaje}}
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-danger " type="button" data-dismiss="modal">Cerrar</button>
+            </div>
+
+        </div>
+    </div>

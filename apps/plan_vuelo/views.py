@@ -39,8 +39,16 @@ def view_panel_coordinacion(request):
 def view_admin_coordinacion(request):
     controladores=Group.objects.get(name='CONTROLADORESLP')
     if request.user.is_authenticated and request.user.groups.filter(name='CONTROLADORESLP').exists():
-        lista_fpl=Flp_trafico.objects.raw("select id_mensaje as id, id_mensaje, substring(id_mensaje, 1, 7) as id_amhs, substring(id_mensaje, 15,22) as fecha, substring(aftn2, 1,6) as hora_amhs, aftn1, aftn2, id_aeronave, reglas_vuelo, aeropuerto_salida, ruta, aeropuerto_destino, otros from plan_vuelo_flp_trafico where aprobado=false order by id_amhs asc limit 90;")
+        lista_fpl=Flp_trafico.objects.raw("select id_mensaje as id, id_mensaje, substring(id_mensaje, 1, 7) as id_amhs, substring(id_mensaje, 15,22) as fecha, substring(aftn2, 1,6) as hora_amhs, aftn1, aftn2, id_aeronave, reglas_vuelo, aeropuerto_salida, ruta, aeropuerto_destino, otros from plan_vuelo_flp_trafico where aprobado=false order by id_amhs desc limit 90;")
         
+        now=datetime.datetime.now()
+        fecha_now=(str(now.day) if len(str(now.day))>1 else ('0' + str(now.day))) + ( str(now.month) if len(str(now.month))>1 else ('0'+str(now.month)) ) +  str(now.year)
+        
+        lista_fpl_hoy = []
+        for fpl in lista_fpl:
+            if fecha_now in fpl.id_mensaje:
+                lista_fpl_hoy.append(fpl)
+                
         lista_fpl_aprobado = Flp_trafico.objects.raw("select id_mensaje as id, id_mensaje, substring(id_mensaje, 1, 7) as id_amhs, substring(id_mensaje, 15,22) as fecha, substring(aftn2, 1,6) as hora_amhs, aftn1, aftn2, id_aeronave, reglas_vuelo, aeropuerto_salida, ruta, aeropuerto_destino, otros from plan_vuelo_flp_trafico where aprobado=true order by id_amhs desc limit 90;")
 
         #id_mensaje, id_amhs, fecha, hora_amhs, aftn1, aftn2, id_aeronave, reglas_vuelo, aeropuerto_salida, ruta, aeropuerto_destino, otros
@@ -51,7 +59,7 @@ def view_admin_coordinacion(request):
         equipo_coordinacion = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and empresa_institucion_id=1 order by activo")
 
 
-        return render(request, 'temp_plan_vuelo/progreso_vuelo.html', {'lista_fpl':lista_fpl ,'lista_fpl_aprobado':lista_fpl_aprobado , 'equipo_trabajo': equipo_coordinacion} )#,'metar':metar} )
+        return render(request, 'temp_plan_vuelo/progreso_vuelo.html', {'lista_fpl':lista_fpl,'lista_fpl_hoy':lista_fpl_hoy ,'lista_fpl_aprobado':lista_fpl_aprobado , 'equipo_trabajo': equipo_coordinacion} )#,'metar':metar} )
         #return render(request,'temp_plan_vuelo/admin.html')
     else:
         return redirect('login')
@@ -68,7 +76,7 @@ def view_aprobar_flp(request, id_plancompleto):
             fpl=plan_completo[0]
             context=serializar_fpl(plan_completo[0])
 
-            lista_rutas,lista_rutas_puntos=Ruta_flp2.detectarRutas((fpl.ruta.split(' '))[1:])
+            lista_rutas,lista_rutas_puntos=Ruta_flp2.detectarRutas(fpl.ruta.split(' ')[0:])
             
             ficha={
                 'avion':fpl.id_aeronave.split('-')[1],
@@ -187,9 +195,19 @@ import json
 def view_update_flp (request):
     if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='CONTROLADORESLP').exists():
         if request.is_ajax and request.method =="GET":
-            lista_fpl=Flp_trafico.objects.raw("select id_mensaje, substring(id_mensaje, 1, 7) as id_amhs, substring(id_mensaje, 15,22) as fecha, substring(aftn2, 1,6) as hora_amhs, aftn1, aftn2, id_aeronave, reglas_vuelo, aeropuerto_salida, ruta, aeropuerto_destino, otros from plan_vuelo_flp_trafico where aprobado=false order by id_amhs asc limit 90;")
-            lista_fpl = [serializar_fpl_update(fpl) for fpl in lista_fpl]
-            return HttpResponse(json.dumps(lista_fpl), content_type='application/json')
+
+            lista_fpl=Flp_trafico.objects.raw("select id_mensaje, substring(id_mensaje, 1, 7) as id_amhs, substring(id_mensaje, 15,22) as fecha, substring(aftn2, 1,6) as hora_amhs, aftn1, aftn2, id_aeronave, reglas_vuelo, aeropuerto_salida, ruta, aeropuerto_destino, otros from plan_vuelo_flp_trafico where aprobado=false order by id_amhs desc limit 90;")
+            
+            now=datetime.datetime.now()
+            fecha_now=(str(now.day) if len(str(now.day))>1 else ('0' + str(now.day))) + ( str(now.month) if len(str(now.month))>1 else ('0'+str(now.month)) ) +  str(now.year)
+            
+            lista_fpl_hoy = []
+            for fpl in lista_fpl:
+                if fecha_now in fpl.id_mensaje:
+                    lista_fpl_hoy.append(fpl)
+            
+            lista_fpl_hoy = [serializar_fpl_update(fpl) for fpl in lista_fpl_hoy]
+            return HttpResponse(json.dumps(lista_fpl_hoy), content_type='application/json')
             #return HttpResponse({'lista_fpl':lista_fpl}, content_type='application/json')
         return JsonResponse({'respuesta':"ningun resultado"}, status=400)
     else:
@@ -228,22 +246,53 @@ def view_update_notam_realtime(request):
         dic={ 'id_mensaje': False}
         if request.is_ajax and request.method =="GET":
             #notams recientes
-            lista_notam = Notam_trafico.objects.filter(nuevo=True).only('id_mensaje','idnotam','resumen')
+            lista_notam = Notam_trafico.objects.filter(nuevo=True).only('id_mensaje','idnotam','resumen','ingresado')
             #id_mensaje       |    aftn1    |      aftn2      |          idnotam          |                    resumen                     | aplica_a | valido_desde  |    valido_hasta     |                   mensaje                    | nuevo |          ingresado 
-            lista_notam = [serializar_notam_realtime(notam) for notam in lista_notam]
-            return HttpResponse(json.dumps(lista_notam), content_type='application/json')
+            #lista_notam = [serializar_notam_realtime(notam) for notam in lista_notam]
+            lista_notam2=[]
+            for notam in lista_notam:
+                hora,minuto,segundo = diferencie_entre_horas(notam.ingresado.replace(tzinfo=None) , datetime.datetime.now().replace(tzinfo=None) )
+                if hora <= 1:
+                    pasado=str(hora)+" horas y "+str(minuto) +" minutos."
+                    lista_notam2.append( serializar_notam_realtime(notam,pasado) )
+
+            return HttpResponse(json.dumps(lista_notam2), content_type='application/json')
             #return HttpResponse({'lista_fpl':lista_fpl}, content_type='application/json')
         return JsonResponse(dic, status=400)
     else:
         return redirect('accounts/login/')
 
-def serializar_notam_realtime(notam):
+def view_notam_modal(request, id_notam_mensaje):
+    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='CONTROLADORESLP').exists():        
+        #plan_completo = Flp_trafico.objects.filter(id_mensaje=id_plancompleto)[0]
+        if Notam_trafico.objects.filter(id_mensaje=str(id_notam_mensaje)).exists():
+            notam_completo = Notam_trafico.objects.filter(id_mensaje=str(id_notam_mensaje))[0]
+        else:
+            notam_completo = Notam_trafico
+
+        return render(request, 'temp_plan_vuelo/modal_notam_completo.html', {'notam_completo': notam_completo}  ) #retorno el modal y el contexto
+    else:
+        return redirect('accounts/login/')
+    
+
+
+def serializar_notam_realtime(notam, pasado):
     return {
         'id_mensaje' : notam.id_mensaje,
         'idnotam' : notam.idnotam,
         'resumen' : notam.resumen,
+        'pasado' : pasado,
     }
 
+def diferencie_entre_horas(data1, data2):
+  #data1 = datetime.datetime.now()
+  #data2 = datetime.datetime.now()
+  diff = data2 - data1
+  days, seconds = diff.days, diff.seconds
+  hours = days * 24 + seconds // 3600
+  minutes = (seconds % 3600) // 60
+  seconds = seconds % 60
+  return [hours,minutes,seconds]
 
 
 #############################   CONTROL DE USUARIOS   #################################
@@ -403,7 +452,7 @@ def view_panel_ejecutivo(request):
 
 #from traffic.data import airways
 
-def view_aip(request):
+def view_carta_navegacional(request):
     #muestra el panel principal ejecutivo
     if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='EJECUTIVOSLP').exists():
         equipo_coordinacion = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and empresa_institucion_id=1 order by activo")
@@ -411,7 +460,7 @@ def view_aip(request):
         puntos_satelitales = Punto_satelital.objects.raw('select * from plan_vuelo_punto_satelital')
         puntos_satelitales = [serializar_punto_satelital(punto) for punto in puntos_satelitales]
 
-        return render(request, 'temp_plan_vuelo/temp_aip/temp_aip.html' ,{'equipo_trabajo': equipo_coordinacion , 'puntos_satelitales' : puntos_satelitales,'todaruta': Ruta_flp.objects.all()} )#,'metar':metar} )
+        return render(request, 'temp_plan_vuelo/temp_carta_navegacional/temp_carta_navegacional.html' ,{'equipo_trabajo': equipo_coordinacion , 'puntos_satelitales' : puntos_satelitales,'todaruta': Ruta_flp.objects.all()} )#,'metar':metar} )
     else:
         return redirect('login')
 
@@ -458,14 +507,18 @@ def obterner_posiciones(vector_puntos):
 
 
 
-
-
-
 # VIEW_SUPERVISOR ################################################################################################################
+
+# id_cargo |  nombre_cargo   | empresa_id
+#----------+-----------------+------------
+#        1 | COORDINADOR ACC |          1
+#        2 | EJECUTIVO ACC   |          1
+#        3 | SUPERVISOR ACC  |          1
+
 def view_panel_supervisor(request):
     #muestra el panel principal ejecutivo
     if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='SUPERVISORESLP').exists():
-        equipo_coordinacion = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and empresa_institucion_id=1 order by activo")
+        equipo_coordinacion = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=3 and ci=trabajador_id) and empresa_institucion_id=1 order by activo")
         return render(request, 'temp_plan_vuelo/index_supervisor.html' ,{'equipo_trabajo': equipo_coordinacion} )#,'metar':metar} )
     else:
         return redirect('login')
@@ -473,11 +526,24 @@ def view_panel_supervisor(request):
 def view_servicio_met(request):
     #muestra el panel principal ejecutivo
     if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='SUPERVISORESLP').exists():
-        equipo_coordinacion = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and empresa_institucion_id=1 order by activo")
+        equipo_coordinacion = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=3 and ci=trabajador_id) and empresa_institucion_id=1 order by activo")
         return render(request, 'temp_plan_vuelo/temp_servicio_met/servicio_met.html' ,{'equipo_trabajo': equipo_coordinacion} )#,'metar':metar} )
     else:
         return redirect('login')
 
+
+from pyflightdata import FlightData
+def view_aeropuertos_aeronaves(request):
+    #muestra salidas y llegadas historial adenmas de de bucar todos los movimientos de la aeronave X
+    if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='SUPERVISORESLP').exists():
+        equipo_coordinacion = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=3 and ci=trabajador_id) and empresa_institucion_id=1 order by activo")
+
+        api=FlightData()
+        lista_llegadas=api.get_airport_arrivals('LPB',limit=25, earlier_data=True)
+
+        return render(request, 'temp_plan_vuelo/espacio_aereo.html' ,{'equipo_trabajo': equipo_coordinacion, 'lista_llegadas': lista_llegadas} )#,'metar':metar} )
+    else:
+        return redirect('login')
 
 
 

@@ -1,0 +1,240 @@
+{% extends 'temp_plan_vuelo/baseadmin.html' %} 
+{% load static %} 
+
+{% block title %}
+<title>Upsilon | Progreso</title>
+{% endblock title %}
+
+
+
+{% block extra_head %}
+    <link rel='stylesheet' href='https://harvesthq.github.io/chosen/chosen.css'>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="{% static 'theme-assets/css/aprobar_plan.css' %}"> -->
+
+{% endblock extra_head %}
+    
+
+
+
+<!-- ////////////////////////////////////////////////////////////////////////////-->
+
+
+{% block content %}
+
+<!--BARRA LATERAL O MENU LATERAL-->
+<div class="main-menu menu-fixed menu-light menu-accordion    menu-shadow " data-scroll-to-active="false">
+
+    <div class="main-menu-content">
+        <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
+            <li class="active">
+                <a href="#_planes_recientes">
+                    <i class="ft-home"></i>
+                </a>
+            </li>
+            <li class=" nav-item">
+                <a href="#_planes_aprobados">
+                    <i class="ft-pie-chart"></i>
+                </a>
+            </li>
+            <li class=" nav-item">
+                <a href="#_notams">
+                    <i class="ft-droplet"></i>
+                </a>
+            </li>
+            <li class=" nav-item">
+                <a href="#_metars">
+                    <i class="ft-layers"></i>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+</div>
+<!--BARRA LATERAL O MENU LATERAL-->
+
+<br>
+
+<!-- Plan de vuelos recientes -->
+<div id="_planes_recientes"></div><br><br><br><br>
+<section>
+    <div class="row justify-content-center">
+        <div class="col-10" style="align-content: center;">
+            <div class="card" style="box-shadow: 2px 2px 8px 0 black; min-height: 30%;  max-height: 100%; ">
+
+                <div class="card-header">
+                    <h3 class="card-title">AEROPUERTOS</h3>
+                    <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            <li>
+                                <button class="btn-primary" id="update_fpl1">Actualizar</button>
+                            </li>
+
+                            <li><a data-action="reload" ><i class="ft-rotate-cw" id="update_fpl1"></i></a></li>
+
+                            <!--BUSCAR-->
+                            <li class="nav-item dropdown navbar-search">
+                                <a class="nav-link dropdown-toggle hide" data-toggle="dropdown" href="#">
+                                    <i class="ficon ft-search"></i>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li class="arrow_box">
+                                        <div class="input-group search-box">
+                                            <div class="position-relative has-icon-right full-width">
+                                                <input class="form-control" type="text" id="buscar_flp_table" onkeyup="buscarFlp()" placeholder="Buscar FLP">
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                            <!--BUSCAR-->
+
+                            <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+                            <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                            <li><a data-action="close"><i class="ft-x"></i></a></li>
+                        </ul>
+                    </div>
+                    <br>
+                </div>
+                <!--CONTENIDO DE LA TABLA DE PLANES RECIENTES-->
+               
+               
+               
+                <div class="card-content collapse show" style="height: 75%; overflow-y: auto;">
+
+                    CONTENIDO 1
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Planes de vuelo recientes -->
+
+
+
+
+<!-- Plan de vuelos aprobados -->
+<div id="_planes_aprobados"></div><br><br><br><br>
+<section>
+    <div class="row justify-content-center">
+        <div class="col-10" style="align-content: center;">
+            <div class="card" style="box-shadow: 2px 2px 8px 0 black; min-height: 30%;  max-height: 100%;">
+                <div class="card-header">
+                    <h4 class="card-title">SALIDAS</h4>
+                    
+                    <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+                            <li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
+                            <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                            <li><a data-action="close"><i class="ft-x"></i></a></li>
+                        </ul>
+                    </div>
+                    <br>
+
+                </div>
+                <div class="card-content collapse show" style="height: 75%; overflow-y: auto;">
+                   CONTENIDO 2
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Planes de vuelo aprobados -->
+
+
+
+
+<!--NOTAMS-->
+<div id="_notams"></div><br><br><br><br>
+<section>
+    <div class="row justify-content-center">
+        <div class="col-10" style="align-content: center;">
+            <div class="card" style="box-shadow: 2px 2px 8px 0 black; min-height: 30%;  max-height: 100%;">
+                <div class="card-header">
+                    <h4 class="card-title">LLEGADAS</h4>
+                    <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+                            <li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
+                            <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                            <li><a data-action="close"><i class="ft-x"></i></a></li>
+                        </ul>
+                    </div>
+                    <br>
+
+                </div>
+                <div class="card-content collapse show" style="height: 75%; overflow-y: auto;">
+                    CONTENIDO 3
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--NOTAMS-->
+
+
+<!--METARS-->
+<div id="_metars"></div><br><br><br><br>
+<section>
+    <div class="row justify-content-center">
+        <div class="col-10" style="align-content: center;">
+            <div class="card" style="box-shadow: 2px 2px 8px 0 black; min-height: 30%;  max-height: 100%;">
+                <div class="card-header">
+                    <h4 class="card-title">PENDIENTE</h4>
+                    <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+                            <li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
+                            <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                            <li><a data-action="close"><i class="ft-x"></i></a></li>
+                        </ul>
+                    </div>
+                    <br>
+
+                </div>
+                <div class="card-content collapse show" style="height: 75%; overflow-y: auto;">
+                    CONTENIDO 4
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--METARS-->
+
+{% endblock content %} 
+
+
+{% block extrajs %}
+<script src='https://harvesthq.github.io/chosen/chosen.jquery.js'></script>
+
+<script type="text/javascript">
+    function abrir_modal(url) {
+        $("#modal").load(url.trim(), function() {
+            $(this).modal('show');
+        });
+    }
+
+    //DESPLAZAMIENTO SUAVIZADO
+    $('.main-menu-content a').click(function(e){				
+		e.preventDefault();		//evitar el eventos del enlace normal
+		var strAncla=$(this).attr('href'); //id del ancla
+			$('body,html').stop(true,true).animate({				
+				scrollTop: $(strAncla).offset().top
+			},200);		
+    });
+
+</script>
+
+
+{% endblock extrajs %}
+
+
+
+<!-- ////////////////////////////////////////////////////////////////////////////-->
+<!-- ////////////////////////////////////////////////////////////////////////////-->
