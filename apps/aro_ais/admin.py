@@ -4,6 +4,7 @@ from django.contrib import admin
 
 
 from apps.aro_ais.models import Pib_trafico
+from apps.aro_ais.models import Pib_extenso
 
-#admin.site.register(Metar_trafico)
 admin.site.register(Pib_trafico)
+admin.site.register(Pib_extenso)

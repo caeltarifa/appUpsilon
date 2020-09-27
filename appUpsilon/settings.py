@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'apps.generacion_fpl',
     'apps.trabajadoresATS',
     'apps.aro_ais',
+    #'apps.utils',
 ]
 
 MIDDLEWARE = [

@@ -14,6 +14,9 @@ from django.db.models import Q
 
 #from apps.plan_vuelo.forms import Vuelo_Aprobado_form, PostForm
 from apps.plan_vuelo.models import Flp_trafico, EntrePuntos_flp,Ruta_flp, Trabajador, Ruta_guardada, Flp_aprobado, Punto_satelital, Notam_trafico, Aeropuerto
+
+from apps.aro_ais.models import Pib_trafico
+
 Ruta_flp2=Ruta_flp()
 EntrePuntos_flp2=EntrePuntos_flp()
 
@@ -278,12 +281,51 @@ def view_update_notam_realtime(request):
                 if hora <= 5:
                     pasado=str(hora)+" horas y "+str(minuto) +" minutos."
                     lista_notam2.append( serializar_notam_realtime(notam,pasado) )
+                else:
+                    notam.update(nuevo=False)
+
+            ######################## NOTAMS sin PIB
+
+            lista_notams_sin_pib = Notam_trafico.objects.raw('select * from plan_vuelo_notam_trafico where id_mensaje not in (select pib_notam_id from aro_ais_pib_trafico)')
+            #for notamsp in lista_notams_sin_pib:
+            #    generar_auto_pib(notamsp)
 
             return HttpResponse(json.dumps(lista_notam2), content_type='application/json')
             #return HttpResponse({'lista_fpl':lista_fpl}, content_type='application/json')
         return JsonResponse(dic, status=400)
     else:
         return redirect('accounts/login/')
+
+def generar_auto_pib(notamsp):
+    pib_decoded = ""
+    pib=Pib_trafico(
+                    pib_notam = notamsp,
+                    fir = notamsp.aplica_a.strip().split(" ")[1],
+                    instalacion = "",
+                    informacion = "pib decodificado",
+                    #publicado = ,
+                    #vigente = ,
+                    #archivado = ,
+                    inicio_publi = stringToDatetimefield( notamsp.valido_desde.strip().split(" ")[1] ),
+                    fin_publi = stringToDatetimefield( notamsp.valido_hasta.strip().split(" ")[1] ),
+                    #oficialaro = ,
+                )
+    pib.save()
+
+def stringToDatetimefield( cadena ):
+    try:
+        anio = int("20"+ cadena[0:2])
+        mes = int(cadena[2:4])
+        dia = int(cadena[4:6])
+        hora = int(cadena[6:8])
+        minuto = int(cadena[8:10])
+        # datetime(year, month, day, hour, minute, second, microsecond)
+        tempo = datetime.datetime(anio,mes, dia, hora, minuto )
+    except:
+        tempo = datetime.datetime(2099,12, 31, 00, 00 )
+    
+    return tempo 
+
 
 def view_notam_modal(request, id_notam_mensaje):
     if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='CONTROLADORESLP').exists():        

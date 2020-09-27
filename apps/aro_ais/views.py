@@ -21,3 +21,13 @@ def view_panel_aroais(request):
         return render(request, 'temp_plan_vuelo/index_aroais.html' ,{'equipo_trabajo': equipo_coordinacion} )#,'metar':metar} )
     else:
         return redirect('login')
+
+def view_gestion_pib(request):
+    if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='AROAISLP').exists():
+        equipo_coordinacion = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and empresa_institucion_id=1 order by activo")
+
+        
+
+        return render(request, 'temp_plan_vuelo/index_aroais.html' ,{'equipo_trabajo': equipo_coordinacion} )#,'metar':metar} )
+    else:
+        return redirect('login')
