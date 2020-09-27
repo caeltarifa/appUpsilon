@@ -15,9 +15,9 @@ def view_pagina_principal(request):
     
     if request.user.is_authenticated: 
         #preguntando si el 'usuario autenticado' pertenece al grupo de CONTROLADORES
-        if request.user.groups.filter(name='AROAISLP').exists():
-            if request.user.username in 'aroaislp@aasana':
-                return redirect('view_admin_ais')
+        #if request.user.groups.filter(name='AROAISLP').exists():
+        #    if request.user.username in 'aroaislp@aasana':
+        #        return redirect('view_admin_ais')
         
         #preguntando si el 'usuario autenticado' pertenece al grupo de aerolineas
         if request.user.groups.filter(name='AEROLINEA').exists():
@@ -51,6 +51,10 @@ def view_pagina_principal(request):
         if request.user.groups.filter(name='SUPERVISORESLP').exists():
             if request.user.username in 'acc_supervisorlp@aasana':
                 return redirect('view_panel_supervisor')
+
+        if request.user.groups.filter(name='AROAISLP').exists():
+            if request.user.username in 'aroaislp@aasana':
+                return redirect('view_panel_aroais')
 
         #RETURN POR DEFECTO
         return render(request, 'temp_plan_vuelo/prohibido.html' )#,'metar':metar} )

@@ -200,21 +200,32 @@ class Punto_satelital(models.Model):
         ordering = ['nombrepunto']
 
 
-
-
 class Notam_trafico(models.Model):
     id_mensaje = models.CharField(max_length=22,primary_key=True)
     aftn1 = models.CharField(max_length=11)
     aftn2 = models.CharField(max_length=15)
-    idnotam = models.CharField(max_length=35)
+    idnotam = models.CharField(max_length=85)
     resumen = models.CharField(max_length=65) #Q
     aplica_a = models.CharField(max_length=15) #A
     valido_desde = models.CharField(max_length=20) #B
     valido_hasta = models.CharField(max_length=20) #C
-    mensaje = models.CharField(max_length=150)
+    mensaje = models.CharField(max_length=450)
     nuevo = models.BooleanField(default=True)
     ingresado = models.DateTimeField(default=datetime.now, blank=True, null=True)
     def __unicode__(self):
         return self.idnotam
     class Meta:
         ordering = ['idnotam']
+
+
+class Aeropuerto(models.Model):
+    aeropuerto = models.AutoField(primary_key=True)
+    nombre = models.CharField(max_length=50)
+    iata = models.CharField(max_length=5)
+    icao = models.CharField(max_length=4)
+    longitude = models.FloatField()
+    latitude = models.FloatField()
+    def __unicode__(self):
+        return self.aeropuerto
+    class Meta:
+        ordering = ['aeropuerto']

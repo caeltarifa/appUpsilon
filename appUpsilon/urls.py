@@ -30,6 +30,7 @@ urlpatterns = [
     
     path('generacion_fpl/', include('apps.generacion_fpl.urls')),
     path('plan_vuelo/', include('apps.plan_vuelo.urls')),
+    path('aro_ais/', include('apps.aro_ais.urls')),
     #path('plan_vuelo/postdetail/<int:pk>/', post_detail , name='post_detail')
     #path('accounts/login/', control_acceso_login ,name='acceso_login'),
 ]

@@ -12,7 +12,7 @@ from apps.plan_vuelo.views import view_panel_ejecutivo, view_carta_navegacional,
 
 
 # SUPERVISOR ################################################################################################################
-from apps.plan_vuelo.views import view_panel_supervisor, view_servicio_met, view_aeropuertos_aeronaves
+from apps.plan_vuelo.views import view_panel_supervisor, view_servicio_met, view_aeropuertos_aeronaves,view_enviar_fplaeropuerto
 
 
  # view_form_plan_vuelo, post_new, post_detail
@@ -66,6 +66,7 @@ urlpatterns = [
     path('supervisor/', view_panel_supervisor, name="view_panel_supervisor"), #redirije al panel de control de ejecutivo
     path('servicio_met/', view_servicio_met, name="view_servicio_met"), #
     path('espacioaereo/', view_aeropuertos_aeronaves, name="view_aeropuertos_aeronaves"), #
+    path('getflps/', view_enviar_fplaeropuerto, name="view_enviar_fplaeropuerto"), #
     
 
 

@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'apps.plan_vuelo',
     'apps.generacion_fpl',
     'apps.trabajadoresATS',
+    'apps.aro_ais',
 ]
 
 MIDDLEWARE = [

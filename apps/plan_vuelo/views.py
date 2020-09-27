@@ -6,14 +6,14 @@ from django.db import connection
 from django.contrib.auth.models import Group
 
 import datetime
-
+import json
 
 from django.db.models import Q
 #from django.shortcuts import render_to_response
 
 
 #from apps.plan_vuelo.forms import Vuelo_Aprobado_form, PostForm
-from apps.plan_vuelo.models import Flp_trafico, EntrePuntos_flp,Ruta_flp, Trabajador, Ruta_guardada, Flp_aprobado, Punto_satelital, Notam_trafico
+from apps.plan_vuelo.models import Flp_trafico, EntrePuntos_flp,Ruta_flp, Trabajador, Ruta_guardada, Flp_aprobado, Punto_satelital, Notam_trafico, Aeropuerto
 Ruta_flp2=Ruta_flp()
 EntrePuntos_flp2=EntrePuntos_flp()
 
@@ -39,10 +39,17 @@ def view_panel_coordinacion(request):
 def view_admin_coordinacion(request):
     controladores=Group.objects.get(name='CONTROLADORESLP')
     if request.user.is_authenticated and request.user.groups.filter(name='CONTROLADORESLP').exists():
-        lista_fpl=Flp_trafico.objects.raw("select id_mensaje as id, id_mensaje, substring(id_mensaje, 1, 7) as id_amhs, substring(id_mensaje, 15,22) as fecha, substring(aftn2, 1,6) as hora_amhs, aftn1, aftn2, id_aeronave, reglas_vuelo, aeropuerto_salida, ruta, aeropuerto_destino, otros from plan_vuelo_flp_trafico where aprobado=false order by id_amhs desc limit 90;")
-        
+        #lista_fpl=Flp_trafico.objects.raw("select id_mensaje as id, id_mensaje, substring(id_mensaje, 1, 7) as id_amhs, substring(id_mensaje, 15,22) as fecha, substring(aftn2, 1,6) as hora_amhs, aftn1, aftn2, id_aeronave, reglas_vuelo, aeropuerto_salida, ruta, aeropuerto_destino, otros from plan_vuelo_flp_trafico where aprobado=false order by id_mensaje asc limit 90;")
+         
         now=datetime.datetime.now()
-        fecha_now=(str(now.day) if len(str(now.day))>1 else ('0' + str(now.day))) + ( str(now.month) if len(str(now.month))>1 else ('0'+str(now.month)) ) +  str(now.year)
+        dia = (str(now.day) if len(str(now.day))>1 else ('0' + str(now.day)))
+        mesanio = ( str(now.month) if len(str(now.month))>1 else ('0'+str(now.month)) ) +  str(now.year)
+        fecha_now = dia + mesanio
+        
+        dia = dia +"%"
+        mesanio = "%"+mesanio
+        lista_fpl=Flp_trafico.objects.raw("select id_mensaje, substring(id_mensaje, 1, 7) as id_amhs, substring(id_mensaje, 15,22) as fecha, substring(aftn2, 1,6) as hora_amhs, aftn1, aftn2, id_aeronave, reglas_vuelo, aeropuerto_salida, ruta, aeropuerto_destino, otros  from plan_vuelo_flp_trafico   where substring(aftn2,1,6) like %(dia)s  and substring(id_mensaje, 15,22) like %(mesanio)s   and  aprobado=false order by substring(aftn2, 1,6) desc limit 90;  " , {'dia':dia,'mesanio':mesanio})
+        
         
         lista_fpl_hoy = []
         for fpl in lista_fpl:
@@ -191,20 +198,36 @@ def view_historial_aprobacion(request):
 
 
 ##VIEW FOR TO SEND DATA FOR THE TEMPLATE
-import json
+
 def view_update_flp (request):
     if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='CONTROLADORESLP').exists():
         if request.is_ajax and request.method =="GET":
-
-            lista_fpl=Flp_trafico.objects.raw("select id_mensaje, substring(id_mensaje, 1, 7) as id_amhs, substring(id_mensaje, 15,22) as fecha, substring(aftn2, 1,6) as hora_amhs, aftn1, aftn2, id_aeronave, reglas_vuelo, aeropuerto_salida, ruta, aeropuerto_destino, otros from plan_vuelo_flp_trafico where aprobado=false order by id_amhs desc limit 90;")
+            try:
+                get_icao = request.GET.dict()['icao']
+                get_icao = str(get_icao).replace('"',"")
+            except:
+                get_icao = ""
             
             now=datetime.datetime.now()
-            fecha_now=(str(now.day) if len(str(now.day))>1 else ('0' + str(now.day))) + ( str(now.month) if len(str(now.month))>1 else ('0'+str(now.month)) ) +  str(now.year)
+            dia = (str(now.day) if len(str(now.day))>1 else ('0' + str(now.day)))
+            mesanio = ( str(now.month) if len(str(now.month))>1 else ('0'+str(now.month)) ) +  str(now.year)
+            fecha_now = dia + mesanio
             
-            lista_fpl_hoy = []
-            for fpl in lista_fpl:
-                if fecha_now in fpl.id_mensaje:
-                    lista_fpl_hoy.append(fpl)
+            dia = "25%"
+            mesanio = "%092020"
+            lista_fpl=Flp_trafico.objects.raw("select id_mensaje, substring(id_mensaje, 1, 7) as id_amhs, substring(id_mensaje, 15,22) as fecha, substring(aftn2, 1,6) as hora_amhs, aftn1, aftn2, id_aeronave, reglas_vuelo, aeropuerto_salida, ruta, aeropuerto_destino, otros  from plan_vuelo_flp_trafico   where substring(aftn2,1,6) like %(dia)s  and substring(id_mensaje, 15,22) like %(mesanio)s   and  aprobado=false order by substring(aftn2, 1,6) desc limit 90;  " , {'dia':dia,'mesanio':mesanio})
+
+            if(len(get_icao)>0):
+                lista_fpl_hoy = []
+                for fpl in lista_fpl:
+                    if get_icao in fpl.aeropuerto_destino.split(' ')[0]:
+                        lista_fpl_hoy.append(fpl)
+            else:
+                
+                lista_fpl_hoy = []
+                for fpl in lista_fpl:
+                    if fecha_now in fpl.id_mensaje:
+                        lista_fpl_hoy.append(fpl)
             
             lista_fpl_hoy = [serializar_fpl_update(fpl) for fpl in lista_fpl_hoy]
             return HttpResponse(json.dumps(lista_fpl_hoy), content_type='application/json')
@@ -252,7 +275,7 @@ def view_update_notam_realtime(request):
             lista_notam2=[]
             for notam in lista_notam:
                 hora,minuto,segundo = diferencie_entre_horas(notam.ingresado.replace(tzinfo=None) , datetime.datetime.now().replace(tzinfo=None) )
-                if hora <= 1:
+                if hora <= 5:
                     pasado=str(hora)+" horas y "+str(minuto) +" minutos."
                     lista_notam2.append( serializar_notam_realtime(notam,pasado) )
 
@@ -270,11 +293,24 @@ def view_notam_modal(request, id_notam_mensaje):
         else:
             notam_completo = Notam_trafico
 
-        return render(request, 'temp_plan_vuelo/modal_notam_completo.html', {'notam_completo': notam_completo}  ) #retorno el modal y el contexto
+        return render(request, 'temp_plan_vuelo/modal_mensaje_completo.html', {'data': serializar_notam_completo(notam_completo) }  ) #retorno el modal y el contexto
     else:
         return redirect('accounts/login/')
     
 
+def serializar_notam_completo(notam):
+    return {
+        'titulo': 'NOTAM',
+        'id_mensaje' : notam.id_mensaje[0:7] + " " + notam.id_mensaje[7:13],
+        'aftn1' : notam.aftn1,
+        'aftn2' : notam.aftn2,
+        'idnotam' : notam.idnotam,
+        'resumen' : notam.resumen,
+        'aplica_a' : notam.aplica_a,
+        'valido_desde' : notam.valido_desde,
+        'valido_hasta' : notam.valido_hasta,
+        'mensaje' : notam.mensaje,
+    }
 
 def serializar_notam_realtime(notam, pasado):
     return {
@@ -541,9 +577,88 @@ def view_aeropuertos_aeronaves(request):
         api=FlightData()
         lista_llegadas=api.get_airport_arrivals('LPB',limit=25, earlier_data=True)
 
-        return render(request, 'temp_plan_vuelo/espacio_aereo.html' ,{'equipo_trabajo': equipo_coordinacion, 'lista_llegadas': lista_llegadas} )#,'metar':metar} )
+        #envia los aeropuertos y sus posiciones para el mapa
+        diccionario={
+            'type': 'Feature',
+            'properties': {
+                    'description':"vacio" ,
+                    'iata':"vacio",
+                    'icao': ''
+                },
+            'geometry': {
+                    'type': 'Point',
+                    'coordinates': ["vacio", "vacio"]
+                }
+            }
+
+        dic={'estado':False, 'lista_fpl':[diccionario]}
+
+        lista_aeropuerto=[]
+        vector_aeropuertos = Aeropuerto.objects.all()
+        for aero in  vector_aeropuertos:
+            diccionario={
+                'type': 'Feature',
+                'properties': {
+                        'nombre':aero.nombre ,
+                        'iata':aero.iata,
+                        'icao': aero.icao,
+                    },
+                'geometry': {
+                        'type': 'Point',
+                        'coordinates': [str(aero.longitude).replace(",","."), str(aero.latitude).replace(",",".") ]
+                    }
+                }
+            lista_aeropuerto.append(json.dumps(diccionario))
+
+        return render(request, 'temp_plan_vuelo/espacio_aereo.html' ,{'equipo_trabajo': equipo_coordinacion, 'lista_llegadas': lista_llegadas, 'lista_aeropuerto':lista_aeropuerto} )#,'metar':metar} )
     else:
         return redirect('login')
+
+
+def view_enviar_fplaeropuerto(request):
+    #envia planes de cuelo del aeropuerto x
+    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='EJECUTIVOSLP').exists():
+        #envia los aeropuertos y sus posiciones para el mapa
+        diccionario={
+            'nombre': 'Feature',
+            'properties': {
+                    'description':"vacio" ,
+                    'iata':"vacio",
+                    'icao': ''
+                },
+            'geometry': {
+                    'type': 'Point',
+                    'coordinates': ["vacio", "vacio"]
+                }
+            }
+
+        dic={'estado':False, 'lista_fpl':[diccionario]}
+
+        if request.is_ajax and request.method =="GET":
+            get_icao = request.GET.dict()['icao']
+
+            lista_aeropuerto=[]
+            if get_icao !='' and Aeropuerto.objects.filter(icao=get_icao).exists():
+                vector_aeropuertos = Aeropuerto.objects.filter(icao=get_icao)
+                for aero in  vector_aeropuertos:
+                    diccionario={
+                        'type': 'Feature',
+                        'properties': {
+                                'nombre':aero.nombre ,
+                                'iata':aero.iata,
+                                'icao': aero.icao,
+                            },
+                        'geometry': {
+                                'type': 'Point',
+                                'coordinates': [str(aero.longitude).replace(",","."), str(aero.latitude).replace(",",".") ]
+                            }
+                        }
+                    lista_aeropuerto.append(diccionario)
+                dic={'estado':True, 'lista_fpl':lista_aeropuerto,}
+        return JsonResponse(dic, status=200)
+    else:
+        return redirect('accounts/login/')
+
 
 
 
