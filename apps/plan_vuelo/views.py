@@ -7,15 +7,17 @@ from django.contrib.auth.models import Group
 
 import datetime
 import json
+from googletrans import Translator
 
-from django.db.models import Q
+#from django.db.models import Q
 #from django.shortcuts import render_to_response
-
 
 #from apps.plan_vuelo.forms import Vuelo_Aprobado_form, PostForm
 from apps.plan_vuelo.models import Flp_trafico, EntrePuntos_flp,Ruta_flp, Trabajador, Ruta_guardada, Flp_aprobado, Punto_satelital, Notam_trafico, Aeropuerto
 
-from apps.aro_ais.models import Pib_trafico
+from apps.aro_ais.pynotam import notam
+
+from apps.aro_ais.models import Pib_trafico, Pib_extenso
 
 Ruta_flp2=Ruta_flp()
 EntrePuntos_flp2=EntrePuntos_flp()
@@ -268,7 +270,7 @@ def serializar_fpl_update(fpl):
     }
 
 def view_update_notam_realtime(request):
-    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='CONTROLADORESLP').exists():
+    if request.user.is_authenticated and request.user.is_active:# and request.user.groups.filter(name='CONTROLADORESLP').exists():
         dic={ 'id_mensaje': False}
         if request.is_ajax and request.method =="GET":
             #notams recientes
@@ -282,13 +284,19 @@ def view_update_notam_realtime(request):
                     pasado=str(hora)+" horas y "+str(minuto) +" minutos."
                     lista_notam2.append( serializar_notam_realtime(notam,pasado) )
                 else:
-                    notam.update(nuevo=False)
+                    Notam_trafico.objects.filter(id_mensaje=notam.id_mensaje).update(nuevo=False)
 
             ######################## NOTAMS sin PIB
-
-            lista_notams_sin_pib = Notam_trafico.objects.raw('select * from plan_vuelo_notam_trafico where id_mensaje not in (select pib_notam_id from aro_ais_pib_trafico)')
-            #for notamsp in lista_notams_sin_pib:
-            #    generar_auto_pib(notamsp)
+            lista_notams_sin_pib = Notam_trafico.objects.raw('select * from plan_vuelo_notam_trafico where id_mensaje not in (select ref_notam_amhs_id from aro_ais_pib_trafico)')
+            for notamsp in lista_notams_sin_pib:
+                generar_auto_pib_trafico(notamsp)
+            
+    
+            ######################## NOTAMS sin PIB EXTENSO
+            lista_notam_sin_pib_extenso = Notam_trafico.objects.raw('select * from plan_vuelo_notam_trafico where id_mensaje in (select ref_notam_amhs_id from aro_ais_pib_trafico where ref_notam_amhs_id not in (select notam_extenso_id from aro_ais_pib_extenso))')
+            for notamspe in lista_notam_sin_pib_extenso:
+                pib=Pib_trafico.objects.filter(ref_notam_amhs=notamspe.id_mensaje)[0]
+                generar_auto_pib_extenso(notamspe, pib)
 
             return HttpResponse(json.dumps(lista_notam2), content_type='application/json')
             #return HttpResponse({'lista_fpl':lista_fpl}, content_type='application/json')
@@ -296,21 +304,110 @@ def view_update_notam_realtime(request):
     else:
         return redirect('accounts/login/')
 
-def generar_auto_pib(notamsp):
-    pib_decoded = ""
+def generar_auto_pib_trafico(notamsp):
+    notam_tilc = componer_msj(notamsp)
+
+    translator = Translator()
+    try:
+        n = notam.Notam.from_str(notam_tilc)
+        decodificado = n.decoded()
+        decodificado = translator.translate( decodificado, dest='es').text
+    except:
+        s = """(A0000/15 NOTAMN
+        Q) ZZZZ/QWPLW/IV/BO/W/000/130/4809N01610E001
+        A) XXXX B) 1509261100 C) 1509261230
+        E) YYYY
+        )"""
+        decodificado=notam_tilc
+    
     pib=Pib_trafico(
-                    pib_notam = notamsp,
-                    fir = notamsp.aplica_a.strip().split(" ")[1],
-                    instalacion = "",
-                    informacion = "pib decodificado",
+                    ref_notam_amhs = notamsp,
+                    decodificado = decodificado,
                     #publicado = ,
                     #vigente = ,
                     #archivado = ,
-                    inicio_publi = stringToDatetimefield( notamsp.valido_desde.strip().split(" ")[1] ),
-                    fin_publi = stringToDatetimefield( notamsp.valido_hasta.strip().split(" ")[1] ),
-                    #oficialaro = ,
+                    #pendiente = ,
                 )
     pib.save()
+
+def generar_auto_pib_extenso(notamspe, pib_trafico):
+    notam_tilc = componer_msj(notamspe)
+
+    translator=Translator()
+    try:
+        n = notam.Notam.from_str(notam_tilc)
+        pib_extenso = Pib_extenso(
+            notam_extenso = pib_trafico, 
+            notam_id = n.notam_id , 
+            notam_tipo = n.notam_type , 
+            ref_notam_id = n.ref_notam_id , 
+            fir = n.fir , 
+            notam_codigo = n.notam_code , 
+            tipo_trafico = n.traffic_type , 
+
+            proposito =  translator.translate( str(n.purpose) , dest='es').text , 
+            alcance =  translator.translate( str(n.scope) , dest='es').text , 
+
+            fl_inferior =  n.fl_lower , 
+            fl_superior =  n.fl_upper , 
+
+            area =  n.area , 
+
+            lugar =  n.location , 
+            valid_desde =  n.valid_from , 
+            valid_hasta =  n.valid_till , 
+
+            agendado =  translator.translate( str(n.schedule) , dest='es').text , 
+
+            cuerpo = translator.translate( str(n.body) , dest='es').text , 
+
+            limit_superior = n.limit_lower , 
+            limit_inferior = n.limit_upper , 
+            indices_item_a = n.indices_item_a , 
+            indices_item_b = n.indices_item_b , 
+            indices_item_c = n.indices_item_c , 
+            indices_item_d = n.indices_item_d , 
+            indices_item_e = n.indices_item_e , 
+            indices_item_f = n.indices_item_f , 
+            indices_item_g = n.indices_item_g  ,
+        )
+
+    except:
+        s = """(A0000/15 NOTAMN
+        Q) ZZZZ/QWPLW/IV/BO/W/000/130/4809N01610E001
+        A) XXXX B) 1509261100 C) 1509261230
+        E) YYYY
+        )"""
+        pib_extenso = Pib_extenso(
+            notam_extenso = pib_trafico, 
+            notam_id = notamspe.idnotam , 
+            cuerpo = notamspe.mensaje , 
+        )
+    
+    pib_extenso.save()
+
+def componer_msj(notam):
+    msj=" "
+    msj+= notam.idnotam + " " 
+    msj+= notam.resumen + " " 
+    msj+= notam.aplica_a + " " 
+    msj+= notam.valido_desde + " " 
+    msj+= (notam.valido_hasta + " ") if not 'EST' in notam.valido_hasta else ( ' '.join( notam.valido_hasta.replace("+", "").strip().split(" ")[:-1] ) + " ")
+    msj+= notam.mensaje
+    msj = msj.replace("\n"," ")
+    msj = msj.strip()
+    if not 'E)' in msj:
+        if 'F)' in msj:
+            msj.replace("F)", "E) F)")
+        elif 'G)' in msj:
+            msj.replace("G)" , "E) G)")
+        else:
+            msj+= " E) " 
+    msj+= ")"
+    msj.replace("))", ")") 
+
+    return msj
+
 
 def stringToDatetimefield( cadena ):
     try:
@@ -328,7 +425,7 @@ def stringToDatetimefield( cadena ):
 
 
 def view_notam_modal(request, id_notam_mensaje):
-    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='CONTROLADORESLP').exists():        
+    if request.user.is_authenticated and request.user.is_active: #and request.user.groups.filter(name='CONTROLADORESLP').exists():        
         #plan_completo = Flp_trafico.objects.filter(id_mensaje=id_plancompleto)[0]
         if Notam_trafico.objects.filter(id_mensaje=str(id_notam_mensaje)).exists():
             notam_completo = Notam_trafico.objects.filter(id_mensaje=str(id_notam_mensaje))[0]
@@ -375,7 +472,7 @@ def diferencie_entre_horas(data1, data2):
 
 #############################   CONTROL DE USUARIOS   #################################
 def view_identificacion(request, id_trabajador):
-    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='CONTROLADORESLP').exists():        
+    if request.user.is_authenticated and request.user.is_active and (request.user.groups.filter(name='CONTROLADORESLP').exists() or request.user.groups.filter(name='AROAISLP').exists()):        
         if Trabajador.objects.filter(ci=int(id_trabajador)).exists():
             persona = Trabajador.objects.filter(ci=id_trabajador)[0]
             persona = {
@@ -394,7 +491,7 @@ def view_identificacion(request, id_trabajador):
         return redirect('accounts/login/')
 
 def view_validar_passwd(request):
-    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='CONTROLADORESLP').exists():
+    if request.user.is_authenticated and request.user.is_active and (request.user.groups.filter(name='CONTROLADORESLP').exists() or request.user.groups.filter(name='AROAISLP').exists()):
         if request.is_ajax and request.method =="GET":
             cadena = request.GET.get('parametro')
             
@@ -415,7 +512,7 @@ def view_validar_passwd(request):
         return redirect('accounts/login/')
 
 def view_cerrar_sesion(request):
-    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='CONTROLADORESLP').exists():
+    if request.user.is_authenticated and request.user.is_active and (request.user.groups.filter(name='CONTROLADORESLP').exists() or request.user.groups.filter(name='AROAISLP').exists()):
         if request.is_ajax and request.method =="GET":
             carnet = request.GET.get('id_trabajador')
             
@@ -532,7 +629,7 @@ def view_panel_ejecutivo(request):
 
 def view_carta_navegacional(request):
     #muestra el panel principal ejecutivo
-    if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='EJECUTIVOSLP').exists():
+    if request.user.is_authenticated and request.user.is_active  and (request.user.groups.filter(name='EJECUTIVOSLP').exists() or request.user.groups.filter(name='AROAISLP').exists()):
         equipo_coordinacion = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and empresa_institucion_id=1 order by activo")
 
         puntos_satelitales = Punto_satelital.objects.raw('select * from plan_vuelo_punto_satelital')
@@ -552,7 +649,7 @@ def serializar_punto_satelital(punto):
 
 def view_obtener_dibujo_ruta(request):
     #muestra las rutas recordadas para un origen y destino dado 
-    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='EJECUTIVOSLP').exists():
+    if request.user.is_authenticated and request.user.is_active and (request.user.groups.filter(name='EJECUTIVOSLP').exists() or request.user.groups.filter(name='AROAISLP').exists()):
         dic={'estado':False, 'lineas':[[{'longitude': 'null', 'latitude':'null'}]]}
 
         if request.is_ajax and request.method =="GET":

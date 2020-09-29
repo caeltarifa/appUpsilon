@@ -78,10 +78,10 @@ def view_admin_empresa(request):
         usuariox=str(request.user.username).split('@')
         
         #preguntando si existe el usuario en la tabla 'Empresa_institucion'
-        if not Empresa_institucion.objects.filter(nombre_emp_inst=usuariox[0]).exists():
-            return render(request, 'temp_plan_vuelo/no_autorizado.html')
+        #if not Empresa_institucion.objects.filter(nombre_emp_inst=usuariox[0]).exists():
+        #    return render(request, 'temp_plan_vuelo/no_autorizado.html')
 
-        id_empresa=Empresa_institucion.objects.filter(nombre_emp_inst=usuariox[0])[0].id_emp_inst
+        id_empresa=Empresa_institucion.objects.filter(nombre_emp_inst=usuariox[0].upper())[0].id_emp_inst
         trabajadores=Trabajador.objects.values('ci', 'nombre','apellido').filter(empresa_institucion_id=int(id_empresa))
         
         #OBTENIENDO PLANES DE VUELOS CREADOS, SOLICITADOS Y CANCELADOS
@@ -102,7 +102,7 @@ def view_admin_empresa(request):
         #---metar=Metar_trafico.objects.raw("select * from plan_vuelo_metar_trafico order by fecha_llegada desc limit 50")
 
 
-        return render(request, 'temp_plan_vuelo/adminempresa.html', {'id_empresa':id_empresa, 'solicitados':solicitados,'rechazados':rechazados , 'aprobados':aprobados, 'metar':metar, 'trabajadores':trabajadores} )
+        return render(request, 'temp_plan_vuelo/adminempresa.html', {'id_empresa':id_empresa, 'solicitados':solicitados,'rechazados':rechazados , 'aprobados':aprobados, 'trabajadores':trabajadores} )
     else:
         return redirect('login')
 
@@ -122,23 +122,25 @@ def view_admin_comunicaciones(request):
 def view_creacion_fpl_presentado(request):
     if request.user.is_authenticated:
         
-        usuariox=str(request.user.username).split('@')
-
-        id_empresa=Empresa_institucion.objects.filter(nombre_emp_inst=usuariox[0])[0].id_emp_inst
-        trabajadores=Trabajador.objects.values('ci', 'nombre','apellido').filter(empresa_institucion_id=int(id_empresa))
-        
         if request.method == 'POST':
             form_fpl=Plan_presentadoForm(request.POST)
             if form_fpl.is_valid():
                 form_fpl.save()
-            return redirect('/')
+                return redirect('/')
+            return redirect('view_creacion_fpl_presentado')
         else:
+            usuariox=str(request.user.username).split('@')
+            id_empresa=Empresa_institucion.objects.filter(nombre_emp_inst=usuariox[0].upper())[0].id_emp_inst
+            trabajadores=Trabajador.objects.values('ci', 'nombre','apellido').filter(empresa_institucion_id=int(id_empresa))
+
             form_fpl=Plan_presentadoForm()
             numeroform=Plan_vuelo_presentado.objects.all().count()+1
             
             hora=str(datetime.now().hour)+':'+str(datetime.now().minute)+':'+str(datetime.now().second)
             hoy=str(datetime.now().year)+'-'+str(datetime.now().month)+'-'+str(datetime.now().day)
             return render(request, 'temp_plan_vuelo/modal_crear_flp.html', {'form_fpl':form_fpl,'numeroform':numeroform, 'hoy':hoy, 'hora':hora, 'trabajadores': trabajadores })
+    else:
+        return redirect('login') #redireccionar al forbiden
 
 ## DEVUELVE EL MODAL PARA VALIDAR CODIGO 
 def view_codigo_solicitud(request):

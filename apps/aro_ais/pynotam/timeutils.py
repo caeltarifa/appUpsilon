@@ -1,6 +1,9 @@
 from datetime import *
 
 
+def run():
+    print("Test")
+
 class EstimatedDateTime(datetime):
     """Represents an estimated point in time. Instances are identical to datetime.datetime in every way,
     except that the instance will have an attribute 'is_estimated' which is set to True."""

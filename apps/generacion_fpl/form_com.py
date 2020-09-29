@@ -211,11 +211,11 @@ class  Plan_presentadoForm(forms.ModelForm):
         }
 
         widgets={
-            'nro_formulario':forms.TextInput(attrs={'id':"numeroForm", 'readonly':'readonly', 'size':'1', 'style':'text-align:right;'}),
-            'fk_despachador': forms.TextInput(attrs={'id':"despachador", 'value':'dato', 'readonly':'readonly', 'size':'7', 'style':'text-align:right;'}),
-            'fk_estado':forms.TextInput(attrs={'id':"estado", 'value':'7', 'readonly':'readonly', 'size':'7', 'style':'text-align:right;'}),
-            'fecha_presentacion':forms.TextInput(attrs={'id':"fechaForm", 'readonly':'readonly', 'size':'7', 'style':'text-align:right;'}),
-            'hora_presentacion':forms.TextInput(attrs={'id':"horaForm", 'readonly':'readonly', 'size':'5', 'style':'text-align:right;'}),
+            'nro_formulario':forms.TextInput(attrs={'id':"numeroForm", 'size':'1', 'style':'text-align:right;'}),
+            'fk_despachador': forms.TextInput(attrs={'id':"despachador", 'value':'dato', 'size':'7', 'style':'text-align:right;'}),
+            'fk_estado':forms.TextInput(attrs={'id':"estado", 'value':'7', 'size':'7', 'style':'text-align:right;'}),
+            'fecha_presentacion':forms.TextInput(attrs={'id':"fechaForm", 'size':'7', 'style':'text-align:right;'}),
+            'hora_presentacion':forms.TextInput(attrs={'id':"horaForm", 'size':'5', 'style':'text-align:right;'}),
             
             #'fk_despachador': forms.Select(queryset=Trabajador.objects.filter(empresa_institucion_id=id_empresa)),
         }

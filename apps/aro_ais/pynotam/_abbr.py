@@ -1,3 +1,7 @@
+
+def run():
+    print("Test")
+
 ICAO_abbr = {
     'A/A': 'Air-to-air',
     'A/G': 'Air-to-ground',

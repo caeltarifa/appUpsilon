@@ -1,9 +1,12 @@
-import timeutils
-import _abbr
+from apps.aro_ais.pynotam import timeutils
+from apps.aro_ais.pynotam import _abbr
 import re as _re
-import _parser
+from apps.aro_ais.pynotam import _parser
 from io import StringIO as _StringIO
 
+
+def run():
+    print("Test")
 
 class Notam(object):
     def __init__(self):

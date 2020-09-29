@@ -1,0 +1,491 @@
+{% extends 'temp_plan_vuelo/baseadmin.html' %} 
+{% load static %} 
+
+{% block title %}
+<title>Upsilon | Pib </title>
+{% endblock title %}
+
+
+
+{% block extra_head %}
+    <link rel='stylesheet' href='https://harvesthq.github.io/chosen/chosen.css'>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="{% static 'theme-assets/css/aprobar_plan.css' %}"> -->
+
+    <!-- STYLE FOR TABLE APP VUE-->
+    <style>
+        #app {
+        width: 95%;
+        margin: 0 auto;
+        }
+        .VuePagination {
+        text-align: center;
+        }
+
+    </style>
+    <!-- STYLE FOR TABLE APP VUE-->
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://unpkg.com/vue@2.4.4/dist/vue.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css">
+
+{% endblock extra_head %}
+    
+
+
+
+<!-- ////////////////////////////////////////////////////////////////////////////-->
+
+
+{% block content %}
+
+<!--BARRA LATERAL O MENU LATERAL-->
+<div class="main-menu menu-fixed menu-light menu-accordion    menu-shadow " data-scroll-to-active="false">
+
+    <div class="main-menu-content">
+        <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
+            <li class="active">
+                <a href="#_planes_recientes">
+                    <i class="ft-home"></i>
+                </a>
+            </li>
+            <li class=" nav-item">
+                <a href="#_planes_aprobados">
+                    <i class="ft-pie-chart"></i>
+                </a>
+            </li>
+            <li class=" nav-item">
+                <a href="#_notams">
+                    <i class="ft-droplet"></i>
+                </a>
+            </li>
+            <li class=" nav-item">
+                <a href="#_metars">
+                    <i class="ft-layers"></i>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+</div>
+<!--BARRA LATERAL O MENU LATERAL-->
+
+<br>
+
+<!-- Plan de vuelos recientes -->
+<div id="_planes_recientes"></div><br><br><br><br>
+<section>
+    <div class="row justify-content-center">
+        <div class="col-10" style="align-content: center;">
+            <div class="card" style="box-shadow: 2px 2px 8px 0 black; min-height: 30%;  max-height: 100%; ">
+
+                <div class="card-header">
+                    <h3 class="card-title">PIB SIN PUBLICAR</h3>
+                    <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            <li>
+                                <button class="btn-primary" id="update_fpl1">Actualizar</button>
+                            </li>
+
+                            <li><a data-action="reload" ><i class="ft-rotate-cw" id="update_fpl1"></i></a></li>
+
+                            <!--BUSCAR-->
+                            <li class="nav-item dropdown navbar-search">
+                                <a class="nav-link dropdown-toggle hide" data-toggle="dropdown" href="#">
+                                    <i class="ficon ft-search"></i>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li class="arrow_box">
+                                        <div class="input-group search-box">
+                                            <div class="position-relative has-icon-right full-width">
+                                                <input class="form-control" type="text" id="buscar_flp_table" onkeyup="buscarFlp()" placeholder="Buscar FLP">
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                            <!--BUSCAR-->
+
+                            <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+                            <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                            <li><a data-action="close"><i class="ft-x"></i></a></li>
+                        </ul>
+                    </div>
+                    <br>
+                </div>
+                <!--CONTENIDO DE LA TABLA DE PLANES RECIENTES-->
+               
+               
+               
+                <div class="card-content collapse show" style="height: 75%; overflow-y: auto;">
+
+                    <div id="app"> 
+                        <v-client-table :columns="columns" :data="data" :options="options">
+                            <a slot="edit" slot-scope="props" target="_blank" :href="props.row.edit" class="glyphicon glyphicon-edit">S</a>
+                            <a slot="del" slot-scope="props" target="_blank" :href="props.row.del" class="glyphicon glyphicon-trash">SS</a>
+                        </v-client-table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Planes de vuelo recientes -->
+
+
+
+
+<!-- Plan de vuelos aprobados -->
+<div id="_planes_aprobados"></div><br><br><br><br>
+<section>
+    <div class="row justify-content-center">
+        <div class="col-10" style="align-content: center;">
+            <div class="card" style="box-shadow: 2px 2px 8px 0 black; min-height: 30%;  max-height: 100%;">
+                <div class="card-header">
+                    <h4 class="card-title">PIB PUBLICADOS</h4>
+                    
+                    <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+                            <li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
+                            <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                            <li><a data-action="close"><i class="ft-x"></i></a></li>
+                        </ul>
+                    </div>
+                    <br>
+
+                </div>
+                <div class="card-content collapse show" style="height: 75%; overflow-y: auto;">
+
+                    <div id="app2">
+                        <div class="container">
+                                <div class="col s12">
+                                    <item-form :items.sync="items"></item-form>
+                                    <item-table :items.sync="items"></item-table>
+                                </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Planes de vuelo aprobados -->
+
+
+
+
+<!--NOTAMS-->
+<div id="_notams"></div><br><br><br><br>
+<section>
+    <div class="row justify-content-center">
+        <div class="col-10" style="align-content: center;">
+            <div class="card" style="box-shadow: 2px 2px 8px 0 black; min-height: 30%;  max-height: 100%;">
+                <div class="card-header">
+                    <h4 class="card-title">LLEGADAS</h4>
+                    <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+                            <li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
+                            <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                            <li><a data-action="close"><i class="ft-x"></i></a></li>
+                        </ul>
+                    </div>
+                    <br>
+
+                </div>
+                <div class="card-content collapse show" style="height: 75%; overflow-y: auto;">
+                    CONTENIDO 3
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--NOTAMS-->
+
+
+<!--METARS-->
+<div id="_metars"></div><br><br><br><br>
+<section>
+    <div class="row justify-content-center">
+        <div class="col-10" style="align-content: center;">
+            <div class="card" style="box-shadow: 2px 2px 8px 0 black; min-height: 30%;  max-height: 100%;">
+                <div class="card-header">
+                    <h4 class="card-title">PENDIENTE</h4>
+                    <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+                            <li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
+                            <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                            <li><a data-action="close"><i class="ft-x"></i></a></li>
+                        </ul>
+                    </div>
+                    <br>
+
+                </div>
+                <div class="card-content collapse show" style="height: 75%; overflow-y: auto;">
+                    CONTENIDO 4
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--METARS-->
+
+{% endblock content %} 
+
+
+{% block extrajs %}
+<script src='https://harvesthq.github.io/chosen/chosen.jquery.js'></script>
+
+<script type="text/javascript">
+    function abrir_modal(url) {
+        $("#modal").load(url.trim(), function() {
+            $(this).modal('show');
+        });
+    }
+
+    //DESPLAZAMIENTO SUAVIZADO
+    $('.main-menu-content a').click(function(e){				
+		e.preventDefault();		//evitar el eventos del enlace normal
+		var strAncla=$(this).attr('href'); //id del ancla
+			$('body,html').stop(true,true).animate({				
+				scrollTop: $(strAncla).offset().top
+			},200);		
+    });
+
+</script>
+
+
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.3/vue.min.js'></script>
+<script src='https://cdn.rawgit.com/matfish2/vue-tables-2/master/dist/vue-tables-2.min.js'></script>
+
+<script>
+Vue.use(VueTables.ClientTable);
+        new Vue({
+            el: "#app",
+            data: {
+                columns: ['notam', 'fir', 'lugar', 'instalacion'],
+                data: getData(),
+                options: {
+                    filterByColumn: true,
+                    sortable: ['notam', 'fir', 'lugar'],
+                    filterable: ['notam', 'fir', 'lugar'],
+                    headings: {
+                        notam :  'Notam',
+                        fir :  'FIR',
+                        lugar :  'Lugar', 
+                        instalacion : 'Instalacion'
+                    }, 
+                    rowAttributesCallback: row => {
+                        return {"style": "color: red"};
+                    },
+                    resizableColumns: false
+                }
+            }
+        });
+
+        function getData() {
+            return [{
+                notam: "Egypt",
+                fir: "Mohamed",
+                lugar: "http://site.come/page/edit/",
+                instalacion: "http://site.come/page/del/",
+ 
+            }, {
+                notam: "Spain",
+                fir: "Ray",
+                lugar: "http://site.come/page/edit/",
+                instalacion: "http://site.come/page/del/",
+ 
+            }, {
+                notam: "SAU",
+                fir: "Saad",
+                lugar: "http://site.come/page/edit/",
+                instalacion: "http://site.come/page/del/",
+ 
+            }, {
+                notam: "Italy",
+                fir: "Morgan",
+                lugar: "http://site.come/page/edit/",
+                instalacion: "http://site.come/page/del/",
+ 
+            }, {
+                notam: "Brazil",
+                fir: "Jude",
+                lugar: "http://site.come/page/edit/",
+                instalacion: "http://site.come/page/del/",
+ 
+            }, {
+                notam: "USA",
+                fir: "Sam",
+                lugar: "http://site.come/page/edit/",
+                instalacion: "http://site.come/page/del/",
+ 
+            }, {
+                notam: "Canda",
+                fir: "Yasoo",
+                lugar: "http://site.come/page/edit/",
+                instalacion: "http://site.come/page/del/",
+ 
+            }, {
+                notam: "Egypt",
+                fir: "Mohamed",
+                lugar: "http://site.come/page/edit/",
+                instalacion: "http://site.come/page/del/",
+ 
+            }, {
+                country: "Italy",
+                name: "Rami",
+                edit: "http://site.come/page/edit/",
+                del: "http://site.come/page/del/",
+ 
+            }, {
+                country: "Dubai",
+                name: "Khalefa",
+                edit: "http://site.come/page/edit/",
+                del: "http://site.come/page/del/",
+ 
+            }, {
+                country: "SouthAfrica",
+                name: "Sara",
+                edit: "http://site.come/page/edit/",
+                del: "http://site.come/page/del/",
+ 
+            }];
+        }
+
+</script>
+
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js'></script>
+<!--APP2-->
+<script>
+    Vue.component('item-form', {
+    data() {
+        return {
+        form: { name: "", quantity: "", price: "" },
+        }
+    },
+    props: {
+        items: Array,
+    },
+    methods: {
+        addItem() {
+        let modifiedItems = _.clone(this.items);
+        modifiedItems.push({
+            name: this.form.name,
+            quantity: this.form.quantity,
+            price: this.form.price
+        });
+        this.$emit('update:items', modifiedItems);
+        this.form = { name: "", quantity: "", price: "" };
+        }
+    },
+    template: `
+                <form @submit.prevent="addItem">
+                    <input type="text" placeholder="Name" name="name" v-model="form.name">
+                    <input type="text" placeholder="Quantity" name="quantity" v-model="form.quantity">
+                    <input type="text" placeholder="Price" name="price" v-model="form.price">
+                    <input class="btn" type="submit" value="Add Item">
+                    ss
+                </form>
+                `
+    });
+
+    Vue.component('item-table', {
+    props: {
+        items: Array
+    },
+    computed: {
+        summary() {
+        let sum = 0;
+        this.items.forEach(el => {
+            sum += el.price * el.quantity;
+        });
+        return sum;
+        }
+    },
+    methods: {
+        deleteItem(index) {
+            let modifiedItems = _.clone(this.items);
+            modifiedItems.splice(index, 1);
+            this.$emit('update:items', modifiedItems);
+        }
+    },
+    filters: {
+        capitalize(word) {
+        return _.capitalize(word);
+        }
+    },
+    template: `<div>
+                <table class="highlight">
+                    <table-head :items="items"></table-head>
+                    <tbody>                  
+                        <template v-for="(item, index) in items">       
+                            <tr>
+                                <td> item.name </td>
+                                <td> item.quantity </td>
+                                <td> item.price </td>
+                                <td v-on:click="deleteItem(index)" class="delete">
+                                    <i class="material-icons">delete</i>
+                                </td>
+                            </tr>                   
+                        </template>
+                    </tbody>              
+                </table>
+
+                <div class="col s12">
+                    <span class="flow-text">Summary: {{ summary }}</span>
+                </div>
+                </div>`
+    });
+
+    Vue.component('table-head', {
+    data() {
+        return {
+        columns: ['Name', 'Quantity', 'Price', '']
+        }
+    },
+    props: {
+        items: Array
+    },
+    template: ` <thead>
+                    <tr>
+                        <th v-for="column in columns">
+                        {{ column }}
+                        </th>
+                    </tr>
+                </thead>`
+    });
+
+    new Vue({
+    el: "#app2",
+        data: {
+            items: [
+                {name: "icecream", quantity: 2, price: 50 },
+                {name: "pizza", quantity: 3, price: 299 }
+            ],
+        }
+    });
+
+</script>
+
+
+{% endblock extrajs %}
+
+
+
+<!-- ////////////////////////////////////////////////////////////////////////////-->
+<!-- ////////////////////////////////////////////////////////////////////////////-->

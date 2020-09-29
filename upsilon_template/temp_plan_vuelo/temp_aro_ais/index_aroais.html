@@ -252,10 +252,10 @@
             </a>
         </div>
     
-        <div class="butFrame bounce" onClick="window.location='#'">
-            <a href="{% url 'view_historial_aprobacion' %}">
-                <img src="http://www.neodigital.com.au/thumbnailsmall/Button5.jpg" />
-                <div class="butHeading">fpl aprobados</div>
+        <div class="butFrame bounce"> <!--onClick="window.location='#'"-->
+            <a href="{% url 'view_carta_navegacional' %}">
+                <img src="http://www.neodigital.com.au/thumbnailsmall/Button6.jpg" />
+                <div class="butHeading">CARTA NAVEGACIONAL</div>
             </a>
         </div>
     
@@ -271,19 +271,22 @@
             </a>
         </div>
     
-        <div class="butFrame bounce" onClick="window.location='#'">
-          <img src="http://www.neodigital.com.au/thumbnailsmall/Button5.jpg" />
-          <div class="butHeading">PIB</div>
+        <div class="butFrame bounce">
+            <a href="{% url 'view_pib_automatizado' %}">
+                <img src="http://www.neodigital.com.au/thumbnailsmall/Button5.jpg" />
+                <div class="butHeading">PIB AUTOMATIZADO</div>
+            </a>
+
         </div>
     
     </div>
 
     <div class="buttons">
         
-        <div class="butFrame bounce" onClick="window.location='#'">
-            <a href="url view">
+        <div class="butFrame bounce" >
+            <a href="{% url 'view_pib_tiemporeal' %}">
                 <img src="http://www.neodigital.com.au/thumbnailsmall/Button6.jpg" />
-                <div class="butHeading">Salidas y llegadas</div>
+                <div class="butHeading">PIB TIEMPO REAL</div>
             </a>
         </div>
     

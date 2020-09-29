@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 import os
 ######## BCRYPT PARA CIFRAR Y VALIDAR CONTRASEÑAS #########
 #
-import bcrypt
+#import bcrypt
 #
 ###########################################################
 
@@ -47,7 +47,6 @@ INSTALLED_APPS = [
     'apps.generacion_fpl',
     'apps.trabajadoresATS',
     'apps.aro_ais',
-    #'apps.utils',
 ]
 
 MIDDLEWARE = [

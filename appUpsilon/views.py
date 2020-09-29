@@ -20,7 +20,7 @@ def view_pagina_principal(request):
         #        return redirect('view_admin_ais')
         
         #preguntando si el 'usuario autenticado' pertenece al grupo de aerolineas
-        if request.user.groups.filter(name='AEROLINEA').exists():
+        if request.user.groups.filter(name='EMPRESASLP').exists():
             if request.user.username in 'AMASZONAS':
                 return redirect('view_admin_amaszonas')
             
