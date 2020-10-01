@@ -298,6 +298,8 @@ def view_update_notam_realtime(request):
                 pib=Pib_trafico.objects.filter(ref_notam_amhs=notamspe.id_mensaje)[0]
                 generar_auto_pib_extenso(notamspe, pib)
 
+            ######################## VERIFICAR LOS PIB_TRAFICO SI ESTAN 'VIGENTES' IE SI ESTAN DENTRO DE LA FECHA INDICADA EN EL NOTAM
+
             return HttpResponse(json.dumps(lista_notam2), content_type='application/json')
             #return HttpResponse({'lista_fpl':lista_fpl}, content_type='application/json')
         return JsonResponse(dic, status=400)

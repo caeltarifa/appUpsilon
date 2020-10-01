@@ -1,7 +1,7 @@
 from django.conf.urls import url, include
 from django.urls import path
 
-from apps.generacion_fpl.views import view_admin_ais, view_admin_felcn, view_admin_empresa, view_admin_comunicaciones, view_save_fpl
+from apps.generacion_fpl.views import  view_admin_felcn, view_admin_empresa, view_admin_comunicaciones, view_save_fpl
 
 #VISTAS PARA USUARIOS EMPRESA
 from apps.generacion_fpl.views import  view_solicitar_comunicacional, view_solicitar_operacional,view_solicitar_suplementaria, view_creacion_fpl_presentado, view_solicitar_felcn, view_cancelar_fpl,view_mostrar_fpl_empresa
@@ -16,13 +16,12 @@ from apps.generacion_fpl.views import view_codigo_solicitud, view_aprobar_codigo
 
 urlpatterns = [
     #url('^$',view_index_generacion, name='view_index_generacion'),
-    url('^ais$',view_admin_ais, name='view_admin_ais'),
     url('^felcn$',view_admin_felcn, name='view_admin_felcn'),
     
     # urls para las empresas
-    url('^amaszonas$',view_admin_empresa, name='view_admin_amaszonas'),
-    url('^avianca$',view_admin_empresa, name='view_admin_avianca'),
-    url('^ecojet$',view_admin_empresa, name='view_admin_ecojet'),
+    url('^amaszonaslp$',view_admin_empresa, name='view_admin_amaszonas'),
+    url('^aviancalp$',view_admin_empresa, name='view_admin_avianca'),
+    url('^ecojetlp$',view_admin_empresa, name='view_admin_ecojet'),
     # urls para las empresas
     
     url('^comunicaciones$',view_admin_comunicaciones, name='view_admin_comunicaciones'),
@@ -34,7 +33,7 @@ urlpatterns = [
     url('^cancelar_fpl$',view_cancelar_fpl, name='view_cancelar_fpl'),
     url('^mostrar_fpl$',view_mostrar_fpl_empresa, name='view_mostrar_fpl_empresa'),
     url('^aprobacion$',view_codigo_solicitud, name='view_codigo_solicitud'),
-    
+     
     #url para aprobar con codigo de despachador de vuelo.
     url('^aprobacioncodigo$',view_aprobar_codigo, name='view_aprobar_codigo'),
     

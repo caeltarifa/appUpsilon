@@ -211,7 +211,7 @@
                                         
                                     </tr>
                                     <tr>
-                                        <th style="width:65px; overflow:auto;">
+                                        <th style="width:65px;text-align: center; overflow:auto;">
                                             Notam
                                         </th>
 
@@ -232,7 +232,7 @@
                                             <td style="vertical-align: middle;">
                                                 <a class=" btn-outline-light" onclick="abrir_modal( '{% url 'view_notam_modal' id_notam_mensaje=pib.ref_notam_amhs_id%}')">
                                                     {{pib.notam_id}}<br>
-                                                    {% ifnotequal pib.notam_tipo 'None' %} {{pib.notam_tipo}}  {% endifnotequal %}
+                                                    {% ifnotequal pib.notam_tipo 'NONE' %} {{pib.notam_tipo}}  {% endifnotequal %}
                                                 </a>
                                             </td>
 
@@ -247,10 +247,10 @@
                                             <td >
                                                 <textarea  class="form-control" rows="8" cols="65" id="txt{{pib.ref_notam_amhs_id}}"  style="font-size: 12px">
 {% if pib.decodificado|length > 2%} {% ifnotequal pib.valid_desde 'None'  %} Desde {{pib.valid_desde|slice:"0:-9"}}  {% endifnotequal %} {{pib.decodificado}}   {% ifnotequal pib.valid_hasta 'None'  %} Hasta {{pib.valid_hasta|slice:"0:-9"}}  {% endifnotequal %}  {% else %} {{pib.cuerpo}}  {% endif %} {% if pib.agendado != 'None' and pib.agendado != 'Ninguna'  %} Agendado para {{pib.agendado}}  {% endif %}
-{% ifnotequal pib.tipo_trafico 'None'  %} Tipo trafico {{pib.tipo_trafico}}  {% endifnotequal %}
-{% ifnotequal pib.proposito 'None'  %} Proposito {{pib.proposito}}  {% endifnotequal %}
+{% ifnotequal pib.tipo_trafico 'NONE'  %} Tipo trafico {{pib.tipo_trafico}}  {% endifnotequal %}
+{% ifnotequal pib.proposito 'NONE'  %} Proposito {{pib.proposito}}  {% endifnotequal %}
 
-{% ifnotequal pib.notam_id 'None' %} ({{pib.notam_id}})  {% endifnotequal %}
+{% ifnotequal pib.notam_id 'NONE' %} ({{pib.notam_id}})  {% endifnotequal %}
                                                 </textarea>
                                             </td>
                                             
@@ -478,9 +478,9 @@
                                             
                                             <td >
                                                 <textarea  class="form-control" rows="8" cols="65"  style="font-size: 12px" disabled>
-{% if pib.decodificado|length > 2%} {% ifnotequal pib.valid_desde 'None'  %} Desde {{pib.valid_desde|slice:"0:-9"}}  {% endifnotequal %} {{pib.decodificado}}   {% ifnotequal pib.valid_hasta 'None'  %} Hasta {{pib.valid_hasta|slice:"0:-9"}}  {% endifnotequal %}  {% else %} {{pib.cuerpo}}  {% endif %} {% if pib.agendado != 'None' and pib.agendado != 'Ninguna'  %} Agendado para {{pib.agendado}}  {% endif %}
-{% ifnotequal pib.tipo_trafico 'None'  %} Tipo trafico {{pib.tipo_trafico}}  {% endifnotequal %}
-{% ifnotequal pib.proposito 'None'  %} Proposito {{pib.proposito}}  {% endifnotequal %}
+{% if pib.decodificado|length > 2%} {% ifnotequal pib.valid_desde 'NONE'  %} Desde {{pib.valid_desde|slice:"0:-9"}}  {% endifnotequal %} {{pib.decodificado}}   {% ifnotequal pib.valid_hasta 'NONE'  %} Hasta {{pib.valid_hasta|slice:"0:-9"}}  {% endifnotequal %}  {% else %} {{pib.cuerpo}}  {% endif %} {% if pib.agendado != 'NONE' and pib.agendado != 'Ninguna'  %} Agendado para {{pib.agendado}}  {% endif %}
+{% ifnotequal pib.tipo_trafico 'NONE'  %} Tipo trafico {{pib.tipo_trafico}}  {% endifnotequal %}
+{% ifnotequal pib.proposito 'NONE'  %} Proposito {{pib.proposito}}  {% endifnotequal %}
 
 {% ifnotequal pib.notam_id 'None' %} ({{pib.notam_id}})  {% endifnotequal %}
                                                 </textarea>
@@ -512,7 +512,7 @@
         <div class="col-10" style="align-content: center;">
             <div class="card" style="box-shadow: 2px 2px 8px 0 black; min-height: 30%;  max-height: 100%;">
                 <div class="card-header">
-                    <h4 class="card-title">PENDIENTE</h4>
+                    <h4 class="card-title">HISTORIAL DE NOTAMS</h4>
                     <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
                     <div class="heading-elements">
                         <ul class="list-inline mb-0">
@@ -526,7 +526,81 @@
 
                 </div>
                 <div class="card-content collapse show" style="height: 75%; overflow-y: auto;">
-                    CONTENIDO 4
+                    
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            
+                            <thead style="text-align: center;" >
+                                <tr >
+                                    <td>
+                                        <input type="text" class="form-control " placeholder="Prioridad" id="busca_notam4" onkeyup="buscar_notam_tabla('busca_notam4',0,'tabla_notam')" style="width:110px" maxlength="4" >
+                                    </td>
+    
+                                    <td>
+                                        <input type="text" class="form-control"  placeholder="Notam" id="busca_fir4" onkeyup="buscar_notam_tabla('busca_fir4',1,'tabla_notam')" style="width:110px" maxlength="8">
+                                    </td>
+                                    
+                                    <td>
+                                        <input type="text" class="form-control"  placeholder="Lugar" id="busca_lugar4" onkeyup="buscar_notam_tabla('busca_lugar4',2,'tabla_notam')" style="width:110px" maxlength="4" >
+                                    </td>
+                                    
+                                    <td>
+                                    </td>
+
+                                    <td></td>
+                                    
+                                </tr>
+                                <tr>
+                                    <th style="width:65px; overflow:auto;">
+                                        Prioridad
+                                    </th>
+
+                                    <th style="width:55px;overflow:auto;" >NOTAM</th>
+                                    
+                                    <th style="width:55px;overflow:auto;">Lugar</th>
+                                    
+                                    <th style="width:55px; max-width: auto;">Valido desde</th>
+                                    
+                                    <th style="width:155px;">Valido hasta</th>
+                                </tr>
+                            </thead>
+                            
+                            <tbody style="text-align: center;" id="tabla_notam">
+
+                                {% for notam in lista_notam %}
+                                    <tr >
+                                        <td style="vertical-align: middle;">
+                                            {{notam.aftn1}}
+                                        </td>
+
+                                        <td style="vertical-align: middle;">
+                                            <a class=" btn-outline-light" onclick="abrir_modal( '{% url 'view_notam_modal' id_notam_mensaje=notam.id_mensaje%}')">
+                                                {{notam.idnotam}}<br>
+                                            </a>
+                                        </td>
+                                        
+                                        <td style="vertical-align: middle;">
+                                            {{notam.aplica_a}}
+                                        </td>
+
+                                        <td style="vertical-align: middle;">
+                                            {{notam.valido_desde}}
+                                        </td>
+                                        
+                                        <td style="vertical-align: middle;">
+                                            {{notam.valido_hasta}}
+                                        </td>
+
+                                    </tr>
+                                {% endfor %}
+                                    
+                            
+                            </tbody>
+                        </table>
+                    </div> 
+                    
+
+
                 </div>
             </div>
         </div>

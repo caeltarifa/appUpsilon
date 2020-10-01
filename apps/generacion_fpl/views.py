@@ -32,23 +32,6 @@ from apps.trabajadoresATS.models import TrabajadoresATS, CuentasATS
 
 # Create your views here.
 
-def view_admin_ais(request):
-    if request.user.is_authenticated:
-        trabajadores= TrabajadoresATS.objects.using('aasana_bd').raw("select * from trabajadores limit 5 ")
-
-        cuentas= CuentasATS.objects.using('aasana_bd').raw("select * from cuentas limit 5 ")
-
-        respuesta= CuentasATS.objects.using('aasana_bd').raw("select id_cuenta, password, usuario from cuentas where id_cuenta=1 ")[0]
-        
-        respuesta=respuesta.usuario + '----'+ respuesta.password
-
-
-        return render(request, 'temp_plan_vuelo/aroais.html', {'trabajadores':trabajadores, 'cuentas':cuentas, 'respuesta':respuesta} )
-    else:
-        return redirect('login')
-
-
-
 def view_admin_felcn(request):
     if request.user.is_authenticated:
         
