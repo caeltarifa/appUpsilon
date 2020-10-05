@@ -94,7 +94,7 @@
     <style>
         
         #app {
-        height: 100%;
+        height: 150%;
         overflow-x: auto;
         }
 
@@ -277,21 +277,29 @@
                 >
 
                 <div class="row">
-                    <div class="col-sm-4">
+                    <div class="col-sm-5">
                         <p style="font-size:20px;">
-                            [[ card.name ]] 
+                            [[ card.name ]]
+                            <br>
+                            <span style="font-size:8px;">
+                                ENVIADO: [[card.nombre]] [[card.apellido]]
+                            </span>
                         </p>
                     </div>
                     
-                    <div class="col-sm-5">
+                    <div class="col-sm-4">
                         <span style="font-size:12px;"> 
-                            [[card.aeropuerto_salida]] &nbsp;
+                            [[card.aeropuerto_salida]]
                         </span>
+                         
+                        &nbsp;
+
                         <span class="material-icons" style="transform: rotate(90deg); font: size 25px;" >
                             flight
                         </span>
-                        ______
+                        
                         &nbsp;
+                        
                         <span style="font-size:12px;"> 
                             [[card.aeropuerto_destino]]
                         </span>
@@ -535,7 +543,7 @@
     }
 
 
-    function getportrabajar() {
+    function getfpl_totales() {
         planes_vuelo_totales=[]
         {% for x in por_trabajar %}
             dic = {
@@ -586,6 +594,77 @@
 
         return planes_vuelo_totales; 
     }
+
+
+//vector global
+    var array_global=[]
+
+    function getpor_Trabajar(){
+        $.ajax({
+            type:'GET',
+            url: "{% url 'view_obtener_fplpanelprogreso' %}",
+            //data:$(this).serialize(),
+            success: function (request){
+                vetor=[]
+                for (let i = 0; i < request.length; i++) {
+                    element = request[i];
+                    if (element.paneIndex == 0) {
+                        dic = {
+                            name : element.name,
+                            id : element.id,
+                            paneIndex : 0,
+                            aeropuerto_salida: element.aeropuerto_salida,
+                            aeropuerto_destino : element.aeropuerto_destino,
+                            fecha_aprobacion : element.fecha_aprobacion,
+                            hora_aprobacion : element.hora_aprobacion,
+                            nombre : element.nombre,
+                            apellido : element.apellido,
+                        }
+                    }
+
+                    if (element.paneIndex == 1) {
+                        dic = {
+                            name : element.name,
+                            id : element.id,
+                            paneIndex : 1,
+                            aeropuerto_salida: element.aeropuerto_salida,
+                            aeropuerto_destino : element.aeropuerto_destino,
+                            fecha_aprobacion : element.fecha_aprobacion,
+                            hora_aprobacion : element.hora_aprobacion,
+                            nombre : element.nombre,
+                            apellido : element.apellido,
+                        }
+                    }
+
+                    if (element.paneIndex == 2) {
+                        dic = {
+                            name : element.name,
+                            id : element.id,
+                            paneIndex : 2,
+                            aeropuerto_salida: element.aeropuerto_salida,
+                            aeropuerto_destino : element.aeropuerto_destino,
+                            fecha_aprobacion : element.fecha_aprobacion,
+                            hora_aprobacion : element.hora_aprobacion,
+                            nombre : element.nombre,
+                            apellido : element.apellido,
+                        }
+                    }
+
+                    vetor.push(dic)
+                }
+
+                array_global = vetor;
+
+                
+            }, 
+            error: function (e) {
+                console.log(e);
+                return []
+            }
+                   
+        });
+    }
+
     new Vue({
         delimiters: ['[[', ']]'],
         el: '#app',
@@ -614,19 +693,18 @@
             velocity: 0,
             rotation: 0 },
 
-            cards: getportrabajar(),
-
+            cards: array_global,
 
             panes: [
-            {
-            name: 'Para hacer', idx: 'cero', },
+                {
+                name: 'Para hacer', idx: 'cero', },
 
-            {
-            name: 'En curso', idx: 'uno', },
+                {
+                name: 'En curso', idx: 'uno', },
 
-            {
-            name: 'Finalizados', idx: 'dos', }],
-
+                {
+                name: 'Finalizados', idx: 'dos', }
+            ],
 
             settings: SETTINGS,
             settingsExpanded: false 
@@ -646,7 +724,12 @@
             },
             draggedCard() {
             return this.cards[this.draggedCardIdx] || { name: '' };
-            } },
+            } 
+        },
+        
+        mounted : function(){
+            this.todo()     
+        },
 
         methods: {
             onDragStart(e, index) {
@@ -846,7 +929,23 @@
             abrir_aprobado: function (cadena) {
                 direc="/plan_vuelo/verfplaprobado/" + cadena + "/"
                 abrir_modal(direc)
-                
+            },
+
+            todo: function(){  
+                this.intervalid1 = setInterval(() => {
+                    //this.changes = ((Math.random() * 100).toFixed(2))+'%';
+                    //console.log (this.changes);
+                    
+                    //alert("hola 3"+ this.cards[0].name);
+                    
+                    //alert(vector_portrabajar);
+                    getpor_Trabajar();
+                    
+                    setTimeout(() => {
+                        this.cards=array_global;
+                    }, 500);
+                    //getpor_Trabajar();
+                }, 1500);
             }
         } 
     });

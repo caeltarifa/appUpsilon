@@ -243,6 +243,41 @@ def view_guardar_estado_progreso(request):
         return JsonResponse(response, status=200)
     else:
         return redirect('login')
+    
+def view_obtener_fplpanelprogreso(request):
+    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='TODOS_SERVICIOS').exists():
+        if request.is_ajax and request.method =="GET":
+            
+            lista_portrabajar = Flp_aprobado.objects.raw("select id_flpaprobado_id, id_aeronave, aeropuerto_salida, aeropuerto_destino,fecha_aprobacion, hora_aprobacion, nombre, apellido from (select id_flpaprobado_id, id_aeronave, aeropuerto_salida, aeropuerto_destino,controlador_id,fecha_aprobacion, hora_aprobacion,por_trabajar from plan_vuelo_flp_trafico inner join plan_vuelo_flp_aprobado on id_mensaje like id_flpaprobado_id) as t1 inner join plan_vuelo_trabajador on t1.controlador_id = plan_vuelo_trabajador.ci where por_trabajar='t' order by fecha_aprobacion, hora_aprobacion desc  ")
+            lista_portrabajar = [serializar_fichadraggable(fpl, 0) for fpl in lista_portrabajar]
+
+            en_curso = Flp_aprobado.objects.raw("select id_flpaprobado_id, id_aeronave, aeropuerto_salida, aeropuerto_destino,fecha_aprobacion, hora_aprobacion, nombre, apellido from (select id_flpaprobado_id, id_aeronave, aeropuerto_salida, aeropuerto_destino,controlador_id,fecha_aprobacion, hora_aprobacion,en_curso from plan_vuelo_flp_trafico inner join plan_vuelo_flp_aprobado on id_mensaje like id_flpaprobado_id) as t1 inner join plan_vuelo_trabajador on t1.controlador_id = plan_vuelo_trabajador.ci where en_curso='t' order by fecha_aprobacion, hora_aprobacion desc  ")
+            en_curso = [serializar_fichadraggable(fpl, 1) for fpl in en_curso]
+
+            finalizados = Flp_aprobado.objects.raw("select id_flpaprobado_id, id_aeronave, aeropuerto_salida, aeropuerto_destino,fecha_aprobacion, hora_aprobacion, nombre, apellido from (select id_flpaprobado_id, id_aeronave, aeropuerto_salida, aeropuerto_destino,controlador_id,fecha_aprobacion, hora_aprobacion, finalizado from plan_vuelo_flp_trafico inner join plan_vuelo_flp_aprobado on id_mensaje like id_flpaprobado_id) as t1 inner join plan_vuelo_trabajador on t1.controlador_id = plan_vuelo_trabajador.ci where finalizado='t' order by fecha_aprobacion, hora_aprobacion desc  ")
+            finalizados = [serializar_fichadraggable(fpl, 2) for fpl in finalizados]
+
+            lista_portrabajar += en_curso + finalizados 
+
+            return HttpResponse(json.dumps(lista_portrabajar), content_type='application/json')
+            #return HttpResponse({'lista_fpl':lista_fpl}, content_type='application/json')
+        return JsonResponse([], status=400)
+    else:
+        return redirect('accounts/login/')
+
+def serializar_fichadraggable(fplejec, pane):
+    return {
+        'name' : fplejec.id_aeronave.split('-')[1],
+        'id' : fplejec.id_flpaprobado_id,
+        'paneIndex': pane ,
+        'aeropuerto_salida' : fplejec.aeropuerto_salida[1:5],
+        'aeropuerto_destino' : fplejec.aeropuerto_destino[1:5],
+        'fecha_aprobacion' : str(fplejec.fecha_aprobacion),
+        'hora_aprobacion' : str(fplejec.hora_aprobacion),
+        'nombre' : fplejec.nombre,
+        'apellido' : fplejec.apellido,
+    }
+
 #######################   CONTROL DE APROBACION DE FPLs ##################
 
 

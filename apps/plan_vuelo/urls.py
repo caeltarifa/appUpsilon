@@ -8,7 +8,7 @@ from apps.plan_vuelo.views import view_restaurar_ruta, view_archivar_ruta
 
 from apps.plan_vuelo.views import view_guardar_aprobacion, view_historial_aprobacion
 # EJECUTIVO ################################################################################################################
-from apps.plan_vuelo.views import view_panel_ejecutivo, view_carta_navegacional, view_obtener_dibujo_ruta,view_ver_fpl_aprobado, view_guardar_estado_progreso
+from apps.plan_vuelo.views import view_panel_ejecutivo, view_carta_navegacional, view_obtener_dibujo_ruta,view_ver_fpl_aprobado, view_guardar_estado_progreso, view_obtener_fplpanelprogreso
 
 
 # SUPERVISOR ################################################################################################################
@@ -60,6 +60,8 @@ urlpatterns = [
     path('aip/dibujoruta', view_obtener_dibujo_ruta, name="view_obtener_dibujo_ruta"), #
     path('verfplaprobado/<path:id_plancompleto>/',view_ver_fpl_aprobado, name='view_ver_fpl_aprobado'),
     path('guardarestadoprogreso/',view_guardar_estado_progreso, name='view_guardar_estado_progreso'),
+    path('getportrabajar/',view_obtener_fplpanelprogreso, name='view_obtener_fplpanelprogreso'),
+    
 
 
     #################################################################################################################
