@@ -272,10 +272,13 @@
                 <div class="butHeading">rutas</div>
             </a>
         </div>
-    
-        <div class="butFrame bounce"><!--onClick="window.location='#'"-->
-          <img src="http://www.neodigital.com.au/thumbnailsmall/Button5.jpg" />
-          <div class="butHeading">PIB</div>
+
+
+        <div class="butFrame bounce" >
+            <a href="{% url 'view_pib_tiemporeal' %}">
+                <img src="http://www.neodigital.com.au/thumbnailsmall/Button6.jpg" />
+                <div class="butHeading">PIB TIEMPO REAL</div>
+            </a>
         </div>
     
     </div>
@@ -288,6 +291,8 @@
                 <div class="butHeading">CARTA NAVEGACIONAL</div>
             </a>
         </div>
+
+        
 
         <div class="butFrame bounce"><!--onClick="window.location='#'"-->
             <a href="{% url 'view_aeropuertos_aeronaves' %}">
@@ -315,7 +320,14 @@
         </div>
     
     </div>
+
     
+    <div class="buttons">
+        <div class="butFrame bounce"><!--onClick="window.location='#'"-->
+            <img src="http://www.neodigital.com.au/thumbnailsmall/Button5.jpg" />
+            <div class="butHeading">PIB</div>
+        </div>
+    </div>
 
 </div>
 

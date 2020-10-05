@@ -1,46 +1,201 @@
-
 <!-- SE RECIBE aero, plan, detalles de la ficha, ruta del fpl, rutas all, puntosall   -->
     <div class="modal-dialog  modal-dialog-centered modal-xl " role="document" style="width: 62.5%; margin:auto;" >
         <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">
-                    
-                    {% block titulomodal %}
-                        {{data.titulo}} 
-                    {% endblock titulomodal %}
-                </h2>
-            </div>
+         
 
             <div class="modal-body">
-                <div class="container">
-                    <!--
-                        {% block mensajemodal %}
-                            {{notam_completo.id_mensaje}}<br>
-                            {{notam_completo.aftn1}}<br>
-                            {{notam_completo.aftn2}}<br>
-                            {{notam_completo.idnotam}}<br>
-                            {{notam_completo.resumen}}<br>
-                            {{notam_completo.aplica_a}}<br>
-                            {{notam_completo.valido_desde}}<br>
-                            {{notam_completo.valido_hasta}}<br>
-                            {{notam_completo.mensaje}}
-                        {% endblock mensajemodal %}
-                    -->
 
-                    {% for key , value in data.items %}
-                        {% if not forloop.first %}
-                            {{value}} <br>
-                        {% endif %}
-                    {% endfor %}
-                        
-                        
-                        
-                </div>
+                <section id="MSJ" class="section-bg" >
+                    <div class="container-fluid">
+
+                        <div class="section-header" style="text-align:center;">
+                            <br>
+                            
+                            <h2 class="section-title">
+                                {% block titulomodal %}
+                                    {{data.titulo}} 
+                                {% endblock titulomodal %}
+                            </h2>
+                        </div>
+                        <br><br><br>
+                        <div class="row">
+                            <div class="col-lg-6  wow fadeInLeft">
+                                <div class="containerpib">
+                                    <div id="accordion" class="panel-group">
+                                        {% for key , value in data.items %}
+                                            {% if not forloop.first %}
+                                                {{value}} <br>
+                                            {% endif %}
+                                        {% endfor %}
+                                        <!--
+                                            {{area.lat}}
+                                            {{area.long}}
+                                            {{area.radius}}
+                                        -->
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+
+                            <div class="col-lg-6  wow fadeInRight">
+                                <div class="containerpib">
+                                    <div id="accordion" class="panel-group">
+                                        <!--mita 2-->
+                                        <div id='map' style="border-radius: 25px 25px 25px ;position: absolute; top: -55px; bottom: 0; margin-right:5px; width: 500px; height:500px;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </section>
+
             </div>
 
             <div class="modal-footer">
+                <br><br>
+                <br><br>
+                <br><br>
                 <button class="btn btn-danger " type="button" data-dismiss="modal">Cerrar</button>
             </div>
 
         </div>
     </div>
+<!--
+
+-->
+
+        <script>
+            latitude='{{area.lat}}'
+            latitude= latitude.substr(0,2) + " " + latitude.substr(2, latitude.length)
+            longitude='{{area.long}}'
+            longitude= longitude.substr(0,3) + " " + longitude.substr(3, longitude.length)
+    
+            //alert(latitude, longitude)
+            radius=parseInt('{{area.radius}}')
+            if (radius ==0 || radius==999) {
+                radius=0;
+            }else{
+                radius=1852*radius;
+            }
+            var vector_posicion = parse_gps(longitude +" "+latitude)
+    
+            longitude=vector_posicion[1]
+            latitude=vector_posicion[0]
+    
+            //alert(longitude + " " + latitude)
+    
+            //LAT': '1725S', 'LONG': '06610W'
+            function parse_gps( input ) {
+    
+                if( input.indexOf( 'N' ) == -1 && input.indexOf( 'S' ) == -1 &&
+                    input.indexOf( 'W' ) == -1 && input.indexOf( 'E' ) == -1 ) {
+                    return input.split(',');
+                }
+    
+                var parts = input.split(/[°'"]+/).join(' ').split(/[^\w\S]+/);
+    
+                var directions = [];
+                var coords = [];
+                var dd = 0;
+                var pow = 0;
+    
+                for( i in parts ) {
+    
+                    // we end on a direction
+                    if( isNaN( parts[i] ) ) {
+    
+                        var _float = parseFloat( parts[i] );
+    
+                        var direction = parts[i];
+    
+                        if( !isNaN(_float ) ) {
+                            dd += ( _float / Math.pow( 60, pow++ ) );
+                            direction = parts[i].replace( _float, '' );
+                        }
+    
+                        direction = direction[0];
+    
+                        if( direction == 'S' || direction == 'W' )
+                            dd *= -1;
+    
+                        directions[ directions.length ] = direction;
+    
+                        coords[ coords.length ] = dd;
+                        dd = pow = 0;
+    
+                    } else {
+    
+                        dd += ( parseFloat(parts[i]) / Math.pow( 60, pow++ ) );
+    
+                    }
+    
+                }
+    
+                if( directions[0] == 'W' || directions[0] == 'E' ) {
+                    var tmp = coords[0];
+                    coords[0] = coords[1];
+                    coords[1] = tmp;
+                }
+    
+                return coords;
+                }
+    
+    
+        </script>
+    
+        <script>
+            mapboxgl.accessToken = 'pk.eyJ1IjoiY2FlbHQiLCJhIjoiY2tmNGx4MDY3MDBnNTJ5cDh2aHhjOTQyciJ9.juIQGQyyJdwT0cIfnbFA3Q';
+            var map = new mapboxgl.Map({
+              container: 'map',
+              style: 'mapbox://styles/mapbox/streets-v11',
+              center: [longitude, latitude],
+              zoom: 10,
+              minZoom: 9,
+              maxZoom: 15,
+            });
+     
+            map.on('load', function() {
+              map.addSource("source_circle_500", {
+                "type": "geojson",
+                "data": {
+                  "type": "FeatureCollection",
+                  "features": [{
+                    "type": "Feature",
+                    "geometry": {
+                      "type": "Point",
+                      "coordinates": [longitude, latitude]
+                    }
+                  }]
+                }
+              });
+     
+              map.addLayer({
+                "id": "circle500",
+                "type": "circle",
+                "source": "source_circle_500",
+                "paint": {
+                  "circle-radius": {
+                     stops: [
+                       [0, 0],
+                       [20, metersToPixelsAtMaxZoom(radius,latitude)]
+                     ],
+                     base: 2
+                 },
+                  "circle-color": "#FA8258",
+                  "circle-opacity": 0.2
+                }
+              });
+            });
+     
+        </script>
+     
+        <script>
+          function metersToPixelsAtMaxZoom (meters, latitude){
+          return (meters / 0.075 / Math.cos(latitude * Math.PI / 180))
+          }
+        </script>

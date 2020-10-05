@@ -246,9 +246,9 @@
                                             
                                             <td >
                                                 <textarea  class="form-control" rows="8" cols="65" id="txt{{pib.ref_notam_amhs_id}}"  style="font-size: 12px">
-{% if pib.decodificado|length > 2%} {% ifnotequal pib.valid_desde 'None'  %} Desde {{pib.valid_desde|slice:"0:-9"}}  {% endifnotequal %} {{pib.decodificado}}   {% ifnotequal pib.valid_hasta 'None'  %} Hasta {{pib.valid_hasta|slice:"0:-9"}}  {% endifnotequal %}  {% else %} {{pib.cuerpo}}  {% endif %} {% if pib.agendado != 'None' and pib.agendado != 'Ninguna'  %} Agendado para {{pib.agendado}}  {% endif %}
-{% ifnotequal pib.tipo_trafico 'NONE'  %} Tipo trafico {{pib.tipo_trafico}}  {% endifnotequal %}
-{% ifnotequal pib.proposito 'NONE'  %} Proposito {{pib.proposito}}  {% endifnotequal %}
+{% if pib.decodificado|length > 2%} {% ifnotequal pib.valid_desde 'None'  %} DESDE {{pib.valid_desde|slice:"0:-9"}}  {% endifnotequal %} {{pib.decodificado}}   {% ifnotequal pib.valid_hasta 'None'  %} HASTA {{pib.valid_hasta|slice:"0:-9"}}  {% endifnotequal %}  {% else %} {{pib.cuerpo}}  {% endif %} {% if pib.agendado != 'None' and pib.agendado != 'Ninguna'  %} AGENDADO PARA {{pib.agendado}}  {% endif %}
+{% ifnotequal pib.tipo_trafico 'NONE'  %} TIPO DE TRAFICO {{pib.tipo_trafico}}  {% endifnotequal %}
+{% ifnotequal pib.proposito 'NONE'  %} PROPOSITO {{pib.proposito}}  {% endifnotequal %}
 
 {% ifnotequal pib.notam_id 'NONE' %} ({{pib.notam_id}})  {% endifnotequal %}
                                                 </textarea>

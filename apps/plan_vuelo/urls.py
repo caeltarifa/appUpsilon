@@ -8,7 +8,7 @@ from apps.plan_vuelo.views import view_restaurar_ruta, view_archivar_ruta
 
 from apps.plan_vuelo.views import view_guardar_aprobacion, view_historial_aprobacion
 # EJECUTIVO ################################################################################################################
-from apps.plan_vuelo.views import view_panel_ejecutivo, view_carta_navegacional, view_obtener_dibujo_ruta
+from apps.plan_vuelo.views import view_panel_ejecutivo, view_carta_navegacional, view_obtener_dibujo_ruta,view_ver_fpl_aprobado, view_guardar_estado_progreso
 
 
 # SUPERVISOR ################################################################################################################
@@ -58,12 +58,12 @@ urlpatterns = [
     path('ejecutivo/', view_panel_ejecutivo, name="view_panel_ejecutivo"), #redirije al panel de control de ejecutivo
     path('cartanavegacional/', view_carta_navegacional, name="view_carta_navegacional"), #
     path('aip/dibujoruta', view_obtener_dibujo_ruta, name="view_obtener_dibujo_ruta"), #
-    
-
+    path('verfplaprobado/<path:id_plancompleto>/',view_ver_fpl_aprobado, name='view_ver_fpl_aprobado'),
+    path('guardarestadoprogreso/',view_guardar_estado_progreso, name='view_guardar_estado_progreso'),
 
 
     #################################################################################################################
-    path('supervisor/', view_panel_supervisor, name="view_panel_supervisor"), #redirije al panel de control de ejecutivo
+    path('supervisor/', view_panel_supervisor, name="view_panel_supervisor"), #redirije al panel de control de supervisor
     path('servicio_met/', view_servicio_met, name="view_servicio_met"), #
     path('espacioaereo/', view_aeropuertos_aeronaves, name="view_aeropuertos_aeronaves"), #
     path('getflps/', view_enviar_fplaeropuerto, name="view_enviar_fplaeropuerto"), #

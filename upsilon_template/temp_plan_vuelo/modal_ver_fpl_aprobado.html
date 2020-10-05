@@ -1,0 +1,434 @@
+
+<!-- SE RECIBE aero, plan, detalles de la ficha, ruta del fpl, rutas all, puntosall   -->
+<div class="modal-dialog modal-lg" role="document">
+        
+    <div class="modal-content">
+        
+        <div class="modal-header" style="height: 5px;">
+            .
+            <button class="btn btn-outline-danger " data-dismiss="modal" style="height: 35px; width: 35px; padding: 5px 5px;border-radius:50px;">
+                
+                <span class="material-icons md-18">
+                    cancel
+                </span>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            
+            <div class="container" style="align-items: center; margin-left:33%;">
+                <div class="row">
+                    <span style="font-size:25px;"> 
+                        {{origen}}
+                    </span>
+                    <span class="material-icons" style="transform: rotate(90deg); font: size 50px;" >
+                        flight
+                    </span>
+                    &nbsp;
+                    _____________
+                    &nbsp;
+                    <span style="font-size:25px;"> 
+                        {{destino}}
+                    </span>
+                </div>
+                <br>
+            </div>
+            
+            <div class="container">
+                <div name="formulario" id="formulario">
+                    <div class="radio-tile-group">
+                        {% for persona in equipo_activo %}
+                        
+                            {% if forloop.first %}
+                                <div class="input-container" id="btnRadio{{persona.ci}}">
+                                    <input id="{{persona.ci}}" class="radio-button" type="radio" name="equipo_activo" checked="checked" />
+                                    <div class="radio-tile">
+                                        <span class="material-icons">
+                                            person_outline
+                                        </span>
+                                        <label for="{{persona.ci}}" class="radio-tile-label">{{persona.nombre}}</label>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div class="input-container" id="btnRadio{{persona.ci}}">
+                                    <input id="{{persona.ci}}" class="radio-button" type="radio" name="equipo_activo" />
+                                    <div class="radio-tile">
+                                        <span class="material-icons">
+                                            person_outline
+                                        </span>
+                                        <label for="{{persona.ci}}" class="radio-tile-label">{{persona.nombre}}</label>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+
+            <br>
+
+            <div class="container" id="contenidoid">
+                <div class="row ">
+
+                    <div class="col-md-4" >
+                        
+                        <p id="carnet"> HOLA</p>
+                        <p> HOLA -- {{controlador}}</p>
+
+                        <label>
+                            <span style="font-size: 25px;">
+                                {{avion}}
+                            </span>
+                            
+                            <button class="btn btn-outline-primary" onclick="javascript:imprimirfpl();" style="height: 25px; width:30px; padding: 0%;">
+                                <i>
+                                    <span class="material-icons md-18">
+                                        local_printshop
+                                    </span>
+                                </i>
+                            </button>
+                        </label>
+                        &nbsp;
+                        <button class="btn btn-outline-primary" onclick="javascript:mostrar_ocultarfpl();" style="height: 25px; width:30px; padding: 0%;">
+                            <i>
+                                <span class="material-icons md-18">
+                                    description
+                                </span>
+                            </i>
+                        </button>
+
+                        <div id="plan_vuelo_aftn" style="font-size:12px">
+                                {{id_mensaje|slice:"0:7"}} <br>
+                                {{aftn1}}<br>
+                                {{aftn2}}<br>
+                                {{id_aeronave}}<br>
+                                {{reglas_vuelo}}<br>
+                                {{aeropuerto_salida}}<br>
+                                {{rutafpl}}<br>
+                                {{aeropuerto_destino}}<br>
+                                {{otros}}<br>
+                        </div>
+
+                    </div>
+
+
+                    <!--
+                        <div class="col-md-2">
+                            <br><br><br>
+                            <input type="text" class="nivelvuelo" id="nivelvueloid"
+                            onkeyup="repetirNivel()" placeholder="Nivel" maxlength="4" style="width: 100px;height: 50px;"  />
+                            <br><br>
+                            <input type="text" class="tiempoestimado" id="tiempoestimadoid"
+                            onkeyup="actualizar_tiempo_strip()" placeholder="Tiempo" maxlength="4" style="width: 100px;height: 50px;">
+                            <br><br>
+                            <input type="text" class="transponder" id="transponderidzz"
+                            onkeyup="repetirTransponder()" placeholder="Transponder" maxlength="4" style="width: 100px; height: 50px;" autofocus="autofocus">
+                            <br><br>
+                        </div>
+                    -->             
+
+                </div>
+            </div>
+
+            
+        </div>
+
+
+
+        <div id="muestra">
+            <!-- imprimiendo el numero de tablas o strips para la visualizacion de puntos de notificacion -->
+            <table class="strip" id='HOLA' border="1px" width="100%" style="height:80px; text-align:center;  border-collapse: collapse;" align="center">
+                <tr style="border-top: 1px solid white;">
+                    <td rowspan="2" width="75px">
+                        <strong>{{avion}}</strong> <br> {{reglas_vuelo}} <br>
+                        {{velocidad}}</td>
+
+                    <td width="35px"> <strong>D</strong> <br> {{salida}} </td>
+
+                    <td width="35px"></td>
+
+                    <td width="40px" style="border-bottom: 1px solid white;">
+                        <hr class="incline-line">
+                        </hr>
+                    </td>
+
+                    <td width="60px" style="border-left: 1px solid white">{{punto_ruta}}</td>
+
+                    <td width="50px" rowspan="2" valign="top">{{nivel}}</td>
+
+                    <td width="50px" style="border-right: 1px solid white">{{origen}}</td>
+
+                    <td width="50px" style="border-right: 1px solid white;">UM415</td>
+
+                    <td width="50px">{{destino}}</td>
+
+                    <td width="50px"></td>
+
+                    <td width="25px" rowspan="2" style="border-right: 1.5px solid white;">
+                        <button onclick="javascript:eliminarStrip('HOLA')" type="button" class="close"
+                            aria-label="Close" style="color:red;">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </td>
+
+                </tr>
+                <tr style="border-bottom: 1.5px dashed;">
+                    <td>
+                        <hr class="incline-line">
+                        </hr>
+                    </td>
+
+                    <td>
+                        <hr class="incline-line">
+                        </hr>
+                    </td>
+
+                    <!--TIEMPÓ-->
+                    <td>
+                        <font size="1.5">
+                            <input type="text" class="tiempoestimado" id="tiempoestimadoid"
+                                    placeholder="0120" style="width: 40px;">
+                        </font>
+                    </td>
+
+                    <td>
+                        <hr class="incline-line2">
+                        </hr>
+                    </td>
+
+                    <td style="border-right: 1px solid white;">
+                        <font size="0.9">SEL/{{transmision}}</font>
+                        <br>
+                        <font size="0.9">REG/{{matricula}}</font>
+                    </td>
+
+                    <td style="border-right: 1px solid white;"></td>
+
+                    <td>
+                        <br>
+                        <font size="0.9">
+                            SQ/
+                            <input type="text" name="" class="transponder" id="transponderidx"
+                                onkeyup="transponder()" placeholder="7896" style="width: 33px;">
+                        </font>
+                    </td>
+
+                    <td style="border-right: 1px solid white">
+                        <br>
+                        <font size=0.9>
+                            <strong>ATC-003</strong>
+                        </font>
+                    </td>
+
+                </tr>
+            </table>
+                    
+        </div>
+
+        
+        <div class="modal-footer">
+            <button class="btn btn-primary" onclick="imprimirAprobacion()">Aprobar</button>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+
+<script>
+
+    //VARIABLES GLOBALES
+    var carnet=0;
+
+    //ELEGIR UNA RUTA, OPCIONAL, AL CARGAR LA PAGINA EN HIDE
+    $(function(){
+    
+        //limpiar las fichas al momento de trabajar un plan de vuelo
+        //document.getElementById("muestra").innerHTML="";
+        //ejecutamos para que se carguen los puntos de la ruta en contrada en el chosen multiple
+        
+        //if(! $("#formulario input[name='equipo_activo']:radio").is(':checked') ) {            $('#contenidoid').hide();        }
+    
+        //asignar el valor del nivel al inicio
+        $("#nivelvueloid").val("{{nivel}}");
+
+        //OCULTANDO EL FPL 
+        $( "#plan_vuelo_aftn" ).hide();
+        
+        //seleccionando a la primera persona activa, mostrar en carnet
+        carnet= $('input:radio[name=equipo_activo]:checked').attr('id') ;
+        $('#carnet').text( carnet);
+
+        
+    });
+    
+</script>
+
+<script>
+    //cambiamos el valor de la var carnet
+    $("div[id*='btnRadio']").click(function () {
+            if( $("#formulario input[name='equipo_activo']:radio").is(':checked') ) {
+                carnet=$('input:radio[name=equipo_activo]:checked').attr('id');
+                $('#carnet').text( carnet);
+            }   
+    });
+</script>
+
+<script>
+    velocidad='{{velocidad}}';
+    transmision='{{transmision}}';
+    matricula='{{matricula}}';
+    vuelo='{{avion}}';
+    regla='{{reglas_vuelo}}'.split('/');
+    regla=regla[1].includes('W')?regla[0]+'/W': regla[0]
+    nivel='<input type="text" class="nivel_strip" id="nivel_stripid" style="width:38px; font-size:12px;" maxlength="4" value="'+'{{nivel}}'+'"+/>'
+    
+    arr_ruta="{{rutaaprob}}".split(';');
+
+    arr_puntos="{{puntosaprob}}".split(';');
+
+    arr_tiempos="{{tiemposaprob}}".split(';');
+
+    for (let j = 0; j < arr_tiempos.length; j++) {
+        arr_tiempos[j]='<input type="text" id="tiempo_strip" value="'+arr_tiempos[j]+'" style="width:38px; font-size:12px;" maxlength="4" />'
+    }
+
+    sw_departure=true;
+    departure='<div style="font-size:12px;"><strong>D</strong> <br> {{salida}}</div>';
+    document.getElementById('muestra').innerHTML=''
+    for (let index = 0; index < arr_ruta.length-1; index++) {
+        lista_union=[1,2,3,4,5,6,5,4,4]
+
+        table_inicio = '<table class="strip" id="'+lista_union[index]+'" border="1px" width="100%" style="height:80px; text-align:center;  border-collapse: collapse;" align="center">';
+        tr1 ='<tr style="border-top: 1px solid white;"> <td rowspan="2" width="75px"><strong>'+vuelo+'</strong> <br>'+ regla + '<br>'+velocidad+'</td><td width="35px">'+ departure+ '</td><td width="35px"></td><td width="40px" style="border-bottom: 1px solid white;"><hr class="incline-line"></hr></td><td width="60px" style="border-left: 1px solid white" class="punto_en_strip" name="'+arr_puntos[index+1]+'">'+arr_puntos[index]+'</td><td width="50px" rowspan="2" valign="top"> '+nivel+' </td><td width="50px" style="border-right: 1px solid white">'+'{{origen}}'+'</td><td width="50px" style="border-right: 1px solid white;" class="ruta_en_strip">'+arr_ruta[index]+'</td><td width="50px">'+'{{destino}}'+'</td><td width="50px"></td><td width="25px" rowspan="2" style="border-right: 1.5px solid white;"><button onclick="javascript:eliminarStrip('+"'"+lista_union[index]+"'"+')" type="button" class="close" aria-label="Close" style="color:red;"> <span aria-hidden="true">&times;</span> </button> </td> </tr>';
+        tr2 ='<tr style="border-bottom: 1.5px dashed;"><td><hr class="incline-line"></hr></td><td><hr class="incline-line"></hr></td><!--TIEMPÓ--><td><font size="1.5"> ' + arr_tiempos[index] +  '</font></td><td><hr class="incline-line2"></hr></td><td style="border-right: 1px solid white;"><font size="0.9">SEL/' +transmision+ '</font><br><font size="0.9">REG/'+matricula+ '</font></td><td style="border-right: 1px solid white;"></td><td><br><font size="0.9">SQ/ '+'<label class="transponder_strip" id="transponder_stripid" >{{transponder}}</label>' + '</font></td><td style="border-right: 1px solid white"><br><font size=0.9><strong>ATC-003</strong></font></td></tr></table>';
+        document.getElementById('muestra').innerHTML+=table_inicio+tr1+tr2;
+        if (sw_departure) {
+            sw_departure=false;
+            departure=""
+        }
+    }
+
+    vector=document.getElementsByClassName('tiempo_strip');
+    vector[0].textContent=tiempoin;
+
+    contador_rutas=1 //contador que recorre el vector "subruta_sel_ruta1"
+    for (let i = 1; i < vector.length; i++) {
+        while(typeof lista_union[contador_rutas]!='number' ){
+            contador_rutas=contador_rutas+1
+        }
+
+        tiempoin=sumar_horas(tiempoin, minuto_to_hrs(lista_union[contador_rutas]) );
+        vector[i].textContent=tiempoin;
+        contador_rutas=contador_rutas+1;
+    }
+</script>
+
+
+
+
+
+<script>
+    function imprimirfpl() {
+        var mywindow = window.open('', 'PRINT');
+        mywindow.document.write('<!DOCTYPE html><html><head>');
+        mywindow.document.write('<style>		@page{   margin: 30;    		}		 body { margin: 3mm 17mm 5mm 0mm; }     .incline-line{      width: 100%;      margin: none;      margin-top: 0%;      margin-bottom: 0%;      transform: rotate(156deg);      border-color: black;    } .incline-line2{      width: 100%;      margin: none;      margin-top: 0%;      margin-bottom: 0%;      transform: rotate(164deg);      border-color: black;    } button { display:none; }</style>');
+        mywindow.document.write('</head><body >');
+        mywindow.document.write(document.getElementById('plan_vuelo_aftn').innerHTML);
+        mywindow.document.write('</body></html>');
+        mywindow.document.close(); // necesario para IE >= 10
+        mywindow.focus(); // necesario para IE >= 10
+        mywindow.print();
+        mywindow.close();
+        return true;
+    };        
+</script>
+
+
+<script>
+    function imprimirAprobacion() {
+
+        lista_tiempos = document.getElementsByClassName('tiempo_strip')
+        lista_puntos = document.getElementsByClassName('punto_en_strip')
+        lista_rutas = document.getElementsByClassName('ruta_en_strip')
+        tiempos=""
+        puntos=""
+        rutas=""
+        for (let i = 0; i < lista_tiempos.length; i++) {
+            tiempos = tiempos + lista_tiempos[i].textContent +";";
+            puntos = puntos + lista_puntos[i].textContent +";";
+            rutas = rutas + lista_rutas[i].textContent +";";
+        }
+        
+        datasend={
+            'fpl' : '{{id_mensaje}}',
+            'tiempos' : tiempos,
+            'puntos' : puntos,
+            'rutas' : rutas,
+            'matricula' : '{{matricula}}',
+            'nivel' : '{{nivel}}',
+            'frecuencia' : '{{transmision}}',
+            'persona' : $('input:radio[name=equipo_activo]:checked').attr('id'),
+            'transponder' : document.getElementsByClassName('transponder_strip')[0].textContent,
+        }
+
+
+/*
+        $.ajax({
+            type:'GET',
+            url: "{% url 'view_guardar_aprobacion' %}",
+            data: datasend,
+            //data:$(this).serialize(),
+            success: function (request){
+                if (request.estado == 'server200') {
+                    var mywindow = window.open('', 'PRINT');
+                    mywindow.document.write('<!DOCTYPE html><html><head>');
+                    mywindow.document.write('<style>		@page{   margin: 0;    		}		 body { margin: 3mm 17mm 5mm 0mm; }     .incline-line{      width: 100%;      margin: none;      margin-top: 0%;      margin-bottom: 0%;      transform: rotate(156deg);      border-color: black;    } .incline-line2{      width: 100%;      margin: none;      margin-top: 0%;      margin-bottom: 0%;      transform: rotate(164deg);      border-color: black;    } button { display:none; }</style>');
+                    mywindow.document.write('</head><body >');
+                    mywindow.document.write(document.getElementById('muestra').innerHTML);
+                    mywindow.document.write('</body></html>');
+                    mywindow.document.close(); // necesario para IE >= 10
+                    mywindow.focus(); // necesario para IE >= 10
+                    mywindow.print();
+                    mywindow.close();
+                    location.reload();
+                    return true;
+                }else if(request.estado == 'server400'){
+                    alert("FPL YA ESTA APROBADO")
+                } else{
+                    alert("FATAL ERROR !!")
+                }
+                
+            }   
+        });
+*/
+
+
+    };
+
+    function eliminarStrip(id) {
+        imagen = document.getElementById(id);
+        if (!imagen) {
+            alert("El elemento selecionado no existe");
+        } else {
+            padre = imagen.parentNode;
+            padre.removeChild(imagen);
+        }
+    };
+
+
+    
+
+</script>
+
+
+
+<script>
+    function mostrar_ocultarfpl(){
+        $( "#plan_vuelo_aftn" ).toggle("fast");
+    }
+</script>

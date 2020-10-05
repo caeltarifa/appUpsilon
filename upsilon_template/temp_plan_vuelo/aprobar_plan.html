@@ -38,15 +38,27 @@
                 <div name="formulario" id="formulario">
                     <div class="radio-tile-group">
                         {% for persona in equipo_activo %}
-                            <div class="input-container" id="btnRadio{{persona.ci}}">
-                                <input id="{{persona.ci}}" class="radio-button" type="radio" name="equipo_activo" />
-                                <div class="radio-tile">
-                                    <span class="material-icons">
-                                        person_outline
-                                    </span>
-                                    <label for="{{persona.ci}}" class="radio-tile-label">{{persona.nombre}}</label>
+                            {% if forloop.first %}
+                                <div class="input-container" id="btnRadio{{persona.ci}}">
+                                    <input id="{{persona.ci}}" class="radio-button" type="radio" name="equipo_activo" checked="checked" />
+                                    <div class="radio-tile">
+                                        <span class="material-icons">
+                                            person_outline
+                                        </span>
+                                        <label for="{{persona.ci}}" class="radio-tile-label">{{persona.nombre}}</label>
+                                    </div>
                                 </div>
-                            </div>
+                            {% else %}
+                                <div class="input-container" id="btnRadio{{persona.ci}}">
+                                    <input id="{{persona.ci}}" class="radio-button" type="radio" name="equipo_activo" />
+                                    <div class="radio-tile">
+                                        <span class="material-icons">
+                                            person_outline
+                                        </span>
+                                        <label for="{{persona.ci}}" class="radio-tile-label">{{persona.nombre}}</label>
+                                    </div>
+                                </div>
+                            {% endif %}
                         {% endfor %}
                     </div>
                 </div>
@@ -524,9 +536,13 @@ function actualizar_tiempo_strip(){
         velocidad='{{velocidad}}';
         transmision='{{transmision}}';
         matricula='{{matricula}}';
+        vuelo='{{avion}}';
+        regla='{{reglas_vuelo}}'.split('/');
+        regla=regla[1].includes('W')?regla[0]+'/W': regla[0]
+
         ruta="";
         sw_departure=false;
-        departure='<strong>D</strong> <br> {{salida}}';
+        departure='<div style="font-size:12px;"><strong>D</strong> <br> {{salida}}</div>';
         document.getElementById('muestra').innerHTML=''
         for (let index = 0; index < lista_union.length-1; index++) {
             if (typeof lista_union[index] != 'number') {
@@ -534,7 +550,7 @@ function actualizar_tiempo_strip(){
                     ruta=lista_union[index].substring(1,lista_union[index].length )
                 }else{
                     table_inicio = '<table class="strip" id="'+lista_union[index]+'" border="1px" width="100%" style="height:80px; text-align:center;  border-collapse: collapse;" align="center">';
-                    tr1 ='<tr style="border-top: 1px solid white;"> <td rowspan="2" width="75px"><strong>'+'{{avion}}'+'</strong> <br>'+ '{{reglas_vuelo}}' + '<br>'+velocidad+'</td><td width="35px">'+ departure+ '</td><td width="35px"></td><td width="40px" style="border-bottom: 1px solid white;"><hr class="incline-line"></hr></td><td width="60px" style="border-left: 1px solid white" class="punto_en_strip" name="'+lista_union[index+1]+'">'+lista_union[index]+'</td><td width="50px" rowspan="2" valign="top"> <p class="nivel_strip" id="nivel_stripid"> '+'{{nivel}}'+'</p> </td><td width="50px" style="border-right: 1px solid white">'+'{{origen}}'+'</td><td width="50px" style="border-right: 1px solid white;" class="ruta_en_strip">'+ruta+'</td><td width="50px">'+'{{destino}}'+'</td><td width="50px"></td><td width="25px" rowspan="2" style="border-right: 1.5px solid white;"><button onclick="javascript:eliminarStrip('+"'"+lista_union[index]+"'"+')" type="button" class="close" aria-label="Close" style="color:red;"> <span aria-hidden="true">&times;</span> </button> </td> </tr>';
+                    tr1 ='<tr style="border-top: 1px solid white;"> <td rowspan="2" width="75px"><strong>'+vuelo+'</strong> <br>'+ regla + '<br>'+velocidad+'</td><td width="35px">'+ departure+ '</td><td width="35px"></td><td width="40px" style="border-bottom: 1px solid white;"><hr class="incline-line"></hr></td><td width="60px" style="border-left: 1px solid white" class="punto_en_strip" name="'+lista_union[index+1]+'">'+lista_union[index]+'</td><td width="50px" rowspan="2" valign="top"> <p class="nivel_strip" id="nivel_stripid"> '+'{{nivel}}'+'</p> </td><td width="50px" style="border-right: 1px solid white">'+'{{origen}}'+'</td><td width="50px" style="border-right: 1px solid white;" class="ruta_en_strip">'+ruta+'</td><td width="50px">'+'{{destino}}'+'</td><td width="50px"></td><td width="25px" rowspan="2" style="border-right: 1.5px solid white;"><button onclick="javascript:eliminarStrip('+"'"+lista_union[index]+"'"+')" type="button" class="close" aria-label="Close" style="color:red;"> <span aria-hidden="true">&times;</span> </button> </td> </tr>';
                     tr2 ='<tr style="border-bottom: 1.5px dashed;"><td><hr class="incline-line"></hr></td><td><hr class="incline-line"></hr></td><!--TIEMPÓ--><td><font size="1.5">   <label class="tiempo_strip" id="tiempo_stripid" style="font-size:15px"></label>   </font></td><td><hr class="incline-line2"></hr></td><td style="border-right: 1px solid white;"><font size="0.9">SEL/' +transmision+ '</font><br><font size="0.9">REG/'+matricula+ '</font></td><td style="border-right: 1px solid white;"></td><td><br><font size="0.9">SQ/ <label class="transponder_strip" id="transponder_stripid" ></label>   </font></td><td style="border-right: 1px solid white"><br><font size=0.9><strong>ATC-003</strong></font></td></tr></table>';
                     document.getElementById('muestra').innerHTML+=table_inicio+tr1+tr2;
                     
@@ -980,8 +996,6 @@ function imprimirfpl() {
             'transponder' : document.getElementsByClassName('transponder_strip')[0].textContent,
         }
 
-
-        alert(document.getElementsByClassName('transponder_strip')[0].textContent)
 
         $.ajax({
             type:'GET',

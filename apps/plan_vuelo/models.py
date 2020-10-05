@@ -72,6 +72,10 @@ class Flp_aprobado(models.Model):
     tiempos = models.CharField(max_length=100)
     frecuencias = models.CharField(max_length=10)
     nivel = models.CharField(max_length=6)
+    por_trabajar = models.BooleanField(default=True)
+    en_curso = models.BooleanField(default=False)
+    finalizado = models.BooleanField(default=False)
+
     def __unicode__(self):
         return '%s %s' % (self.id_flp_aprobado, self.metar_trafico, self.controlador)
 

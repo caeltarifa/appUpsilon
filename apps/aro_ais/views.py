@@ -168,7 +168,7 @@ def view_publicarguardar_pib(request):
 
 
 def view_pib_tiemporeal(request):
-    if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='AROAISLP').exists():
+    if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='TODOS_SERVICIOS').exists():
         equipo_coordinacion = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and empresa_institucion_id=1 order by activo")
 
         equipo_activo = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and activo=true and empresa_institucion_id=1 order by activo")
@@ -179,7 +179,7 @@ def view_pib_tiemporeal(request):
     
 
 def view_pibupdate_tiemporeal(request):
-    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='AROAISLP').exists():
+    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='TODOS_SERVICIOS').exists():
         if request.is_ajax and request.method =="GET":
             #obteniendo aeropuertos
             lista_aeropuerto =  Aeropuerto.objects.all().only('icao')

@@ -88,6 +88,122 @@
         }
         /* STYLE FOR MODAL RADIO BUTOONS FOR USERS FOR PROVE FPL */
     </style>
+
+
+
+    <style>
+        
+        #app {
+        height: 100%;
+        overflow-x: auto;
+        }
+
+        main {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        justify-content: flex-start;
+        padding: 20px 0 30px 0;
+        box-sizing: border-box;
+        }
+        main:before {
+        content: '';
+        float: right;
+        min-width: 20px;
+        width: 10px;
+        height: 100%;
+        }
+        main:after {
+        content: '';
+        float: right;
+        min-width: 20px;
+        width: 10px;
+        height: 100%;
+        }
+
+        .pane {
+        display: inline-table;
+        height: 100%;
+        min-width: 31%;
+        max-width: 31%;
+        margin: 0 5px;
+        border-radius: 10px;
+        padding: 10px;
+        box-sizing: border-box;
+        }
+
+        div[id="0"] {
+            background: rgb(255, 233, 106);
+        }
+
+        div[id="1"] {
+            background: rgb(154, 255, 119);
+        }
+
+        div[id="2"] {
+            background: rgb(255, 87, 87);
+        }
+
+        .pane-header {
+        font-weight: 900;
+        font-size:25px;
+        color: #ffffff;
+        }
+
+        .pane-card {
+        background: #ffffff;
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 7px;
+        box-shadow: 0 1px 0 rgba(9, 30, 66, 0.25);
+        cursor: grab;
+        }
+        .pane-card:hover {
+        background: #f4f5f7;
+        }
+        .pane-card.dragging {
+        color: transparent;
+        background: none;
+        border: 2px dashed rgba(0, 0, 0, 0.2);
+        box-shadow: none;
+        user-select: none;
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        cursor: grabbing;
+        }
+
+
+
+        #ghost-card {
+        position: absolute;
+        user-select: none;
+        pointer-events: none;
+        top: 100vh;
+        left: 100vw;
+        opacity: 0;
+        transform-origin: center;
+        transform: scale(1) rotate(0);
+        box-shadow: 0 1px 0 rgba(9, 30, 66, 0.25);
+        transition: transform 0.04s ease-in-out;
+        }
+        #ghost-card.animate {
+        transition: box-shadow 0.1s ease-in-out;
+        transition: transform 0.05s ease-in-out;
+        }
+        #ghost-card.active {
+        opacity: 1;
+        box-shadow: 0 12px 24px -6px rgba(9, 30, 66, 0.25), 0 0 0 1px rgba(9, 30, 66, 0.08);
+        }
+        #ghost-card.leaving {
+        transition: all .1s ease;
+        box-shadow: 0 1px 0 rgba(9, 30, 66, 0.25);
+        }
+
+        
+
+        
+    </style>
+
 {% endblock extra_head %}
     
 
@@ -99,41 +215,131 @@
 {% block content %}
 
 <!--BARRA LATERAL O MENU LATERAL-->
+
+<!--
 <div class="main-menu menu-fixed menu-light menu-accordion    menu-shadow " data-scroll-to-active="false">
-
-    <div class="main-menu-content">
-        <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
-            <li class="active">
-                <a href="#_planes_recientes">
-                    <i class="ft-home"></i>
-                </a>
-            </li>
-
-            <li class=" nav-item">
-                <a href="#_planes_aprobados">
-                    <i class="ft-trash"></i>
-                </a>
-            </li>
-
-            <li class=" nav-item">
-                <a href="#_notams">
-                    <i class="ft-plus"></i>
-                </a>
-            </li>
-
-            <li class=" nav-item">
-                <a href="#_metars">
-                    <i class="ft-edit"></i>
-                </a>
-            </li>
-            
-        </ul>
+        <div class="main-menu-content">
+            <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
+                <li class="active">
+                    <a href="#_planes_recientes">
+                        <i class="ft-home"></i>
+                    </a>
+                </li>
+    
+                <li class=" nav-item">
+                    <a href="#_planes_aprobados">
+                        <i class="ft-trash"></i>
+                    </a>
+                </li>
+    
+                <li class=" nav-item">
+                    <a href="#_notams">
+                        <i class="ft-plus"></i>
+                    </a>
+                </li>
+    
+                <li class=" nav-item">
+                    <a href="#_metars">
+                        <i class="ft-edit"></i>
+                    </a>
+                </li>
+                
+            </ul>
+        </div>
     </div>
+-->
 
-</div>
 <!--BARRA LATERAL O MENU LATERAL-->
 
 <br>
+
+
+<div id="app" @mousemove="onDrag($event)" @mouseup="onDragStop()">
+    <main>
+        <div
+            v-for="(pane, paneIdx) in filledPanes"
+            :key="paneIdx"
+            :ref="`pane-${paneIdx}`"
+            class="pane"
+            v-bind:id="paneIdx"
+            >
+            <div class="pane-header">[[ pane.name ]] </div>
+    
+    
+            <div
+                v-for="(card, cardIdx) in pane.cards"
+                :key="cardIdx"
+                :class="{ 'pane-card': true, 'dragging': draggedCardIdx === card.index}"
+                :ref="`card-${card.index}`"
+                @mousedown="onDragStart($event, card.index)"
+
+                v-bind:id="card.id"
+                >
+
+                <div class="row">
+                    <div class="col-sm-4">
+                        <p style="font-size:20px;">
+                            [[ card.name ]] 
+                        </p>
+                    </div>
+                    
+                    <div class="col-sm-5">
+                        <span style="font-size:12px;"> 
+                            [[card.aeropuerto_salida]] &nbsp;
+                        </span>
+                        <span class="material-icons" style="transform: rotate(90deg); font: size 25px;" >
+                            flight
+                        </span>
+                        ______
+                        &nbsp;
+                        <span style="font-size:12px;"> 
+                            [[card.aeropuerto_destino]]
+                        </span>
+                    </div>
+
+                    <div class="col-sm-2">
+                        <button class="btn btn-info" v-on:click="abrir_aprobado(card.id)" >
+                            <span class="material-icons">
+                                flight
+                            </span>
+                        </button>
+                    </div>
+                </div>
+                <!--
+                    [[card.fecha_aprobacion]]
+                    [[card.hora_aprobacion]]
+                    [[card.nombre]]
+                    [[card.apellido]]
+                -->
+                
+    
+    
+            </div>
+    
+    
+        </div>
+    </main>
+  
+  
+  
+    <div
+         id="ghost-card"
+         ref="ghostCard"
+         :style="`
+                 width: ${ghostCardStyle.width}px;
+                 left: ${ghostCardStyle.pos.x}px; top: ${ghostCardStyle.pos.y - 10}px;
+                 transform: ${ghostCardStyle.transform};
+                 transform-origin: ${ghostCardStyle.transformOrigin};
+                 `"
+         :class="{ 'pane-card': true, 'active': draggedCardIdx !== -1, leaving: ghostCardStyle.leaving, animate: settings.animate }"
+         >
+         <p style="font-size:20px;">
+            [[draggedCard.name]]
+        </p>
+    </div>
+
+</div>
+  
 
 <!-- Plan de vuelos recientes -->
 <div id="_planes_recientes"></div><br><br><br><br>
@@ -203,7 +409,7 @@
                             </thead>
                             <tbody id="toUpdate_fpl">
 
-                                {% for fpl in aprobados_historial %}
+                                {% for fpl in por_trabajar %}
                                 <tr>
                                     <th id="{{elemen.id}}" width="5%" scope="row">{{fpl.id_flpaprobado_id}}</th>
                                     <th width="5%">{{fpl.id_aeronave}}</th>
@@ -214,8 +420,8 @@
                                     <td width="15%">
                                         <!--
                                         -->
-                                        <button class="btn btn-outline-info" onclick="abrir_modal( '% url 'view_aprobar_flp' id_plancompleto=fpl.id_mensaje%')">Ver FLP</button>
-
+                                        <button class="btn btn-outline-info" onclick="abrir_modal( '{% url 'view_ver_fpl_aprobado' id_plancompleto=fpl.id_flpaprobado_id%}')">Ver FLP aprobado</button>
+                                        ZPX0433251537/25092020)
                                     </td>
                                 </tr>
                                 {% endfor %}
@@ -230,203 +436,13 @@
 </section>
 <!-- Planes de vuelo recientes -->
 
-
-<!-- Plan de vuelos aprobados -->
-<div id="_planes_aprobados"></div><br><br><br><br>
-<section>
-    <div class="row justify-content-center">
-        <div class="col-10" style="align-content: center;">
-            <div class="card" style="box-shadow: 2px 2px 8px 0 black; min-height: 30%;  max-height: 100%;">
-                <div class="card-header">
-                    <h4 class="card-title">RUTAS ARCHIVADAS</h4>
-                    
-                    <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
-                    <div class="heading-elements">
-                        <ul class="list-inline mb-0">
-                            <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
-                            <li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
-                            <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
-                            <li><a data-action="close"><i class="ft-x"></i></a></li>
-                        </ul>
-                    </div>
-                    <br>
-
-                </div>
-                <div class="card-content collapse show" style="height: 75%; overflow-y: auto;">
-                    FDFD
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-<!-- Planes de vuelo aprobados -->
-
-
-<!--NUEVO-->
-<div id="_notams"></div><br><br><br><br>
-<section>
-    <div class="row justify-content-center">
-        <div class="col-10" style="align-content: center;">
-            <div class="card" style="box-shadow: 2px 2px 8px 0 black; min-height: 30%;  max-height: 100%;">
-                <div class="card-header">
-                    <h4 class="card-title">NUEVO</h4>
-                    <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
-                    <div class="heading-elements">
-                        <ul class="list-inline mb-0">
-                            <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
-                            <li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
-                            <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
-                            <li><a data-action="close"><i class="ft-x"></i></a></li>
-                        </ul>
-                    </div>
-                    <br>
-
-                </div>
-                <div class="card-content collapse show" style="height: 75%; overflow-y: auto;">
-                    
-
-                    <div class="container" id="contenidoid">
-                        <div class="row align-items-center ">
-                            
-                            
-                            <div class="col-md-4" style="margin-left:35%">
-
-                                <div class="form-group">
-                                    <label for="usr">Origen:</label>
-                                    <input type="text" class="form-control" id="guardar_origenid" >
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="usr">Destino:</label>
-                                    <input type="text" class="form-control" id="guardar_destinoid">
-                                </div>
-
-                                <div id="seccionagregarid" style=" padding:10px 13px;" >
-    
-                                    <!-- LISTA DE PUNTOS Y RUTAS OPCIONALES --- FILA PARA ELEGIR LA RUTA A USAR -->
-                                    <div class="row" id="lista_ruta1" >
-                                        <div id="output_ruta1"></div>
-                                        <select id="sel_ruta1"  data-placeholder="RUTA" onchange="mostrarPuntosActuales('sel_ruta1')">
-                                            <option value="0" >RUTA</option>
-                                            {% for ruta_x in todaruta %}
-                                            <option value="{{ruta_x.ruta}}">{{ruta_x.nombre_ruta}}</option>                                        
-                                            {% endfor %}
-                                        </select>
-    
-                                        <div id="output_inicio1" ></div>
-                                            <select id="sel_inicio1" data-placeholder="Inicio y Fin" class="chosen-select_inicio1" multiple>
-                                                {% for punto in todopuntos  %}    
-                                                <option value="{{punto.puntoInicial}}">{{punto.puntoInicial}}</option>                                                
-                                                {% endfor %}
-                                            </select>      
-                                    </div>
-    <br>
-                                    <div class="row" id="lista_ruta2">
-                                        <div id="output_ruta2"></div>
-                                        <select id="sel_ruta2" data-placeholder="RUTA" onchange="mostrarPuntosActuales('sel_ruta2')">
-                                            <option value="0" >RUTA</option>
-                                            {% for ruta_x in todaruta %}
-                                            <option value="{{ruta_x.ruta}}">{{ruta_x.nombre_ruta}}</option>                                        
-                                            {% endfor %}
-                                        </select>
-    
-                                        <div id="output2"></div>
-                                        <select id="sel_inicio2" data-placeholder="INICIO" name="tags[]"  class="chosen-select" multiple>
-                                            {% for punto in todopuntos  %}    
-                                            <option value="{{punto.puntoInicial}}">{{punto.puntoInicial}}</option>                                                
-                                            {% endfor %}
-                                        </select>
-    
-                                    </div>
-    <br>
-                                    <div class="row" id="lista_ruta3">
-                                        <div id="output_ruta3"></div>
-                                        <select id="sel_ruta3" data-placeholder="RUTA">
-                                            <option value="0" >RUTA</option>
-                                            {% for ruta_x in todaruta %}
-                                            <option value="{{ruta_x.ruta}}">{{ruta_x.nombre_ruta}}</option>                                        
-                                            {% endfor %}
-                                        </select>
-    
-                                        <div id="output_inicio3"></div>
-                                        <select id="sel_inicio3" data-placeholder="INICIO" name="tags[]"  class="chosen-select" multiple>
-                                            {% for punto in todopuntos  %}    
-                                            <option value="{{punto.puntoInicial}}">{{punto.puntoInicial}}</option>                                                
-                                            {% endfor %}
-                                        </select>    
-                                    </div>
-    <br>
-                                    <br>
-                                    <div class="row" style="align-items:center;">
-                                        
-                                        <button class="btn btn-outline-info" id="recordarid">
-                                            Guardar Ruta
-                                        </button>
-                                        &nbsp;&nbsp;&nbsp;
-                                        <div id="mensaje_rutaid"></div>
-                                    </div>
-                                </div>
-
-                                <br>
-                                <br>
-                                <br>
-    
-                            </div>
-
-    
-                        </div>
-                    </div>
-
-
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-<!--NUEVO-->
-
-
-<!--EDITAR-->
-<div id="_metars"></div><br><br><br><br>
-<section>
-    <div class="row justify-content-center">
-        <div class="col-10" style="align-content: center;">
-            <div class="card" style="box-shadow: 2px 2px 8px 0 black; min-height: 30%;  max-height: 100%;">
-                <div class="card-header">
-                    <h4 class="card-title">EDITAR</h4>
-                    <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
-                    <div class="heading-elements">
-                        <ul class="list-inline mb-0">
-                            <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
-                            <li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
-                            <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
-                            <li><a data-action="close"><i class="ft-x"></i></a></li>
-                        </ul>
-                    </div>
-                    <br>
-
-                </div>
-                <div class="card-content collapse show" style="height: 75%; overflow-y: auto;">
-                    
-                    
-
-
-
-
-
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-<!--EDITAR-->
-
 {% endblock content %} 
 
 
 {% block extrajs %}
 <script src='https://harvesthq.github.io/chosen/chosen.jquery.js'></script>
-<script src="{% static 'theme-assets/js/scripts/aprobar_plan.js' %}"></script>
+
+
 
 <script type="text/javascript">
     //var $ = jQuery.noConflict();
@@ -459,7 +475,6 @@
         }
     }
 
-
     //DESPLAZAMIENTO SUAVIZADO
     $('.main-menu-content a').click(function(e){				
 		e.preventDefault();		//evitar el eventos del enlace normal
@@ -476,10 +491,8 @@
 
     });
 
-    
 
 </script>
-
 
 
 
@@ -490,175 +503,373 @@
             $(this).modal('show');
         });
     }
-
 </script>
 
 
-<script>
-    function restore_route(ruta, tipo){
-        if (tipo=="restaurar") {
-            urltosend="{% url 'view_restaurar_ruta' %}"
-        } else {
-            urltosend="{% url 'view_archivar_ruta' %}"
-        }
 
-        $.ajax({
-                type:'GET',
-                url: urltosend,
-                data:{'ruta':ruta},
-                success: function (request){
-                    if (request.estado) {
-                        location.reload();
-                    }else{
-                        Alert("HUBO UN ERROR AL PROCESAR");
-                    }
-                },
-                error: function (e) {
-                    console.log(e);
-                }   
-            })
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.min.js'></script>
+<script>
+    const SETTINGS = {
+        trelloStyle: false,
+        animateEnd: true,
+        transformOriginMode: 'mouse', // or 'center'
+        scale: 1.1,
+        rotationOffset: {
+            min: 1.2,
+            max: 2 },
+
+        rotationMitigation: 0.2,
+        debug: {
+            dataInspector: false } 
+    };
+
+
+
+    function getdato(){
+        return {
+            name: '<a>Something</a>',
+            id: "hola",
+            paneIndex: 0 
+            }
     }
-</script>
-
-<script>
-    //----------------------------------------
-        
-    //CHOSEN FOR THE FIRST OPTIONAL RUTA LIST
-    document.getElementById('output_ruta1').innerHTML = location.search;
-    $("#sel_ruta1").chosen({width: '90px'});
-    document.getElementById('output_inicio1').innerHTML = location.search;
-    $("#sel_inicio1").chosen({width: '200px',max_selected_options:2});
-
-    //CHOSEN FOR THE SECOND OPTIONAL RUTA LIST
-    document.getElementById('output_ruta2').innerHTML = location.search;
-    $("#sel_ruta2").chosen({width: '90px'});
-    document.getElementById('output_inicio1').innerHTML = location.search;
-    $("#sel_inicio2").chosen({width: '200px',max_selected_options:2});
-
-    //CHOSEN FOR THE THIRD OPTIONAL RUTA LIST
-    document.getElementById('output_ruta3').innerHTML = location.search;
-    $("#sel_ruta3").chosen({width: '90px'});
-    document.getElementById('output_inicio3').innerHTML = location.search;
-    $("#sel_inicio3").chosen({width: '200px',max_selected_options:2});
-</script>
 
 
-
-<script>
-    //RECORDAR RUTA MODIFICADA
-    $('#recordarid').click(function () {
-
-        error=false
-
-        rutas="";
-        seleccionados="";
-
-        if(document.getElementById('guardar_origenid').value == "" ){
-                $('#guardar_origenid').css({'border': '2px solid transparent','border-color':'red'})
-                error=true
-        }else{
-            $('#guardar_origenid').css({'border': '','border-color':''})
-        }
-
-        if(document.getElementById('guardar_destinoid').value == "" ){
-                $('#guardar_destinoid').css({'border': '2px solid transparent','border-color':'red'})
-                error=true
-        }else{
-            $('#guardar_destinoid').css({'border': '','border-color':''})
-        }
-
-
-
-        //OPTIONAL ROUTES FOR FLIGTH PLAN
-        if ($("#sel_ruta1 option:selected").text() !="" && $("#sel_ruta1 option:selected").text()!='RUTA' ) {
-
-            seleccionadosx=""
-            $('#sel_inicio1 :selected').each(function(){
-                seleccionadosx=seleccionadosx + $(this).text() +";";
-            });
-            //THEN TO ASK IF THE TEXTBOX OF POINTS IS DISTINCT TO "" EMPTY
-            if(seleccionadosx.split(";").length-1 < 2){
-                $('#lista_ruta1').css({'border': '2px solid transparent','border-color':'red'})
-                error=true
-            }else{
-                $('#lista_ruta1').css({'border': '','border-color':''})
-                seleccionados=seleccionados+seleccionadosx;
-                rutas=rutas + $("#sel_ruta1 option:selected").text()+";"
+    function getportrabajar() {
+        planes_vuelo_totales=[]
+        {% for x in por_trabajar %}
+            dic = {
+                name : '{{x.id_aeronave}}'.substr(5,10),
+                id: "{{x.id_flpaprobado_id}}",
+                paneIndex: 0 ,
+                aeropuerto_salida : '{{x.aeropuerto_salida}}'.substr(1,4),
+                aeropuerto_destino : '{{x.aeropuerto_destino}}'.substr(1,4),
+                fecha_aprobacion : '{{x.fecha_aprobacion}}',
+                hora_aprobacion : '{{x.hora_aprobacion}}',
+                nombre : '{{x.nombre}}',
+                apellido : '{{x.apellido}}',
             }
-        }else{
-            $('#lista_ruta1').css({'border': '2px solid transparent','border-color':'red'})
-            error=true
-        }
+            planes_vuelo_totales.push(dic)
+        {% endfor %}
+        //variables globales 
 
-
-        if ($("#sel_ruta2 option:selected").text() !="" && $("#sel_ruta2 option:selected").text()!='RUTA' ) {
-
-            seleccionadosx=""
-            $('#sel_inicio2 :selected').each(function(){
-                seleccionadosx=seleccionadosx + $(this).text() +";";
-            });
-            //THEN TO ASK IF THE TEXTBOX OF POINTS IS DISTINCT TO "" EMPTY
-            if(seleccionadosx.split(";").length-1 < 2){
-                $('#lista_ruta2').css({'border': '2px solid transparent','border-color':'red'})
-                error=true
-            }else{
-                $('#lista_ruta2').css({'border': '','border-color':''})
-                seleccionados=seleccionados+seleccionadosx;
-                rutas=rutas + $("#sel_ruta2 option:selected").text()+";"
+        {% for x in en_curso %}
+            dic = {
+                name : '{{x.id_aeronave}}'.substr(5,10),
+                id: "{{x.id_flpaprobado_id}}",
+                paneIndex: 1 ,
+                aeropuerto_salida : '{{x.aeropuerto_salida}}'.substr(1,4),
+                aeropuerto_destino : '{{x.aeropuerto_destino}}'.substr(1,4),
+                fecha_aprobacion : '{{x.fecha_aprobacion}}',
+                hora_aprobacion : '{{x.hora_aprobacion}}',
+                nombre : '{{x.nombre}}',
+                apellido : '{{x.apellido}}',
             }
-        }else{
-            $('#lista_ruta2').css({'border': '','border-color':''})
-        }
+            planes_vuelo_totales.push(dic)
+        {% endfor %}
 
-        
-        if ($("#sel_ruta3 option:selected").text() !="" && $("#sel_ruta3 option:selected").text()!='RUTA' ) {
 
-            seleccionadosx=""
-            $('#sel_inicio3 :selected').each(function(){
-                seleccionadosx=seleccionadosx + $(this).text() +";";
-            });
-            //THEN TO ASK IF THE TEXTBOX OF POINTS IS DISTINCT TO "" EMPTY
-            if(seleccionadosx.split(";").length-1 < 2){
-                $('#lista_ruta3').css({'border': '2px solid transparent','border-color':'red'})
-                error=true
-            }else{
-                $('#lista_ruta3').css({'border': '','border-color':''})
-                seleccionados=seleccionados+seleccionadosx;
-                rutas=rutas + $("#sel_ruta3 option:selected").text()+";"
+        {% for x in finalizados %}
+            dic = {
+                name : '{{x.id_aeronave}}'.substr(5,10),
+                id: "{{x.id_flpaprobado_id}}",
+                paneIndex: 2 ,
+                aeropuerto_salida : '{{x.aeropuerto_salida}}'.substr(1,4),
+                aeropuerto_destino : '{{x.aeropuerto_destino}}'.substr(1,4),
+                fecha_aprobacion : '{{x.fecha_aprobacion}}',
+                hora_aprobacion : '{{x.hora_aprobacion}}',
+                nombre : '{{x.nombre}}',
+                apellido : '{{x.apellido}}',
             }
-        }else{
-            $('#lista_ruta3').css({'border': '','border-color':''})
-        }
+            planes_vuelo_totales.push(dic)
+        {% endfor %}
+
+        return planes_vuelo_totales; 
+    }
+    new Vue({
+        delimiters: ['[[', ']]'],
+        el: '#app',
+        data: {
+            mousePos: {
+            x: -1000,
+            y: -1000 },
+
+            lastMousePos: { x: 0, y: 0 },
+            draggedCardIdx: -1,
+            paneOverlappedIdx: -1,
+            ghostCardStyle: {
+            leaving: false,
+            pos: {
+                x: 0,
+                y: 0 },
+
+            width: 0,
+            cursorDistance: {
+                x: 0,
+                y: 0 },
+
+            percentDistanceMiddle: 0,
+            transform: '',
+            transformOrigin: '',
+            velocity: 0,
+            rotation: 0 },
+
+            cards: getportrabajar(),
 
 
-        datasend={
-            "origen":"{{origen}}",
-            "destino":"{{destino}}",
-            "rutas":rutas,
-            "puntos":seleccionados
-            
-        }
+            panes: [
+            {
+            name: 'Para hacer', idx: 'cero', },
 
-        if(!error && rutas!="" && seleccionados!=""){
-            $.ajax({
-                type:'GET',
-                url: '{% url 'view_recordar_ruta' %}',
-                data: datasend,
-                //data:$(this).serialize(),
-                success: function (request){
-                    if (request.estado) {
-                        $('#mensaje_rutaid').text('Guardado exitoso')
-                        $('#mensaje_rutaid').css('color','green')
-                        location.reload();
-                    }else{
-                        $('#mensaje_rutaid').text('Verifique los datos de la ruta o la ruta ya existe')
-                        $('#mensaje_rutaid').css('color','red')
+            {
+            name: 'En curso', idx: 'uno', },
+
+            {
+            name: 'Finalizados', idx: 'dos', }],
+
+
+            settings: SETTINGS,
+            settingsExpanded: false 
+        },
+
+        computed: {
+            filledPanes() {
+            let filledPanes = this.panes.map(item => ({ name: item.name }));
+
+            for (let i = 0; i < this.cards.length; i++) {
+                let pane = filledPanes[this.cards[i].paneIndex];
+                if (!pane.cards) pane.cards = [];
+                pane.cards.push({ ...this.cards[i], index: i });
+            }
+
+            return filledPanes;
+            },
+            draggedCard() {
+            return this.cards[this.draggedCardIdx] || { name: '' };
+            } },
+
+        methods: {
+            onDragStart(e, index) {
+                let cardEl = this.$refs[`card-${index}`][0];
+                let cardRect = cardEl.getBoundingClientRect();
+
+                document.documentElement.style.cursor = 'grabbing';
+
+                let paddingLeft = parseFloat(getComputedStyle(cardEl).paddingLeft);
+                let paddingRight = parseFloat(getComputedStyle(cardEl).paddingRight);
+
+                this.mousePos.x = e.pageX;
+                this.mousePos.y = e.pageY;
+
+                this.draggedCardIdx = index;
+
+                this.ghostCardStyle.width =
+                cardEl.clientWidth - paddingLeft - paddingRight;
+                this.ghostCardStyle.cursorDistance.x = e.pageX - cardRect.x;
+                this.ghostCardStyle.cursorDistance.y = e.pageY - cardRect.y;
+
+                this.setGhostCardStyle(e);
+                this.updateUI();
+
+                if (this.settings.transformOriginMode === 'center')
+                this.ghostCardStyle.transformOrigin = 'center';else
+
+                this.ghostCardStyle.transformOrigin = `${this.ghostCardStyle.cursorDistance.x}px ${this.ghostCardStyle.cursorDistance.y}px`;
+                this.ghostCardStyle.percentDistanceMiddle =
+                this.ghostCardStyle.cursorDistance.x - cardEl.clientWidth / 2;
+                this.ghostCardStyle.percentDistanceMiddle = Math.abs(
+                this.ghostCardStyle.percentDistanceMiddle);
+
+                this.ghostCardStyle.percentDistanceMiddle /= cardEl.clientWidth / 2;
+                this.ghostCardStyle.percentDistanceMiddle =
+                Math.round(this.ghostCardStyle.percentDistanceMiddle * 100) / 100;
+            },
+
+            onDrag(e) {
+                e = e || window.event;
+                if (this.draggedCardIdx === -1)
+                return;
+                this.mousePos.x = e.pageX;
+                this.mousePos.y = e.pageY;
+            },
+
+            updateUI() {
+                let dragX = this.mousePos.x,
+                dragY = this.mousePos.y;
+
+                if (this.draggedCardIdx === -1 || this.ghostCardStyle.leaving) return;
+
+                if (!dragX && !dragY) {
+                    this.lastMousePos.x = 0;
+                    this.lastMousePos.y = 0;
+                    return requestAnimationFrame(this.updateUI);
+                }
+                this.findTransformValues();
+                this.setGhostCardStyle(true);
+
+                let isOverlapping;
+
+                for (let i = 0, paneEl = null; paneEl = this.$refs[`pane-${i}`]; i++) {
+                    paneEl = paneEl[0] ? paneEl[0] : paneEl;
+
+                    isOverlapping = this.checkOverlap(
+                    { x: dragX, y: dragY },
+                    paneEl.getBoundingClientRect());
+
+
+                    if (isOverlapping && this.paneOverlappedIdx === i)
+                    return requestAnimationFrame(this.updateUI);else
+                    if (isOverlapping) {
+                    this.paneOverlappedIdx = i;
+                    break;
                     }
-                }   
-            });
-        }
-    })
+                }
 
+                if (!isOverlapping) {
+                    return requestAnimationFrame(this.updateUI);
+                }
+                this.putCardInPane();
+                return requestAnimationFrame(this.updateUI);
+            },
+
+            onDragStop() {
+                if (this.draggedCardIdx === -1)
+                return;
+                document.documentElement.style.cursor = 'default';
+                let cardEl = this.$refs[`card-${this.draggedCardIdx}`] && this.$refs[`card-${this.draggedCardIdx}`][0];
+                let cardRect = cardEl.getBoundingClientRect();
+
+                if (!this.settings.animateEnd) {
+                    return this.resetValues();
+                }
+                setTimeout(() => {
+                    this.resetValues();
+                }, 100);
+                this.ghostCardStyle.leaving = true;
+                let xOffset = cardRect.x - this.ghostCardStyle.pos.x;
+                let yOffset = cardRect.y - this.ghostCardStyle.pos.y;
+                this.ghostCardStyle.transform = `scale(1) translate(${xOffset}px, ${yOffset}px)`;
+            },
+
+            resetValues() {
+                this.draggedCardIdx = -1;
+                this.paneOverlappedIdx = -1;
+                this.lastMousePos.x = 0;
+                this.lastMousePos.y = 0;
+                this.ghostCardStyle.x = -1000;
+                this.ghostCardStyle.y = -1000;
+                this.ghostCardStyle.width = 0;
+                this.ghostCardStyle.cursorDistance.x = 0;
+                this.ghostCardStyle.cursorDistance.y = 0;
+                this.ghostCardStyle.transform = '';
+                this.ghostCardStyle.leaving = false;
+                this.ghostCardStyle.percentDistanceMiddle = 0;
+            },
+
+            checkOverlap(drag, rect) {
+                if (drag.x < rect.x || drag.x > rect.x + rect.width) return false;
+                if (drag.y < rect.y || drag.y > rect.y + rect.height) return false;
+                return true;
+            },
+
+            putCardInPane() {
+                this.cards[this.draggedCardIdx].paneIndex = this.paneOverlappedIdx;
+                //setTimeout(() => {alert( this.cards[this.draggedCardIdx].name + " --  " + this.cards[0].id  + " esta en el panel: >> " + this.paneOverlappedIdx )                }, 400);
+
+                datasend={
+                    id: this.cards[this.draggedCardIdx].id, 
+                    estado: parseInt(this.paneOverlappedIdx),
+                }
+
+                guardar_estado(datasend)
+
+            },
+
+            setGhostCardStyle(isDragstart) {
+                let dragX = this.mousePos.x,
+                dragY = this.mousePos.y;
+                let transform = [];
+
+                if (isDragstart)
+                transform.push(`scale(${this.settings.scale})`);
+
+                transform.push(`rotate(${this.ghostCardStyle.rotation}deg)`);
+                this.ghostCardStyle.transform = transform.join(' ');
+                this.ghostCardStyle.pos.x = dragX - this.ghostCardStyle.cursorDistance.x;
+                this.ghostCardStyle.pos.y = dragY - this.ghostCardStyle.cursorDistance.y;
+            },
+
+            findTransformValues() {
+
+                if (this.settings.trelloStyle) {
+                    this.ghostCardStyle.rotation = '4';
+                    this.lastMousePos.x = this.mousePos.x;
+                    this.lastMousePos.y = this.mousePos.y;
+                    return;
+                }
+
+
+                let velocity = this.mousePos.x - this.lastMousePos.x;
+                let rotation = this.ghostCardStyle.rotation || 0;
+
+                let rotationMin = this.settings.rotationOffset.min;
+                let rotationMax = this.settings.rotationOffset.max;
+                let rotationOffset =
+                (rotationMax - rotationMin) * (
+                1 - this.ghostCardStyle.percentDistanceMiddle);
+                let rotationMitigation = this.settings.rotationMitigation;
+
+                rotation =
+                rotation * (1 - rotationMitigation) +
+                this.sigmoid(velocity) * (rotationMin + rotationOffset);
+                if (Math.abs(rotation) < 0.01) rotation = 0;
+
+                this.ghostCardStyle.velocity = velocity;
+                this.ghostCardStyle.rotation = rotation;
+                this.lastMousePos.x = this.mousePos.x;
+                this.lastMousePos.y = this.mousePos.y;
+            },
+
+            sigmoid(x) {
+                return x / (1 + Math.abs(x));
+            },
+
+            expandSettings() {
+                if (this.settingsExpanded) return;
+                this.settingsExpanded = true;
+            },
+
+            wrapSettings() {
+                this.settingsExpanded = false;
+            },
+
+            abrir_aprobado: function (cadena) {
+                direc="/plan_vuelo/verfplaprobado/" + cadena + "/"
+                abrir_modal(direc)
+                
+            }
+        } 
+    });
+  </script>
+
+
+<script>
+    //guardar estado del progreso
+    function guardar_estado(datasend){
+        $.ajax({
+            type:'GET',
+            url: "{% url 'view_guardar_estado_progreso' %}",
+            data: datasend,
+            //data:$(this).serialize(),
+            success: function (request){
+                if (request.estado == 'server200') {
+                    console.log("Server 200");
+                }else{
+                    alert("Server 400")
+                }
+            }   
+        });
+    }
 </script>
 
 {% endblock extrajs %}

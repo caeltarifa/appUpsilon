@@ -190,10 +190,57 @@ def view_historial_aprobacion(request):
     if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='CONTROLADORESLP').exists():
         equipo_coordinacion = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and empresa_institucion_id=1 order by activo")
 
-        aprobados_historial = Flp_aprobado.objects.raw('select id_flpaprobado_id,id_aeronave,  aeropuerto_salida, aeropuerto_destino,fecha_aprobacion, hora_aprobacion, nombre, apellido from (select id_flpaprobado_id, id_aeronave, aeropuerto_salida, aeropuerto_destino,controlador_id,fecha_aprobacion, hora_aprobacion from plan_vuelo_flp_trafico inner join plan_vuelo_flp_aprobado on id_mensaje like id_flpaprobado_id) as t1 inner join plan_vuelo_trabajador on t1.controlador_id = plan_vuelo_trabajador.ci order by fecha_aprobacion, hora_aprobacion desc')
+        por_trabajar = Flp_aprobado.objects.raw("select id_flpaprobado_id, id_aeronave, aeropuerto_salida, aeropuerto_destino,fecha_aprobacion, hora_aprobacion, nombre, apellido from (select id_flpaprobado_id, id_aeronave, aeropuerto_salida, aeropuerto_destino,controlador_id,fecha_aprobacion, hora_aprobacion,por_trabajar from plan_vuelo_flp_trafico inner join plan_vuelo_flp_aprobado on id_mensaje like id_flpaprobado_id) as t1 inner join plan_vuelo_trabajador on t1.controlador_id = plan_vuelo_trabajador.ci where por_trabajar='t' order by fecha_aprobacion, hora_aprobacion desc  ")
+        en_curso =     Flp_aprobado.objects.raw("select id_flpaprobado_id, id_aeronave, aeropuerto_salida, aeropuerto_destino,fecha_aprobacion, hora_aprobacion, nombre, apellido from (select id_flpaprobado_id, id_aeronave, aeropuerto_salida, aeropuerto_destino,controlador_id,fecha_aprobacion, hora_aprobacion,en_curso from plan_vuelo_flp_trafico inner join plan_vuelo_flp_aprobado on id_mensaje like id_flpaprobado_id) as t1 inner join plan_vuelo_trabajador on t1.controlador_id = plan_vuelo_trabajador.ci where en_curso='t' order by fecha_aprobacion, hora_aprobacion desc  ")
+        finalizados =  Flp_aprobado.objects.raw("select id_flpaprobado_id, id_aeronave, aeropuerto_salida, aeropuerto_destino,fecha_aprobacion, hora_aprobacion, nombre, apellido from (select id_flpaprobado_id, id_aeronave, aeropuerto_salida, aeropuerto_destino,controlador_id,fecha_aprobacion, hora_aprobacion, finalizado from plan_vuelo_flp_trafico inner join plan_vuelo_flp_aprobado on id_mensaje like id_flpaprobado_id) as t1 inner join plan_vuelo_trabajador on t1.controlador_id = plan_vuelo_trabajador.ci where finalizado='t' order by fecha_aprobacion, hora_aprobacion desc  ")
+        
+        #por_trabajar = [serializarFplAprobado(aprobado) for aprobado in por_trabajar]
         #id_mensaje       | aeropuerto_salida | aeropuerto_destino  | fecha_aprobacion | hora_aprobacion | nombre  | apellido  
 
-        return render(request, 'temp_plan_vuelo/fpl_aprobados_historial.html' ,{'equipo_trabajo': equipo_coordinacion, 'aprobados_historial': aprobados_historial } )#,'metar':metar} )
+        return render(request, 'temp_plan_vuelo/fpl_aprobados_historial.html' ,{'equipo_trabajo': equipo_coordinacion, 'por_trabajar': por_trabajar , 'en_curso' : en_curso,'finalizados':finalizados } )#,'metar':metar} )
+    else:
+        return redirect('login')
+
+def serializarFplAprobado(fplaprobado):
+    return {
+        'id_flpaprobado_id' : fplaprobado.id_flpaprobado_id,
+        'id_aeronave' : fplaprobado.id_aeronave, 
+        'aeropuerto_salida' : fplaprobado.aeropuerto_salida, 
+        'aeropuerto_destino' : fplaprobado.aeropuerto_destino,
+        'fecha_aprobacion' : fplaprobado.fecha_aprobacion, 
+        'hora_aprobacion' : fplaprobado.hora_aprobacion, 
+        'nombre' : fplaprobado.nombre, 
+        'apellido' : fplaprobado.apellido,
+
+    }
+
+def view_guardar_estado_progreso(request):
+    #cambia de estado en las rutas, dado un id_ruta para eliminar o archivar
+    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='EJECUTIVOSLP').exists():
+        response={
+            'estado': 'NFound',
+        }
+        if request.is_ajax and request.method =="GET":
+            get_id_fpl = request.GET.dict()['id']
+
+            if Flp_aprobado.objects.filter(id_flpaprobado=get_id_fpl).exists():
+                get_estado = int(request.GET.dict()['estado'])
+                if (get_estado == 0):
+                    Flp_aprobado.objects.filter(id_flpaprobado=get_id_fpl).update(por_trabajar=True, en_curso=False, finalizado=False)
+                elif (get_estado == 1):
+                    Flp_aprobado.objects.filter(id_flpaprobado=get_id_fpl).update(por_trabajar=False, en_curso=True, finalizado=False)
+                else:
+                    Flp_aprobado.objects.filter(id_flpaprobado=get_id_fpl).update(por_trabajar=False, en_curso=False, finalizado=True)
+                
+                response={
+                    'estado': 'server200',
+                    'tipo' : get_estado
+                }
+            else:
+                response={
+                    'estado': 'server400',
+                }
+        return JsonResponse(response, status=200)
     else:
         return redirect('login')
 #######################   CONTROL DE APROBACION DE FPLs ##################
@@ -425,16 +472,34 @@ def stringToDatetimefield( cadena ):
     
     return tempo 
 
-
+from ast import literal_eval
 def view_notam_modal(request, id_notam_mensaje):
     if request.user.is_authenticated and request.user.is_active: #and request.user.groups.filter(name='CONTROLADORESLP').exists():        
         #plan_completo = Flp_trafico.objects.filter(id_mensaje=id_plancompleto)[0]
         if Notam_trafico.objects.filter(id_mensaje=str(id_notam_mensaje)).exists():
-            notam_completo = Notam_trafico.objects.filter(id_mensaje=str(id_notam_mensaje))[0]
+            #notam_completo = Notam_trafico.objects.filter(id_mensaje=str(id_notam_mensaje))[0]
+            notam_completo = Notam_trafico.objects.raw("select * from (select notam_extenso_id, area from aro_ais_pib_trafico inner join aro_ais_pib_extenso on ref_notam_amhs_id = notam_extenso_id) as hola inner join plan_vuelo_notam_trafico  on id_mensaje = notam_extenso_id where id_mensaje like %(id_mensaje)s;", {'id_mensaje':id_notam_mensaje})[0]
+            #notam_extenso_id     area  id_mensaje  aftn1   aftn2   idnotam     resumen     aplica_a    valido_desde    valido_hasta    mensaje     nuevo   ingresado
         else:
             notam_completo = Notam_trafico
 
-        return render(request, 'temp_plan_vuelo/modal_mensaje_completo.html', {'data': serializar_notam_completo(notam_completo) }  ) #retorno el modal y el contexto
+        try:
+            if len(str(notam_completo.area)) > 0:
+                dic=literal_eval(str(notam_completo.area))
+            else:
+                dic={
+                    'lat' : '1725S',  
+                    'long' : '06610W',
+                    'radius'    : 0
+                }
+
+        except:
+            dic={
+                'lat' : '1725S',  
+                'long' : '06610W',
+                'radius' : 0
+            }
+        return render(request, 'temp_plan_vuelo/modal_mensaje_completo.html', {'data': serializar_notam_completo(notam_completo), 'area':dic }  ) #retorno el modal y el contexto
     else:
         return redirect('accounts/login/')
     
@@ -451,6 +516,13 @@ def serializar_notam_completo(notam):
         'valido_desde' : notam.valido_desde,
         'valido_hasta' : notam.valido_hasta,
         'mensaje' : notam.mensaje,
+    }
+
+def serializarArea(area):
+    return{
+        'lat': area.lat[:-3] + " " + area.lat[-3:] ,
+        'long': area.long,
+        'radius': area.radius,
     }
 
 def serializar_notam_realtime(notam, pasado):
@@ -631,7 +703,7 @@ def view_panel_ejecutivo(request):
 
 def view_carta_navegacional(request):
     #muestra el panel principal ejecutivo
-    if request.user.is_authenticated and request.user.is_active  and (request.user.groups.filter(name='EJECUTIVOSLP').exists() or request.user.groups.filter(name='AROAISLP').exists()):
+    if request.user.is_authenticated and request.user.is_active  and (request.user.groups.filter(name='TODOS_SERVICIOS').exists() or request.user.groups.filter(name='AROAISLP').exists()):
         equipo_coordinacion = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and empresa_institucion_id=1 order by activo")
 
         puntos_satelitales = Punto_satelital.objects.raw('select * from plan_vuelo_punto_satelital')
@@ -679,6 +751,70 @@ def obterner_posiciones(vector_puntos):
                 'latitude': str(x.latitude).replace(",","."),
             })
     return posiciones
+
+
+def view_ver_fpl_aprobado(request, id_plancompleto):
+    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='EJECUTIVOSLP').exists():        
+        #plan_completo = Flp_trafico.objects.filter(id_mensaje=id_plancompleto)[0]
+        if Flp_trafico.objects.filter(id_mensaje=str(id_plancompleto)).exists():
+            
+            fpl = Flp_trafico.objects.filter(id_mensaje=str(id_plancompleto))[0]
+
+            #agregando el mensaje aftn
+            context=serializar_fpl(fpl)
+
+            ficha={
+                'avion':fpl.id_aeronave.split('-')[1],
+                'velocidad':fpl.ruta.split(' ')[0].split('F')[0][1:],
+                'nivel':fpl.ruta.split(' ')[0].split('F')[1],
+                'origen':fpl.aeropuerto_salida[1:5],
+                'salida':fpl.aeropuerto_salida[5:],
+                'destino':fpl.aeropuerto_destino[1:5],
+                'matricula': fpl.id_aeronave.split('-')[1] if Ruta_flp2.getMatricula(fpl.otros)=='NFound' else Ruta_flp2.getMatricula(fpl.otros),
+                'transmision':Ruta_flp2.getTransmision(fpl.otros),
+            }
+            
+            context.update(ficha)
+
+            fplaprobado=Flp_aprobado.objects.get(id_flpaprobado_id=id_plancompleto)
+
+            aprobado={
+                'controlador' : fplaprobado.controlador,
+                'fecha_aprobacion' : fplaprobado.fecha_aprobacion,
+                'hora_aprobacion' : fplaprobado.hora_aprobacion,
+                'transponder' : fplaprobado.transponder,
+                'rutaaprob' : fplaprobado.ruta_usada,
+                'puntosaprob' : fplaprobado.puntos_de_ficha,
+                'tiemposaprob' : fplaprobado.tiempos,
+                'frecuencias' : fplaprobado.frecuencias,
+                'nivelaprobado' : fplaprobado.nivel,
+            }
+
+            context.update(aprobado)
+
+        else:
+            context={
+                'id_mensaje': 'NOT FOUND ERROR 404'
+            }
+        
+        equipo_activo = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and activo=true and empresa_institucion_id=1 order by activo")
+        equipo_activo={ 'equipo_activo':equipo_activo,}
+            
+        context.update(equipo_activo)
+
+
+        #obteniendo el cuerpo del plan de vuelo tipoavion, velocidad, nivel
+
+        return render(request, 'temp_plan_vuelo/modal_ver_fpl_aprobado.html', context  ) #retorno el modal y el contexto
+    else:
+        return redirect('accounts/login/')
+    
+
+
+
+
+
+
 
 
 
