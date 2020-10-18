@@ -26,6 +26,7 @@ class Pib_trafico(models.Model):
     pendiente = models.BooleanField(default=True)
 
     msj_publicado = models.CharField(max_length=600,blank=True, null=True)
+    instalacion = models.CharField(max_length=60,blank=True, null=True)
     
     def __unicode__(self):
         return self.ref_notam_amhs
@@ -77,6 +78,20 @@ class Pib_extenso(models.Model):
     class Meta:
         ordering = ['notam_id']
 
+
+class Pib_registro_documento(models.Model):
+    id_registropib = models.AutoField(primary_key=True)
+    fecha_generado = models.DateTimeField(default=datetime.now, blank=True, null=True)
+    registro = models.ManyToManyField(Pib_trafico)
+    
+    oficialaro = models.ForeignKey(Trabajador,on_delete=models.PROTECT, blank=False, null=False) 
+
+    def __unicode__(self):
+        return self.fecha_generado
+    class Meta:
+        ordering = ['fecha_generado']
+
+    
 
 
     ################################# DESCRIPTION ####################################

@@ -36,7 +36,7 @@ def view_pagina_principal(request):
                 return redirect('view_admin_felcn')
         
         #preguntando si el 'usuario autenticado' pertenece al grupo de COMUNICACIONES
-        if request.user.groups.filter(name='COMUNICACIONES').exists():
+        if request.user.groups.filter(name='COMUNICACIONESLP').exists():
             if request.user.username in 'ccamlp@aasana':
                 return redirect('view_admin_comunicaciones')
 
@@ -55,12 +55,36 @@ def view_pagina_principal(request):
         if request.user.groups.filter(name='AROAISLP').exists():
             if request.user.username in 'aroaislp@aasana':
                 return redirect('view_panel_aroais')
+        
+        if request.user.groups.filter(name='INFORMACION_AERONAUTICA').exists():
+            return redirect('view_panel_serviciosaroais_aasana')
+                
+            
 
         #RETURN POR DEFECTO
         return render(request, 'temp_plan_vuelo/prohibido.html' )#,'metar':metar} )
 
     else:
         return redirect('accounts/login/')
+
+
+def view_panel_comunicaciones(request):
+    if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='COMUNICACIONESLP').exists():
+        return render(request, 'temp_plan_vuelo/index_comunicacion.html')# ,{'equipo_trabajo': equipo_coordinacion} )#,'metar':metar} )
+    else:
+        return redirect('login')
+
+
+def view_admin_comunicaciones(request):
+    #def view_panel_coordinacion(request):
+    if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='COMUNICACIONESLP').exists():
+        return render(request, 'temp_plan_vuelo/index_coordinacion.html')# ,{'equipo_trabajo': equipo_coordinacion} )#,'metar':metar} )
+    else:
+        return redirect('login')
+
+
+
+
 
 
 # def control_acceso_login(request):

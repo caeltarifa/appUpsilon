@@ -1,0 +1,195 @@
+{% extends 'temp_plan_vuelo/baseadmin.html' %} 
+{% load static %} 
+
+{% block title %}
+<title>Upsilon | imprimir PIB</title>
+{% endblock title %}
+
+
+
+{% block extra_head %}
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="{% static 'theme-assets/css/aprobar_plan.css' %}"> -->
+    <link rel="stylesheet" href="{% static 'theme-assets/css/pib.css' %}">
+
+{% endblock extra_head %}
+    
+
+
+
+<!-- ////////////////////////////////////////////////////////////////////////////-->
+
+
+{% block content %}
+
+
+
+
+
+<!-- Plan de vuelos recientes -->
+<div id="_planes_recientes"></div><br><br><br><br>
+<section>
+    <div class="row justify-content-center">
+        <div class="col-10" style="align-content: center;">
+            <div class="card" style="box-shadow: 2px 2px 8px 0 black; min-height: 30%;  max-height: 100%; ">
+                
+                <!--CONTENIDO DE LA TABLA DE PLANES RECIENTES-->
+               
+                <div class="card-content collapse show" style="height: 75%; overflow-y: auto;">
+
+                    <!--==========================
+                    BOLETIN DE INFORMACION RAPIDA
+                     ============================-->
+                    <section id="PIB" class="section-bg" >
+                        <div class="container-fluid">
+
+                            <div class="section-header" style="text-align:center;">
+                                <br><br><br>
+                                <h2 class="section-title">PIB</h2>
+                                <a data-action="reload" >
+                                    <i class="ft-rotate-cw" id="update_fpl1"></i>
+                                </a>
+                                
+                                <span class="section-divider"></span>
+                                <p class="section-description">
+                                    Boletín de información previa al vuelo.
+                                </p>
+
+                                
+                                <div id="id_contenido_pib">
+                                    <div class="container">          
+                                        <table class="table table-bordered" >
+                                          <tbody style="text-align:center;">
+                                            <tr>
+                                                <td style="width:25%;vertical-align:middle;font-size:12px;" rowspan="2"> <strong>BOLETIN DE INFORMACIÓN PREVIA AL VUELO</strong>  <br> <br> INFORMACION GENERAL  </td>
+                                                <td style="width:50%;vertical-align:middle;font-size:14px;"> <strong>ESTADO PLURINACIONAL DE BOLIVIA <br> AEROPUERTO INTERNACIONAL DE EL ALTO </strong> </td>
+                                                <td style="width:13%;vertical-align:middle;font-size:12px;"> <strong>Fecha y Hora<br>de Expedición</strong> </td>
+                                                <td style="width:12%;vertical-align:middle;font-size:12px;" rowspan="3"> 
+                                                    <strong> Ruta o Área <br> cubierta</strong> 
+                                                    <br> <br> 
+                                                    FIR LA PAZ 
+                                                    <br> <br> 
+                                                    <button class="btn btn-outline-primary" onclick="imprimirElemento()">
+                                                        <span class="material-icons md-18">
+                                                            local_printshop
+                                                        </span>
+                                                    </button>
+    
+                                                </td>
+                                            </tr>
+                                      
+                                            <tr>
+                                              
+                                              <td style="width:50%;"> <img src="https://www.aasana.bo/files/logoa.jpg" style="width:180px; height:65px;"> </td>
+                                              <td style="width:13%;vertical-align:middle;font-size:12px;">06/10/2020</td>
+                                            </tr>
+                                             
+                                            <tr>
+                                                <td style="width:25%;font-size:12px;">Pagina</td>
+                                                <td style="width:50%;font-size:12px;" > 
+                                                    <strong>SR</strong> 
+                                                    &nbsp; 
+                                                    1014
+                                                    &nbsp; &nbsp; 
+                                                    <strong> SS</strong> 
+                                                    &nbsp; 
+                                                    1014
+     
+                                                </td>
+                                                <td style="width:13%;font-size:12px;">0000 UTC</td>
+                                             
+                                            </tr>
+                                          </tbody>
+                                        </table>
+                                    </div>
+    
+                                    <!-- LUGAR INSTALACION INFORMACION -->
+                                    <div class="container">          
+                                        <table class="table table-bordered" >
+                                            <thead>
+                                                <tr>
+                                                    <th style="width:25%;vertical-align:middle;font-size:12px;"> LUGAR </th>
+                                                    <th style="width:15%;vertical-align:middle;font-size:12px;"> INSTALACION </th>
+                                                    <th style="width:60%;vertical-align:middle;font-size:12px;"> INFORMACION </th>
+                                                </tr>    
+                                            </thead>
+                                          <tbody style="">
+                                                {% for pib in pib_vigente %}
+                                                    <tr>
+                                                        <td style="vertical-align:middle;font-size:12px;text-align:center;"> {{pib.nombre}} <br> {{pib.lugar}} </td>
+                                                        <td style="vertical-align:middle;font-size:12px;text-align:center;"> {{pib.instalacion}} </td>
+                                                        <td style="vertical-align:middle;font-size:12px;text-align:left;"> {{pib.msj_publicado}} </td>
+                                                    </tr>
+                                                {% endfor %}
+                                          </tbody>
+                                        </table>
+                                    </div>                                    
+                                </div>
+
+
+
+
+                            </div>
+
+                        </div>
+
+                    </section>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+{% endblock content %} 
+
+
+{% block extrajs %}
+
+
+<script type="text/javascript">
+
+
+    function abrir_modal(url) {
+        $("#modal").load(url.trim(), function() {
+            $(this).modal('show');
+        });
+    }
+
+    //DESPLAZAMIENTO SUAVIZADO
+    $('.main-menu-content a').click(function(e){				
+		e.preventDefault();		//evitar el eventos del enlace normal
+		var strAncla=$(this).attr('href'); //id del ancla
+			$('body,html').stop(true,true).animate({				
+				scrollTop: $(strAncla).offset().top
+			},200);		
+    });
+
+</script>
+
+<script>
+    function imprimirElemento(){
+        elemento=document.getElementById('id_contenido_pib')
+
+        var ventana = window.open('', 'PRINT');
+        ventana.document.write('<html><head><title>' + document.title + '</title> ');
+        ventana.document.write('</head><body >');
+        ventana.document.write(elemento.innerHTML);
+        ventana.document.write('</body></html>');
+        ventana.document.close();
+        ventana.focus();
+        ventana.print();
+        ventana.close();
+        return true;
+    }
+</script>
+
+
+
+{% endblock extrajs %}
+
+
+
+<!-- ////////////////////////////////////////////////////////////////////////////-->
+<!-- ////////////////////////////////////////////////////////////////////////////-->

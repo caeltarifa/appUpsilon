@@ -256,11 +256,12 @@
                             <thead>
                                 <tr>
                                     <th scope="col">ID AMHS</th>
-                                    <th scope="col">Tiempo</th>
-                                    <th scope="col">FPL</th>
-                                    <th scope="col">Origen</th>
+                                    <th scope="col">Ruta y puntos notif</th>
+                                    <th scope="col">Datos Avion</th>
+                                    <th scope="col">Hora aprobacion</th>
                                     <th scope="col">Destino</th>
-                                    <th scope="col">Tiempo de vuelo</th>
+                                    <th scope="col">Tiempos de vuelo</th>
+                                    <th scope="col">Creado por</th>
                                     <th scope="col"></th>
                                 </tr>
                             </thead>
@@ -268,16 +269,24 @@
 
                                 {% for fpl in lista_fpl_aprobado %}
                                 <tr>
-                                    <th id="{{elemen.id}}" width="5%" scope="row">{{fpl.id_amhs}}</th>
-                                    <th width="5%">{{fpl.hora_amhs}} <br> {{fpl.fecha|slice:"2:"}} </th>
-                                    <td width="5%">{{fpl.id_aeronave|slice:"5:11"}}</td>
-                                    <td width="5%">{{fpl.aeropuerto_salida|slice:"1:5"}} <br> {{fpl.aeropuerto_salida|slice:"5:10"}}</td>
+                                    <th id="{{elemen.id}}" width="5%" scope="row">{{fpl.id_flpaprobado_id|slice:"0:7"}}</th>
+                                    <th width="5%">{{fpl.ruta_usada}} <br> {{fpl.puntos_de_ficha}} </th>
+                                    <td width="5%">Matricula: {{fpl.matricula}} <br> Transponder: {{fpl.transponder}} <br> Frecuencia: {{fpl.frecuencias}} <br> Nivel: {{fpl.nivel}} </td>
+                                    <td width="5%">{{fpl.hora_aprobacion}} </td>
                                     <td width="5%">{{fpl.aeropuerto_destino|slice:"1:5"}}</td>
-                                    <td width="5%">{{fpl.aeropuerto_destino|slice:"5:9"}}</td>
+                                    <td width="5%">{{fpl.tiempos}}</td>
+                                    <td width="5%">{{fpl.controlador_id}}</td>
                                     <td width="15%">
                                         <!--
                                         -->
-                                        <button class="btn btn-outline-info" onclick="abrir_modal( '')">Editar FLP</button>
+                                        <div class="row">
+                                            <button class="btn btn-outline-info" onclick="abrir_modal( '')">Editar FLP</button>
+                                            <button class="btn btn-outline-danger" onclick="abrir_modal( '')">
+                                                <span class="material-icons red">
+                                                    delete
+                                                </span>
+                                            </button>
+                                        </div>
 
                                     </td>
                                 </tr>

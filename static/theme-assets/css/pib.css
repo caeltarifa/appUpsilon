@@ -10,12 +10,12 @@
   #accordion a {
     display: block;
     padding: 10px 15px;
-    border-bottom: 1px solid #b42b2b;
+    border-bottom: 1px solid #4e8cb6;
     text-decoration: none;
   }
   #accordion .panel-heading a.collapsed:hover,
   #accordion .panel-heading a.collapsed:focus {
-    background-color: #b42b2b;
+    background-color: #4e8cb6;
     color: white;
     transition: all 0.2s ease-in;
   }
@@ -30,7 +30,7 @@
   }
   #accordion .panel-heading a:not(.collapsed) {
     color: white;
-    background-color: #b42b2b;
+    background-color: #4e8cb6;
     transition: all 0.2s ease-in;
   }
   

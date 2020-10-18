@@ -1,8 +1,12 @@
 from django.conf.urls import url, include
 from django.urls import path, re_path
-from apps.plan_vuelo.views import view_plan_vuelo, view_panel_coordinacion, view_admin_coordinacion , view_aprobar_flp, view_tablero, view_update_flp, view_template_prueba, view_identificacion, view_validar_passwd, view_cerrar_sesion , view_recordar_ruta, view_rutas_guardadas
+from apps.plan_vuelo.views import view_plan_vuelo, view_panel_coordinacion, view_admin_coordinacion , view_aprobar_flp, view_tablero, view_update_flp, view_template_prueba, view_identificacion, view_validar_passwd, view_cerrar_sesion , view_recordar_ruta, view_rutas_guardadas, view_get_trabajadores
 
 from apps.plan_vuelo.views import view_update_notam_realtime,view_notam_modal
+from apps.aro_ais.views import view_todos_notams
+
+
+from apps.plan_vuelo.views import view_getmetar
 
 from apps.plan_vuelo.views import view_restaurar_ruta, view_archivar_ruta
 
@@ -29,11 +33,12 @@ urlpatterns = [
     
     #path('admin_popup/<int:id_plancompleto>/',view_aprobar_flp, name='view_aprobar_flp'),
     path('admin_popup/<path:id_plancompleto>/',view_aprobar_flp, name='view_aprobar_flp'),
-    
-    path('identificacion/<int:id_trabajador>/', view_identificacion, name="view_identificacion"),
-    path('identificacion/validar', view_validar_passwd, name="view_validar_passwd"),
 
-    path('identificacion/terminaractividad', view_cerrar_sesion, name="view_cerrar_sesion"),
+   ############################################################################# 
+    path('identificacion/<int:id_trabajador>/', view_identificacion, name="view_identificacion"),
+    path('identificacion/validar/', view_validar_passwd, name="view_validar_passwd"),
+    path('identificacion/terminaractividad/', view_cerrar_sesion, name="view_cerrar_sesion"),
+    path('identificacion/trabajadores', view_get_trabajadores, name="view_get_trabajadores"),
     
 
     path('adminy/template_prueba/',view_template_prueba, name='view_template_prueba'),
@@ -54,7 +59,7 @@ urlpatterns = [
     path('aprobarfpl/', view_guardar_aprobacion, name="view_guardar_aprobacion"),
     path('historialaprobados/', view_historial_aprobacion, name="view_historial_aprobacion"),
     
-    #################################################################################################################
+    # EJECUTIVO ################################################################################################################
     path('ejecutivo/', view_panel_ejecutivo, name="view_panel_ejecutivo"), #redirije al panel de control de ejecutivo
     path('cartanavegacional/', view_carta_navegacional, name="view_carta_navegacional"), #
     path('aip/dibujoruta', view_obtener_dibujo_ruta, name="view_obtener_dibujo_ruta"), #
@@ -64,7 +69,7 @@ urlpatterns = [
     
 
 
-    #################################################################################################################
+    # SUPERVISOR ################################################################################################################
     path('supervisor/', view_panel_supervisor, name="view_panel_supervisor"), #redirije al panel de control de supervisor
     path('servicio_met/', view_servicio_met, name="view_servicio_met"), #
     path('espacioaereo/', view_aeropuertos_aeronaves, name="view_aeropuertos_aeronaves"), #
@@ -75,6 +80,8 @@ urlpatterns = [
     ######################### NOTAMS REAL TIME
     path('notamsupdate/', view_update_notam_realtime, name="view_update_notam_realtime"), #
     path('notammodal/<path:id_notam_mensaje>/',view_notam_modal, name='view_notam_modal'),
+    path('allnotams/',view_todos_notams, name='view_todos_notams'),
 
-    
+    ######################### QUERY METARS
+    path('getmetar/<path:id_aeropuerto>/',view_getmetar, name='view_getmetar'),
 ]

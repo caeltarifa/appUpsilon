@@ -75,7 +75,7 @@
                     <div class="col-md-4" >
                         
                         <p id="carnet"> HOLA</p>
-                        <p> HOLA -- {{controlador}}</p>
+                        <p> Enviado por {{controlador}}</p>
 
                         <label>
                             <span style="font-size: 25px;">
@@ -300,11 +300,14 @@
     sw_departure=true;
     departure='<div style="font-size:12px;"><strong>D</strong> <br> {{salida}}</div>';
     document.getElementById('muestra').innerHTML=''
-    for (let index = 0; index < arr_ruta.length-1; index++) {
-        lista_union=[1,2,3,4,5,6,5,4,4]
 
-        table_inicio = '<table class="strip" id="'+lista_union[index]+'" border="1px" width="100%" style="height:80px; text-align:center;  border-collapse: collapse;" align="center">';
-        tr1 ='<tr style="border-top: 1px solid white;"> <td rowspan="2" width="75px"><strong>'+vuelo+'</strong> <br>'+ regla + '<br>'+velocidad+'</td><td width="35px">'+ departure+ '</td><td width="35px"></td><td width="40px" style="border-bottom: 1px solid white;"><hr class="incline-line"></hr></td><td width="60px" style="border-left: 1px solid white" class="punto_en_strip" name="'+arr_puntos[index+1]+'">'+arr_puntos[index]+'</td><td width="50px" rowspan="2" valign="top"> '+nivel+' </td><td width="50px" style="border-right: 1px solid white">'+'{{origen}}'+'</td><td width="50px" style="border-right: 1px solid white;" class="ruta_en_strip">'+arr_ruta[index]+'</td><td width="50px">'+'{{destino}}'+'</td><td width="50px"></td><td width="25px" rowspan="2" style="border-right: 1.5px solid white;"><button onclick="javascript:eliminarStrip('+"'"+lista_union[index]+"'"+')" type="button" class="close" aria-label="Close" style="color:red;"> <span aria-hidden="true">&times;</span> </button> </td> </tr>';
+    lista_tabla=['t1','t2','t3','t4','t5','t6','t7','t8','t9','t10','t11','t12','t13','t14','t15']
+    lista_tiempo=['tt1','tt2','tt3','tt4','tt5','tt6','tt7','tt8','tt9','tt10','tt11','tt12','tt13','tt14','tt15']
+    
+    for (let index = 0; index < arr_ruta.length-1; index++) {
+
+        table_inicio = '<table class="strip" id="'+lista_tabla[index]+'" border="1px" width="100%" style="height:80px; text-align:center;  border-collapse: collapse;" align="center">';
+        tr1 ='<tr style="border-top: 1px solid white;"> <td rowspan="2" width="75px"><strong>'+vuelo+'</strong> <br>'+ regla + '<br>'+velocidad+'</td><td width="35px">'+ departure+ '</td><td width="35px"></td><td width="40px" style="border-bottom: 1px solid white;"><hr class="incline-line"></hr></td><td width="60px" style="border-left: 1px solid white" class="punto_en_strip" name="'+arr_puntos[index+1]+'">'+arr_puntos[index]+'</td><td width="50px" rowspan="2" valign="top"> '+nivel+' </td><td width="50px" style="border-right: 1px solid white">'+'{{origen}}'+'</td><td width="50px" style="border-right: 1px solid white;" class="ruta_en_strip">'+arr_ruta[index]+'</td><td width="50px">'+'{{destino}}'+'</td><td width="50px">  '  +   ' <div class="modern-Checkbox"><input type="checkbox" id="'+ lista_tiempo[index] + '"><label for="'+lista_tiempo[index]+'">ok</label></div> '  +  '  </td><td width="25px" rowspan="2" style="border-right: 1.5px solid white;"><button onclick="javascript:eliminarStrip('+"'"+lista_tabla[index]+"'"+')" type="button" class="close" aria-label="Close" style="color:red;"> <span aria-hidden="true">&times;</span> </button> </td> </tr>';
         tr2 ='<tr style="border-bottom: 1.5px dashed;"><td><hr class="incline-line"></hr></td><td><hr class="incline-line"></hr></td><!--TIEMPÓ--><td><font size="1.5"> ' + arr_tiempos[index] +  '</font></td><td><hr class="incline-line2"></hr></td><td style="border-right: 1px solid white;"><font size="0.9">SEL/' +transmision+ '</font><br><font size="0.9">REG/'+matricula+ '</font></td><td style="border-right: 1px solid white;"></td><td><br><font size="0.9">SQ/ '+'<label class="transponder_strip" id="transponder_stripid" >{{transponder}}</label>' + '</font></td><td style="border-right: 1px solid white"><br><font size=0.9><strong>ATC-003</strong></font></td></tr></table>';
         document.getElementById('muestra').innerHTML+=table_inicio+tr1+tr2;
         if (sw_departure) {

@@ -667,10 +667,14 @@
                     // Populate the distanceContainer with total distance
                     var value = document.createElement('pre');
                     value.textContent =
-                        'Distancia total: ' +
-                        turf.length(linestring).toLocaleString() +
-                        ' km';
+                        'Distancia total: ' +  turf.length(linestring).toLocaleString() + ' km ' ;
                     distanceContainer.appendChild(value);
+
+                    nautica=parseFloat(turf.length(linestring).toLocaleString())/1.852
+                    var value2 = document.createElement('pre');
+                    value2.textContent =
+                        'Distancia total: ' + nautica.toString().substr(0,8) + " nmi" ;
+                    distanceContainer.appendChild(value2);
                 }
 
                 map.getSource('geojson').setData(geojson);

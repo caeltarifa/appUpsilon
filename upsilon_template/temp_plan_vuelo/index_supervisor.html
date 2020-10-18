@@ -242,7 +242,7 @@
 
 <div style="margin-top:1%;"  >
     <h1 align="center">
-        ACC SUPERVISOR
+        {{user.get_username | upper}}
     </h1>
     
     <div class="buttons">
@@ -254,10 +254,10 @@
             </a>
         </div>
     
-        <div class="butFrame bounce"><!--onClick="window.location='#'"-->
+        <div class="butFrame bounce">
             <a href="{% url 'view_historial_aprobacion' %}">
                 <img src="http://www.neodigital.com.au/thumbnailsmall/Button5.jpg" />
-                <div class="butHeading">fpl aprobados</div>
+                <div class="butHeading">progreso de vuelo</div>
             </a>
         </div>
     

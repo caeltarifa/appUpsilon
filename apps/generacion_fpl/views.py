@@ -89,16 +89,16 @@ def view_admin_empresa(request):
     else:
         return redirect('login')
 
-def view_admin_comunicaciones(request):
-    if request.user.is_authenticated:
-        
-        usuariox=str(request.user.username).split('@')
-        #preguntando si el nombre_usuario es igual a algun nombre empresa_institucion y obteniendo su id_empresa
-        #id_empresa=Empresa_institucion.objects.filter(nombre_emp_inst=usuariox[0])[0].id_emp_inst
-
-        return render(request, 'temp_plan_vuelo/comunicaciones.html', {'id_empresa':usuariox[0]} )
-    else:
-        return redirect('login')
+#def view_admin_comunicaciones(request):
+#    if request.user.is_authenticated:
+#        
+#        usuariox=str(request.user.username).split('@')
+#        #preguntando si el nombre_usuario es igual a algun nombre empresa_institucion y obteniendo su id_empresa
+#        #id_empresa=Empresa_institucion.objects.filter(nombre_emp_inst=usuariox[0])[0].id_emp_inst
+#
+#        return render(request, 'temp_plan_vuelo/comunicaciones.html', {'id_empresa':usuariox[0]} )
+#    else:
+#        return redirect('login')
 
 
 ##SOLICITUDES DE CREACION DE PLAN_PRESENTADO

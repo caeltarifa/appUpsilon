@@ -2,7 +2,7 @@
 {% load static %} 
 
 {% block title %}
-<title>Upsilon | Progreso</title>
+<title>Upsilon | PIB</title>
 {% endblock title %}
 
 
@@ -55,11 +55,61 @@
                                 <p class="section-description">
                                     Boletín de información previa al vuelo.
                                 </p>
+
+                                
+                                
+                                <div class="container">          
+                                    <table class="table table-bordered" >
+                                      <tbody style="text-align:center;">
+                                        <tr>
+                                            <td style="width:25%;vertical-align:middle;font-size:12px;" rowspan="2"> <strong>BOLETIN DE INFORMACIÓN PREVIA AL VUELO</strong>  <br> <br> INFORMACION GENERAL  </td>
+                                            <td style="width:50%;vertical-align:middle;"> <strong>ESTADO PLURINACIONAL DE BOLIVIA <br> AEROPUERTO INTERNACIONAL DE EL ALTO </strong> </td>
+                                            <td style="width:13%;vertical-align:middle;font-size:12px;"> <strong>Fecha y Hora<br>de Expedición</strong> </td>
+                                            <td style="width:12%;vertical-align:middle;font-size:12px;" rowspan="3"> 
+                                                <strong> Ruta o Área <br> cubierta</strong> 
+                                                <br> <br> 
+                                                FIR LA PAZ 
+                                                <br> <br> 
+                                                <a class="btn btn-outline-primary" target="_blank" href="{% url 'view_imprimir_pibrealtime' %}">
+                                                    <span class="material-icons md-18">
+                                                        local_printshop
+                                                    </span>
+                                                </a>
+
+                                            </td>
+                                        </tr>
+                                  
+                                        <tr>
+                                          
+                                          <td style="width:50%;"> <img src="https://www.aasana.bo/files/logoa.jpg" style="width:180px; height:65px;"> </td>
+                                          <td style="width:13%;vertical-align:middle;font-size:12px;">06/10/2020</td>
+                                        </tr>
+                                         
+                                        <tr>
+                                            <td style="width:25%;">Pagina</td>
+                                            <td style="width:50%;"> 
+                                                <strong>SR</strong> 
+                                                &nbsp; 
+                                                1014
+                                                &nbsp; &nbsp; 
+                                                <strong> SS</strong> 
+                                                &nbsp; 
+                                                1014
+ 
+                                            </td>
+                                            <td style="width:13%;">0000 UTC</td>
+                                         
+                                        </tr>
+                                      </tbody>
+                                    </table>
+                                </div>
+
+
+
+
                             </div>
 
                             <div class="row">
-                                
-                                
                                 
                                 <div class="col-lg-6  wow fadeInLeft">
                                     <div class="containerpib">
@@ -242,9 +292,6 @@
                                 </div>
 
 
-
-
-
                             </div>
                             <br><br><br><br>
 
@@ -274,7 +321,7 @@
     $(function(){
             setInterval(() => {
                 updatepib();
-            }, 7000);
+            }, 4000);
     });
 
     sw=true;
@@ -305,7 +352,7 @@
                     for (let j = 0; j < listap.length; j++) {
                         notam = listap[j];
                         
-                        g = '<tr> <td>' + notam['fir'] + "<br> Desde: " + notam['valid_desde'].substr(0,16)
+                        g = '<tr> <td>' + notam['instalacion'] // "<br> Desde: " + notam['valid_desde'].substr(0,16)
                         h = '</td> <td>'
                         i2 = notam['msj_publicado']// msj for publication
                         j2 = '</td> </tr> '
@@ -324,7 +371,7 @@
                     for (let j = 0; j < listap.length; j++) {
                         notam = listap[j];
                         
-                        g = '<tr> <td>' + notam['fir'] + "<br> Desde: " + notam['valid_desde'].substr(0,16)
+                        g = '<tr> <td>' + notam['instalacion'] //+ "<br>" + notam['estacion']
                         h = '</td> <td>'
                         i2 = notam['msj_publicado']// msj for publication
                         j2 = '</td> </tr> '
@@ -346,7 +393,7 @@
                     b = '<a href="#panelBody' + aeropuerto + '" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion">'
                     c = aeropuerto
                     d = '</a> </h4> </div>'
-                    e = '<div id="panelBody' + aeropuerto +'" class="panel-collapse collapse show in">'
+                    e = '<div id="panelBody' + aeropuerto +'" class="panel-collapse collapse in">' //class="panel-collapse collapse show in">
                     f = '    <div class="panel-body"> <div class=" table-responsive"> <table class="table table-hover" > <thead> <tr> <th style="width:30px;">Instalacion</th> <th class="col-md-6">Informacion</th> </tr> </thead> <tbody id="msjs_'+aeropuerto+'">' 
                     
                     k = '</tbody> </table> </div> </div>'
@@ -389,6 +436,15 @@
 			},200);		
     });
 
+</script>
+
+<script >
+    $('#example').DataTable( {
+        dom: 'Bfrtip',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ]
+    } );
 </script>
 
 

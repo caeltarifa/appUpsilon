@@ -11,17 +11,28 @@ import json
 
 
 from apps.plan_vuelo.models import  Notam_trafico, Trabajador, Aeropuerto
-from apps.aro_ais.models import  Pib_trafico, Pib_extenso
+from apps.aro_ais.models import  Pib_trafico, Pib_extenso, Pib_registro_documento
 
 
 from apps.trabajadoresATS.models import TrabajadoresATS, CuentasATS
 
+
+#LIBRARY FOR CAST "['A','B','C']" TO  ['A','B','C'] (list element)
+import ast
 # Create your views here.
 
 def view_panel_aroais(request):
     if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='AROAISLP').exists():
         equipo_coordinacion = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and empresa_institucion_id=1 order by activo")
         return render(request, 'temp_plan_vuelo/temp_aro_ais/index_aroais.html' ,{'equipo_trabajo': equipo_coordinacion} )#,'metar':metar} )
+    else:
+        return redirect('login')
+
+
+def view_panel_serviciosaroais_aasana(request):
+    if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='INFORMACION_AERONAUTICA').exists():
+        equipo_coordinacion = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and empresa_institucion_id=1 order by activo")
+        return render(request, 'temp_plan_vuelo/temp_aro_ais/index_servicio_general_aroais.html' ,{'equipo_trabajo': equipo_coordinacion} )#,'metar':metar} )
     else:
         return redirect('login')
 
@@ -50,10 +61,44 @@ def view_pib_automatizado(request):
     if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='AROAISLP').exists():
         equipo_coordinacion = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and empresa_institucion_id=1 order by activo")
 
-        lista_pib_pendiente = Pib_trafico.objects.raw("select * from aro_ais_pib_trafico inner join aro_ais_pib_extenso on ref_notam_amhs_id = notam_extenso_id and pendiente='t' ")
+        lista_pib_pendiente = Pib_trafico.objects.raw("select * from (select * from aro_ais_pib_trafico inner join aro_ais_pib_extenso on ref_notam_amhs_id = notam_extenso_id and pendiente='t') as pib inner join plan_vuelo_notam_trafico on id_mensaje=ref_notam_amhs_id order by DATE(ingresado) desc;")
         lista_pib_archivado = Pib_trafico.objects.raw("select * from aro_ais_pib_trafico inner join aro_ais_pib_extenso on ref_notam_amhs_id = notam_extenso_id and archivado='t'  ")
         lista_pib_publicado = Pib_trafico.objects.raw("select * from aro_ais_pib_trafico inner join aro_ais_pib_extenso on ref_notam_amhs_id = notam_extenso_id and vigente='t' and msj_publicado!=''  ")
         lista_notams_recientes=Notam_trafico.objects.all().order_by('-ingresado')[:25]
+
+        # ref_notam_amhs_id | decodificado | publicado | vigente | archivado | oficialaro_id | pendiente   | msj_publicado | Instalacion  | notam_extenso_id    | notam_id |
+        # notam_tipo | ref_notam_id | fir  | notam_codigo |  tipo_trafico  | proposito |    alcance    | fl_inferior | fl_superior | area |  
+        # lugar   |      valid_desde       |      valid_hasta       |   agendado    | cuerpo | limit_superior | limit_inferior | indices_item_a |
+        # indices_item_b | indices_item_c | indices_item_d | indices_item_e | indices_item_f | indices_item_g
+        lista_pib_pendiente=[serializar_pibtrafico_pibextenso(pib) for pib in lista_pib_pendiente]
+        lista_pib_archivado=[serializar_pibtrafico_pibextenso(pib) for pib in lista_pib_archivado]
+        lista_pib_publicado=[serializar_pibtrafico_pibextenso(pib) for pib in lista_pib_publicado]
+        lista_notams_recientes=[serializar_notam(notamx) for notamx in lista_notams_recientes]
+        
+        equipo_activo = Trabajador.objects.raw("select ci, nombre, apellido, activo  from plan_vuelo_trabajador where activo='t' and ci in ( select trabajador_id from plan_vuelo_trabajador_cargo where cargo_id in ( select id_cargo  from plan_vuelo_cargo where cuenta_usuario_id in  (select id from auth_user where username like %(usuario)s) ) )", {'usuario':request.user.username})
+        
+        return render(request, 'temp_plan_vuelo/temp_aro_ais/notam_automatizado.html' ,{'equipo_activo':equipo_activo,'equipo_trabajo': equipo_coordinacion, 'lista_pendiente':lista_pib_pendiente, 'lista_archivado':lista_pib_archivado, 'lista_publicado':lista_pib_publicado, 'lista_notam':lista_notams_recientes} )
+    else:
+        return redirect('login')
+
+
+def view_imprimir_pibrealtime(request):
+    if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='TODOS_SERVICIOS').exists():
+        pib_vigente = Pib_trafico.objects.raw("select * from (select ref_notam_amhs_id, lugar, instalacion, msj_publicado from aro_ais_pib_trafico inner join aro_ais_pib_extenso on ref_notam_amhs_id = notam_extenso_id and vigente='t' and msj_publicado!='') as pib inner join plan_vuelo_aeropuerto on icao like substring(lugar, 3, 4) order by lugar asc ")
+        
+        pib_vigente = [{'ref_notam_amhs_id':pib.ref_notam_amhs_id,'nombre': pib.nombre,'lugar':str(pib.lugar)[2:6], 'instalacion':pib.instalacion, 'msj_publicado':pib.msj_publicado} for pib in pib_vigente]
+        
+        return render(request, 'temp_plan_vuelo/temp_aro_ais/print_notam_realtime.html' ,{'pib_vigente':pib_vigente} )
+    else:
+        return redirect('login')
+
+
+def view_todos_notams(request):
+    if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='TODOS_SERVICIOS').exists():
+        lista_pib_pendiente = Pib_trafico.objects.raw("select * from aro_ais_pib_trafico inner join aro_ais_pib_extenso on ref_notam_amhs_id = notam_extenso_id and pendiente='t' ")
+        lista_pib_archivado = Pib_trafico.objects.raw("select * from aro_ais_pib_trafico inner join aro_ais_pib_extenso on ref_notam_amhs_id = notam_extenso_id and archivado='t'  ")
+        lista_pib_publicado = Pib_trafico.objects.raw("select * from aro_ais_pib_trafico inner join aro_ais_pib_extenso on ref_notam_amhs_id = notam_extenso_id and vigente='t' and msj_publicado!=''  ")
+        lista_notams_recientes=Notam_trafico.objects.all().order_by('-ingresado')[:100]
 
         # ref_notam_amhs_id | decodificado | publicado | vigente | archivado | oficialaro_id | pendiente   | msj_publicado |    notam_extenso_id    | notam_id |
         # notam_tipo | ref_notam_id | fir  | notam_codigo |  tipo_trafico  | proposito |    alcance    | fl_inferior | fl_superior | area |  
@@ -63,13 +108,14 @@ def view_pib_automatizado(request):
         lista_pib_archivado=[serializar_pibtrafico_pibextenso(pib) for pib in lista_pib_archivado]
         lista_pib_publicado=[serializar_pibtrafico_pibextenso(pib) for pib in lista_pib_publicado]
         lista_notams_recientes=[serializar_notam(notamx) for notamx in lista_notams_recientes]
-        
 
-        equipo_activo = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and activo=true and empresa_institucion_id=1 order by activo")
+        #equipo_activo = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and activo=true and empresa_institucion_id=1 order by activo")
         
-        return render(request, 'temp_plan_vuelo/temp_aro_ais/notam_automatizado.html' ,{'equipo_activo':equipo_activo,'equipo_trabajo': equipo_coordinacion, 'lista_pendiente':lista_pib_pendiente, 'lista_archivado':lista_pib_archivado, 'lista_publicado':lista_pib_publicado, 'lista_notam':lista_notams_recientes} )
+        return render(request, 'temp_plan_vuelo/temp_aro_ais/lista_notam.html' ,{'lista_notam':lista_notams_recientes} )
     else:
         return redirect('login')
+
+
 def serializar_notam(notamx):
     return {
         'id_mensaje': notamx.id_mensaje,
@@ -98,6 +144,7 @@ def serializar_pibtrafico_pibextenso(pibloong):
         'oficialaro_id' : str(pibloong.oficialaro_id).strip().upper(),
         'pendiente' : str(pibloong.pendiente).strip().upper(),
         'msj_publicado' : str(pibloong.msj_publicado).strip().upper(),
+        'instalacion' : str(pibloong.instalacion).strip().upper(),
         'notam_extenso_id' : str(pibloong.notam_extenso_id).strip().upper(),
         'notam_id' : str(pibloong.notam_id).strip().upper(),
         'notam_tipo' : str(pibloong.notam_tipo).strip().upper(),
@@ -146,8 +193,6 @@ def view_archivar_pib(request):
     else:
         return redirect('accounts/login/')
 
-
-
 def view_publicarguardar_pib(request):
     if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='AROAISLP').exists():
         if request.is_ajax and request.method =="GET":
@@ -157,9 +202,43 @@ def view_publicarguardar_pib(request):
             if pib_Trafico.exists():
                 getpublicacion = request.GET.dict()['publicacion']
                 gettrabajador = request.GET.dict()['persona']
-                Pib_trafico.objects.filter(ref_notam_amhs_id=getid_mensaje).update(oficialaro_id=gettrabajador, msj_publicado=getpublicacion, pendiente=False, archivado=False, vigente=True, publicado=datetime.datetime.now())
+                getinstalacion = request.GET.dict()['instalacion']
+                Pib_trafico.objects.filter(ref_notam_amhs_id=getid_mensaje).update(oficialaro_id=gettrabajador, msj_publicado=getpublicacion, instalacion=getinstalacion, pendiente=False, archivado=False, vigente=True, publicado=datetime.datetime.now())
                 return JsonResponse({'estado':True}, status=200)
 
+        return JsonResponse({'estado':False}, status=200)
+    else:
+        return redirect('accounts/login/')
+
+
+def view_guardarregistro_pib(request):
+    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='AROAISLP').exists():
+        if request.is_ajax and request.method =="GET":
+            getresumen = request.GET.dict()['resumen']
+
+            getresumen=getresumen.split(',')
+
+            sw=True
+            #verificando que todos los notams existan
+            for pib in getresumen:
+                if pib != "":
+                    if not Pib_trafico.objects.filter(ref_notam_amhs_id=pib).exists():
+                        sw=False
+            if sw:
+                gettrabajador = request.GET.dict()['oficial']
+                
+                documento = Pib_registro_documento()
+
+
+                documento.oficialaro=Trabajador.objects.get(ci=gettrabajador)
+                documento.save()
+                
+                for pib in getresumen:
+                    if pib != "":
+                        documento.registro.add(pib)
+                
+                
+                return JsonResponse({'estado':True}, status=200)
         return JsonResponse({'estado':False}, status=200)
     else:
         return redirect('accounts/login/')
@@ -182,14 +261,14 @@ def view_pibupdate_tiemporeal(request):
     if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='TODOS_SERVICIOS').exists():
         if request.is_ajax and request.method =="GET":
             #obteniendo aeropuertos
-            lista_aeropuerto =  Aeropuerto.objects.all().only('icao')
+            lista_aeropuerto =  Aeropuerto.objects.all().only('icao').order_by('icao')
 
             #Pib_trafico.objects.raw("select ref_notam_amhs_id, decodificado, publicado, vigente, oficialaro_id, msj_publicado, notam_id, notam_tipo, ref_notam_id, fir, notam_codigo, tipo_trafico, proposito, alcance, fl_inferior, fl_superior, area, lugar, valid_desde, valid_hasta, agendado, cuerpo, limit_superior, limit_inferior from aro_ais_pib_trafico inner join aro_ais_pib_extenso on ref_notam_amhs_id = notam_extenso_id and vigente='t' and msj_publicado!='' and  DATE(publicado)>='2020-09-21' and lugar like %(icao)s  ", {'icao':'%'+aeroicao+'%'})
             # ref_notam_amhs_id | decodificado | publicado | vigente |  oficialaro_id |  msj_publicado |     
             # notam_id | notam_tipo | ref_notam_id | fir  | notam_codigo |  tipo_trafico  | proposito |    alcance    | fl_inferior | fl_superior | 
             # area |  lugar   |      valid_desde       |      valid_hasta       |   agendado    | cuerpo | limit_superior | limit_inferior | 
             ###estoy buscando los pibs recientes , vigentes, y publicados
-            lista_pib_por_region = [ {'icao':aero.icao, 'pibs':  [ serializarPibRegional(pibregional) for pibregional in Pib_trafico.objects.raw("select ref_notam_amhs_id, decodificado, publicado, vigente, oficialaro_id, msj_publicado, notam_id, notam_tipo, ref_notam_id, fir, notam_codigo, tipo_trafico, proposito, alcance, fl_inferior, fl_superior, area, lugar, valid_desde, valid_hasta, agendado, cuerpo, limit_superior, limit_inferior from aro_ais_pib_trafico inner join aro_ais_pib_extenso on ref_notam_amhs_id = notam_extenso_id and vigente='t' and msj_publicado!='' and  DATE(publicado)>='2020-09-21' and lugar like %(icao)s  ", {'icao':'%'+aero.icao+'%'}) ],  } for aero in lista_aeropuerto]
+            lista_pib_por_region = [ {'icao':aero.icao, 'pibs':  [ serializarPibRegional(pibregional) for pibregional in Pib_trafico.objects.raw("select ref_notam_amhs_id, decodificado, publicado, instalacion, vigente, oficialaro_id, msj_publicado, notam_id, notam_tipo, ref_notam_id, fir, notam_codigo, tipo_trafico, proposito, alcance, fl_inferior, fl_superior, area, lugar, valid_desde, valid_hasta, agendado, cuerpo, limit_superior, limit_inferior from aro_ais_pib_trafico inner join aro_ais_pib_extenso on ref_notam_amhs_id = notam_extenso_id and vigente='t' and msj_publicado!='' and  DATE(publicado)>='2020-09-21' and lugar like %(icao)s  ", {'icao':'%'+aero.icao+'%'}) ],  } for aero in lista_aeropuerto]
 
             '''          
                 ref_notam_amhs_id
@@ -276,6 +355,7 @@ def serializarPibRegional(pibicao):
         'vigente' : str(pibicao.vigente).upper(), 
         'oficialaro_id' : str(pibicao.oficialaro_id).upper(), 
         'msj_publicado' : str(pibicao.msj_publicado).upper(), 
+        'instalacion' : str(pibicao.instalacion).upper(), 
         'notam_id' : str(pibicao.notam_id).upper(), 
         'notam_tipo' : str(pibicao.notam_tipo).upper(), 
         'ref_notam_id' : str(pibicao.ref_notam_id).upper(), 

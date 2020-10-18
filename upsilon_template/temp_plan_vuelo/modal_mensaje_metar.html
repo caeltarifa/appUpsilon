@@ -1,0 +1,66 @@
+<!-- SE RECIBE aero, plan, detalles de la ficha, ruta del fpl, rutas all, puntosall   -->
+    <div class="modal-dialog  modal-dialog-centered modal-xl " role="document" style="width: 62.5%; margin:auto;" >
+        <div class="modal-content">
+         
+
+            <div class="modal-body">
+
+                <section id="MSJ" class="section-bg" >
+                    <div class="container-fluid">
+
+                        <div class="section-header" style="text-align:center;">
+                            <br>
+                            
+                            <h2 class="section-title">
+                                {% block titulomodal %}
+                                    {{titulo}} 
+                                {% endblock titulomodal %}
+                            </h2>
+                        </div>
+                        <br><br><br>
+                        <div class="row">
+                            <div class="col-lg-6  wow fadeInLeft">
+                                <div class="containerpib">
+                                    <div id="accordion" class="panel-group">                                        
+                                        
+                                        {% for x in mensaje %}
+                                            {{x}} <br>
+                                        {% endfor %}
+                                            
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+
+                            <div class="col-lg-6  wow fadeInRight">
+                                <div class="containerpib">
+                                    <div id="accordion" class="panel-group">
+                                        <!--mita 2-->
+                                        <div id='map' style="z-index:0; border-radius: 25px 25px 25px ;position: absolute; top: -55px; bottom: 0; margin-right:5px; width: 500px; height:500px;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+            <div class="modal-footer">
+                <br><br>
+                <br><br>
+                <br><br>
+                <button class="btn btn-danger " type="button" data-dismiss="modal" style="z-index:900;">Cerrar</button>
+            </div>
+
+        </div>
+    </div>
+<!--
+
+-->

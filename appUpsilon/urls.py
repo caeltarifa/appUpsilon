@@ -14,11 +14,17 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
+
+from django.conf.urls import url, include
+
 from django.urls import path, include
 from django.contrib import admin
 
+
 #vistas para la pagina principal
 from .views import view_pagina_principal#, control_acceso_login
+
+from .views import view_panel_comunicaciones, view_admin_comunicaciones
 
 #paginas de la aplicacion "plan_vuelo"
 #from apps.plan_vuelo.views import post_detail
@@ -33,6 +39,10 @@ urlpatterns = [
     path('aro_ais/', include('apps.aro_ais.urls')),
     #path('plan_vuelo/postdetail/<int:pk>/', post_detail , name='post_detail')
     #path('accounts/login/', control_acceso_login ,name='acceso_login'),
+
+    url('^comunicaciones$',view_panel_comunicaciones, name='view_panel_comunicaciones'),
+    url('^comunicaciones$',view_admin_comunicaciones, name='view_admin_comunicaciones'),
+
 ]
 
 

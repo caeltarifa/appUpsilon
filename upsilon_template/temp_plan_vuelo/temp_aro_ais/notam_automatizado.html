@@ -2,7 +2,7 @@
 {% load static %} 
 
 {% block title %}
-<title>Upsilon | Pib </title>
+<title>Upsilon | Notam PIB </title>
 {% endblock title %}
 
 
@@ -245,13 +245,16 @@
                                             </td>
                                             
                                             <td >
-                                                <textarea  class="form-control" rows="8" cols="65" id="txt{{pib.ref_notam_amhs_id}}"  style="font-size: 12px">
-{% if pib.decodificado|length > 2%} {% ifnotequal pib.valid_desde 'None'  %} DESDE {{pib.valid_desde|slice:"0:-9"}}  {% endifnotequal %} {{pib.decodificado}}   {% ifnotequal pib.valid_hasta 'None'  %} HASTA {{pib.valid_hasta|slice:"0:-9"}}  {% endifnotequal %}  {% else %} {{pib.cuerpo}}  {% endif %} {% if pib.agendado != 'None' and pib.agendado != 'Ninguna'  %} AGENDADO PARA {{pib.agendado}}  {% endif %}
-{% ifnotequal pib.tipo_trafico 'NONE'  %} TIPO DE TRAFICO {{pib.tipo_trafico}}  {% endifnotequal %}
-{% ifnotequal pib.proposito 'NONE'  %} PROPOSITO {{pib.proposito}}  {% endifnotequal %}
+                                                <!--
+    {% ifnotequal pib.tipo_trafico 'NONE'  %} TIPO DE TRAFICO {{pib.tipo_trafico}}  {% endifnotequal %}
+    {% ifnotequal pib.proposito 'NONE'  %} PROPOSITO {{pib.proposito}}  {% endifnotequal %}
 
-{% ifnotequal pib.notam_id 'NONE' %} ({{pib.notam_id}})  {% endifnotequal %}
-                                                </textarea>
+    {% if pib.agendado != 'None' and pib.agendado != 'Ninguna'  %} AGENDADO PARA {{pib.agendado}}  {% endif %}
+-->
+                                                <textarea  class="form-control" rows="5" cols="65" id="txt{{pib.ref_notam_amhs_id}}"  style="font-size: 12px">
+{% if pib.decodificado|length > 2%} {% ifnotequal pib.valid_desde 'None'  %} DESDE {{pib.valid_desde|slice:"0:-9"}}  {% endifnotequal %} {{pib.decodificado}}   {% ifnotequal pib.valid_hasta 'None'  %} HASTA {{pib.valid_hasta|slice:"0:-9"}}  {% endifnotequal %}  {% else %} {{pib.cuerpo}}  {% endif %} 
+
+{% ifnotequal pib.notam_id 'NONE' %} ({{pib.notam_id}})  {% endifnotequal %}</textarea>
                                             </td>
                                             
                                             <td>
@@ -291,6 +294,11 @@
                     <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
                     <div class="heading-elements">
                         <ul class="list-inline mb-0">
+
+                            <li>
+                                <button class="btn btn-primary" onclick="modal_local_pibguardarregistro()">Guardar resumen</button>
+                            </li>
+
                             <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
                             <li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
                             <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
@@ -301,6 +309,55 @@
 
                 </div>
                 <div class="card-content collapse show" style="height: 75%; overflow-y: auto;">
+
+
+                    <div class="container">          
+                        <table class="table table-bordered" >
+                          <tbody style="text-align:center;">
+                            <tr>
+                                <td style="width:25%;vertical-align:middle;font-size:12px;" rowspan="2"> <strong>BOLETIN DE INFORMACIÓN PREVIA AL VUELO</strong>  <br> <br> INFORMACION GENERAL  </td>
+                                <td style="width:50%;vertical-align:middle;"> <strong>ESTADO PLURINACIONAL DE BOLIVIA <br> AEROPUERTO INTERNACIONAL DE EL ALTO </strong> </td>
+                                <td style="width:13%;vertical-align:middle;font-size:12px;"> <strong>Fecha y Hora<br>de Expedición</strong> </td>
+                                <td style="width:12%;vertical-align:middle;font-size:12px;" rowspan="3"> 
+                                    <strong> Ruta o Área <br> cubierta</strong> 
+                                    <br> <br> 
+                                    FIR LA PAZ 
+                                    <br> <br> 
+                                    <button class="btn btn-outline-primary" target="_blank" href="{% url 'view_imprimir_pibrealtime' %}">
+                                        <span class="material-icons md-18">
+                                            local_printshop
+                                        </span>
+                                    </button>
+
+                                </td>
+                            </tr>
+                      
+                            <tr>
+                              
+                              <td style="width:50%;"> <img src="https://www.aasana.bo/files/logoa.jpg" style="width:180px; height:65px;"> </td>
+                              <td style="width:13%;vertical-align:middle;font-size:12px;">06/10/2020</td>
+                            </tr>
+                             
+                            <tr>
+                                <td style="width:25%;">Pagina</td>
+                                <td style="width:50%;"> 
+                                    <strong>SR</strong> 
+                                    &nbsp; 
+                                    <input type="text" id="id_sunrise" value="1014" style="width:50px;" >  
+                                    &nbsp; &nbsp; 
+                                    <strong> SS</strong> 
+                                    &nbsp; 
+                                    <input type="text" id="id_sunsise" value="1014" style="width:50px;">  
+
+                                </td>
+                                <td style="width:13%;">0000 UTC</td>
+                             
+                            </tr>
+                          </tbody>
+                        </table>
+                    </div>
+
+
 
                     <div >
                         <div class="table-responsive">
@@ -331,11 +388,11 @@
                                             Notam
                                         </th>
 
-                                        <th style="width:55px;overflow:auto;" >FIR</th>
-                                        
                                         <th style="width:55px;overflow:auto;">Lugar</th>
                                         
-                                        <th style="width:550px; max-width: auto;">Informacion</th>
+                                        <th style="width:55px;overflow:auto;" >Instalación</th>
+                                        
+                                        <th style="width:550px; max-width: auto;">Información</th>
                                         
                                         <th style="width:155px;">Estado</th>
                                     </tr>
@@ -344,20 +401,20 @@
                                 <tbody style="text-align: center;" id="tabla_pib_vigente">
 
                                     {% for pib in lista_publicado %}
-                                        <tr >
+                                        <tr id="{{pib.ref_notam_amhs_id}}" class="pibregistro">
                                             <td style="vertical-align: middle;">
                                                 <a class=" btn-outline-light" onclick="abrir_modal( '{% url 'view_notam_modal' id_notam_mensaje=pib.ref_notam_amhs_id%}')">
-                                                    {{pib.notam_id}}<br>
+                                                     {{pib.notam_id}}<br>
                                                     {% ifnotequal pib.notam_tipo 'None' %} {{pib.notam_tipo}}  {% endifnotequal %}
                                                 </a>
                                             </td>
 
                                             <td style="vertical-align: middle;">
-                                                {{pib.fir}}
+                                                {{pib.lugar}}
                                             </td>
                                             
                                             <td style="vertical-align: middle;">
-                                                {{pib.lugar}}
+                                                {{pib.instalacion}}
                                             </td>
                                             
                                             <td style="text-align: left;" >
@@ -610,7 +667,7 @@
 
 
 
-<!-- Modal -->
+<!-- Modal save pib -->
 <div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog">
     
@@ -644,7 +701,9 @@
 
                 <br>
 
-                <textarea  class="form-control" rows="8" cols="65" id="txtmodal"  style="font-size: 12px">
+                <input type="text" class="form-control" id="id_estacion" placeholder="Estacion" style="text-transform:uppercase" >
+                <br>
+                <textarea  class="form-control" rows="8" cols="65" id="txtmodal"  style="font-size: 12px;text-transform:uppercase" >
                 </textarea>
 
 
@@ -652,7 +711,59 @@
             </div>
             
             <div class="modal-footer">
+                <button class="btn btn-danger " type="button" data-dismiss="modal" style="z-index:900;">Cancelar</button>
                 <button id="btnmodal" type="button" class="btn btn-success" data-dismiss="modal" >Listo</button>
+            </div>
+        </div>
+      
+    </div>
+</div>
+
+
+
+
+<!-- Modal register pib today  -->
+<div class="modal fade" id="myModal2" role="dialog">
+    <div class="modal-dialog">
+    
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Guardar resumen</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                
+                <div class="container">
+                    <div name="formulario" id="formulario">
+                        <div class="radio-tile-group">
+                            {% for persona in equipo_activo %}
+                                <div class="input-container" id="btnRadio{{persona.ci}}">
+                                    <input id="{{persona.ci}}" class="radio-button" type="radio" name="equipo_activo" />
+                                    <div class="radio-tile">
+                                        <span class="material-icons">
+                                            person_outline
+                                        </span>
+                                        <label for="{{persona.ci}}" class="radio-tile-label">{{persona.nombre}}</label>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+
+                <br>
+
+                <h4><strong id="id_titulo_resumen">Resumen de notams</strong></h4>
+                <p id="id_resumen_pibs"></p>
+
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn btn-danger " type="button" data-dismiss="modal" style="z-index:900;">Cancelar</button>
+                <button id="btnmodal2" type="button" class="btn btn-success" data-dismiss="modal" >Listo</button>
             </div>
         </div>
       
@@ -737,27 +848,31 @@
             id='txt' + notam
             trabajador=$('input:radio[name=equipo_activo]:checked').attr('id')
             if (typeof(trabajador)!=='undefined') {
-                
-                datasend={
-                    "id_notam": notam,
-                    "publicacion": document.getElementById('txtmodal').value,
-                    "persona":trabajador,
+                if (document.getElementById('id_estacion').value!="" || document.getElementById('txtmodal').value!="") {
+                    datasend={
+                        "id_notam": notam,
+                        "instalacion" : document.getElementById('id_estacion').value,
+                        "publicacion" : document.getElementById('txtmodal').value,
+                        "persona":trabajador,
+                    }
+                    
+                    $.ajax({
+                        type:'GET',
+                        url: '{% url 'view_publicarguardar_pib' %}',
+                        data: datasend,
+                        //data:$(this).serialize(),
+                        success: function (request){
+                            if (request.estado) {
+                                    location.reload();
+                            }else{
+                                alert("HUBO UN ERROR AL PROCESAR");
+                            }
+                        }   
+                    });
+                } else {
+                    alert("Rellene los cuadros de texto")
                 }
                 
-                $.ajax({
-                    type:'GET',
-                    url: '{% url 'view_publicarguardar_pib' %}',
-                    data: datasend,
-                    //data:$(this).serialize(),
-                    success: function (request){
-                        if (request.estado) {
-                                location.reload();
-                        }else{
-                            alert("HUBO UN ERROR AL PROCESAR");
-                        }
-                    }   
-                });
-
             }else{
                 alert("Elija una persona")
             }
@@ -770,10 +885,6 @@
 
 
     <script>
-    //$("#myBtn").click(function(){
-        //    $("#myModal").modal();
-        //});
-        
         function modal_local(id){
             notam=id
             id='txt'+id
@@ -782,8 +893,6 @@
             $('#txtmodal').val(txt.trim());
 
             varfuncion = "guardar_publicacion_pib('" + notam + "');"
-            //alert(varfuncion)
-            //document.getElementById('btnmodal').setAttribute=( "onclick",varfuncion);
             $('#btnmodal').removeAttr('onclick');
             $('#btnmodal').attr('onClick', varfuncion);
         }
@@ -868,6 +977,66 @@
 
 
 
+    <script>
+        function modal_local_pibguardarregistro(){
+            array = document.getElementById('tabla_pib_vigente').getElementsByTagName('tr')
+            id_mensajes = ""
+            notam_resumen = ""
+            for (let i = 0; i < array.length; i++) {
+                id_element = array[i].id;
+                id_mensajes=id_mensajes+id_element+","
+
+                notam_resumen = notam_resumen + "<tr><td>" +array[i].cells[0].textContent.trim() +"</td></tr>"
+            }
+
+
+            $("#myModal2").modal();
+            document.getElementById("id_titulo_resumen").innerHTML = "Resumen notam: "+array.length + " registros"
+            document.getElementById("id_resumen_pibs").innerHTML = '<table class="table table-hover" >'+notam_resumen+"</table>";
+
+            varfuncion = "guardar_resumen_pib('" + id_mensajes + "');"
+            $('#btnmodal2').removeAttr('onclick');
+            $('#btnmodal2').attr('onClick', varfuncion);
+            
+        }
+
+        function guardar_resumen_pib(resumen_notam) {
+            //ENVIAR LISTA DE ID_PIB_tRAFICO PARA GUARDAR EL REGISTRO.
+
+            trabajador=$('input:radio[name=equipo_activo]:checked').attr('id')
+            if (typeof(trabajador)!=='undefined') {
+                if (resumen_notam != "") {
+                    alert(trabajador)
+                    datasend={
+                        "resumen" : resumen_notam,
+                        "oficial" : trabajador 
+                    }
+
+                    $.ajax({
+                        type:'GET',
+                        url: '{% url 'view_guardarregistro_pib' %}',
+                        data: datasend,
+                        //data:$(this).serialize(),
+                        success: function (request){
+                            if (request.estado) {
+                                    location.reload();
+                            }else{
+                                alert("HUBO UN ERROR AL GUARDAR RESUMEN");
+                            }
+                        }   
+                    });
+                    
+                } else {
+                    alert("Rellene los cuadros de texto")
+                }
+                
+            }else{
+                alert("Elija una persona")
+            }
+
+
+        }
+    </script>
 
 {% endblock extrajs %}
 

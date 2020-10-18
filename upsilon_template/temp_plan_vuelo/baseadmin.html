@@ -125,13 +125,77 @@
                                         <a class="navbar-brand" href="{% url 'view_pagina_principal' %}">
                                             <!-- <img class="brand-logo" alt="Chameleon admin logo"
                                     src="theme-assets/images/logo/logo.png" /> -->
-                                            <h1 class="brand-text " style="color: white;">Upsilon | {{user.get_username}} </h1>
+                                            <div class="row">
+                                                &nbsp;&nbsp;&nbsp;
+                                                <img  src="{% static 'servicios_logos/aasana_alas_nucleo.svg' %}"  style="width:105px;" alt=""> <!-- id="logofooter" class="rotating" -->
+                                                &nbsp;&nbsp;&nbsp;
+                                                <h1 class="brand-text " style="color: white;">Upsilon | Información aeronáutica<!-- {{user.get_username}} --> </h1>
+                                            </div>
                                         </a>
                                     </li>
                                     <!--LOGO DE PAGINA-->
 
                                 </ul>
                                 <!--VERSION MOVIL -->
+
+
+
+
+                                <!--NOTIFICACION METAR        -->                           
+                                <ul class="nav navbar-nav float-right" >
+                                    
+                                    <li class="dropdown dropdown-user nav-item">
+                                        <a class="dropdown-toggle nav-link dropdown-user-link" hred="#"
+                                            data-toggle="dropdown">
+                                            <span class="avatar avatar-online" id="id_notificacion_metar" onclick="autofocus_metar()">
+                                                <span class="material-icons">
+                                                    wb_sunny
+                                                </span>
+                                                <!--
+                                                    <img src="{% static 'theme-assets/images/portrait/small/avatar-s-2.png' %}" alt="avatar">
+                                                -->
+                                            </span>
+                                        </a>
+                                        
+                                        <ul  class="dropdown-menu dropdown-menu-right" style="background-color: #ffffff;">
+                                            
+                                            <li> <!--class="arrow_box_right"-->
+                                                <h4>
+                                                    &nbsp; &nbsp; 
+                                                    Metars
+                                                </h4> 
+                                            </li>
+                                            
+                                            <!-- BUSCAR METAR-->
+                                            <li class="arrow_box_right">
+                                                <div class="input-group search-box">
+                                                    <div class="position-relative has-icon-right full-width">
+                                                        <input class="form-control" id="aeropuerto_metar" type="text"
+                                                        placeholder="Buscar...">
+                                                        <div class="form-control-position" id="btn_aeropuerto_metar" onclick="busca_metar()">
+                                                            <span class="material-icons">
+                                                                search
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!--
+                                                    <form>
+                                                    </form>
+                                                -->
+                                            </li>
+                                            <!-- BUSCAR METAR-->
+                                            
+                                            <div id="grupo_metars" style="height: 30px; overflow: auto;">
+                                                
+                                            </div>
+                                        </ul>
+                                    </li>
+                                </ul>
+                                <!--NOTIFICACION METAR   --> 
+
+
+
 
                                 
                                 <!--NOTIFICACION NOTAM Y SPECI        -->                           
@@ -157,7 +221,7 @@
                                                 </h4> 
                                             </li>
                                             
-                                            <div id="grupo_notams">
+                                            <div id="grupo_notams" style="height: 300px; overflow: auto;">
                                                 
                                             </div>
                                         </ul>
@@ -194,42 +258,8 @@
                                                 </form>
                                             </li>
                                             
-                                            <div id="grupo_trabajo">
-                                                {% for persona in equipo_trabajo %}
-                                                    <div class="dropdown-divider"></div>
-                                                    <li>
-                                                        <div class="input-group">
-                                                            
-                                                            {% if persona.activo %}
-                                                                <a id="{{persona.ci}}" class="dropdown-item" onclick="cerrar_sesion( '{% url 'view_cerrar_sesion' %}?id_trabajador={{persona.ci}}')" >
-                                                                    <i class="ft-user"></i> 
-                                                                    {{persona.nombre}}
-                                                                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                                                                    <button class="btn btn-outline-danger">
-                                                                        <span class="material-icons">
-                                                                            close
-                                                                        </span>    
-                                                                    </button>
-                                                                </a>
-                                                            {% else %}
-                                                                <a class="dropdown-item" onclick="abrir_modal( '{% url 'view_identificacion' id_trabajador=persona.ci%}')" >
-                                                                    <i class="ft-user"></i> 
-                                                                    {{persona.nombre}}
-                                                                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-        
-                                                                    <button class="btn btn-outline-primary"> 
-                                                                        <span class="material-icons">
-                                                                            fingerprint
-                                                                        </span>
-                                                                    </button>
-        
-                                                                </a>
-                                                            {% endif %}
-                                                                
-                                                            
-                                                        </div>
-                                                    </li>
-                                                {% endfor %}    
+                                            <div id="grupo_trabajo" style="height: 350px; overflow: auto;">
+                                                    
                                             </div>
                                         </ul>
                                     </li>
@@ -239,81 +269,79 @@
                                 <!--EQUIPO DE USUARIOS-->
 
 
-                                <!--MENU APPS 2-->
-                                <ul class="nav navbar-nav float-right" >
-
-                                    <!--BUSCAR-->
-                                    <li class="nav-item dropdown navbar-search" >
-                                        
-                                        <a class="nav-link dropdown-toggle hide" data-toggle="dropdown" href="#">
-                                            <span class="material-icons white md-24">
-                                                apps
-                                            </span>
-                                        </a>
-
-                                        <ul class="dropdown-menu dropdown-menu-right" style="background-color: #ffffff;">
+                                <!--MENU APPS 2
+                                    <ul class="nav navbar-nav float-right" >
+                                        <li class="nav-item dropdown navbar-search" >
                                             
-                                            <li class="arrow_box_right">
-                                                <div class="container">
-                                                    <div class="row">
-                                                    <div class="col-sm-6 bg-success">
-                                                        <a class="dropdown-item" href="#">
-                                                            <span class="material-icons  md-24">
-                                                                apps
-                                                            </span>
-                                                        </a>
+                                            <a class="nav-link dropdown-toggle hide" data-toggle="dropdown" href="#">
+                                                <span class="material-icons white md-24">
+                                                    apps
+                                                </span>
+                                            </a>
+    
+                                            <ul class="dropdown-menu dropdown-menu-right" style="background-color: #ffffff;">
+                                                
+                                                <li class="arrow_box_right">
+                                                    <div class="container">
+                                                        <div class="row">
+                                                        <div class="col-sm-6 bg-success">
+                                                            <a class="dropdown-item" href="#">
+                                                                <span class="material-icons  md-24">
+                                                                    apps
+                                                                </span>
+                                                            </a>
+                                                        </div>
+                                                        <div class="col-sm-6 bg-warning">
+                                                            <a class="dropdown-item" href="#">
+                                                                <span class="material-icons  md-24">
+                                                                    apps
+                                                                </span>
+                                                            </a>
+                                                        </div>
+                                                        </div>
                                                     </div>
-                                                    <div class="col-sm-6 bg-warning">
-                                                        <a class="dropdown-item" href="#">
-                                                            <span class="material-icons  md-24">
-                                                                apps
-                                                            </span>
-                                                        </a>
+                                                </li>
+    
+                                                <div class="dropdown-divider"></div>
+    
+                                                <li >
+                                                    <div class="container">
+                                                        <div class="row">
+                                                        <div class="col-sm-6 bg-success">
+                                                            <a class="dropdown-item" href="#">
+                                                                <span class="material-icons  md-24">
+                                                                    apps
+                                                                </span>
+                                                            </a>
+                                                        </div>
+                                                        <div class="col-sm-6 bg-warning">
+                                                            <a class="dropdown-item" href="#">
+                                                                <span class="material-icons  md-24">
+                                                                    apps
+                                                                </span>
+                                                            </a>
+                                                        </div>
+                                                        </div>
                                                     </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-
-                                            <div class="dropdown-divider"></div>
-
-                                            <li >
-                                                <div class="container">
-                                                    <div class="row">
-                                                    <div class="col-sm-6 bg-success">
-                                                        <a class="dropdown-item" href="#">
-                                                            <span class="material-icons  md-24">
-                                                                apps
-                                                            </span>
-                                                        </a>
-                                                    </div>
-                                                    <div class="col-sm-6 bg-warning">
-                                                        <a class="dropdown-item" href="#">
-                                                            <span class="material-icons  md-24">
-                                                                apps
-                                                            </span>
-                                                        </a>
-                                                    </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        
-                                            <div class="dropdown-divider"></div>
-
-                                            <li class="nav-item d-none d-md-block bg-success">
-                                                <a class="nav-link" href="{% url 'view_tablero' %}">
-                                                    TABLERO
-                                                    <span class="material-icons">
-                                                        people_alt
-                                                    </span>
-                                                </a>
-                                            </li>
-
-                                        
-                                        </ul>
-                                    </li>
-                                    <!--BUSCAR-->
-
-                                </ul>
+                                                </li>
+                                            
+                                                <div class="dropdown-divider"></div>
+    
+                                                <li class="nav-item d-none d-md-block bg-success">
+                                                    <a class="nav-link" href="{% url 'view_tablero' %}">
+                                                        TABLERO
+                                                        <span class="material-icons">
+                                                            people_alt
+                                                        </span>
+                                                    </a>
+                                                </li>
+    
+                                            
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                -->
+                                
                                 <!-- MENU APPS 2-->
                                 
                                 
@@ -539,6 +567,8 @@
                 setInterval(() => {
                     new_notams_update();
                 }, 5000);
+
+                get_equipo_trabajo();
         });
 
         function abrir_modal_base(url) {
@@ -553,6 +583,7 @@
                 url: "{% url 'view_update_notam_realtime' %}",
                 //data:$(this).serialize(),
                 success: function (request){
+                    document.getElementById('grupo_notams').innerHTML="";
                     if (request.length > 0) {
                         for (let i = 0; i < request.length; i++) {
                             const objnotam = request[i];
@@ -574,7 +605,7 @@
                                 a14 = '</li>'
                                 a15 = '<div class="dropdown-divider"></div>'
                                 
-                                document.getElementById('grupo_notams').innerHTML=a1 + a2 + a3 + a5 + a6 + a12 + a13 + a14 + a15;
+                                document.getElementById('grupo_notams').innerHTML+=a1 + a2 + a3 + a5 + a6 + a12 + a13 + a14 + a15;
 
                                 //document.getElementById('grupo_notams').innerHTML=a1 + a2 + a3 + a5 + a6 + a7 + a8 + a9 + a10 + a11 + a12 + a13 + a14 + a15;
 
@@ -596,9 +627,9 @@
                         a13 = '    </div>'
                         a14 = '</li>'
                         a15 = '<div class="dropdown-divider"></div>'
-                        document.getElementById('grupo_notams').innerHTML=a1 + a2 + a3 + a5 + a6 + a12 + a13 + a14 + a15;
+                        document.getElementById('grupo_notams').innerHTML+=a1 + a2 + a3 + a5 + a6 + a12 + a13 + a14 + a15;
                     }
-                    boton_todos='<a class="btn btn-outline-info" style="margin-left: 30%;"> Ver todos</a>'
+                    boton_todos='<a class="btn btn-outline-info" style="margin-left: 30%;" href="{% url 'view_todos_notams' %}"> Ver todos</a>'
                     document.getElementById('grupo_notams').innerHTML+=boton_todos;
                 },
                 error: function (e) {
@@ -628,6 +659,105 @@
             })
         }
 
+    </script>
+
+    <script>
+        function get_equipo_trabajo(){
+            user='{{user.get_username}}';
+            
+            datasend={
+                cuenta: user,
+            }
+            
+            $.ajax({
+                type:'GET',
+                url: "{% url 'view_get_trabajadores' %}",
+                data: datasend,
+                //data:$(this).serialize(),
+                success: function (request){
+                    document.getElementById("grupo_trabajo").innerHTML=""
+                    for (let i = 0; i < request.length; i++) {
+                        persona = request[i];
+
+                        a = '<div class="dropdown-divider"></div>'
+                        b = '<li>'
+                        c =     '<div class="input-group">'
+                                  if (persona.activo)
+                                  {
+                                        a1 =  '           <a id="{{persona.ci}}" class="dropdown-item" onclick="cerrar_sesion(' + "'" + "/plan_vuelo/identificacion/terminaractividad/?id_trabajador=" + persona.ci +"'" + ' )" >'
+                                        a2 =  '               <i class="ft-user"></i> '
+                                        a3 =                 persona.nombre
+                                        a4 =  '               &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;'
+                                        a5 =  '               <button class="btn btn-outline-danger">'
+                                        a6 =  '                   <span class="material-icons">'
+                                        a7 =  '                       close'
+                                        a8 =  '                   </span>    '
+                                        a9 =  '               </button>'
+                                        a0 =  '           </a>'
+                                  }
+                                  else{ 
+                                        a1 =  '           <a class="dropdown-item" onclick="abrir_modal('+ "'" +'/plan_vuelo/identificacion/'+persona.ci+ "/'"+')" >'
+                                        a2 =  '               <i class="ft-user"></i> '
+                                        a3 =                 persona.nombre
+                                        a4 =  '               &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;'
+                                        a5 =  '               <button class="btn btn-outline-primary"> '
+                                        a6 =  '                   <span class="material-icons">'
+                                        a7 =  '                       fingerprint'
+                                        a8 =  '                   </span>'
+                                        a9 =  '               </button>'
+                                        a0 =  '           </a>'
+                                   }
+                        d = '    </div>'
+                        e = '</li>'
+
+                        document.getElementById("grupo_trabajo").innerHTML += a + b + c + (a1 + a2 + a3 + a4 + a5 + a6 + a7 + a8 + a9 + a0) + d + e;
+                    }
+                },
+                error: function (e) {
+                    console.log(e);
+                }   
+            })
+
+        }
+    </script>
+
+    <script>
+
+        function autofocus_metar(){
+            document.getElementById("aeropuerto_metar").value="";
+            document.getElementById("aeropuerto_metar").focus();
+
+        }
+
+        var input = document.getElementById("aeropuerto_metar");
+        input.addEventListener("keyup", function(event) {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+                document.getElementById("btn_aeropuerto_metar").click();
+            }
+        });
+
+
+        function busca_metar(){
+            aeropuerto = document.getElementById('aeropuerto_metar').value.toUpperCase()
+            if (aeropuerto != "") {
+                url='/plan_vuelo/getmetar/' + aeropuerto + '/'
+                //alert(url)
+                abrir_modal_base(url )
+                /*
+                $.ajax({
+                    type:'GET',
+                    url: "{% url 'view_update_notam_realtime' %}",
+                    //data:$(this).serialize(),
+                    success: function (request){
+                        document.getElementById('grupo_notams').innerHTML="";
+                    },
+                    error: function (e) {
+                        console.log(e);
+                    }   
+                })*/
+            }
+        }
     </script>
     
     {% block extrajs %} {% endblock extrajs %}

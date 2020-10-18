@@ -27,11 +27,9 @@
                                                 {{value}} <br>
                                             {% endif %}
                                         {% endfor %}
-                                        <!--
-                                            {{area.lat}}
-                                            {{area.long}}
-                                            {{area.radius}}
-                                        -->
+                                        <br>
+                                        <h4>Decodificado: </h4>
+                                        {{decodificado}}
                                     </div>
                                 </div>
                             </div>
@@ -44,12 +42,11 @@
                                 <div class="containerpib">
                                     <div id="accordion" class="panel-group">
                                         <!--mita 2-->
-                                        <div id='map' style="border-radius: 25px 25px 25px ;position: absolute; top: -55px; bottom: 0; margin-right:5px; width: 500px; height:500px;"></div>
+                                        <div id='map' style="z-index:0; border-radius: 25px 25px 25px ;position: absolute; top: -55px; bottom: 0; margin-right:5px; width: 500px; height:500px;"></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                     </div>
 
                 </section>
@@ -60,7 +57,7 @@
                 <br><br>
                 <br><br>
                 <br><br>
-                <button class="btn btn-danger " type="button" data-dismiss="modal">Cerrar</button>
+                <button class="btn btn-danger " type="button" data-dismiss="modal" style="z-index:900;">Cerrar</button>
             </div>
 
         </div>
@@ -68,8 +65,10 @@
 <!--
 
 -->
+        <script src="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js"></script>
 
         <script>
+            mapboxgl.accessToken = 'pk.eyJ1IjoiY2FlbHQiLCJhIjoiY2tmNGx4MDY3MDBnNTJ5cDh2aHhjOTQyciJ9.juIQGQyyJdwT0cIfnbFA3Q';
             latitude='{{area.lat}}'
             latitude= latitude.substr(0,2) + " " + latitude.substr(2, latitude.length)
             longitude='{{area.long}}'
@@ -143,19 +142,17 @@
                 }
     
                 return coords;
-                }
-    
-    
-        </script>
-    
-        <script>
-            mapboxgl.accessToken = 'pk.eyJ1IjoiY2FlbHQiLCJhIjoiY2tmNGx4MDY3MDBnNTJ5cDh2aHhjOTQyciJ9.juIQGQyyJdwT0cIfnbFA3Q';
+            }
+        
+        
+
+
             var map = new mapboxgl.Map({
               container: 'map',
               style: 'mapbox://styles/mapbox/streets-v11',
               center: [longitude, latitude],
               zoom: 10,
-              minZoom: 9,
+              minZoom: 7,
               maxZoom: 15,
             });
      

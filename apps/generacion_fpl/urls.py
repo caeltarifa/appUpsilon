@@ -1,7 +1,8 @@
 from django.conf.urls import url, include
 from django.urls import path
 
-from apps.generacion_fpl.views import  view_admin_felcn, view_admin_empresa, view_admin_comunicaciones, view_save_fpl
+from apps.generacion_fpl.views import  view_admin_felcn, view_admin_empresa,  view_save_fpl
+
 
 #VISTAS PARA USUARIOS EMPRESA
 from apps.generacion_fpl.views import  view_solicitar_comunicacional, view_solicitar_operacional,view_solicitar_suplementaria, view_creacion_fpl_presentado, view_solicitar_felcn, view_cancelar_fpl,view_mostrar_fpl_empresa
@@ -24,7 +25,11 @@ urlpatterns = [
     url('^ecojetlp$',view_admin_empresa, name='view_admin_ecojet'),
     # urls para las empresas
     
-    url('^comunicaciones$',view_admin_comunicaciones, name='view_admin_comunicaciones'),
+
+
+    #url('^comunicaciones$',view_admin_comunicaciones, name='view_admin_comunicaciones'),
+    
+    
     url('^crear_fpl$',view_creacion_fpl_presentado, name='view_creacion_fpl_presentado'),
     url('^solicitar_fplcom$',view_solicitar_comunicacional, name='view_solicitar_comunicacional'),
     url('^solicitar_fplope$',view_solicitar_operacional, name='view_solicitar_operacional'),

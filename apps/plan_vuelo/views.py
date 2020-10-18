@@ -35,15 +35,15 @@ def view_plan_vuelo(request):
         return redirect('login')
 
 def view_panel_coordinacion(request):
-    if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='CONTROLADORESLP').exists():
-        equipo_coordinacion = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and empresa_institucion_id=1 order by activo")
-        return render(request, 'temp_plan_vuelo/index_coordinacion.html' ,{'equipo_trabajo': equipo_coordinacion} )#,'metar':metar} )
+    if request.user.is_authenticated and request.user.is_active  and (request.user.groups.filter(name='CONTROLADORESLP').exists() or request.user.groups.filter(name='TODOS_SERVICIOS').exists() ):
+        #equipo_coordinacion = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and empresa_institucion_id=1 order by activo")
+        return render(request, 'temp_plan_vuelo/index_coordinacion.html')# ,{'equipo_trabajo': equipo_coordinacion} )#,'metar':metar} )
     else:
         return redirect('login')
 
 def view_admin_coordinacion(request):
     controladores=Group.objects.get(name='CONTROLADORESLP')
-    if request.user.is_authenticated and request.user.groups.filter(name='CONTROLADORESLP').exists():
+    if request.user.is_authenticated and (request.user.groups.filter(name='CONTROLADORESLP').exists() or request.user.groups.filter(name='TODOS_SERVICIOS').exists()):
         #lista_fpl=Flp_trafico.objects.raw("select id_mensaje as id, id_mensaje, substring(id_mensaje, 1, 7) as id_amhs, substring(id_mensaje, 15,22) as fecha, substring(aftn2, 1,6) as hora_amhs, aftn1, aftn2, id_aeronave, reglas_vuelo, aeropuerto_salida, ruta, aeropuerto_destino, otros from plan_vuelo_flp_trafico where aprobado=false order by id_mensaje asc limit 90;")
          
         now=datetime.datetime.now()
@@ -61,8 +61,16 @@ def view_admin_coordinacion(request):
             if fecha_now in fpl.id_mensaje:
                 lista_fpl_hoy.append(fpl)
                 
-        lista_fpl_aprobado = Flp_trafico.objects.raw("select id_mensaje as id, id_mensaje, substring(id_mensaje, 1, 7) as id_amhs, substring(id_mensaje, 15,22) as fecha, substring(aftn2, 1,6) as hora_amhs, aftn1, aftn2, id_aeronave, reglas_vuelo, aeropuerto_salida, ruta, aeropuerto_destino, otros from plan_vuelo_flp_trafico where aprobado=true order by id_amhs desc limit 90;")
-
+        now=datetime.datetime.now()
+        anio =  str(now.year)
+        mes = ( str(now.month) if len(str(now.month))>1 else ('0'+str(now.month)) ) 
+        dia = (str(now.day) if len(str(now.day))>1 else ('0' + str(now.day)))
+        
+        hoy=anio+"-"+mes+"-"+dia
+        #lista_fpl_aprobado_hoy = Flp_trafico.objects.raw("select id_mensaje as id, id_mensaje, substring(id_mensaje, 1, 7) as id_amhs, substring(id_mensaje, 15,22) as fecha, substring(aftn2, 1,6) as hora_amhs, aftn1, aftn2, id_aeronave, reglas_vuelo, aeropuerto_salida, ruta, aeropuerto_destino, otros from plan_vuelo_flp_trafico where aprobado=true order by id_amhs desc limit 90;")
+        lista_fpl_aprobado_hoy = Flp_aprobado.objects.raw("select * from plan_vuelo_flp_aprobado where fecha_aprobacion=%(hoy)s order by hora_aprobacion desc limit 90;", {'hoy':hoy})
+        #id_flpaprobado_id    | fecha_aprobacion | hora_aprobacion | transponder | ruta_usada  | puntos_de_ficha | matricula | controlador_id | frecuencias | nivel |   tiempos    | en_curso | finalizado | por_trabajar
+        
         #id_mensaje, id_amhs, fecha, hora_amhs, aftn1, aftn2, id_aeronave, reglas_vuelo, aeropuerto_salida, ruta, aeropuerto_destino, otros
         #eliminando los planes de vuelo que no tengas IS
         
@@ -71,7 +79,7 @@ def view_admin_coordinacion(request):
         equipo_coordinacion = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and empresa_institucion_id=1 order by activo")
 
 
-        return render(request, 'temp_plan_vuelo/progreso_vuelo.html', {'lista_fpl':lista_fpl,'lista_fpl_hoy':lista_fpl_hoy ,'lista_fpl_aprobado':lista_fpl_aprobado , 'equipo_trabajo': equipo_coordinacion} )#,'metar':metar} )
+        return render(request, 'temp_plan_vuelo/progreso_vuelo.html', {'lista_fpl':lista_fpl,'lista_fpl_hoy':lista_fpl_hoy ,'lista_fpl_aprobado':lista_fpl_aprobado_hoy , 'equipo_trabajo': equipo_coordinacion} )#,'metar':metar} )
         #return render(request,'temp_plan_vuelo/admin.html')
     else:
         return redirect('login')
@@ -81,7 +89,7 @@ def view_admin_coordinacion(request):
 
 #######################   CONTROL DE APROBACION DE FPLs ##################
 def view_aprobar_flp(request, id_plancompleto):
-    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='CONTROLADORESLP').exists():        
+    if request.user.is_authenticated and request.user.is_active and (request.user.groups.filter(name='CONTROLADORESLP').exists() or request.user.groups.filter(name='TODOS_SERVICIOS').exists()):        
         #plan_completo = Flp_trafico.objects.filter(id_mensaje=id_plancompleto)[0]
         if Flp_trafico.objects.filter(id_mensaje=str(id_plancompleto)).exists():
             plan_completo = Flp_trafico.objects.filter(id_mensaje=str(id_plancompleto))
@@ -124,7 +132,7 @@ def view_aprobar_flp(request, id_plancompleto):
                 'id_mensaje': 'NOT FOUND ERROR 404'
             }
         
-        equipo_activo = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and activo=true and empresa_institucion_id=1 order by activo")
+        equipo_activo = Trabajador.objects.raw("select ci, nombre, apellido, activo  from plan_vuelo_trabajador where activo='t' and ci in ( select trabajador_id from plan_vuelo_trabajador_cargo where cargo_id in ( select id_cargo  from plan_vuelo_cargo where cuenta_usuario_id in  (select id from auth_user where username like %(usuario)s) ) )", {'usuario':request.user.username})
         equipo_activo={
             'equipo_activo':equipo_activo,
             }
@@ -190,16 +198,13 @@ def view_historial_aprobacion(request):
     if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='CONTROLADORESLP').exists():
         equipo_coordinacion = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and empresa_institucion_id=1 order by activo")
 
-        por_trabajar = Flp_aprobado.objects.raw("select id_flpaprobado_id, id_aeronave, aeropuerto_salida, aeropuerto_destino,fecha_aprobacion, hora_aprobacion, nombre, apellido from (select id_flpaprobado_id, id_aeronave, aeropuerto_salida, aeropuerto_destino,controlador_id,fecha_aprobacion, hora_aprobacion,por_trabajar from plan_vuelo_flp_trafico inner join plan_vuelo_flp_aprobado on id_mensaje like id_flpaprobado_id) as t1 inner join plan_vuelo_trabajador on t1.controlador_id = plan_vuelo_trabajador.ci where por_trabajar='t' order by fecha_aprobacion, hora_aprobacion desc  ")
-        en_curso =     Flp_aprobado.objects.raw("select id_flpaprobado_id, id_aeronave, aeropuerto_salida, aeropuerto_destino,fecha_aprobacion, hora_aprobacion, nombre, apellido from (select id_flpaprobado_id, id_aeronave, aeropuerto_salida, aeropuerto_destino,controlador_id,fecha_aprobacion, hora_aprobacion,en_curso from plan_vuelo_flp_trafico inner join plan_vuelo_flp_aprobado on id_mensaje like id_flpaprobado_id) as t1 inner join plan_vuelo_trabajador on t1.controlador_id = plan_vuelo_trabajador.ci where en_curso='t' order by fecha_aprobacion, hora_aprobacion desc  ")
-        finalizados =  Flp_aprobado.objects.raw("select id_flpaprobado_id, id_aeronave, aeropuerto_salida, aeropuerto_destino,fecha_aprobacion, hora_aprobacion, nombre, apellido from (select id_flpaprobado_id, id_aeronave, aeropuerto_salida, aeropuerto_destino,controlador_id,fecha_aprobacion, hora_aprobacion, finalizado from plan_vuelo_flp_trafico inner join plan_vuelo_flp_aprobado on id_mensaje like id_flpaprobado_id) as t1 inner join plan_vuelo_trabajador on t1.controlador_id = plan_vuelo_trabajador.ci where finalizado='t' order by fecha_aprobacion, hora_aprobacion desc  ")
-        
         #por_trabajar = [serializarFplAprobado(aprobado) for aprobado in por_trabajar]
         #id_mensaje       | aeropuerto_salida | aeropuerto_destino  | fecha_aprobacion | hora_aprobacion | nombre  | apellido  
 
-        return render(request, 'temp_plan_vuelo/fpl_aprobados_historial.html' ,{'equipo_trabajo': equipo_coordinacion, 'por_trabajar': por_trabajar , 'en_curso' : en_curso,'finalizados':finalizados } )#,'metar':metar} )
+        return render(request, 'temp_plan_vuelo/fpl_aprobados_historial.html' ,{'equipo_trabajo': equipo_coordinacion } )#,'metar':metar} )
     else:
         return redirect('login')
+
 
 def serializarFplAprobado(fplaprobado):
     return {
@@ -212,6 +217,30 @@ def serializarFplAprobado(fplaprobado):
         'nombre' : fplaprobado.nombre, 
         'apellido' : fplaprobado.apellido,
 
+    }
+
+def view_get_trabajadores(request):
+    if request.user.is_authenticated and request.user.is_active:
+        #equipo_coordinacion = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and empresa_institucion_id=1 order by activo")
+        if request.is_ajax and request.method =="GET":
+            get_usuario = request.GET.dict()['cuenta']
+            # select ci, nombre, apellido, activo  from plan_vuelo_trabajador where ci in ( select trabajador_id from plan_vuelo_trabajador_cargo where cargo_id in ( select id_cargo  from plan_vuelo_cargo where cuenta_usuario_id in  (select id from auth_user where username like 'acc_supervisorlp@aasana') ) );
+            grupo_trabajo = Trabajador.objects.raw("select ci, nombre, apellido, activo  from plan_vuelo_trabajador where ci in ( select trabajador_id from plan_vuelo_trabajador_cargo where cargo_id in ( select id_cargo  from plan_vuelo_cargo where cuenta_usuario_id in  (select id from auth_user where username like %(usuario)s) ) )", { 'usuario' : get_usuario} )
+            #ci |   nombre    | apellido | activo 
+            grupo_trabajo=[serializarTrabajador(trabajador) for trabajador in grupo_trabajo]
+            
+            return HttpResponse(json.dumps(grupo_trabajo), content_type='application/json')
+        else:
+            return HttpResponse(json.dumps([]), content_type='application/json')
+    else:
+        return redirect('login')
+
+def serializarTrabajador(trabajador):
+    return {
+        'ci' : trabajador.ci,
+        'nombre' : trabajador.nombre,
+        'apellido' : trabajador.apellido,
+        'activo' : trabajador.activo,
     }
 
 def view_guardar_estado_progreso(request):
@@ -280,6 +309,56 @@ def serializar_fichadraggable(fplejec, pane):
 
 #######################   CONTROL DE APROBACION DE FPLs ##################
 
+
+
+from  avwx.models import MetarSet
+from pyflightdata import FlightData
+
+########################    METARS
+def view_getmetar (request, id_aeropuerto):
+    if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='TODOS_SERVICIOS').exists():
+        dic={'estado':False , 'mensaje': 'Sin registros'}
+        
+        #if request.is_ajax and request.method =="GET":
+        #get_aero = request.GET.dict()['icao']
+        get_aero = str(id_aeropuerto)
+
+        try:
+            jfk_metars = MetarSet(get_aero)
+            jfk_metars.refresh()
+            latest_jfk_metar = jfk_metars.get_latest()
+            estado = True
+            
+        except:
+            estado = False
+
+
+        if estado:
+            
+            f=FlightData()
+
+            cadena = f.decode_metar(latest_jfk_metar.raw_text)
+
+            translator=Translator()
+
+            traducido = translator.translate(cadena, src='en', dest='es').text
+
+            vector = traducido.split('\n')
+            titulo=vector.pop()
+
+            dic={'estado':True , 'titulo': titulo , 'mensaje': vector}
+
+        else:
+            dic={'estado':False ,'titulo':'METAR', 'mensaje': ['Sin registros o error en el mensaje METAR']}
+
+
+        return render(request, 'temp_plan_vuelo/modal_mensaje_metar.html', dic  ) #retorno el modal y el contexto
+        #return HttpResponse(dic, content_type='application/json')
+    else:
+        return redirect('login')
+
+
+########################    METARS
 
 
 
@@ -475,8 +554,17 @@ def componer_msj(notam):
     msj+= notam.idnotam + " " 
     msj+= notam.resumen + " " 
     msj+= notam.aplica_a + " " 
-    msj+= notam.valido_desde + " " 
-    msj+= (notam.valido_hasta + " ") if not 'EST' in notam.valido_hasta else ( ' '.join( notam.valido_hasta.replace("+", "").strip().split(" ")[:-1] ) + " ")
+    msj+= notam.valido_desde + " "
+    
+    if notam.valido_hasta != '':
+        array_valido_hasta=notam.valido_hasta.split(' ')
+        if array_valido_hasta[1].strip() =='':
+            msj+= 'C) 3001290000 \n'
+        else:
+            msj+= (notam.valido_hasta + " ") if not 'EST' in notam.valido_hasta else ( ' '.join( notam.valido_hasta.replace("+", "").strip().split(" ")[:-1] ) + " ")
+    else:
+        msj+= 'C) 3001290000 \n'
+
     msj+= notam.mensaje
     msj = msj.replace("\n"," ")
     msj = msj.strip()
@@ -488,7 +576,7 @@ def componer_msj(notam):
         else:
             msj+= " E) " 
     msj+= ")"
-    msj.replace("))", ")") 
+    msj=msj.replace("))", ")") 
 
     return msj
 
@@ -515,6 +603,13 @@ def view_notam_modal(request, id_notam_mensaje):
             #notam_completo = Notam_trafico.objects.filter(id_mensaje=str(id_notam_mensaje))[0]
             notam_completo = Notam_trafico.objects.raw("select * from (select notam_extenso_id, area from aro_ais_pib_trafico inner join aro_ais_pib_extenso on ref_notam_amhs_id = notam_extenso_id) as hola inner join plan_vuelo_notam_trafico  on id_mensaje = notam_extenso_id where id_mensaje like %(id_mensaje)s;", {'id_mensaje':id_notam_mensaje})[0]
             #notam_extenso_id     area  id_mensaje  aftn1   aftn2   idnotam     resumen     aplica_a    valido_desde    valido_hasta    mensaje     nuevo   ingresado
+            notam_traducido = Notam_trafico.objects.get(id_mensaje=notam_completo.id_mensaje)
+            
+            n = notam.Notam.from_str(componer_msj(notam_traducido))
+            decodificado = n.decoded()
+
+            translator = Translator()
+            decodificado = translator.translate( decodificado, dest='es').text
         else:
             notam_completo = Notam_trafico
 
@@ -534,7 +629,7 @@ def view_notam_modal(request, id_notam_mensaje):
                 'long' : '06610W',
                 'radius' : 0
             }
-        return render(request, 'temp_plan_vuelo/modal_mensaje_completo.html', {'data': serializar_notam_completo(notam_completo), 'area':dic }  ) #retorno el modal y el contexto
+        return render(request, 'temp_plan_vuelo/modal_mensaje_completo.html', {'data': serializar_notam_completo(notam_completo), 'decodificado':decodificado, 'area':dic }  ) #retorno el modal y el contexto
     else:
         return redirect('accounts/login/')
     
@@ -600,7 +695,7 @@ def view_identificacion(request, id_trabajador):
         return redirect('accounts/login/')
 
 def view_validar_passwd(request):
-    if request.user.is_authenticated and request.user.is_active and (request.user.groups.filter(name='CONTROLADORESLP').exists() or request.user.groups.filter(name='AROAISLP').exists()):
+    if request.user.is_authenticated and request.user.is_active and (request.user.groups.filter(name='TODOS_SERVICIOS').exists() or request.user.groups.filter(name='AROAISLP').exists()):
         if request.is_ajax and request.method =="GET":
             cadena = request.GET.get('parametro')
             
@@ -832,7 +927,9 @@ def view_ver_fpl_aprobado(request, id_plancompleto):
                 'id_mensaje': 'NOT FOUND ERROR 404'
             }
         
-        equipo_activo = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and activo=true and empresa_institucion_id=1 order by activo")
+        #equipo_activo = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and activo=true and empresa_institucion_id=1 order by activo")
+        equipo_activo = Trabajador.objects.raw("select ci, nombre, apellido, activo  from plan_vuelo_trabajador where activo='t' and ci in ( select trabajador_id from plan_vuelo_trabajador_cargo where cargo_id in ( select id_cargo  from plan_vuelo_cargo where cuenta_usuario_id in  (select id from auth_user where username like %(usuario)s) ) )", {'usuario':request.user.username})
+        
         equipo_activo={ 'equipo_activo':equipo_activo,}
             
         context.update(equipo_activo)

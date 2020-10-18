@@ -1,0 +1,649 @@
+{% extends 'temp_plan_vuelo/baseadmin.html' %} 
+{% load static %} 
+
+{% block title %}
+<title>Upsilon | NOTAMS </title>
+{% endblock title %}
+
+
+
+{% block extra_head %}
+    <link rel='stylesheet' href='https://harvesthq.github.io/chosen/chosen.css'>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="{% static 'theme-assets/css/aprobar_plan.css' %}"> -->
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <!--        /* STYLE FOR MODAL RADIO BUTOONS FOR USERS FOR PROVE FPL */    -->
+    <style>
+        .radio-tile-group {
+        display: -webkit-box;
+        display: flex;
+        flex-wrap: wrap;
+        -webkit-box-pack: center;
+        justify-content: center;
+        }
+        .radio-tile-group .input-container {
+        position: relative;
+        height: 7rem;
+        width: 7rem;
+        margin: 0.5rem;
+        }
+        .radio-tile-group .input-container .radio-button {
+        opacity: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        cursor: pointer;
+        }
+        .radio-tile-group .input-container .radio-tile {
+        display: -webkit-box;
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+                flex-direction: column;
+        -webkit-box-align: center;
+                align-items: center;
+        -webkit-box-pack: center;
+                justify-content: center;
+        width: 100%;
+        height: 100%;
+        border: 2px solid #079ad9;
+        border-radius: 5px;
+        padding: 1rem;
+        -webkit-transition: -webkit-transform 300ms ease;
+        transition: -webkit-transform 300ms ease;
+        transition: transform 300ms ease;
+        transition: transform 300ms ease, -webkit-transform 300ms ease;
+        }
+        .radio-tile-group .input-container .icon svg {
+        fill: #079ad9;
+        width: 3rem;
+        height: 3rem;
+        }
+        .radio-tile-group .input-container .radio-tile-label {
+        text-align: center;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #079ad9;
+        }
+        .radio-tile-group .input-container .radio-button:checked + .radio-tile {
+        background-color: #079ad9;
+        border: 2px solid #079ad9;
+        color: white;
+        -webkit-transform: scale(1.1, 1.1);
+                transform: scale(1.1, 1.1);
+        }
+        .radio-tile-group .input-container .radio-button:checked + .radio-tile .icon svg {
+        fill: white;
+        background-color: #079ad9;
+        }
+        .radio-tile-group .input-container .radio-button:checked + .radio-tile .radio-tile-label {
+        color: white;
+        background-color: #079ad9;
+        }
+    </style>
+    <!--        /* STYLE FOR MODAL RADIO BUTOONS FOR USERS FOR PROVE FPL */    -->
+
+{% endblock extra_head %}
+    
+
+
+
+<!-- ////////////////////////////////////////////////////////////////////////////-->
+
+
+{% block content %}
+
+<!--BARRA LATERAL O MENU LATERAL-->
+<div class="main-menu menu-fixed menu-light menu-accordion    menu-shadow " data-scroll-to-active="false">
+
+    <div class="main-menu-content">
+        <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
+            <li class="active">
+                <a href="#_planes_recientes">
+                    <i class="ft-home"></i>
+                </a>
+            </li>
+            <!--
+                <li class=" nav-item">
+                    <a href="#_planes_aprobados">
+                        <i class="ft-pie-chart"></i>
+                    </a>
+                </li>
+                <li class=" nav-item">
+                    <a href="#_notams">
+                        <i class="ft-droplet"></i>
+                    </a>
+                </li>
+                <li class=" nav-item">
+                    <a href="#_metars">
+                        <i class="ft-layers"></i>
+                    </a>
+                </li>
+            -->
+        </ul>
+    </div>
+
+</div>
+<!--BARRA LATERAL O MENU LATERAL-->
+
+<br>
+
+
+
+
+<!--NOTAMS-->
+<div id="_metars"></div><br><br><br><br>
+<section>
+    <div class="row justify-content-center">
+        <div class="col-10" style="align-content: center;">
+            <div class="card" style="box-shadow: 2px 2px 8px 0 black; min-height: 30%;  max-height: 100%;">
+                <div class="card-header">
+                    <h4 class="card-title">HISTORIAL DE NOTAMS</h4>
+                    <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+                            <li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
+                            <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                            <li><a data-action="close"><i class="ft-x"></i></a></li>
+                        </ul>
+                    </div>
+                    <br>
+
+                </div>
+                <div class="card-content collapse show" style="height: 75%; overflow-y: auto;">
+                    
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            
+                            <thead style="text-align: center;" >
+                                <tr >
+                                    <td>
+                                        <input type="text" class="form-control " placeholder="Prioridad" id="busca_notam4" onkeyup="buscar_notam_tabla('busca_notam4',0,'tabla_notam')" style="width:110px" maxlength="4" >
+                                    </td>
+    
+                                    <td>
+                                        <input type="text" class="form-control"  placeholder="Notam" id="busca_fir4" onkeyup="buscar_notam_tabla('busca_fir4',1,'tabla_notam')" style="width:110px" maxlength="8">
+                                    </td>
+                                    
+                                    <td>
+                                        <input type="text" class="form-control"  placeholder="Lugar" id="busca_lugar4" onkeyup="buscar_notam_tabla('busca_lugar4',2,'tabla_notam')" style="width:110px" maxlength="4" >
+                                    </td>
+                                    
+                                    <td>
+                                    </td>
+
+                                    <td></td>
+                                    
+                                </tr>
+                                <tr>
+                                    <th style="width:65px; overflow:auto;">
+                                        Prioridad
+                                    </th>
+
+                                    <th style="width:55px;overflow:auto;" >NOTAM</th>
+                                    
+                                    <th style="width:55px;overflow:auto;">Lugar</th>
+                                    
+                                    <th style="width:55px; max-width: auto;">Valido desde</th>
+                                    
+                                    <th style="width:155px;">Valido hasta</th>
+                                </tr>
+                            </thead>
+                            
+                            <tbody style="text-align: center;" id="tabla_notam">
+
+                                {% for notam in lista_notam %}
+                                    <tr >
+                                        <td style="vertical-align: middle;">
+                                            {{notam.aftn1}}
+                                        </td>
+
+                                        <td style="vertical-align: middle;">
+                                            <a class=" btn-outline-light" onclick="abrir_modal( '{% url 'view_notam_modal' id_notam_mensaje=notam.id_mensaje%}')">
+                                                {{notam.idnotam}}<br>
+                                            </a>
+                                        </td>
+                                        
+                                        <td style="vertical-align: middle;">
+                                            {{notam.aplica_a}}
+                                        </td>
+
+                                        <td style="vertical-align: middle;">
+                                            {{notam.valido_desde}}
+                                        </td>
+                                        
+                                        <td style="vertical-align: middle;">
+                                            {{notam.valido_hasta}}
+                                        </td>
+
+                                    </tr>
+                                {% endfor %}
+                                    
+                            
+                            </tbody>
+                        </table>
+                    </div> 
+                    
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--NOTAMS-->
+
+
+
+<!-- Plan de vuelos recientes -->
+<div id="_planes_recientes"></div><br><br><br><br>
+<section>
+    <div class="row justify-content-center">
+        <div class="col-10" style="align-content: center;">
+            <div class="card" style="box-shadow: 2px 2px 8px 0 black; min-height: 30%;  max-height: 100%; ">
+
+                <div class="card-header">
+                    <h3 class="card-title">PIB VIGENTE Y SIN PUBLICAR</h3>
+                    <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            <li>
+                                <button class="btn-primary" id="update_fpl1">Actualizar</button>
+                            </li>
+
+                            <li><a data-action="reload" ><i class="ft-rotate-cw" id="update_fpl1"></i></a></li>
+
+                            <!--BUSCAR-->
+                            <li class="nav-item dropdown navbar-search">
+                                <a class="nav-link dropdown-toggle hide" data-toggle="dropdown" href="#">
+                                    <i class="ficon ft-search"></i>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li class="arrow_box">
+                                        <div class="input-group search-box">
+                                            <div class="position-relative has-icon-right full-width">
+                                                <input class="form-control" type="text" id="buscar_flp_table" onkeyup="buscarFlp()" placeholder="Buscar FLP">
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                            <!--BUSCAR-->
+
+                            <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+                            <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                            <li><a data-action="close"><i class="ft-x"></i></a></li>
+                        </ul>
+                    </div>
+                    <br>
+                </div>
+                <!--CONTENIDO DE LA TABLA DE PLANES RECIENTES-->
+               
+               
+               
+                <div class="card-content collapse show" style="height: 75%; overflow-y: auto;">
+                    <!-- /.modal -->
+                    <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    </div>
+                    <!-- /.modal -->
+                    <div >
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                
+                                <thead style="text-align: center;">
+                                    <tr>
+                                        <td>
+                                            <input type="text" class="form-control " placeholder="Notam" id="busca_notam" onkeyup="buscar_notam_tabla('busca_notam',0,'tabla_pib_no_publicado')" style="width:110px" maxlength="8" >
+                                        </td>
+        
+                                        <td>
+                                            <input type="text" class="form-control"  placeholder="FIR" id="busca_fir" onkeyup="buscar_notam_tabla('busca_fir',1,'tabla_pib_no_publicado')" style="width:80px" maxlength="4">
+                                        </td>
+                                        
+                                        <td>
+                                            <input type="text" class="form-control"  placeholder="Lugar" id="busca_lugar" onkeyup="buscar_notam_tabla('busca_lugar',2,'tabla_pib_no_publicado')" style="width:80px" maxlength="4" >
+                                        </td>
+                                        
+                                        <td>
+                                        </td>
+
+                                        <td></td>
+                                        
+                                    </tr>
+                                    <tr>
+                                        <th style="width:65px;text-align: center; overflow:auto;">
+                                            Notam
+                                        </th>
+
+                                        <th style="width:55px;overflow:auto;" >FIR</th>
+                                        
+                                        <th style="width:55px;overflow:auto;">Lugar</th>
+                                        
+                                        <th style="width:550px; max-width: auto;">Informacion</th>
+                                        
+                                        <th style="width:155px;">Estado</th>
+                                    </tr>
+                                </thead>
+                                
+                                <tbody style="text-align: center;" id="tabla_pib_no_publicado">
+
+                                    {% for pib in lista_pendiente %}
+                                        <tr >
+                                            <td style="vertical-align: middle;">
+                                                <a class=" btn-outline-light" onclick="abrir_modal( '{% url 'view_notam_modal' id_notam_mensaje=pib.ref_notam_amhs_id%}')">
+                                                    {{pib.notam_id}}<br>
+                                                    {% ifnotequal pib.notam_tipo 'NONE' %} {{pib.notam_tipo}}  {% endifnotequal %}
+                                                </a>
+                                            </td>
+
+                                            <td style="vertical-align: middle;">
+                                                {{pib.fir}}
+                                            </td>
+                                            
+                                            <td style="vertical-align: middle;">
+                                                {{pib.lugar}}
+                                            </td>
+                                            
+                                            <td >
+                                            </td>
+                                            
+                                            <td>
+                                                <!-- Trigger the modal with a button -->
+                                                <button class="btn btn-success btn-sm" id="publicar_pib" onclick="modal_local('{{pib.ref_notam_amhs_id}}')" >Guardar y<br> publicar</button>
+                                                <br>
+                                                <br>
+                                                <button class=" btn btn-warning btn-sm" id="archivar_pib"  onclick="archivar_pib('{{pib.ref_notam_amhs_id}}', 'archivar')">Archivar</button>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                        
+                                
+                                </tbody>
+                            </table>
+                        </div> 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Planes de vuelo recientes -->
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Publicar</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                
+                <div class="container">
+                    <div name="formulario" id="formulario">
+                        <div class="radio-tile-group">
+                            {% for persona in equipo_activo %}
+                                <div class="input-container" id="btnRadio{{persona.ci}}">
+                                    <input id="{{persona.ci}}" class="radio-button" type="radio" name="equipo_activo" />
+                                    <div class="radio-tile">
+                                        <span class="material-icons">
+                                            person_outline
+                                        </span>
+                                        <label for="{{persona.ci}}" class="radio-tile-label">{{persona.nombre}}</label>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+
+                <br>
+
+                <textarea  class="form-control" rows="8" cols="65" id="txtmodal"  style="font-size: 12px">
+                </textarea>
+
+
+
+            </div>
+            
+            <div class="modal-footer">
+                <button id="btnmodal" type="button" class="btn btn-success" data-dismiss="modal" >Listo</button>
+            </div>
+        </div>
+      
+    </div>
+</div>
+
+
+{% endblock content %} 
+
+
+{% block extrajs %}
+<script src='https://harvesthq.github.io/chosen/chosen.jquery.js'></script>
+
+<script type="text/javascript">
+    function abrir_modal(url) {
+
+        $("#modal").load(url.trim(), function() {
+            $(this).modal('show');
+        });
+    }
+
+    //DESPLAZAMIENTO SUAVIZADO
+    $('.main-menu-content a').click(function(e){				
+		e.preventDefault();		//evitar el eventos del enlace normal
+		var strAncla=$(this).attr('href'); //id del ancla
+			$('body,html').stop(true,true).animate({				
+				scrollTop: $(strAncla).offset().top
+			},200);		
+    });
+
+    //FILTER FOR NOTAM
+
+    function buscar_notam_tabla(id_search, columna, id_tabla) {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById(id_search);
+        filter = input.value.toUpperCase();
+        table = document.getElementById(id_tabla);
+        tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[columna];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    txtValue = txtValue.trim();
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+
+            }
+       
+    }
+
+</script>
+
+
+    <script>
+        //FUNCIONES PARA MANEJO DE PIB
+        function archivar_pib(notam, tipo){
+            datasend={
+                "id_notam":notam,
+                "tipo":tipo
+            }
+
+            $.ajax({
+                type:'GET',
+                url: '{% url 'view_archivar_pib' %}',
+                data: datasend,
+                //data:$(this).serialize(),
+                success: function (request){
+                    if (request.estado) {
+                            location.reload();
+                    }else{
+                        alert("HUBO UN ERROR AL PROCESAR");
+                    }
+                }   
+            });
+        }
+        //PUBLICACION DEL NOTAM
+        function guardar_publicacion_pib(notam){
+            id='txt' + notam
+            trabajador=$('input:radio[name=equipo_activo]:checked').attr('id')
+            if (typeof(trabajador)!=='undefined') {
+                
+                datasend={
+                    "id_notam": notam,
+                    "publicacion": document.getElementById('txtmodal').value,
+                    "persona":trabajador,
+                }
+                
+                $.ajax({
+                    type:'GET',
+                    url: '{% url 'view_publicarguardar_pib' %}',
+                    data: datasend,
+                    //data:$(this).serialize(),
+                    success: function (request){
+                        if (request.estado) {
+                                location.reload();
+                        }else{
+                            alert("HUBO UN ERROR AL PROCESAR");
+                        }
+                    }   
+                });
+
+            }else{
+                alert("Elija una persona")
+            }
+        
+        }
+
+    </script>
+
+
+
+
+    <script>
+    //$("#myBtn").click(function(){
+        //    $("#myModal").modal();
+        //});
+        
+        function modal_local(id){
+            notam=id
+            id='txt'+id
+            $("#myModal").modal();
+            txt=document.getElementById(id).value;
+            $('#txtmodal').val(txt.trim());
+
+            varfuncion = "guardar_publicacion_pib('" + notam + "');"
+            //alert(varfuncion)
+            //document.getElementById('btnmodal').setAttribute=( "onclick",varfuncion);
+            $('#btnmodal').removeAttr('onclick');
+            $('#btnmodal').attr('onClick', varfuncion);
+        }
+    </script>
+    
+
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.min.js'></script><script  src="./script.js"></script>
+    <script>
+        
+        Vue.component('modal-pr', {
+            props: {
+                sl: {
+                    type: Object,
+                    required: true
+                },        
+            },
+            data: function () {
+                return {}
+            },
+            mounted: function () {},
+            computed: {
+                ident() {          
+                    var iden = `${this.sl.referencia}`;
+    
+                    if (this.sl.hasOwnProperty("id")) {
+                        iden += `-${this.sl.id}`;
+                    }
+    
+                    return {
+                        id: iden,
+                        tar: `#${iden}`
+                    };
+                },
+            },
+            template: `
+            <div>
+                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" :data-target="ident.tar">  
+                    {{s1.notam_id}}
+                </button>
+    
+                <!-- Modal -->
+                <div class="modal fade" :id="ident.id" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> -->
+                                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                            </div>
+                            <div class="modal-body">
+                                <pre> {{ sl }} </pre>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            `
+        });
+    
+        lista=[]
+        {% for x in lista_archivado %}
+            lista.push('{{x}}')
+        {% endfor %}
+    
+        var app = new Vue({
+        el: '#app',
+        data: {
+            solicitudes: []
+                    //    [
+                    //      {id: 1, fecha: "2019-05-30", solicitud: 1, id_solicitador: 42, solicitador: "NELSON FABIAN  FORERO RODRIGUEZ", nombre_formato: "Creación de cuentas de Red a usuarios", plantilla: "form-r01", referencia: "R01", revisor: 5, aprobacion: null, estado: {id: 3, descripcion: "Aprobada Jefe sistemas"} },
+                    //    {id: 3, fecha: "2019-05-30", solicitud: 3, id_solicitador: 42, solicitador: "NELSON FABIAN  FORERO RODRIGUEZ", nombre_formato: "Creación de cuentas de Red a usuarios", plantilla: "form-r01", referencia: "R01", revisor: 5, aprobacion: null, estado: {id: 3, descripcion: "Aprobada Jefe sistemas"} },
+                    //]
+        },
+        methods: {},
+        computed: {}
+        });
+    
+    </script>
+
+
+
+
+{% endblock extrajs %}
+
+
+
+<!-- ////////////////////////////////////////////////////////////////////////////-->
+<!-- ////////////////////////////////////////////////////////////////////////////-->

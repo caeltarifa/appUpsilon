@@ -1,6 +1,8 @@
 from django.db import models
 from datetime import datetime
 
+from django.contrib.auth.models import User
+
 # Create your models here.
 #from apps.generacion_fpl.models import Empresa_institucion
 
@@ -27,6 +29,11 @@ class Cargo(models.Model):
     id_cargo=models.AutoField(primary_key=True)
     nombre_cargo=models.CharField(max_length=35)
     empresa = models.ForeignKey(Empresa_institucion, on_delete=models.PROTECT)
+    cuenta_usuario = models.OneToOneField(
+        User,
+        on_delete=models.PROTECT,
+        null=False,
+    )
     def __str__(self):
         return self.nombre_cargo
 
@@ -46,7 +53,7 @@ class Trabajador(models.Model):
     ci=models.IntegerField(primary_key=True)
     nombre=models.CharField(max_length=35)
     apellido = models.CharField(max_length=35)
-    activo=models.BooleanField(default=True)
+    activo=models.BooleanField(default=False)
     empresa_institucion = models.ForeignKey(Empresa_institucion, on_delete=models.PROTECT)
     cargo=models.ManyToManyField(Cargo)
     correo=models.EmailField(max_length=30,blank=True)
@@ -63,8 +70,10 @@ class Flp_aprobado(models.Model):
         primary_key=True,
     )
     controlador = models.ForeignKey(Trabajador,on_delete=models.PROTECT,)
+    
     fecha_aprobacion = models.DateField(auto_now=True, auto_now_add=False)
     hora_aprobacion = models.TimeField(auto_now=True, auto_now_add=False)
+    
     transponder = models.IntegerField()
     ruta_usada = models.CharField(max_length=250) #almacena punto1-ruta-punto2, punto3-ruta-punto4, 
     puntos_de_ficha = models.CharField(max_length=200) #almacena los puntos usados en los unicodeips y longitude: 'punto1 23 punto2 34 punto3 56 punto4'
@@ -75,6 +84,7 @@ class Flp_aprobado(models.Model):
     por_trabajar = models.BooleanField(default=True)
     en_curso = models.BooleanField(default=False)
     finalizado = models.BooleanField(default=False)
+
 
     def __unicode__(self):
         return '%s %s' % (self.id_flp_aprobado, self.metar_trafico, self.controlador)
@@ -160,7 +170,6 @@ class Ruta_flp(models.Model):
         
         return matricula
         
-
     def getTransmision(self, cadena):
         transmision=''
         try:
@@ -176,7 +185,10 @@ class Ruta_flp(models.Model):
         return transmision
 
     def __unicode__(self):
-        return '%s %s' % (self.id_ruta, self.nombre_ruta, self.ruta)
+        return self.nombre_ruta
+
+    class Meta:
+        ordering = ['nombre_ruta']
 
 class EntrePuntos_flp(models.Model):
     id_segmento=models.AutoField(primary_key=True)
