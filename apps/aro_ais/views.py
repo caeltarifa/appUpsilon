@@ -12,6 +12,9 @@ import json
 
 from apps.plan_vuelo.models import  Notam_trafico, Trabajador, Aeropuerto
 from apps.aro_ais.models import  Pib_trafico, Pib_extenso, Pib_registro_documento
+from apps.aro_ais.models import  Letra_asunto,Asunto,Estado_asunto
+#from apps.aro_ais.models import  Simbolo_8400, Abreviatura_8400
+
 
 
 from apps.trabajadoresATS.models import TrabajadoresATS, CuentasATS
@@ -21,13 +24,18 @@ from apps.trabajadoresATS.models import TrabajadoresATS, CuentasATS
 import ast
 # Create your views here.
 
-def view_panel_aroais(request):
+def view_panel_aroaislp(request):
     if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='AROAISLP').exists():
-        equipo_coordinacion = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and empresa_institucion_id=1 order by activo")
-        return render(request, 'temp_plan_vuelo/temp_aro_ais/index_aroais.html' ,{'equipo_trabajo': equipo_coordinacion} )#,'metar':metar} )
+        #equipo_coordinacion = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and empresa_institucion_id=1 order by activo")
+        return render(request, 'temp_plan_vuelo/temp_aro_ais/index_aroais.html')# ,{'equipo_trabajo': equipo_coordinacion} )#,'metar':metar} )
     else:
         return redirect('login')
 
+def view_panel_notaminternacional(request):
+    if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='AISNACIONAL').exists():
+        return render(request, 'temp_plan_vuelo/temp_aro_ais/index_notaminternacional.html')
+    else:
+        return redirect('login')
 
 def view_panel_serviciosaroais_aasana(request):
     if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='INFORMACION_AERONAUTICA').exists():
@@ -57,11 +65,51 @@ def view_admin_ais(request):
 
 
 
+def view_simulador(request):
+    if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='AISNACIONAL').exists():
+        letra_asunto = Letra_asunto.objects.all().order_by('id_letra')
+        #letra_asunto = [x.id_letra for x in letra_asunto]
+        return render(request, 'temp_plan_vuelo/temp_aro_ais/simulador_notam.html', {'vec_letra': letra_asunto})
+    else:
+        return redirect('login')
+
+def view_getAsunto(request):
+    if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='AISNACIONAL').exists():
+        letra = str(request.GET.dict()['letra'])
+        asunto = Asunto.objects.filter(letra_asunto_id=letra)
+        vec_asuntos = [x.id_asunto for x in asunto]
+        return JsonResponse({'vec_asunto':vec_asuntos}, status=200)
+    else:
+        return redirect('login')
+
+def view_getEstadoAsunto(request):
+    if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='AISNACIONAL').exists():
+        asunto = str(request.GET.dict()['asunto'])
+        
+        estado_asunto = Estado_asunto.objects.filter(id_asunto__id_asunto=asunto)
+        vec_estado_asuntos = [x.id_estado_asunto for x in estado_asunto]
+        return JsonResponse({'vec_estado_asunto':vec_estado_asuntos}, status=200)
+    else:
+        return redirect('login')
+
+def view_diccionario8400(request):
+    if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='AISNACIONAL').exists():
+        
+        return render(request, 'temp_plan_vuelo/temp_aro_ais/diccionario8400.html')
+    else:
+        return redirect('login')
+
+
+
+
+
+
+
+
 def view_pib_automatizado(request):
     if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='AROAISLP').exists():
-        equipo_coordinacion = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and empresa_institucion_id=1 order by activo")
 
-        lista_pib_pendiente = Pib_trafico.objects.raw("select * from (select * from aro_ais_pib_trafico inner join aro_ais_pib_extenso on ref_notam_amhs_id = notam_extenso_id and pendiente='t') as pib inner join plan_vuelo_notam_trafico on id_mensaje=ref_notam_amhs_id order by DATE(ingresado) desc;")
+        lista_pib_pendiente = Pib_trafico.objects.raw("select * from ( select * from aro_ais_pib_trafico inner join aro_ais_pib_extenso on ref_notam_amhs_id = notam_extenso_id and pendiente='t' and (notam_id like %(notamC)s and notam_id not like %(notamA)s )) as pib inner join plan_vuelo_notam_trafico on id_mensaje=ref_notam_amhs_id order by DATE(ingresado) desc;", {'notamC':'%C%/2%', 'notamA':'(A%'})
         lista_pib_archivado = Pib_trafico.objects.raw("select * from aro_ais_pib_trafico inner join aro_ais_pib_extenso on ref_notam_amhs_id = notam_extenso_id and archivado='t'  ")
         lista_pib_publicado = Pib_trafico.objects.raw("select * from aro_ais_pib_trafico inner join aro_ais_pib_extenso on ref_notam_amhs_id = notam_extenso_id and vigente='t' and msj_publicado!=''  ")
         lista_notams_recientes=Notam_trafico.objects.all().order_by('-ingresado')[:25]
@@ -75,9 +123,7 @@ def view_pib_automatizado(request):
         lista_pib_publicado=[serializar_pibtrafico_pibextenso(pib) for pib in lista_pib_publicado]
         lista_notams_recientes=[serializar_notam(notamx) for notamx in lista_notams_recientes]
         
-        equipo_activo = Trabajador.objects.raw("select ci, nombre, apellido, activo  from plan_vuelo_trabajador where activo='t' and ci in ( select trabajador_id from plan_vuelo_trabajador_cargo where cargo_id in ( select id_cargo  from plan_vuelo_cargo where cuenta_usuario_id in  (select id from auth_user where username like %(usuario)s) ) )", {'usuario':request.user.username})
-        
-        return render(request, 'temp_plan_vuelo/temp_aro_ais/notam_automatizado.html' ,{'equipo_activo':equipo_activo,'equipo_trabajo': equipo_coordinacion, 'lista_pendiente':lista_pib_pendiente, 'lista_archivado':lista_pib_archivado, 'lista_publicado':lista_pib_publicado, 'lista_notam':lista_notams_recientes} )
+        return render(request, 'temp_plan_vuelo/temp_aro_ais/notam_automatizado.html' ,{'lista_pendiente':lista_pib_pendiente, 'lista_archivado':lista_pib_archivado, 'lista_publicado':lista_pib_publicado, 'lista_notam':lista_notams_recientes} )
     else:
         return redirect('login')
 

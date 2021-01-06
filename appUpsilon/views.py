@@ -52,12 +52,18 @@ def view_pagina_principal(request):
             if request.user.username in 'acc_supervisorlp@aasana':
                 return redirect('view_panel_supervisor')
 
+        
         if request.user.groups.filter(name='AROAISLP').exists():
             if request.user.username in 'aroaislp@aasana':
-                return redirect('view_panel_aroais')
+                return redirect('view_panel_aroaislp')
+        
+        if request.user.groups.filter(name='AISNACIONAL').exists():
+            if request.user.username in 'notaminternacional@aasana':
+                return redirect('view_panel_notaminternacional')
         
         if request.user.groups.filter(name='INFORMACION_AERONAUTICA').exists():
-            return redirect('view_panel_serviciosaroais_aasana')
+            if request.user.username in 'aroaiscbba@aasana':
+                return redirect('view_panel_aisslcb')
                 
             
 

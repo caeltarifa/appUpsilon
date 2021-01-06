@@ -51,6 +51,7 @@ class Flp_trafico(models.Model):
 
 class Trabajador(models.Model):
     ci=models.IntegerField(primary_key=True)
+    coordinador=models.BooleanField(default=False)
     nombre=models.CharField(max_length=35)
     apellido = models.CharField(max_length=35)
     activo=models.BooleanField(default=False)

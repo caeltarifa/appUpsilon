@@ -2,7 +2,7 @@
 
 
 {% block title %}
-<title>Upsilonn | login</title>
+<title>Upsilon | login</title>
 {% endblock title %}
 
 
@@ -19,7 +19,7 @@
                     <div class="col-sm">
                         <h2><strong>Upsilon</strong></h2>
                         <p style="font-size: 15px; ">
-                            Sistema de adminitracion de trafico aereo con informacion de notificacion y metereologica.
+                            Sistema distribuido y en tiempo real de la gestión de información aeronáutica para la automatización de servicios a la navegación aérea.
                         </p>
                         <a href="#PIB" class="btn-get-started scrollto"> Comencemos</a>
                     </div>
@@ -30,7 +30,7 @@
 
     <div class="col-sm container my-auto bg-danger">
             <div class="wow fadeInRight " style="margin-top:10%;">
-                    <h3 style="color: white;">Identificate</h3>
+                    <h3 style="color: white;">Iniciar sesión</h3>
                     <br>
 
                     {% if form.errors %}
@@ -66,7 +66,11 @@
                     </form>
 
                     {# Assumes you setup the password_reset view in your URLconf #}
-                    <p><a href="{% url 'password_reset' %}">¿Olvidaste tu password?</a></p>
+                    <!--
+                        <p>
+                            <a href="{% url 'password_reset' %}">¿Olvidaste tu password?</a>
+                        </p>
+                    -->
             </div>
     </div>
 </div>

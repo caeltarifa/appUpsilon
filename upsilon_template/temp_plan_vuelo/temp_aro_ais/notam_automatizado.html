@@ -252,7 +252,7 @@
     {% if pib.agendado != 'None' and pib.agendado != 'Ninguna'  %} AGENDADO PARA {{pib.agendado}}  {% endif %}
 -->
                                                 <textarea  class="form-control" rows="5" cols="65" id="txt{{pib.ref_notam_amhs_id}}"  style="font-size: 12px">
-{% if pib.decodificado|length > 2%} {% ifnotequal pib.valid_desde 'None'  %} DESDE {{pib.valid_desde|slice:"0:-9"}}  {% endifnotequal %} {{pib.decodificado}}   {% ifnotequal pib.valid_hasta 'None'  %} HASTA {{pib.valid_hasta|slice:"0:-9"}}  {% endifnotequal %}  {% else %} {{pib.cuerpo}}  {% endif %} 
+{% if pib.decodificado|length > 2%} {% ifnotequal pib.valid_desde 'None'  %} DESDE HR {{pib.valid_desde|slice:"0:-9"}}  {% endifnotequal %} {{pib.decodificado}}   {% ifnotequal pib.valid_hasta 'None'  %} HASTA HR {{pib.valid_hasta|slice:"0:-9"}}  {% endifnotequal %}  {% else %} {{pib.cuerpo}}  {% endif %} 
 
 {% ifnotequal pib.notam_id 'NONE' %} ({{pib.notam_id}})  {% endifnotequal %}</textarea>
                                             </td>
@@ -701,7 +701,7 @@
 
                 <br>
 
-                <input type="text" class="form-control" id="id_estacion" placeholder="Estacion" style="text-transform:uppercase" >
+                <input type="text" class="form-control" id="id_estacion" placeholder="Instalacion" style="text-transform:uppercase" >
                 <br>
                 <textarea  class="form-control" rows="8" cols="65" id="txtmodal"  style="font-size: 12px;text-transform:uppercase" >
                 </textarea>

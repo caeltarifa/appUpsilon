@@ -31,7 +31,7 @@ SECRET_KEY = 'sb%@$i%e)zwtv=v_-p$^tc@%=%^kt7@becs*s0*m&tkhq^wp5c'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['212.115.109.148','upsilon.aasana.tk']
+ALLOWED_HOSTS = ['212.115.109.148','upsilon.aasana.tk', 'upsilon.navae.tk', 'upsilon.aasana.bo']
 
 
 # Application definition
@@ -89,7 +89,7 @@ DATABASES = {
    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
 
      'ENGINE': 'django.db.backends.postgresql_psycopg2',
-     'NAME': 'upsilon_prueba4_db', #nombre de la base de datos
+     'NAME': 'upsilon_of_db', #nombre de la base de datos
 	 'USER': 'postgres', #usuario de base de datos
 	 'PASSWORD': 'nuclearaasana',
 	 'HOST': 'localhost',

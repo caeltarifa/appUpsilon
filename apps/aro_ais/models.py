@@ -1,11 +1,10 @@
-
+	
 from django.db import models
 from datetime import datetime
 
 from apps.plan_vuelo.models import  Notam_trafico, Trabajador
 
 # Create your models here.
-
 
 
 class Pib_trafico(models.Model):
@@ -32,7 +31,6 @@ class Pib_trafico(models.Model):
         return self.ref_notam_amhs
     class Meta:
         ordering = ['ref_notam_amhs']
-
 
 class Pib_extenso(models.Model):
     notam_extenso = models.OneToOneField(
@@ -78,7 +76,6 @@ class Pib_extenso(models.Model):
     class Meta:
         ordering = ['notam_id']
 
-
 class Pib_registro_documento(models.Model):
     id_registropib = models.AutoField(primary_key=True)
     fecha_generado = models.DateTimeField(default=datetime.now, blank=True, null=True)
@@ -91,8 +88,61 @@ class Pib_registro_documento(models.Model):
     class Meta:
         ordering = ['fecha_generado']
 
-    
+class Letra_asunto(models.Model):
+    id_letra = models.CharField(max_length=1,primary_key=True)
+    titulo_letra = models.CharField(max_length=350,blank=False, null=False)
+    acronimo = models.CharField(max_length=100,blank=True, null=True)
+    def __str__(self):
+        return '{}/{}'.format(self.id_letra, self.acronimo)
+    class Meta:
+        ordering=('id_letra',)
 
+class Asunto(models.Model):
+    id_asunto = models.CharField(max_length=2,primary_key=True)
+    descripcion_asunto = models.CharField(max_length=350,blank=False, null=False)
+    fraseologia_asunto = models.CharField(max_length=150,blank=False, null=False)
+    letra_asunto = models.ForeignKey(Letra_asunto,on_delete=models.PROTECT, blank=False, null=False) 
+    def __str__(self):
+        return '{}/{}'.format(self.id_asunto, self.fraseologia_asunto)
+    class Meta:
+        ordering=('id_asunto',)
+
+class Estado_asunto(models.Model):
+    id_estado_asunto = models.CharField(max_length=3,primary_key=True)
+    descripcion_estado = models.CharField(max_length=350,blank=False, null=False)
+    fraseologia_estado = models.CharField(max_length=150,blank=True, null=True)
+    id_asunto = models.ManyToManyField(Asunto) 
+    def __str__(self):
+        return '{}/{}'.format(self.id_estado_asunto, self.fraseologia_estado)
+    class Meta:
+        ordering=('id_estado_asunto',)
+
+class Simbolo_8400(models.Model):
+    id_simbolo = models.AutoField(primary_key=True)
+    simbolo = models.CharField(max_length=2,blank=False, null=False)
+    descripcion = models.CharField(max_length=150,blank=False, null=False)
+    def __str__(self):
+        return '{}/{}'.format(self.id_simbolo, self.simbolo)
+    class Meta:
+        ordering=('id_simbolo',)
+
+class Abreviatura_8400(models.Model):
+    abreviatura = models.CharField(primary_key=True,max_length=550)
+    simbolo = models.ForeignKey(Simbolo_8400,on_delete=models.PROTECT, blank=False, null=False) 
+    def __str__(self):
+        return '{}/{}'.format(self.abreviatura,self.simbolo)
+    class Meta:
+        ordering=('abreviatura',)
+
+
+class Significado_8400(models.Model):
+    id_significado = models.AutoField(primary_key=True)
+    abreviatura = models.ForeignKey(Abreviatura_8400,on_delete=models.PROTECT, blank=False, null=False) 
+    significado_completo = models.CharField(max_length=500,blank=False, null=False)
+    significado_pib = models.CharField(max_length=400,blank=False, null=False)
+
+    def __str__(self):
+        return '{}/{}'.format(self.id_significado,self.abreviatura,self.significado_completo,self.significado_pib)
 
     ################################# DESCRIPTION ####################################
 
@@ -141,7 +191,6 @@ class Pib_registro_documento(models.Model):
 
 
 
-
 #n.notam_id
 #n.notam_type
 #n.ref_notam_id
@@ -173,3 +222,4 @@ class Pib_registro_documento(models.Model):
 #n.indices_item_e
 #n.indices_item_f
 #n.indices_item_g
+

@@ -1,0 +1,285 @@
+{% extends 'temp_plan_vuelo/baseadmin.html' %}
+{% load static %}
+
+{% block title %}
+<title>Upsilon | Simulador</title>
+{% endblock title %}
+
+
+
+{% block extra_head %}
+<link rel='stylesheet' href='https://harvesthq.github.io/chosen/chosen.css'>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<!-- <link rel="stylesheet" href="{% static 'theme-assets/css/aprobar_plan.css' %}"> -->
+<link rel="stylesheet" href="{% static 'theme-assets/css/pib.css' %}">
+
+<style>
+  #vue-table {
+    margin: 2em 0;
+  }
+
+  #vue-table a {
+    font-weight: bold;
+    text-decoration: none;
+  }
+
+  #vue-table a.active {
+    font-weight: bold;
+    color: black;
+    text-decoration: underline;
+  }
+</style>
+
+{% endblock extra_head %}
+
+
+
+
+<!-- ////////////////////////////////////////////////////////////////////////////-->
+
+
+{% block content %}
+
+
+
+
+
+<!-- Plan de vuelos recientes -->
+<div id="_planes_recientes"></div><br><br><br><br>
+<section>
+  <div class="row justify-content-center">
+    <div class="col-10" style="align-content: center;">
+      <div class="card" style="box-shadow: 2px 2px 8px 0 black; min-height: 30%;  max-height: 100%; ">
+
+        <!--CONTENIDO DE LA TABLA DE PLANES RECIENTES-->
+
+        <div class="card-content collapse show" style="height: 75%; overflow-y: auto;">
+
+          <!--==========================
+                    BOLETIN DE INFORMACION RAPIDA
+                     ============================-->
+          <section class="section-bg">
+            <div class="container-fluid">
+
+              <div class="section-header" style="text-align:center;">
+                <br><br><br>
+                <div class="jumbotron jumbotron-fluid">
+                  <h1>Bootstrap Tutorial</h1>
+                  <p>Bootstrap is the most popular HTML, CSS...</p>
+                </div>
+
+                <h2 class="section-title">DOCUMENTO DE CÓDIGOS Y ABREVIATURAS 8400</h2>
+
+                <span class="section-divider"></span>
+                <p class="section-description">
+                  Diccionario buscador de significados
+                </p>
+
+
+
+
+                <div class="container">
+                  <div id="vue-table">
+
+                    <input type="text" v-model="search" class="form-control" />
+
+                    <table class="table table-striped">
+
+                      <thead>
+                        <tr>
+                          <th v-repeat="column: columns">
+                            <a href="#" v-on="click: sortBy(column)" v-class="active: sortKey == column">
+                              [[ column | capitalize ]]
+                            </a>
+                          </th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <!-- <tr v-repeat="people | filterBy search | orderBy sortKey reverse"> -->
+                        <tr v-for="gente in people ">
+                          <td>[% gente.name %] </td>
+                          <td>[% gente.age  %]</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+
+
+
+
+              </div>
+
+
+
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Planes de vuelo recientes -->
+
+
+
+{% endblock content %}
+
+
+{% block extrajs %}
+<script src='https://harvesthq.github.io/chosen/chosen.jquery.js'></script>
+
+<script type="text/javascript">
+
+  $(function () {
+
+  });
+
+  sw = true;
+
+  //DESPLAZAMIENTO SUAVIZADO
+  $('.main-menu-content a').click(function (e) {
+    e.preventDefault();		//evitar el eventos del enlace normal
+    var strAncla = $(this).attr('href'); //id del ancla
+    $('body,html').stop(true, true).animate({
+      scrollTop: $(strAncla).offset().top
+    }, 200);
+  });
+
+</script>
+
+
+
+
+<script>
+  function getAsunto() {
+    select = document.getElementById('letra_asunto_id')
+    selectedOption = select.options[select.selectedIndex];
+    letra = selectedOption.value
+
+    datasend = { "letra": letra, }
+    $.ajax({
+      type: 'GET',
+      url: '{% url 'view_getAsunto' %}',
+      data: datasend,
+      //data:$(this).serialize(),
+      success: function (request) {
+        select_asunto = document.getElementById('asunto_id')
+        clearSelect(select_asunto)
+
+        select_asunto.appendChild(createOptionSelect(""))
+
+        for (let i = 0; i < request.vec_asunto.length; i++) {
+          valor = request.vec_asunto[i]
+          select_asunto.appendChild(createOptionSelect(valor))
+        }
+
+      }
+    });
+  }
+  function clearSelect(select) {
+    for (let i = select.options.length; i >= 0; i--) {
+      select.remove(i);
+    }
+  }
+  function createOptionSelect(valor) {
+    option = document.createElement('option');
+    option.value = valor;
+    option.text = valor;
+    return option
+  }
+</script>
+
+<script>
+  function getEstadoAsunto() {
+    select = document.getElementById('asunto_id')
+    selectedOption = select.options[select.selectedIndex];
+    asunto = selectedOption.value
+
+    datasend = { "asunto": asunto, }
+    $.ajax({
+      type: 'GET',
+      url: '{% url 'view_getEstadoAsunto' %}',
+      data: datasend,
+      //data:$(this).serialize(),
+      success: function (request) {
+        select_estado_asunto = document.getElementById('estado_asunto_id')
+        clearSelect(select_estado_asunto)
+
+        select_estado_asunto.appendChild(createOptionSelect(''))
+
+        for (let i = 0; i < request.vec_estado_asunto.length; i++) {
+          valor = request.vec_estado_asunto[i]
+          select_estado_asunto.appendChild(createOptionSelect(valor))
+        }
+      }
+    });
+  }
+</script>
+
+<script>
+  //BUTTON NUEVO, REEMPLAZO , CANCELADO
+  function nuevo_notam() {
+    document.getElementById("titulo_form").innerHTML = "NUEVO"
+
+  }
+
+  function reemplazo_notam() {
+    document.getElementById("titulo_form").innerHTML = "REENPLAZO"
+  }
+
+  function cancelacion_notam() {
+    document.getElementById("titulo_form").innerHTML = "CANCELACIÓN"
+  }
+</script>
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/vue/0.11.10/vue.min.js'></script>
+<script>
+  new Vue({
+    el: '#vue-table',
+
+    delimiters: ['[%', '%]'],
+
+    data: {
+      sortKey: '',
+
+      search: '',
+
+      reverse: false,
+
+      columns: ['name', 'age'],
+
+      people: [
+        { name: 'John', age: 50 },
+        { name: 'Jack', age: 35 },
+        { name: 'Keith', age: 28 },
+        { name: 'Alain', age: 17 },
+        { name: 'Neil', age: 1 },
+        { name: 'Mark', age: 72 },
+        { name: 'Don', age: 47 },
+        { name: 'Walter', age: 41 },
+        { name: 'Jessy', age: 33 },
+        { name: 'Henck', age: 22 },
+        { name: 'Sal', age: 9 },
+        { name: 'Skyler', age: 42 },
+        { name: 'Holly', age: 55 },
+      ]
+    },
+
+    methods: {
+      sortBy: function (sortKey) {
+        this.reverse = (this.sortKey == sortKey) ? !this.reverse : false;
+        this.sortKey = sortKey;
+      }
+    }
+  })
+</script>
+{% endblock extrajs %}
+
+
+
+<!-- ////////////////////////////////////////////////////////////////////////////-->
+<!-- ////////////////////////////////////////////////////////////////////////////-->

@@ -6,6 +6,7 @@ from django.db import connection
 from django.contrib.auth.models import Group
 
 import datetime
+import time
 import json
 from googletrans import Translator
 
@@ -324,9 +325,12 @@ def view_getmetar (request, id_aeropuerto):
         get_aero = str(id_aeropuerto)
 
         try:
+
             jfk_metars = MetarSet(get_aero)
+            time.sleep(5)
             jfk_metars.refresh()
             latest_jfk_metar = jfk_metars.get_latest()
+            
             estado = True
             
         except:
@@ -342,7 +346,7 @@ def view_getmetar (request, id_aeropuerto):
             translator=Translator()
 
             traducido = translator.translate(cadena, src='en', dest='es').text
-
+            time.sleep(3)
             vector = traducido.split('\n')
             titulo=vector.pop()
 
@@ -608,8 +612,8 @@ def view_notam_modal(request, id_notam_mensaje):
             n = notam.Notam.from_str(componer_msj(notam_traducido))
             decodificado = n.decoded()
 
-            translator = Translator()
-            decodificado = translator.translate( decodificado, dest='es').text
+            #translator = Translator()
+            #decodificado = translator.translate( decodificado, dest='es').text
         else:
             notam_completo = Notam_trafico
 
@@ -629,7 +633,7 @@ def view_notam_modal(request, id_notam_mensaje):
                 'long' : '06610W',
                 'radius' : 0
             }
-        return render(request, 'temp_plan_vuelo/modal_mensaje_completo.html', {'data': serializar_notam_completo(notam_completo), 'decodificado':decodificado, 'area':dic }  ) #retorno el modal y el contexto
+        return render(request, 'temp_plan_vuelo/modal_mensaje_completo.html', {'data': serializar_notam_completo(notam_completo), 'area':dic }  ) #retorno el modal y el contexto
     else:
         return redirect('accounts/login/')
     
@@ -676,7 +680,9 @@ def diferencie_entre_horas(data1, data2):
 
 #############################   CONTROL DE USUARIOS   #################################
 def view_identificacion(request, id_trabajador):
-    if request.user.is_authenticated and request.user.is_active and (request.user.groups.filter(name='CONTROLADORESLP').exists() or request.user.groups.filter(name='AROAISLP').exists()):        
+    if request.user.is_authenticated and request.user.is_active and (request.user.groups.filter(name='TODOS_SERVICIOS').exists() ):        
+        
+        ## VERIFICAR QUE EL USUARIO SOLICITANTE PERTENEZCA AL GRUPO_TRABAJO DEL USUARIO "request.user.is_authenticated"
         if Trabajador.objects.filter(ci=int(id_trabajador)).exists():
             persona = Trabajador.objects.filter(ci=id_trabajador)[0]
             persona = {
@@ -695,7 +701,7 @@ def view_identificacion(request, id_trabajador):
         return redirect('accounts/login/')
 
 def view_validar_passwd(request):
-    if request.user.is_authenticated and request.user.is_active and (request.user.groups.filter(name='TODOS_SERVICIOS').exists() or request.user.groups.filter(name='AROAISLP').exists()):
+    if request.user.is_authenticated and request.user.is_active and (request.user.groups.filter(name='TODOS_SERVICIOS').exists() ):
         if request.is_ajax and request.method =="GET":
             cadena = request.GET.get('parametro')
             
@@ -716,7 +722,7 @@ def view_validar_passwd(request):
         return redirect('accounts/login/')
 
 def view_cerrar_sesion(request):
-    if request.user.is_authenticated and request.user.is_active and (request.user.groups.filter(name='CONTROLADORESLP').exists() or request.user.groups.filter(name='AROAISLP').exists()):
+    if request.user.is_authenticated and request.user.is_active and (request.user.groups.filter(name='TODOS_SERVICIOS').exists() ):
         if request.is_ajax and request.method =="GET":
             carnet = request.GET.get('id_trabajador')
             
@@ -853,7 +859,7 @@ def serializar_punto_satelital(punto):
 
 def view_obtener_dibujo_ruta(request):
     #muestra las rutas recordadas para un origen y destino dado 
-    if request.user.is_authenticated and request.user.is_active and (request.user.groups.filter(name='EJECUTIVOSLP').exists() or request.user.groups.filter(name='AROAISLP').exists()):
+    if request.user.is_authenticated and request.user.is_active and (request.user.groups.filter(name='TODOS_SERVICIOS').exists()):
         dic={'estado':False, 'lineas':[[{'longitude': 'null', 'latitude':'null'}]]}
 
         if request.is_ajax and request.method =="GET":

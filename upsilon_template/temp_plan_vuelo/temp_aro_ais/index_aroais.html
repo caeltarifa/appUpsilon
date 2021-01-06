@@ -228,7 +228,7 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 {% endblock extra_head %}
-    
+     
     
 
 
@@ -245,10 +245,47 @@
     
     <div class="buttons">
         
+        <div class="butFrame bounce">
+            <a href="{% url 'view_pib_automatizado' %}">
+                <img src="http://www.neodigital.com.au/thumbnailsmall/Button5.jpg" />
+                <div class="butHeading">GESTIÓN DEL PIB</div>
+            </a>
+        </div>
+
+        <div class="butFrame bounce" >
+            <a href="{% url 'view_pib_tiemporeal' %}">
+                <img src="http://www.neodigital.com.au/thumbnailsmall/Button6.jpg" />
+                <div class="butHeading">PIB TIEMPO REAL</div>
+            </a>
+        </div>
+    </div>
+
+    
+    
+    <div class="buttons">
+        
+        <div class="butFrame bounce" >
+            <a href="{% url 'view_pib_tiemporeal' %}">
+                <img src="http://www.neodigital.com.au/thumbnailsmall/Button6.jpg" />
+                <div class="butHeading">Solicitar NOTAM</div>
+            </a>
+        </div>
+    
+        <div class="butFrame bounce" >
+            <a href="{% url 'view_pib_tiemporeal' %}">
+                <img src="http://www.neodigital.com.au/thumbnailsmall/Button6.jpg" />
+                <div class="butHeading">BUZON DE SALIDA</div>
+            </a>
+        </div>
+    
+    </div>
+
+    <div class="buttons">
+        
         <div class="butFrame bounce" onClick="window.location='#'">
             <a href="{% url 'view_admin_coordinacion' %}">
                 <img src="http://www.neodigital.com.au/thumbnailsmall/Button1.jpg" />
-                <div class="butHeading">Trafico AMHS y aprobar FPL</div>
+                <div class="butHeading">Trafico FPL</div>
             </a>
         </div>
     
@@ -260,8 +297,8 @@
         </div>
     
     </div>
-    
-    
+
+
     <div class="buttons">
         
         <div class="butFrame bounce">
@@ -271,28 +308,9 @@
             </a>
         </div>
     
-        <div class="butFrame bounce">
-            <a href="{% url 'view_pib_automatizado' %}">
-                <img src="http://www.neodigital.com.au/thumbnailsmall/Button5.jpg" />
-                <div class="butHeading">PIB AUTOMATIZADO</div>
-            </a>
-
-        </div>
-    
     </div>
 
-    <div class="buttons">
-        
-        <div class="butFrame bounce" >
-            <a href="{% url 'view_pib_tiemporeal' %}">
-                <img src="http://www.neodigital.com.au/thumbnailsmall/Button6.jpg" />
-                <div class="butHeading">PIB TIEMPO REAL</div>
-            </a>
-        </div>
-    
-       
-    
-    </div>
+
 
 </div>
 
