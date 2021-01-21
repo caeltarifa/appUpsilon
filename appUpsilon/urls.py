@@ -33,13 +33,13 @@ from .views import view_panel_comunicaciones, view_admin_comunicaciones
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', view_pagina_principal,name='view_pagina_principal'),
-    
     path('generacion_fpl/', include('apps.generacion_fpl.urls')),
     path('plan_vuelo/', include('apps.plan_vuelo.urls')),
     path('ais/', include('apps.aro_ais.urls')),
-    #path('plan_vuelo/postdetail/<int:pk>/', post_detail , name='post_detail')
-    #path('accounts/login/', control_acceso_login ,name='acceso_login'),
-
+    
+        #path('plan_vuelo/postdetail/<int:pk>/', post_detail , name='post_detail')
+        #path('accounts/login/', control_acceso_login ,name='acceso_login'),
+    
     url('^comunicaciones$',view_panel_comunicaciones, name='view_panel_comunicaciones'),
     url('^comunicaciones$',view_admin_comunicaciones, name='view_admin_comunicaciones'),
 

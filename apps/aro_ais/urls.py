@@ -9,7 +9,10 @@ from apps.aro_ais.views import view_imprimir_pibrealtime
 from apps.aro_ais.views import view_panel_serviciosaroais_aasana
 from apps.aro_ais.views import view_simulador
 from apps.aro_ais.views import view_getAsunto,view_getEstadoAsunto
-from apps.aro_ais.views import view_diccionario8400
+from apps.aro_ais.views import view_codigos_abreviaturas
+from apps.aro_ais.views import view_get_abreviatura8400
+from apps.aro_ais.views import view_get_codigo8126
+
 
 urlpatterns = [
     path('',view_panel_aroaislp, name="view_panel_aroaislp"),
@@ -32,7 +35,10 @@ urlpatterns = [
     path('guardarregistropib/', view_guardarregistro_pib, name="view_guardarregistro_pib"), #envia al frontend datos actualizados
     path('imprimirpib/', view_imprimir_pibrealtime, name="view_imprimir_pibrealtime"), #INTERFAZ PARA IMPRIMIR EL PIB
     path('simulador/', view_simulador, name="view_simulador"), #SIMULADOR GENERADOR DE NOTAM
-    path('diccionario8400/', view_diccionario8400, name="view_diccionario8400"), #SIMULADOR GENERADOR DE NOTAM
+    path('codigos_abreviaturas/', view_codigos_abreviaturas, name="view_codigos_abreviaturas"), #SIMULADOR GENERADOR DE NOTAM
 
 
+    ## CODIGOS Y ABREVIATURAS
+    path('responseabreviatura/', view_get_abreviatura8400, name="view_get_abreviatura8400"), #
+    path('response8126/', view_get_codigo8126, name="view_get_codigo8126"), #
 ]

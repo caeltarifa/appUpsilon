@@ -20,6 +20,7 @@ from apps.aro_ais.pynotam import notam
 
 from apps.aro_ais.models import Pib_trafico, Pib_extenso
 
+
 Ruta_flp2=Ruta_flp()
 EntrePuntos_flp2=EntrePuntos_flp()
 
@@ -343,10 +344,9 @@ def view_getmetar (request, id_aeropuerto):
 
             cadena = f.decode_metar(latest_jfk_metar.raw_text)
 
-            translator=Translator()
+            #translator=Translator()
 
-            traducido = translator.translate(cadena, src='en', dest='es').text
-            time.sleep(3)
+            traducido = cadena #translator.translate(cadena, src='en', dest='es').text
             vector = traducido.split('\n')
             titulo=vector.pop()
 
@@ -474,11 +474,11 @@ def view_update_notam_realtime(request):
 def generar_auto_pib_trafico(notamsp):
     notam_tilc = componer_msj(notamsp)
 
-    translator = Translator()
+    #translator = Translator()
     try:
         n = notam.Notam.from_str(notam_tilc)
         decodificado = n.decoded()
-        decodificado = translator.translate( decodificado, dest='es').text
+        decodificado = decodificado #translator.translate( decodificado, dest='es').text
     except:
         s = """(A0000/15 NOTAMN
         Q) ZZZZ/QWPLW/IV/BO/W/000/130/4809N01610E001
@@ -512,8 +512,8 @@ def generar_auto_pib_extenso(notamspe, pib_trafico):
             notam_codigo = n.notam_code , 
             tipo_trafico = n.traffic_type , 
 
-            proposito =  translator.translate( str(n.purpose) , dest='es').text , 
-            alcance =  translator.translate( str(n.scope) , dest='es').text , 
+            proposito =  str(n.purpose), #translator.translate( str(n.purpose) , dest='es').text , 
+            alcance =  str(n.scope), #translator.translate( str(n.scope) , dest='es').text , 
 
             fl_inferior =  n.fl_lower , 
             fl_superior =  n.fl_upper , 
@@ -524,9 +524,9 @@ def generar_auto_pib_extenso(notamspe, pib_trafico):
             valid_desde =  n.valid_from , 
             valid_hasta =  n.valid_till , 
 
-            agendado =  translator.translate( str(n.schedule) , dest='es').text , 
+            agendado = str(n.schedule), # translator.translate( str(n.schedule) , dest='es').text , 
 
-            cuerpo = translator.translate( str(n.body) , dest='es').text , 
+            cuerpo = str(n.body), # translator.translate( str(n.body) , dest='es').text , 
 
             limit_superior = n.limit_lower , 
             limit_inferior = n.limit_upper , 
@@ -1180,3 +1180,5 @@ def view_template_prueba(request):
 
 def view_tablero (request):
     return render(request, 'temp_plan_vuelo/tablero_trello.html')
+
+

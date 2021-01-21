@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}
-<title>Upsilon | Simulador</title>
+<title>Upsilon | Códigos y abreviaturas</title>
 {% endblock title %}
 
 
@@ -40,12 +40,32 @@
 
 {% block content %}
 
+<!--BARRA LATERAL O MENU LATERAL-->
+<div class="main-menu menu-fixed menu-light menu-accordion    menu-shadow " data-scroll-to-active="false">
+
+  <div class="main-menu-content">
+    <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
+      <li class="active">
+        <a href="#_8400">
+          <i class="ft-home"></i>
+        </a>
+      </li>
+      <li class=" nav-item">
+        <a href="#_8126">
+          <i class="ft-pie-chart"></i>
+        </a>
+      </li>
+
+    </ul>
+  </div>
+
+</div>
+<!--BARRA LATERAL O MENU LATERAL-->
 
 
 
-
-<!-- Plan de vuelos recientes -->
-<div id="_planes_recientes"></div><br><br><br><br>
+<!-- DOCUMENTO 8400 -->
+<div id="_8400"></div><br><br><br><br>
 <section>
   <div class="row justify-content-center">
     <div class="col-10" style="align-content: center;">
@@ -63,56 +83,89 @@
 
               <div class="section-header" style="text-align:center;">
                 <br><br><br>
-                <div class="jumbotron jumbotron-fluid">
-                  <h1>Bootstrap Tutorial</h1>
-                  <p>Bootstrap is the most popular HTML, CSS...</p>
-                </div>
 
-                <h2 class="section-title">DOCUMENTO DE CÓDIGOS Y ABREVIATURAS 8400</h2>
+                <h2 class="section-title">DOCUMENTO 8400</h2>
 
                 <span class="section-divider"></span>
                 <p class="section-description">
                   Diccionario buscador de significados
                 </p>
 
-
-
-
                 <div class="container">
                   <div id="vue-table">
 
-                    <input type="text" v-model="search" class="form-control" />
+                    <div id="app">
+                      
+                      <input type="text" v-model="searchQuery" v-on:keyup.enter="filteredPeople" class="form-control" placeholder="Abreviatura o texto claro... " style="text-transform:uppercase;" >
 
-                    <table class="table table-striped">
+                      <span>[[respuesta]]</span>
 
-                      <thead>
-                        <tr>
-                          <th v-repeat="column: columns">
-                            <a href="#" v-on="click: sortBy(column)" v-class="active: sortKey == column">
-                              [[ column | capitalize ]]
-                            </a>
-                          </th>
-                        </tr>
-                      </thead>
 
-                      <tbody>
-                        <!-- <tr v-repeat="people | filterBy search | orderBy sortKey reverse"> -->
-                        <tr v-for="gente in people ">
-                          <td>[% gente.name %] </td>
-                          <td>[% gente.age  %]</td>
-                        </tr>
-                      </tbody>
-                    </table>
+                      <br>
+                      <br>
+
+                      <h3> Abreviaturas </h3>
+
+                      <table class="table table-striped">
+
+                        <thead>
+                          <tr>
+                            <th v-for ="column in columns">
+                              <a href="#"><!--  v-on="click: sortBy(column)" v-class="active: sortKey == column">  --> 
+                                [[ column ]]
+                              </a>
+                            </th>
+                          </tr>
+                        </thead>
+
+                        <tbody>
+                          <!-- <tr v-repeat="people | filterBy search | orderBy sortKey reverse"> -->
+                          <tr v-for="person in filtro ">
+                            <td> [[ person.abreviatura ]] </td>
+                            <td> [[ person.significado_completo ]] </td>
+                          </tr>
+
+                        
+                          </tr>
+                        </tbody>
+                      </table>
+
+
+                      <br><br>
+                      
+
+                      <h3> Texto claro </h3>
+                      
+                      <table class="table table-striped">
+
+                        <thead>
+                          <tr>
+                            <th v-for ="column in columns">
+                              <a href="#"><!--  v-on="click: sortBy(column)" v-class="active: sortKey == column">  --> 
+                                [[ column ]]
+                              </a>
+                            </th>
+                          </tr>
+                        </thead>
+
+                        <tbody>
+                          <!-- <tr v-repeat="people | filterBy search | orderBy sortKey reverse"> -->
+                          <tr v-for="person in filtro_texto_claro ">
+                            <td> [[ person.abreviatura ]] </td>
+                            <td> [[ person.significado_completo ]] </td>
+                          </tr>
+
+                        
+                          </tr>
+                        </tbody>
+                      </table>
+
+
+                    </div>
                   </div>
                 </div>
 
-
-
-
-
               </div>
-
-
 
             </div>
           </section>
@@ -122,7 +175,116 @@
   </div>
 </section>
 
-<!-- Planes de vuelo recientes -->
+<!-- DOCUMENTO 8400 -->
+
+
+
+
+
+<!-- DOCUMENTO 8126 -->
+<div id="_8126"></div><br><br><br><br>
+<section>
+  <div class="row justify-content-center">
+    <div class="col-10" style="align-content: center;">
+      <div class="card" style="box-shadow: 2px 2px 8px 0 black; min-height: 30%;  max-height: 100%; ">
+
+        <!--CONTENIDO DE LA TABLA DE PLANES RECIENTES-->
+
+        <div class="card-content collapse show" style="height: 75%; overflow-y: auto;">
+
+          <!--==========================
+            BOLETIN DE INFORMACION RAPIDA
+          ============================-->
+          <section class="section-bg">
+            <div class="container-fluid">
+
+              <div class="section-header" style="text-align:center;">
+                <br><br><br>
+
+                <h2 class="section-title">DOCUMENTO 8126</h2>
+
+                <span class="section-divider"></span>
+                <p class="section-description">
+                  Diccionario buscador de asuntos y estados de asunto
+                </p>
+
+
+
+
+                <div class="container">
+                  <div id="app2">
+                    <input type="text" v-model="buscarCadena8126" v-on:keyup.enter="filtro_estado_asunto" class="form-control" placeholder="Asunto y Estados de Asuntos... " style="text-transform:uppercase;" >
+
+                    <span>[[respuesta]]</span>
+
+                    <br>
+                    <br>
+                      <h3 v-model="acronimo_letra" v-model="titulo_letra"> [[acronimo_letra]] [[titulo_letra]] </h3>
+                    <br>
+
+                    <table class="table table-striped">
+
+                      <thead>
+                        <tr>
+                          <th v-for ="column in columns_asunto">
+                            <a href="#"><!--  v-on="click: sortBy(column)" v-class="active: sortKey == column">  --> 
+                              [[ column ]]
+                            </a>
+                          </th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <!-- <tr v-repeat="people | filterBy search | orderBy sortKey reverse"> -->
+                        <tr v-for="person in filtro_asunto_inicial">
+                          <td> [[ person.id_asunto ]] </td>
+                          <td> [[ person.descripcion_asunto ]] </td>
+                          <td> [[ person.fraseologia_asunto ]] </td>
+                        </tr>
+                        
+                        <tr>
+                          <td>-</td>
+                          <td>-</td>
+                          <td>-</td>
+                        </tr>
+                        
+                        <thead>
+                          <tr>
+                            <th v-for ="column in columns_estado">
+                              <a href="#"><!--  v-on="click: sortBy(column)" v-class="active: sortKey == column">  --> 
+                                [[ column ]]
+                              </a>
+                            </th>
+                          </tr>
+                        </thead>
+
+                        <tr v-for="person in filtro_estado_asunto_inicial">
+                          <td> [[ person.id_estado_asunto ]] </td>
+                          <td> [[ person.descripcion_estado ]] </td>
+                          <td> [[ person.fraseologia_estado ]] </td>
+                        </tr>
+
+                      
+                        </tr>
+                      </tbody>
+                    </table>
+
+                  </div>
+                </div>
+
+
+
+              </div>
+
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DOCUMENTO 8126 -->
 
 
 
@@ -131,6 +293,8 @@
 
 {% block extrajs %}
 <script src='https://harvesthq.github.io/chosen/chosen.jquery.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/vue/0.11.10/vue.min.js'></script>
+<script src='https://unpkg.com/vue/dist/vue.js'></script>
 
 <script type="text/javascript">
 
@@ -150,9 +314,6 @@
   });
 
 </script>
-
-
-
 
 <script>
   function getAsunto() {
@@ -236,46 +397,187 @@
   }
 </script>
 
-<script src='https://cdnjs.cloudflare.com/ajax/libs/vue/0.11.10/vue.min.js'></script>
+
+<script src="https://unpkg.com/vue"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
   new Vue({
-    el: '#vue-table',
-
-    delimiters: ['[%', '%]'],
-
+    el: '#app',
+    delimiters: ['[[', ']]'],
     data: {
-      sortKey: '',
+      // -------------- 8400 -----------------
+      searchQuery: '',
+      respuesta:'',
+      people: ['Apple', 'Banana', 'Orange', 'Facebook', 'Twitter', 'Youtube'],
+      columns: ['Abreviatura', 'Descripción'],
+      diccionario: [],
+      diccionario2: [],
+      // -------------- 8400 -----------------
 
-      search: '',
-
-      reverse: false,
-
-      columns: ['name', 'age'],
-
-      people: [
-        { name: 'John', age: 50 },
-        { name: 'Jack', age: 35 },
-        { name: 'Keith', age: 28 },
-        { name: 'Alain', age: 17 },
-        { name: 'Neil', age: 1 },
-        { name: 'Mark', age: 72 },
-        { name: 'Don', age: 47 },
-        { name: 'Walter', age: 41 },
-        { name: 'Jessy', age: 33 },
-        { name: 'Henck', age: 22 },
-        { name: 'Sal', age: 9 },
-        { name: 'Skyler', age: 42 },
-        { name: 'Holly', age: 55 },
-      ]
+      
+      buscarCadena8126: '',
+      
     },
+    computed: {
+      // -------------- 8400 -----------------
+      filtro: function () {
+        var self = this;
+        self.searchQuery=self.searchQuery.toUpperCase();
+        variable=self.diccionario.filter(function (user) {
+          return user.abreviatura.indexOf(self.searchQuery) !== -1;
+        })
+        if(variable.length>0){
+          return variable 
+        }
+      },
+      filtro_texto_claro: function () {
+        var self = this;
+        self.searchQuery=self.searchQuery.toUpperCase();
+        variable=self.diccionario2.filter(function (user) {
+          return user.abreviatura.indexOf(self.searchQuery) !== -1;
+        })
+        if(variable.length>0){
+          return variable 
+        }
+      },
+      // -------------- 8400 -----------------
 
+    },
     methods: {
-      sortBy: function (sortKey) {
-        this.reverse = (this.sortKey == sortKey) ? !this.reverse : false;
-        this.sortKey = sortKey;
-      }
+      // -------------- 8400 -----------------
+      filteredPeople: function () {
+        var self = this;
+        variable=self.diccionario.filter(function (user) {
+          return user.abreviatura.indexOf(self.searchQuery) !== -1;
+        })
+        if(variable.length>0){
+          return variable 
+        }else{
+          this.created(this.searchQuery)
+        }
+      },
+      created: function (parametro) {
+        
+        (async() => {
+          //alert("INTENTANDO EN LA bd")
+
+          await this.getResponse(parametro)
+          
+          if(this.diccionario.length >0 || this.diccionario2.length >0 ){
+            this.respuesta='';
+            this.searchQuery="";
+          }else{
+            this.respuesta="No se encontraron resultados.";
+          }
+        })();
+      },
+      getResponse: async function(parametro){
+        parametro = parametro.toUpperCase();
+        const url = '{% url 'view_get_abreviatura8400' %}' + "?abreviatura="+parametro
+        await axios.get(url).then(response => {this.diccionario = (response.data.abreviaturas); this.diccionario2 = (response.data.texto_claro)}).catch(function (error) { console.log(error); });
+        //console.log(this.diccionario2)
+      },
+      // -------------- 8400 -----------------
+
+
     }
-  })
+      
+      
+  });
+
+  
+</script>
+
+<script>
+  new Vue({
+    el: '#app2',
+    delimiters: ['[[', ']]'],
+    data: {
+      // -------------- 8400 -----------------
+      titulo_letra: "Titulo de la letra",
+      acronimo_letra: "",
+      buscarCadena8126: '',
+      
+      respuesta:'',
+      
+      people: ['Apple', 'Banana', 'Orange', 'Facebook', 'Twitter', 'Youtube'],
+      
+      columns_asunto: ['Asunto', 'Descripción','Fraseología'],
+      columns_estado: ['Estado de asunto', 'Descripción','Fraseología'],
+      
+      asuntos: [],
+      estados_asunto: [],
+      // -------------- 8400 -----------------
+
+      
+      
+    },
+    computed: {
+      filtro_asunto_inicial: function () {
+        var self = this;
+        self.buscarCadena8126=self.buscarCadena8126.toUpperCase();
+        variable=self.asuntos.filter(function (user) {
+          return user.id_asunto.indexOf(self.buscarCadena8126) !== -1;
+        })
+        if(variable.length>0){
+          return variable 
+        }
+      },
+      filtro_estado_asunto_inicial: function () {
+        var self = this;
+        self.buscarCadena8126=self.buscarCadena8126.toUpperCase();
+        variable=self.estados_asunto.filter(function (user) {
+          return user.id_estado_asunto.indexOf(self.buscarCadena8126) !== -1;
+        })
+        if(variable.length>0){
+          return variable 
+        }
+      },
+    },
+    methods: {
+      filtro_estado_asunto: function () {
+        //SE ACTIVA CUANDO SE PRESIONA LA TECLA ENTER
+        var self = this;
+        variable=self.asuntos.filter(function (user) {
+          return user.id_asunto.indexOf(self.buscarCadena8126) !== -1;
+        })
+        if(variable.length>0){
+          return variable 
+        }else{
+          if(this.buscarCadena8126.length > 0 && this.buscarCadena8126.length < 3){
+            this.buscando_8126(this.buscarCadena8126)
+          }
+        }
+      },
+      buscando_8126: function (parametro) {
+        (async() => {
+          //alert("INTENTANDO EN LA bd")
+
+          await this.getResponse8126(parametro)
+          
+          if(this.asuntos.length >0 || this.estados_asunto.length >0 ){
+            this.respuesta='';
+            this.buscarCadena8126="";
+          }else{
+            this.respuesta="No se encontraron resultados.";
+          }
+        })();
+      },
+      getResponse8126: async function(parametro){
+        parametro = parametro.toUpperCase();
+        const url = '{% url 'view_get_codigo8126' %}' + "?string8126="+parametro
+        await axios.get(url).then(response => {this.titulo_letra=response.data.titulo_letra; this.acronimo_letra=response.data.acronimo_letra ; this.asuntos = (response.data.asuntos); this.estados_asunto = (response.data.estados_asuntos)}).catch(function (error) { console.log(error); });
+        console.log(this.asuntos)
+        console.log(this.estados_asunto)
+        //titulo_letra
+      },
+
+    }
+      
+      
+  });
+
+  
 </script>
 {% endblock extrajs %}
 

@@ -138,8 +138,9 @@
                                 </ul>
                                 <!--VERSION MOVIL -->
 
-
-
+                                {% block addElement %}
+                                xz
+                                {% endblock addElement %}
 
                                 <!--NOTIFICACION METAR        -->                           
                                 <ul class="nav navbar-nav float-right" >
@@ -198,7 +199,7 @@
 
 
                                 
-                                <!--NOTIFICACION NOTAM Y SPECI        -->                           
+                                <!--NOTIFICACION NOTAM       -->                           
                                 <ul class="nav navbar-nav float-right">
                                     <li class="dropdown dropdown-user nav-item">
                                         <a class="dropdown-toggle nav-link dropdown-user-link" href="#"
@@ -217,7 +218,7 @@
                                             <li class="arrow_box_right">
                                                 <h4>
                                                     &nbsp; &nbsp; 
-                                                    Notam & Speci
+                                                    Notam
                                                 </h4> 
                                             </li>
                                             
@@ -416,6 +417,9 @@
                                 </ul>
                                 <!--CERRAR SESION-->
 
+                                
+
+
                             </div>
                         </div>
                     </div>
@@ -563,10 +567,11 @@
                     });
                 });
                 //FILTER FOR THE SEARCH PERSONS IN NAVBAR
+                new_notams_update();
                 
                 setInterval(() => {
                     new_notams_update();
-                }, 5000);
+                }, 35000);
 
                 get_equipo_trabajo();
         });

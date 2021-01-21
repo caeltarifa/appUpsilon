@@ -12,7 +12,10 @@ import json
 
 from apps.plan_vuelo.models import  Notam_trafico, Trabajador, Aeropuerto
 from apps.aro_ais.models import  Pib_trafico, Pib_extenso, Pib_registro_documento
+from apps.aro_ais.models import Abreviatura_8400
+
 from apps.aro_ais.models import  Letra_asunto,Asunto,Estado_asunto
+
 #from apps.aro_ais.models import  Simbolo_8400, Abreviatura_8400
 
 
@@ -88,16 +91,17 @@ def view_getEstadoAsunto(request):
         
         estado_asunto = Estado_asunto.objects.filter(id_asunto__id_asunto=asunto)
         vec_estado_asuntos = [x.id_estado_asunto for x in estado_asunto]
-        return JsonResponse({'vec_estado_asunto':vec_estado_asuntos}, status=200)
+        return JsonResponse({'vec_estado_asunto':vec_estado_asuntos, 'asunto_fraseologia': "asunto para cuerpo E)", 'asunto_espaniol': "asunto espaniol PIB", }, status=200)
     else:
         return redirect('login')
 
-def view_diccionario8400(request):
+def view_codigos_abreviaturas(request):
     if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='AISNACIONAL').exists():
         
         return render(request, 'temp_plan_vuelo/temp_aro_ais/diccionario8400.html')
     else:
         return redirect('login')
+
 
 
 
@@ -421,3 +425,109 @@ def serializarPibRegional(pibicao):
         'limit_superior' : str(pibicao.limit_superior).upper(), 
         'limit_inferior' : str(pibicao.limit_inferior).upper(),
     }
+
+
+
+
+
+# AIM ################################################################################################################
+
+def view_get_abreviatura8400(request):
+    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='AISNACIONAL').exists():
+        #equipo_coordinacion = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and empresa_institucion_id=1 order by activo")
+        if request.method =="GET":
+            #get_abreviatura = str(request.GET.dict()['abreviatura'])
+            get_abreviatura = str(request.GET.get('abreviatura'))
+            #buscamos coincidencias en SIGNIFICADO_COMPLETO o ABREVIATURA
+            #id_significado | abreviatura | significado_completo |         significado_pib
+            lista_abreviaturas = Abreviatura_8400.objects.raw("select id_significado, abreviatura,significado_completo, significado_pib from aro_ais_abreviatura_8400 inner join aro_ais_significado_8400 on abreviatura_id=abreviatura where abreviatura like %(abreviatura)s" , { 'abreviatura' : str("%"+get_abreviatura+"%")} )
+            lista_textoclaro = Abreviatura_8400.objects.raw("select id_significado, abreviatura,significado_completo, significado_pib from aro_ais_abreviatura_8400 inner join aro_ais_significado_8400 on abreviatura_id=abreviatura where significado_completo like %(abreviatura2)s" , { 'abreviatura2' : "%"+get_abreviatura+"%"} )
+
+            lista_abreviaturas = [ serializarAbreviatura(abrev) for abrev in lista_abreviaturas ]
+            lista_textoclaro = [ serializarAbreviatura(abrev) for abrev in lista_textoclaro ]
+            #
+            devolucion = {
+                'abreviaturas': lista_abreviaturas,
+                'texto_claro': lista_textoclaro
+            }
+
+            return HttpResponse(json.dumps(devolucion), content_type='application/json')
+        else:
+            return HttpResponse(json.dumps([{'HOLA':'hola'}]), content_type='application/json')
+    else:
+        return redirect('login')
+
+
+def serializarAbreviatura(abrev):
+    return {
+        'id_significado' : abrev.id_significado,
+        'abreviatura' : abrev.abreviatura,
+        'significado_completo' : abrev.significado_completo,
+        'significado_pib' : abrev.significado_pib,
+    }
+
+
+def view_get_codigo8126(request):
+    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='AISNACIONAL').exists():
+        #equipo_coordinacion = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and empresa_institucion_id=1 order by activo")
+        if request.method =="GET":
+            #get_abreviatura = str(request.GET.dict()['abreviatura'])
+            get_codigo_asunto = str(request.GET.get('string8126')).upper()
+            #buscamos coincidencias en SIGNIFICADO_COMPLETO o ABREVIATURA
+            
+            #id_significado | abreviatura | significado_completo |         significado_pib
+            titulo_letra = Letra_asunto.objects.raw("select id_letra, titulo_letra, acronimo from aro_ais_letra_asunto where id_letra in ( select letra_asunto_id from aro_ais_asunto where id_asunto like %(codigo_asunto)s  ) " , { 'codigo_asunto' : str("%"+get_codigo_asunto+"%")} )
+            if len(titulo_letra) > 0:
+                acronimo_letra = str(titulo_letra[0].acronimo + " - ")
+                titulo_letra = str(titulo_letra[0].titulo_letra)
+            else:
+                titulo_letra=""
+                acronimo_letra=""
+
+
+            #id_asunto | descripcion_asunto | fraseologia_asunto
+            lista_asuntos = Asunto.objects.raw("select id_asunto, descripcion_asunto, fraseologia_asunto from aro_ais_asunto where id_asunto like %(codigo_asunto)s" , { 'codigo_asunto' : ""+get_codigo_asunto+""} )
+            lista_asuntos = [ serializarAsunto(codig) for codig in lista_asuntos ]
+
+            ## BUSCQUEDA A PARTIR DE UN ASUNTO
+            #id_estado_asunto | descripcion_estado | fraseologia_estado
+            lista_estados = []
+            lista_estados = Estado_asunto.objects.raw("SELECT * from aro_ais_estado_asunto where id_estado_asunto in (select estado_asunto_id from aro_ais_estado_asunto_id_asunto where asunto_id like %(codigo_asunto)s) " , { 'codigo_asunto' : ""+get_codigo_asunto+""} )
+            lista_estados = [ serializarEstadoAsunto(estado) for estado in lista_estados ]
+            
+            ## BUSQUEDA A PARTIR DEL ESTADO_ASUNTO
+            #id_estado_asunto | descripcion_estado | fraseologia_estado
+            lista_estados2 = Estado_asunto.objects.raw("select * from aro_ais_estado_asunto where id_estado_asunto like %(codigo_asunto)s " , { 'codigo_asunto' : ""+get_codigo_asunto+""} )
+            lista_estados2 = [ serializarEstadoAsunto(estado) for estado in lista_estados2 ]
+            
+
+            lista_estados.extend(lista_estados2)
+            #
+            devolucion = {
+                'titulo_letra' : titulo_letra,
+                'acronimo_letra': acronimo_letra,
+                'asuntos': lista_asuntos,
+                'estados_asuntos': lista_estados,
+            }
+
+            return HttpResponse(json.dumps(devolucion), content_type='application/json')
+        else:
+            return HttpResponse(json.dumps([{'HOLA':'hola'}]), content_type='application/json')
+    else:
+        return redirect('login')
+
+def serializarAsunto(cod):
+    return {
+        'id_asunto' : cod.id_asunto,
+        'descripcion_asunto' : cod.descripcion_asunto,
+        'fraseologia_asunto' : cod.fraseologia_asunto,
+    }
+def serializarEstadoAsunto(estado):
+    return {
+        'id_estado_asunto' : estado.id_estado_asunto,
+        'descripcion_estado' : estado.descripcion_estado,
+        'fraseologia_estado' : estado.fraseologia_estado,
+    }
+
+
+# AIM ################################################################################################################
