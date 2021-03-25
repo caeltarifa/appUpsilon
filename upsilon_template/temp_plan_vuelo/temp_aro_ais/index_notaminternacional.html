@@ -7,54 +7,6 @@
 {% endblock title %}
 
 
-{% block addElement %}
-<!--NOTIFICACION METAR        -->
-<ul class="nav navbar-nav float-right">
-    <li class="dropdown dropdown-user nav-item">
-        <a class="dropdown-toggle nav-link dropdown-user-link" hred="#" data-toggle="dropdown">
-            <span class="avatar avatar-online" id="id_notificacion_metar" onclick="autofocus_metar()">
-                <span class="material-icons">
-                    note_add
-                </span>
-            </span>
-        </a>
-
-        <ul class="dropdown-menu dropdown-menu-right" style="background-color: #ffffff;">
-            <li>
-                <!--class="arrow_box_right"-->
-                <h4>
-                    &nbsp; &nbsp;
-                    Crear NOTAM
-                </h4>
-            </li>
-            <!-- BUSCAR METAR-->
-            <li class="arrow_box_right">
-                <div class="input-group search-box">
-                    <div class="position-relative has-icon-right full-width">
-                        <input class="form-control" id="aeropuerto_metar" type="text" placeholder="Buscar...">
-                        <div class="form-control-position" id="btn_aeropuerto_metar" onclick="busca_metar()">
-                            <span class="material-icons">
-                                search
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <!--
-                    <form>
-                    </form>
-                -->
-            </li>
-            <!-- BUSCAR METAR-->
-            <div id="grupo_metars" style="height: 30px; overflow: auto;">
-
-            </div>
-        </ul>
-    </li>
-</ul>
-<!--NOTIFICACION METAR   -->
-{% endblock addElement %}
-
-
 
 {% block extra_head %}
 <style>
@@ -288,6 +240,7 @@
 
 
 
+
 {% block content %}
 <!-- /.modal -->
 <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -329,11 +282,12 @@
         </div>
 
         <div class="butFrame bounce">
-            <a href="{% url 'view_simulador' %}">
-                <img src="http://www.neodigital.com.au/thumbnailsmall/Button5.jpg" />
-                <div class="butHeading">Banco notam</div>
+            <a href="{% url 'view_todos_notams' %}">
+                <img src="http://www.neodigital.com.au/thumbnailsmall/Button6.jpg" />
+                <div class="butHeading">BANCO NOTAM</div>
             </a>
         </div>
+
 
     </div>
 
@@ -343,24 +297,6 @@
             <a href="{% url 'view_codigos_abreviaturas' %}">
                 <img src="http://www.neodigital.com.au/thumbnailsmall/Button6.jpg" />
                 <div class="butHeading">CODIGOS Y ABREVIATURAS</div>
-            </a>
-        </div>
-
-        <div class="butFrame bounce">
-            <a href="{% url 'view_simulador' %}">
-                <img src="http://www.neodigital.com.au/thumbnailsmall/Button6.jpg" />
-                <div class="butHeading">DOC 8126</div>
-            </a>
-        </div>
-
-    </div>
-
-    <div class="buttons">
-
-        <div class="butFrame bounce">
-            <a href="{% url 'view_todos_notams' %}">
-                <img src="http://www.neodigital.com.au/thumbnailsmall/Button6.jpg" />
-                <div class="butHeading">HISTORIAL NOTAM</div>
             </a>
         </div>
 

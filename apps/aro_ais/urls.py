@@ -7,7 +7,9 @@ from apps.aro_ais.views import view_pib_automatizado, view_archivar_pib, view_pu
 from apps.aro_ais.views import view_guardarregistro_pib
 from apps.aro_ais.views import view_imprimir_pibrealtime
 from apps.aro_ais.views import view_panel_serviciosaroais_aasana
-from apps.aro_ais.views import view_simulador
+from apps.aro_ais.views import view_new_notam
+from apps.aro_ais.views import view_replace_notam
+from apps.aro_ais.views import view_cancel_notam
 from apps.aro_ais.views import view_getAsunto,view_getEstadoAsunto
 from apps.aro_ais.views import view_codigos_abreviaturas
 from apps.aro_ais.views import view_get_abreviatura8400
@@ -34,7 +36,9 @@ urlpatterns = [
     path('verpib/', view_pibupdate_tiemporeal, name="view_pibupdate_tiemporeal"), #envia al frontend datos actualizados
     path('guardarregistropib/', view_guardarregistro_pib, name="view_guardarregistro_pib"), #envia al frontend datos actualizados
     path('imprimirpib/', view_imprimir_pibrealtime, name="view_imprimir_pibrealtime"), #INTERFAZ PARA IMPRIMIR EL PIB
-    path('simulador/', view_simulador, name="view_simulador"), #SIMULADOR GENERADOR DE NOTAM
+    path('newnotam/', view_new_notam, name="view_new_notam"), #SIMULADOR GENERADOR DE NOTAM
+    path('replacenotam/', view_replace_notam, name="view_replace_notam"), #SIMULADOR GENERADOR DE NOTAM
+    path('cancelnotam/', view_cancel_notam, name="view_cancel_notam"), #SIMULADOR GENERADOR DE NOTAM
     path('codigos_abreviaturas/', view_codigos_abreviaturas, name="view_codigos_abreviaturas"), #SIMULADOR GENERADOR DE NOTAM
 
 

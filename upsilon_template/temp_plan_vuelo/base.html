@@ -53,11 +53,18 @@
     <!--<link href="{% static 'theme-assets/css/pib.css' %}" rel="stylesheet"> -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 
+
+    {% block extra_head %}
+    {% endblock extra_head %}
+
 </head>
+
+
+
 
 <body>
 
-{% block navbar %}
+    {% block navbar %}
     <!--==========================
     NAV BAR
     ============================-->
@@ -80,8 +87,8 @@
         </div>
     </header>
     <!-- NAV BAR -->
-{% endblock navbar %}
-    
+    {% endblock navbar %}
+
 
 
 
@@ -96,76 +103,77 @@
 
 
 
-
-
-
-
-{% block footer %}
+    {% block footer %}
     <!--==========================
         PIE DE PAGINA
     ============================-->
-        <footer id="footer">
-            <br>
-            <br>
-            <div class="container ">
-                <!-- Logo -->
-                <div class="row justify-content-center" style="text-align: center;">
-                    <div class="col-15">
-                        <a href="#">
-                            <!-- <img class="rotating" src="{% static 'assets/images/logo/krypton-gradient.svg' %}" alt=""> -->
-                            <img class="rotating" src="{% static 'theme-assets/krypton-gradient.svg' %}" id="logofooter" alt="">
-                            <h2 style="color: white;">Nuclear</h2>
-                            <br>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Columns -->
-                <!-- Links group -->
-                <div class="row justify-content-center" style="text-align: center;">
-                    <div class="col-5 col-sm-3 ">
-                        <a href="https://graviton.aasana.tk" style="color: white;" target="_blank">GRAVITON</a>
-                    </div>
-
-                    <div class="col-2 col-sm-3 ">
-                        <a href="https://boson-aasana.cloud/" style="color: white;" target="_blank">BOSON</a>
-                    </div>
-
-                    <!-- Force next columns to break to new line -->
-                    <!-- <div class="w-100"></div> -->
-
-                    <div class="col-2 col-sm-3 ">
-                        <a href="http://upsilon.aasana.tk" style="color: white;" target="_blank">UPSILON</a>
-                    </div>
-
-                    <div class="col-2 col-sm-3 ">
-                        <a href="#" style="color: white;" target="_blank">BARION</a>
-                    </div>
-
-                </div>
-                <!-- Links group -->
-                <br>
-                <br>
-                <!-- Copyright -->
-                <div class="row justify-content-center">
-                    <div class="col-15">
-                        <p style="color: white;" class="k-copyright">© 2020 | Upsilon</p>
-                    </div>
-                </div>
-                <!-- Made by -->
-                <div class="row justify-content-center">
-                    <div class="col-15">
-                        <p class="coded-by" style="color: white;">Diseñado y codificado
-                            <a style="color: white;" href="https://github.com" target="_blank">@aasanaLaPaz</a></p>
-                    </div>
+    <footer id="footer">
+        <br>
+        <br>
+        <div class="container ">
+            <!-- Logo -->
+            <div class="row justify-content-center" style="text-align: center;">
+                <div class="col-15">
+                    <a href="#">
+                        <!-- <img class="rotating" src="{% static 'assets/images/logo/krypton-gradient.svg' %}" alt=""> -->
+                        <img class="rotating" src="{% static 'theme-assets/krypton-gradient.svg' %}" id="logofooter"
+                            alt="">
+                        <h2 style="color: white;">Nuclear</h2>
+                        <br>
+                    </a>
                 </div>
             </div>
 
-            <!-- Absolute image -->
-        </footer>
+            <!-- Columns -->
+            <!-- Links group -->
+            <div class="row justify-content-center" style="text-align: center;">
+                <div class="col-5 col-sm-3 ">
+                    <a href="https://graviton.aasana.tk" style="color: white;" target="_blank">GRAVITON</a>
+                </div>
+
+                <div class="col-2 col-sm-3 ">
+                    <a href="https://boson-aasana.cloud/" style="color: white;" target="_blank">BOSON</a>
+                </div>
+
+                <!-- Force next columns to break to new line -->
+                <!-- <div class="w-100"></div> -->
+
+                <div class="col-2 col-sm-3 ">
+                    <a href="http://upsilon.aasana.tk" style="color: white;" target="_blank">UPSILON</a>
+                </div>
+
+                <div class="col-2 col-sm-3 ">
+                    <a href="#" style="color: white;" target="_blank">BARION</a>
+                </div>
+
+            </div>
+            <!-- Links group -->
+            <br>
+            <br>
+            <!-- Copyright -->
+            <div class="row justify-content-center">
+                <div class="col-15">
+                    <p style="color: white;" class="k-copyright">© 2021 | Upsilon</p>
+                </div>
+            </div>
+            <!-- Made by -->
+            <div class="row justify-content-center">
+                <div class="col-15">
+                    <p class="coded-by" style="color: white;">
+                        <!--
+                            Diseñado y codificado
+                        -->
+                        <a style="color: white;" href="https://github.com" target="_blank">@LaPaz</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Absolute image -->
+    </footer>
     <!-- PIE DE PAGINA -->
-{% endblock footer %}
-    
+    {% endblock footer %}
+
 
 
 
@@ -186,6 +194,14 @@
 
     <!-- Template Main Javascript File -->
     <script src="{% static 'theme-assets/login/js/main.js' %}"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+
+
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.15/vue.js'></script>
+    {% block extra_js %}
+    {% endblock extra_js %}
+
 
     <script>
         // min and max radius, radius threshold and percentage of filled circles
@@ -248,7 +264,7 @@
             this.speedx = Math.cos(this.speedAngle) * this.speed;
             this.speedy = Math.sin(this.speedAngle) * this.speed;
             var spacex = Math.abs((this.x - (this.speedx < 0 ? -1 : 1) * (canvas.width / 2 + this.radius)) / this
-                    .speedx),
+                .speedx),
                 spacey = Math.abs((this.y - (this.speedy < 0 ? -1 : 1) * (canvas.height / 2 + this.radius)) / this
                     .speedy);
             this.ttl = Math.min(spacex, spacey);
@@ -332,7 +348,7 @@
                 for (var i = 0; i < arr.length; i++) {
                     var circle = arr[i];
                     //checking if out of boundaries
-                    if (circle.ttl < 0) {}
+                    if (circle.ttl < 0) { }
                     var xEscape = canvas.width / 2 + circle.radius,
                         yEscape = canvas.height / 2 + circle.radius;
                     if (circle.ttl < -20) arr[i].init(arr[i].background);

@@ -1,0 +1,519 @@
+{% extends 'temp_plan_vuelo/baseadmin.html' %} 
+{% load static %} 
+
+{% block title %}
+<title>Upsilon | Simulador</title>
+{% endblock title %}
+
+
+
+{% block extra_head %}
+    <link rel='stylesheet' href='https://harvesthq.github.io/chosen/chosen.css'>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="{% static 'theme-assets/css/aprobar_plan.css' %}"> -->
+    <link rel="stylesheet" href="{% static 'theme-assets/css/pib.css' %}">
+{% endblock extra_head %}
+    
+<!-- ////////////////////////////////////////////////////////////////////////////-->
+
+
+
+
+
+
+{% block content %}
+
+
+<!-- Plan de vuelos recientes -->
+<div id="_planes_recientes"></div><br><br><br><br>
+<section>
+    <div class="row justify-content-center">
+        <div class="col-10" style="align-content: center;">
+            <div class="card" style="box-shadow: 2px 2px 8px 0 black; min-height: 30%;  max-height: 100%; ">
+                
+                <!--CONTENIDO DE LA TABLA DE PLANES RECIENTES-->
+               
+                <div class="card-content collapse show" style="height: 75%; overflow-y: auto;">
+
+                    <!--==========================
+                    BOLETIN DE INFORMACION RAPIDA
+                     ============================-->
+                    <section class="section-bg" >
+                        <div class="container-fluid">
+
+                            <div class="section-header" style="text-align:center;">
+                                <br><br><br>
+                                <h2 class="section-title">
+                                  <span class="material-icons">
+                                    post_add
+                                  </span>
+                                  NUEVO NOTAM
+
+                                </h2>
+                                
+                                <span class="section-divider"></span>
+                                <p class="section-description">
+                                    Generacion guiada de notam
+                                </p>
+                                
+                                <div class="container"  id="FORM_NOTAM">          
+                                    <table class="table table-bordered" >
+                                      <tbody style="text-align:center;">            
+                                        <tr>
+                                          <td>
+                                            <form style="margin-left:5%;">
+                                                  <div class="input-group ">
+                                                    <div class="input-group-prepend">
+                                                      <span class="input-group-text">Q)</span>
+                                                    </div>
+                                                    <input type="text" class="form-control" id="fname" name="fname" placeholder="SLLF" disabled><br><br>
+                                                    
+                                                    <select class="form-control" id="letra_asunto_id" onchange="getAsunto()">
+                                                      <option value="" selected="selected">Letra</option>
+                                                      {% for letra in vec_letra %}
+                                                        <option value="{{letra.id_letra}}">
+                                                          {{letra.id_letra}}
+                                                        </option>
+                                                      {% endfor %}
+                                                    </select>
+                                                    
+                                                    <select class="form-control" id="asunto_id" onchange="getEstadoAsunto()" >                                                          
+                                                      <option value="" selected="selected">Asunto</option>
+                                                    </select>
+
+                                                    <select class="form-control" id="estado_asunto_id">
+                                                      <option value="" selected="selected">Estado</option>
+                                                    </select>
+
+                                                    <input type="text" class="form-control" placeholder="IV" style="width:30px;">
+                                                    <input type="text" class="form-control" placeholder="NBO" style="width:30px;">
+                                                    <input type="text" class="form-control" placeholder="W" style="width:30px;" maxlength="1">
+                                                    <input type="number" class="form-control" placeholder="000" style="width:30px;" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==3) return false;">
+                                                    <input type="number" class="form-control" placeholder="160" style="width:30px;" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==3) return false;">
+                                                    
+                                                  </div>
+                                              </form>
+                                          </td>
+                                      </tr>
+                                      
+
+                                        <!--
+                                          <tr>
+                                              <td>
+                                                  <form style="margin-left:5%;">
+                                                      <div class="input-group ">
+                                                        <div class="input-group-prepend">
+                                                          <span class="input-group-text">Cabecera</span>
+                                                        </div>
+                                                        <input type="text" class="form-control" placeholder="Prioridad" style="width:110px;">
+                                                        <input type="text" class="form-control" placeholder="Originador" style="width:110px;">
+                                                      </div>
+                                                  </form>
+                                              </td>
+                                          </tr>
+                                        -->
+                                        
+                                        
+                                        <!-- PRIORIDAD -->
+                                        <tr>
+                                          <td>
+                                              <form style="margin-left:5%;">
+                                                  <div class="input-group ">
+                                                    <div class="input-group-prepend">
+                                                      <span class="input-group-text" style="width:230px;">Prioridad</span>                                                        
+                                                      <div>
+                                                        <select class="form-control" >
+                                                          <option>SS</option>
+                                                          <option>FF</option>
+                                                          <option>KK</option>
+                                                          <option>GG</option>
+                                                          <option>AA</option>
+                                                        </select>
+                                                      </div>
+                                                    </div>
+                                                    
+                                                    <!-- DIRECCION -->
+                                                    <div class="input-group-prepend">
+                                                      <span class="input-group-text" style="width:230px;">Dirección</span>                                                        
+                                                      <input type="text" class="form-control" id="notam_id" value="SLLPYNYX" style="width:250px;">
+                                                    </div>
+                                                    <!-- DIRECCION -->
+                                                  </div>
+
+                                              </form>
+                                          </td>
+                                        </tr>
+                                        <!-- PRIORIDAD -->
+
+                                        <!-- FECHA Y HORA DE DEPOSITO -->
+                                        <tr>
+                                            <td>
+                                                <form style="margin-left:5%;">
+                                                    <div class="input-group ">
+                                                      <div class="input-group-prepend">
+                                                        <span class="input-group-text" style="width:230px;">Depósito</span>
+                                                      </div>
+                                                      <input type="date" class="form-control" style="width:90px;">
+                                                      
+                                                      <input type="number" class="form-control" placeholder="HR" style="width:90px;" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==4) return false;">
+                                                      
+                                                      <div class="input-group-prepend">
+                                                        <span class="input-group-text" style="width:170px;">Remitente</span>                                                        
+                                                        <input type="text" class="form-control" id="notam_id" value="NOTAM INTERNACIONAL" style="width:150px;"><<=(
+                                                      </div>
+
+                                                    </div>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        <!-- FECHA Y HORA DE DEPOSITO -->
+                                        
+
+                                        
+                                        
+                                        <!-- INDICADOR DEL REMITENTE -->
+                                        <tr>
+                                          <td>
+                                            <form style="margin-left:5%;">
+                                              <div class="input-group ">
+                                                <div class="input-group-prepend">
+                                                  <span class="input-group-text" style="width:230px;">Remitente</span>                                                        
+                                                  <input type="text" class="form-control" id="notam_id" value="NOTAM INTERNACIONAL" style="width:250px;"><<=(
+                                                </div>
+                                              </div>
+                                            </form>
+                                          </td>
+                                        </tr>
+                                        <!-- INDICADOR DEL REMITENTE -->
+
+                                        <!--NOTAM NUEVO-->
+                                        <tr>
+                                            <td>
+                                                <form style="margin-left:5%;">
+                                                    <div class="input-group ">
+                                                      <div class="input-group-prepend">
+                                                        <span class="input-group-text" style="width:300px;">Correlativo</span>                                                        
+                                                        <input type="text" class="form-control" id="notam_id" placeholder="C221/2021" style="width:180px;">
+
+                                                        <input type="checkbox"  data-toggle="modal" id="estimado_id"/>
+                                                        <label class="form-check-label" for="estimado_id">Internacional</label>
+
+                                                        <input type="text" class="form-control" id="notam_id" placeholder="A021/2021" style="width:180px;">
+                                                      </div>
+
+                                                    </div>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        <!--NOTAM NUEVO-->
+
+                                        <tr>
+                                            <td>
+                                                <form style="margin-left:5%;">
+                                                    <div class="input-group ">
+                                                      <div class="input-group-prepend">
+                                                        <span class="input-group-text">A)</span>
+                                                      </div>
+                                                      <select class="form-control" >
+                                                        <option>SLLP</option>
+                                                        <option>SLCB</option>
+                                                        <option>SLVR</option>
+                                                        <option>SLET</option>
+                                                        <option>SLOR</option>
+                                                        <option>SLRB</option>
+                                                        <option>SLRQ</option>
+                                                        <option>SLGM</option>
+                                                        <option>SLCO</option>
+                                                        <option>SLSB</option>
+                                                        <option>SLUY</option>
+                                                      </select>
+
+                                                      <div class="input-group-append">
+                                                        <input type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal" value="Mapa"/>
+                                                      </div>
+
+                                                    </div>
+                                                </form>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                <form style="margin-left:5%;">
+                                                    <div class="input-group ">
+                                                      <div class="input-group-prepend">
+                                                        <span class="input-group-text">B)</span>
+                                                      </div>
+                                                      <input type="date" class="form-control" style="width:90px;">
+                                                      <input type="number" class="form-control" placeholder="HR" style="width:90px;" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==4) return false;">
+                                                      <div class="input-group-append">
+                                                      </div>
+                                                    </div>
+                                                </form>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                <form style="margin-left:5%;">
+                                                    <div class="input-group ">
+                                                      <div class="input-group-prepend">
+                                                        <span class="input-group-text">C)</span>
+                                                      </div>
+                                                      <input type="date" class="form-control" style="width:90px;">
+                                                      
+                                                      <input type="number" class="form-control" placeholder="HR" style="width:90px;" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==4) return false;">
+                                                      
+                                                      <div class="form-group">
+                                                        <input type="checkbox"  data-toggle="modal" id="estimado_id"/>
+                                                        <label class="form-check-label" for="estimado_id">EST</label>
+                                                      </div>
+
+                                                    </div>
+                                                </form>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                <form style="margin-left:5%;">
+                                                    <div class="input-group ">
+                                                      <div class="input-group-prepend">
+                                                        <span class="input-group-text">D)</span>
+                                                      </div>
+                                                      <input type="text" class="form-control" placeholder="Horario" style="width:110px;">
+                                                    </div>
+                                                </form>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                <form style="margin-left:5%;">
+                                                    <div class="input-group ">
+                                                      <div class="input-group-prepend">
+                                                        <span class="input-group-text">E)</span>
+                                                      </div>
+                                                      <input type="text" class="form-control" placeholder="Cuerpo" style="width:110px;" id="cuerpo_notam_nuevo">
+                                                    </div>
+                                                </form>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                <form style="margin-left:5%;">
+                                                    <div class="input-group ">
+                                                      <div class="input-group-prepend">
+                                                        <span class="input-group-text">F)</span>
+                                                      </div>
+                                                      <input type="text" class="form-control" placeholder="Límite inferior" style="width:110px;">
+                                                    </div>
+                                                </form>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                <form style="margin-left:5%;">
+                                                    <div class="input-group ">
+                                                      <div class="input-group-prepend">
+                                                        <span class="input-group-text">G)</span>
+                                                      </div>
+                                                      <input type="text" class="form-control" placeholder="Límite superior" style="width:110px;">
+                                                    </div>
+                                                </form>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                <button class="btn btn-outline-info" onclick="printForm()">
+                                                    GENERAR
+                                                </button>
+                                            </td>
+                                        </tr>
+
+
+                                        <tr>
+                                            <td>
+                                                <div class="form-group">
+                                                    <label for="comment">Notam</label>
+                                                    <textarea class="form-control" rows="9" id="comment"></textarea>
+                                                </div> 
+                                            </td>
+                                        </tr>
+                                        
+                                        <tr>
+                                          <td>
+                                              <div class="form-group">
+                                                  <label for="comment">PIB</label>
+                                                  <input type="text" class="form-control" id="" placeholder="Instalación">
+                                                  <textarea class="form-control" rows="3" id="pib_notam_nuevo"></textarea>
+                                              </div> 
+                                          </td>
+                                        </tr>
+
+                                        
+                                      </tbody>
+                                    </table>
+                                    
+                                    <!-- The Modal -->
+                                    <div class="modal fade" id="myModal">
+                                        <div class="modal-dialog">
+                                          <div class="modal-content">
+                                          
+                                            <!-- Modal Header -->
+                                            <div class="modal-header">
+                                              <h4 class="modal-title">Ubicacion satelital</h4>
+                                              <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                            </div>
+                                            
+                                            <!-- Modal body -->
+                                            <div class="modal-body">
+                                              Mostrar mapa
+                                            </div>
+                                            
+                                            <!-- Modal footer -->
+                                            <div class="modal-footer">
+                                              <button type="button" class="btn btn-success" data-dismiss="modal">Listo</button>
+                                            </div>
+                                            
+                                          </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Planes de vuelo recientes -->
+
+
+
+{% endblock content %} 
+
+
+{% block extrajs %}
+<script src='https://harvesthq.github.io/chosen/chosen.jquery.js'></script>
+
+<script type="text/javascript">
+
+    $(function(){
+            
+    });
+
+    sw=true;
+
+    //DESPLAZAMIENTO SUAVIZADO
+    $('.main-menu-content a').click(function(e){				
+		e.preventDefault();		//evitar el eventos del enlace normal
+		var strAncla=$(this).attr('href'); //id del ancla
+			$('body,html').stop(true,true).animate({				
+				scrollTop: $(strAncla).offset().top
+			},200);		
+    });
+
+</script>
+
+
+
+
+<script>
+  function getAsunto(){
+    select = document.getElementById('letra_asunto_id')
+    selectedOption = select.options[select.selectedIndex];
+    letra=selectedOption.value
+    
+    datasend={"letra":letra,}
+    $.ajax({
+        type:'GET',
+        url: '{% url 'view_getAsunto' %}',
+        data: datasend,
+        //data:$(this).serialize(),
+        success: function (request){
+            select_asunto = document.getElementById('asunto_id')
+            clearSelect(select_asunto)
+
+            select_asunto.appendChild( createOptionSelect("") )
+
+            for (let i = 0; i < request.vec_asunto.length; i++) {
+              valor = request.vec_asunto[i]
+              select_asunto.appendChild( createOptionSelect(valor) )
+            }
+            
+        }
+    });
+  }
+  function clearSelect(select){
+    for (let i = select.options.length; i >= 0; i--) {
+      select.remove(i);
+    }
+  }
+  function createOptionSelect(valor){
+    option=document.createElement('option');
+    option.value=valor;
+    option.text=valor;
+    return option
+  }
+</script>
+
+<script>
+  function getEstadoAsunto(){
+    select = document.getElementById('asunto_id')
+    selectedOption = select.options[select.selectedIndex];
+    asunto = selectedOption.value
+    
+    datasend={"asunto":asunto,}
+    $.ajax({
+        type:'GET',
+        url: '{% url 'view_getEstadoAsunto' %}',
+        data: datasend,
+        //data:$(this).serialize(),
+        success: function (request){
+            select_estado_asunto = document.getElementById('estado_asunto_id')
+            clearSelect(select_estado_asunto)
+
+            select_estado_asunto.appendChild( createOptionSelect('') )
+
+            //Recogemos Descripcion_asunto | fraseologia_pib
+            document.getElementById("cuerpo_notam_nuevo").value = request.asunto_fraseologia;
+            document.getElementById("pib_notam_nuevo").innerHTML = request.asunto_espaniol;
+            
+
+            for (let i = 0; i < request.vec_estado_asunto.length; i++) {
+              valor = request.vec_estado_asunto[i]
+              select_estado_asunto.appendChild( createOptionSelect(valor) )
+            }
+        }
+    });
+  }
+</script>
+
+
+<script>
+  function printForm(){
+			var printContents = document.getElementById("FORM_NOTAM").innerHTML;
+			var originalContents = document.body.innerHTML;
+
+			document.body.innerHTML = printContents;
+
+			window.print();
+
+			document.body.innerHTML = originalContents;
+
+  }
+</script>
+{% endblock extrajs %}
+
+
+
+<!-- ////////////////////////////////////////////////////////////////////////////-->
+<!-- ////////////////////////////////////////////////////////////////////////////-->

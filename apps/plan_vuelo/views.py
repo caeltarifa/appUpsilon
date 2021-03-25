@@ -451,7 +451,7 @@ def view_update_notam_realtime(request):
                 else:
                     Notam_trafico.objects.filter(id_mensaje=notam.id_mensaje).update(nuevo=False)
 
-            ######################## NOTAMS sin PIB
+            ######################## NOTAMS CHARLY sin PIB
             lista_notams_sin_pib = Notam_trafico.objects.raw('select * from plan_vuelo_notam_trafico where id_mensaje not in (select ref_notam_amhs_id from aro_ais_pib_trafico)')
             for notamsp in lista_notams_sin_pib:
                 generar_auto_pib_trafico(notamsp)

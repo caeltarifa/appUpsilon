@@ -48,6 +48,7 @@ class Flp_trafico(models.Model):
     aeropuerto_destino = models.CharField(max_length=30)
     otros = models.CharField(max_length=500) #si el modeo¿lo ha sido visto
     aprobado = models.BooleanField(default=False)
+    ingresado = models.DateTimeField(default=datetime.now, blank=False, null=False)
 
 class Trabajador(models.Model):
     ci=models.IntegerField(primary_key=True)
@@ -229,10 +230,168 @@ class Notam_trafico(models.Model):
     mensaje = models.CharField(max_length=450)
     nuevo = models.BooleanField(default=True)
     ingresado = models.DateTimeField(default=datetime.now, blank=True, null=True)
-    def __unicode__(self):
-        return self.idnotam
+    def __str__(self):
+        return '{}'.format(self.idnotam)
     class Meta:
         ordering = ['idnotam']
+
+class Notam_trafico_charly_repla(models.Model):
+    id_mensaje_c_r = models.CharField(max_length=22,primary_key=True)
+    aftn1 = models.CharField(max_length=11)
+    aftn2 = models.CharField(max_length=15)
+    idnotam = models.CharField(max_length=85)
+    resumen = models.CharField(max_length=65) #Q
+    aplica_a = models.CharField(max_length=15) #A
+    valido_desde = models.CharField(max_length=20) #B
+    valido_hasta = models.CharField(max_length=20) #C
+    mensaje = models.CharField(max_length=1200)
+    es_pib = models.BooleanField(default=True)
+    ingresado = models.DateTimeField(default=datetime.now, blank=True, null=True)
+    def __str__(self):
+        return '{}'.format(self.idnotam)
+    class Meta:
+        ordering = ['idnotam']
+class Notam_trafico_charly_cancel(models.Model):
+    id_mensaje_c_c = models.CharField(max_length=22,primary_key=True)
+    aftn1 = models.CharField(max_length=11)
+    aftn2 = models.CharField(max_length=15)
+    idnotam = models.CharField(max_length=85)
+    resumen = models.CharField(max_length=65) #Q
+    aplica_a = models.CharField(max_length=15) #A
+    valido_desde = models.CharField(max_length=20) #B
+    valido_hasta = models.CharField(max_length=20) #C
+    mensaje = models.CharField(max_length=1200)
+    nuevo = models.BooleanField(default=True)
+    ingresado = models.DateTimeField(default=datetime.now, blank=True, null=True)
+    def __str__(self):
+        return '{}'.format(self.idnotam)
+    class Meta:
+        ordering = ['idnotam']
+
+class Notam_trafico_charly_new(models.Model):
+    id_mensaje_c_n = models.CharField(max_length=22,primary_key=True)
+    aftn1 = models.CharField(max_length=11)
+    aftn2 = models.CharField(max_length=15)
+    idnotam = models.CharField(max_length=85)
+    resumen = models.CharField(max_length=65) #Q
+    aplica_a = models.CharField(max_length=15) #A
+    valido_desde = models.CharField(max_length=20) #B
+    valido_hasta = models.CharField(max_length=20) #C
+    mensaje = models.CharField(max_length=1200)
+    es_pib = models.BooleanField(default=False)
+    ingresado = models.DateTimeField(default=datetime.now, blank=True, null=True)
+    
+    cancel = models.OneToOneField(
+        Notam_trafico_charly_cancel,
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True
+    )
+    replace = models.OneToOneField(
+        Notam_trafico_charly_repla,
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True
+    )
+
+    def __str__(self):
+        return '{}'.format(self.idnotam)
+    class Meta:
+        ordering = ['idnotam']
+
+
+#############
+#############
+
+class Notam_trafico_alfa_repla(models.Model):
+    id_mensaje_a_r = models.CharField(max_length=22,primary_key=True)
+    aftn1 = models.CharField(max_length=11)
+    aftn2 = models.CharField(max_length=15)
+    idnotam = models.CharField(max_length=85)
+    resumen = models.CharField(max_length=65) #Q
+    aplica_a = models.CharField(max_length=15) #A
+    valido_desde = models.CharField(max_length=20) #B
+    valido_hasta = models.CharField(max_length=20) #C
+    mensaje = models.CharField(max_length=1200)
+    nuevo = models.BooleanField(default=True)
+    ingresado = models.DateTimeField(default=datetime.now, blank=True, null=True)
+    def __str__(self):
+        return '{}'.format(self.idnotam)
+    class Meta:
+        ordering = ['idnotam']
+class Notam_trafico_alfa_cancel(models.Model):
+    id_mensaje_a_c = models.CharField(max_length=22,primary_key=True)
+    aftn1 = models.CharField(max_length=11)
+    aftn2 = models.CharField(max_length=15)
+    idnotam = models.CharField(max_length=85)
+    resumen = models.CharField(max_length=65) #Q
+    aplica_a = models.CharField(max_length=15) #A
+    valido_desde = models.CharField(max_length=20) #B
+    valido_hasta = models.CharField(max_length=20) #C
+    mensaje = models.CharField(max_length=1200)
+    nuevo = models.BooleanField(default=True)
+    ingresado = models.DateTimeField(default=datetime.now, blank=True, null=True)
+    def __str__(self):
+        return '{}'.format(self.idnotam)
+    class Meta:
+        ordering = ['idnotam']
+
+
+class Notam_trafico_alfa_new(models.Model):
+    id_mensaje_a_n = models.CharField(max_length=22,primary_key=True)
+    aftn1 = models.CharField(max_length=11)
+    aftn2 = models.CharField(max_length=15)
+    idnotam = models.CharField(max_length=85)
+    resumen = models.CharField(max_length=65) #Q
+    aplica_a = models.CharField(max_length=15) #A
+    valido_desde = models.CharField(max_length=20) #B
+    valido_hasta = models.CharField(max_length=20) #C
+    mensaje = models.CharField(max_length=1200)
+    nuevo = models.BooleanField(default=True)
+    ingresado = models.DateTimeField(default=datetime.now, blank=True, null=True)
+    
+    cancel = models.OneToOneField(
+        Notam_trafico_alfa_cancel,
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True
+    )
+
+    replace = models.OneToOneField(
+        Notam_trafico_alfa_repla,
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True
+    )
+    
+    def __str__(self):
+        return '{}'.format(self.idnotam)
+    class Meta:
+        ordering = ['idnotam']
+
+
+
+
+class Notam_trafico_resumen(models.Model):
+    id_mensaje_resumen = models.CharField(max_length=22,primary_key=True)
+    aftn1 = models.CharField(max_length=15)
+    aftn2 = models.CharField(max_length=15)
+    resumen = models.CharField(max_length=1000)
+    resumen_lista = models.CharField(max_length=1300,blank=True, null=True)
+    ingresado = models.DateTimeField(default=datetime.now, blank=True, null=True)
+    def __str__(self):
+        return '{}/{}'.format(self.id_mensaje_resumen, self.aftn1, self.ingresado)
+    class Meta:
+        ordering=('id_mensaje_resumen',)
+
+class Pib_tiempo_real(models.Model):
+    id_notam_pib = models.CharField(max_length=25,primary_key=True)
+    hora_actualizacion = models.DateTimeField(default=datetime.now, blank=True, null=True)
+    def __str__(self):
+        return '{}/{}'.format(self.id_notam_pib, self.hora_actualizacion)
+    class Meta:
+        ordering=['hora_actualizacion',]
+
 
 
 class Aeropuerto(models.Model):
@@ -242,7 +401,8 @@ class Aeropuerto(models.Model):
     icao = models.CharField(max_length=4)
     longitude = models.FloatField()
     latitude = models.FloatField()
-    def __unicode__(self):
-        return self.aeropuerto
+    def __str__(self):
+        return '{}'.format(self.icao)
+
     class Meta:
-        ordering = ['aeropuerto']
+        ordering = ('icao',)

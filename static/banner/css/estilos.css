@@ -1,0 +1,215 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&display=swap');
+*{
+	box-sizing:border-box;
+	margin: 0;
+	padding: 0;
+}
+html,body{
+	height: 100%;
+	font-family: 'Open Sans';
+}
+/*====================== PRELOADER =====================*/
+.loader__page .loader .inicial__uno,.loader__page .loader .inicial__dos,.loader__page .loader .inicial__tres{
+	position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  margin: auto;
+}
+.loader__page .loader .inicial__uno{
+  width: 110px;
+  -webkit-animation: animacion_inicial_uno 2s infinite linear;
+}
+.loader__page .loader .inicial__dos{
+  width: 220px;
+  -webkit-animation: animacion_inicial_dos 4s infinite linear;
+  z-index: 20;
+}
+.loader__page .loader .inicial__tres{
+	width: 400px;
+  -webkit-animation: animacion_inicial_tres 30s infinite linear;
+}
+@-webkit-keyframes animacion_inicial_uno{
+  from{
+    -webkit-transform: rotate(0deg);
+  }
+  to{
+    -webkit-transform: rotate(359deg);
+  }
+}
+@-webkit-keyframes animacion_inicial_dos{
+  from{
+    -webkit-transform: rotate(359deg);
+  }
+  to{
+    -webkit-transform: rotate(0deg);
+  }
+}
+@-webkit-keyframes animacion_inicial_tres{
+	0%{
+		-webkit-transform: rotate(0deg);
+	}
+	10%{
+		-webkit-transform: rotate(10deg);
+	}
+	20%{
+		-webkit-transform: rotate(-20deg);
+	}
+	30%{
+		-webkit-transform: rotate(30deg);
+	}
+	40%{
+		-webkit-transform: rotate(-40deg);
+	}
+	50%{
+		-webkit-transform: rotate(50deg);
+	}
+	60%{
+		-webkit-transform: rotate(-60deg);
+	}
+	70%{
+		-webkit-transform: rotate(70deg);
+	}
+	80%{
+		-webkit-transform: rotate(-80deg);
+	}
+	90%{
+		-webkit-transform: rotate(90deg);
+	}
+	100%{
+		-webkit-transform: rotate(0deg);
+	}
+}
+.loader__page{
+  position: fixed;
+  z-index: 25000;
+  background: rgb(53, 59, 72);
+  left: 0px;
+  top: 0px;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all .3s ease;
+}
+/*======================================================*/
+
+/*================== LOADER CONTAINER ==================*/
+.loaderContainer{
+	padding-top: 65%;
+	position: relative;
+	display:flex;
+  justify-content:center;
+  align-items:center;
+  margin-top: 200px;
+}
+.loaderContainer .loader__banner #banner__logo1,
+.loaderContainer .loader__banner #banner__logo2,
+.loaderContainer .loader__banner #banner__logo3{
+	position: absolute;
+	top: 0;
+	right: 0;
+	left: 0;
+	bottom: 0;
+	margin: auto;
+}
+.loaderContainer .loader__banner #banner__logo1{
+	width: 100px;
+  -webkit-animation: animacion_uno 3s infinite linear;
+}
+.loaderContainer .loader__banner #banner__logo2{
+	width: 195px;
+  -webkit-animation: animacion_dos 5s infinite linear;
+}
+.loaderContainer .loader__banner #banner__logo3{
+	width: 350px;
+  -webkit-animation: animacion_tres 30s infinite linear;
+}
+@-webkit-keyframes animacion_uno{
+	from{
+		-webkit-transform: rotate(0deg);
+	}
+	to{
+		-webkit-transform: rotate(359deg);
+	}
+}
+@-webkit-keyframes animacion_dos{
+	from{
+		-webkit-transform: rotate(359deg);
+	}
+	to{
+		-webkit-transform: rotate(0deg);
+	}
+}
+@-webkit-keyframes animacion_tres{
+	0%{
+		-webkit-transform: rotate(0deg);
+	}
+	10%{
+		-webkit-transform: rotate(10deg);
+	}
+	20%{
+		-webkit-transform: rotate(-20deg);
+	}
+	30%{
+		-webkit-transform: rotate(30deg);
+	}
+	40%{
+		-webkit-transform: rotate(-40deg);
+	}
+	50%{
+		-webkit-transform: rotate(50deg);
+	}
+	60%{
+		-webkit-transform: rotate(-60deg);
+	}
+	70%{
+		-webkit-transform: rotate(70deg);
+	}
+	80%{
+		-webkit-transform: rotate(-80deg);
+	}
+	90%{
+		-webkit-transform: rotate(90deg);
+	}
+	100%{
+		-webkit-transform: rotate(0deg);
+	}
+}
+/*======================================================*/
+
+/*======================== VIDEO =======================*/
+#loginlogo{
+	position: relative;
+	grid-area: loginlogo;
+	background: -webkit-linear-gradient(top,#0399cf,#289ec9, #289ec9, #0399cf);
+	right: auto;
+	left: auto;
+}
+
+.imglogo{
+	width:250px;
+	height:250px;
+	padding-top:50px;
+	
+}
+.txtlogo{
+	padding: 3%;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 1.6em;
+	text-align: center;
+	color: #fff;
+}
+#video{
+	grid-area: video;
+	background: -webkit-linear-gradient(top,#0399cf,#289ec9, #289ec9, #0399cf);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+#video iframe{
+	margin: 30px 0px;
+}
+/*======================================================*/

@@ -1,0 +1,156 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&display=swap');
+*{
+  margin: 0;
+  padding: 0;
+}
+
+/*=============== FOOTER ===============*/
+
+.footer__abajo{
+  background-color: #273c75;
+  box-shadow: 0 1px 1px 0 rgba(0,0,0,0.12);
+  box-sizing: border-box;
+  width: 100%;
+  text-align: left;
+  font: bold 16px sans-serif;
+  padding: 20px 20px
+}
+.footer__abajo .footer__arriba,
+.footer__abajo .footer__medio,
+.footer__abajo .footer__final{
+  display: block;
+  text-align: center;
+}
+/*footer arriba*/
+.footer__abajo .footer__arriba{
+  width: 100%;
+  text-align: center;
+}
+.footer__abajo .footer__arriba .loader__footer{
+  position: relative;
+  width: 100%;
+  min-height: 150px;
+  margin-bottom: 10px;
+}
+.footer__abajo .footer__arriba .loader__footer .svg__uno,
+.footer__abajo .footer__arriba .loader__footer .svg__dos,
+.footer__abajo .footer__arriba .loader__footer .svg__tres{
+  position: absolute;
+  top: -20px;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  margin: auto; 
+}
+.footer__abajo .footer__arriba .loader__footer .svg__uno{
+  width: 70px;
+  -webkit-animation: svg__uno 2s infinite linear;
+}
+.footer__abajo .footer__arriba .loader__footer .svg__dos{
+  width: 140px;
+  -webkit-animation: svg__dos 2s infinite linear;
+  z-index: 20;
+}
+.footer__abajo .footer__arriba .loader__footer .svg__tres{
+  width: 300px;
+  top: 35px;
+}
+@-webkit-keyframes svg__uno{
+  from{
+    -webkit-transform: rotate(0deg);
+  }
+  to{
+    -webkit-transform: rotate(359deg);
+  }
+}
+@-webkit-keyframes svg__dos{
+  from{
+    -webkit-transform: rotate(359deg);
+  }
+  to{
+    -webkit-transform: rotate(0deg);
+  }
+}
+.footer__abajo .footer__arriba .loader__footer .parpadeo__footer{
+  animation-name: parpadeo;
+  animation-duration: 40s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+
+  -webkit-animation-name: parpadeo;
+  -webkit-animation-duration: 40s;
+  -webkit-animation-timing-function: linear;
+  -webkit-animation-iteration-count: infinite;
+}
+@-moz-keyframes parpadeo{
+  0%{opacity: 1.0;}
+  50%{opacity: 0.0;}
+  100%{opacity: 1.0}
+}
+@-webkit-keyframes parpadeo{
+  0%{opacity: 1.0;}
+  50%{opacity: 0.0;}
+  100%{opacity: 1.0}
+}
+@keyframes parpadeo{
+  0%{opacity: 1.0;}
+  50%{opacity: 0.0;}
+  100%{opacity: 1.0}
+}
+/*footer medio*/
+.footer__abajo .footer__medio{
+  width: 100%;
+  text-align: center;
+  margin-bottom: 10px;
+}
+.footer__abajo .footer__medio .links{
+  position: relative;
+}
+.footer__abajo .footer__medio .footer__links{
+  color: #fff;
+  margin: 0px 0px 0px 0px;
+  padding: 0px;
+}
+.footer__abajo .footer__medio .footer__links a{
+  display: inline-block;
+  line-height: 1.8;
+  text-decoration: none;
+  color: inherit;
+  padding: 20px 15px;
+  margin: 0px 10px;
+}
+.footer__abajo .footer__medio .footer__links a:hover{
+  background: #f56f3a;
+  border-radius: 40px;
+  transition: 4000ms ease; 
+}
+/* footer abajo */
+.footer__abajo .footer__final{
+  width: 100%;
+  text-align: center;
+}
+.footer__abajo .footer__final .primera{
+  color: #737777;
+  font: normal 36px 'Open Sans',cursive;
+  margin: 0; 
+}
+.footer__abajo .footer__final .primera > span{
+  color: #fff;
+}
+.footer__abajo .footer__final .empresa{
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: normal;
+}
+.footer__abajo .footer__final .footer__nombre{
+  color: #636e72;
+  font-size: 17px;
+  font-weight: bold;
+}
+.footer__abajo .footer__final .footer__empresa{
+  color: #b2bec3;
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 10px;
+}
+/*======================================*/

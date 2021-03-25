@@ -1,4 +1,6 @@
 {% extends "temp_plan_vuelo/base.html" %}
+{% load static %}
+{% load chartkick %}
 
 
 {% block title %}
@@ -6,88 +8,253 @@
 {% endblock title %}
 
 
+
+
+{% block extra_head %}
+<!--PIB EN REAL TIME 
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.css'>
+-->
+<link rel="stylesheet" href="{% static 'pib_acordeon/acordeon.css' %}">
+
+<!--MAPA NOTAM-->
+<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.css'>
+<link rel="stylesheet" href="{% static 'notam_map/map.css' %}">
+
+<!--agregando el FOOTER-->
+<link rel="stylesheet" href="{% static 'footer/css/footer.css' %}">
+
+<!--agregando el preloader y banner-->
+<link rel="stylesheet" href="{% static 'banner/css/estilos.css' %}">
+
+<!-- AGREGANDO BANNER MODAL LOGIN -->
+<link rel="stylesheet" href="{% static 'banner/css/formulario_login.css' %}">
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!--Agregando data visualization-->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chartkick/2.3.0/chartkick.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.bundle.js"></script>
+<script src="https://www.gstatic.com/charts/loader.js"></script>
+
+<!--  Agregando el slider  -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+<link rel="stylesheet" href="{% static 'notametro/estilos.css' %}">
+{% endblock extra_head %}
+
+
+
+
+
+
 {% block content %}
+<!--==========================
+        preloader
+============================-->
+<div class="loader__page">
+    <div class="loader">
+        <img src="{% static 'banner/img/banner/logo_1.svg' %}" alt="logo_uno" class="inicial__uno">
+        <img src="{% static 'banner/img/banner/logo_2.svg' %}" alt="logo_dos" class="inicial__dos">
+        <img src="{% static 'banner/img/banner/logo_3.svg' %}" alt="logo_tres" class="inicial__tres">
+    </div>
+</div>
 
 <!--==========================
-        Intro Section
+    banner  y logo animado y modal login
+============================-->
+
+<div class="row" style="height: 650px;">
+    <div class="col-lg-6" id="loginlogo">
+
+        <div class="loaderContainer">
+            <div class="loader__banner">
+                <img src="{% static 'banner/img/banner/logo_1.svg' %}" alt="logo_uno" id="banner__logo1">
+                <img src="{% static 'banner/img/banner/logo_2.svg' %}" alt="logo_dos" id="banner__logo2">
+                <img src="{% static 'banner/img/banner/logo_3.svg' %}" alt="logo_tres" id="banner__logo3">
+            </div>
+        </div>
+
+        <p class="txtlogo">
+            Bienvenido a mi Sitio Web
+        </p>
+
+        <!-- Boton modal Login-->
+        <div class=btn-container>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalLogin" id="btn-form"
+                style="background:#f39c12">
+                Inicio Sesión
+            </button>
+        </div>
+
+        <!-- Modal Login-->
+        <div class="modal fade" id=modalLogin tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="container">
+                            <div class="card"></div>
+                            <div class="card">
+                                <h1 class="title">Inicio Sesión</h1>
+
+                                {% if form.errors %}
+                                <p>El usuario y password no coinciden. Intentalo nuevamente.</p>
+                                {% endif %}
+
+                                {% if next %}
+                                {% if user.is_authenticated %}
+                                <p>Tu cuenta no tiene acceso a esta pagina. Para continuar,
+                                    por favor ingresa con una cuenta que tenga acceso.</p>
+                                {% else %}
+                                {% endif %}
+                                {% endif %}
+
+                                <form method="post" action="{% url 'login' %}">
+                                    {% csrf_token %}
+                                    <div class="input-container">
+                                        {{ form.username }}
+                                        <!--
+
+                                            <input type="#{type}" id="#{label}" required="required" />
+                                        -->
+                                        <label for="#{label}">Nombre de usuario</label>
+                                        <div class="bar"></div>
+                                    </div>
+                                    <div class="input-container">
+                                        {{ form.password }}
+                                        <!--
+
+                                            <input type="#{type}" id="#{label}" required="required" />
+                                        -->
+                                        <label for="#{label}">Contraseña</label>
+                                        <div class="bar"></div>
+                                    </div>
+                                    <div class="button-container">
+                                        <button><span>Ingresar</span></button>
+                                    </div>
+                                    <div class="footer"><a href="#">¿Olvidaste tu contraseña?</a></div>
+                                </form>
+                                {# Assumes you setup the password_reset view in your URLconf #}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-lg-6" id="video">
+        <iframe width="500px" height="250px" src="https://www.youtube.com/embed/ZVQeTagj0AI" frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen></iframe>
+    </div>
+</div>
+
+
+<!--==========================
+        mapa notam, notam tarjeta y notam timeline
 ============================-->
 <section id="intro">
-<div class="row h-100 align-items-center">
-    <div class="col-sm container my-auto bg-dark " style="width:100%;" >
+    <div class="row h-100 align-items-center">
+        <div class="col-sm container my-auto bg-dark " style="width:100%;">
             <div class="wow fadeInLeft " style="margin-top:10%;">
                 <div class="row h-100 align-items-center">
                     <div class="col-sm">
-                        <h2><strong>Upsilon</strong></h2>
+                        <h2>Upsilon v.7</h2>
                         <p style="font-size: 15px; ">
-                            Sistema distribuido y en tiempo real de la gestión de información aeronáutica para la automatización de servicios a la navegación aérea.
+                            Sistema distribuido y en tiempo real de la gestión de información aeronáutica para la
+                            automatización de servicios a la navegación aérea.
                         </p>
                         <a href="#PIB" class="btn-get-started scrollto"> Comencemos</a>
                     </div>
                 </div>
             </div>
-    </div>
+        </div>
 
 
-    <div class="col-sm container my-auto bg-danger">
+        <div class="col-sm container my-auto bg-danger">
             <div class="wow fadeInRight " style="margin-top:10%;">
-                    <h3 style="color: white;">Iniciar sesión</h3>
-                    <br>
+                <h3 style="color: white;">Iniciar sesión</h3>
+                <br>
 
-                    {% if form.errors %}
-                    <p>El usuario y password no coinciden. Intentalo nuevamente.</p>
-                    {% endif %}
+                {% if form.errors %}
+                <p>El usuario y password no coinciden. Intentalo nuevamente.</p>
+                {% endif %}
 
-                        {% if next %}
-                            {% if user.is_authenticated %}
-                            <p>Tu cuenta no tiene acceso a esta pagina. Para continuar,
-                                por favor ingresa con una cuenta que tenga acceso.</p>
-                            {% else %}
-                        {% endif %}
-                    {% endif %}
+                {% if next %}
+                {% if user.is_authenticated %}
+                <p>Tu cuenta no tiene acceso a esta pagina. Para continuar,
+                    por favor ingresa con una cuenta que tenga acceso.</p>
+                {% else %}
+                {% endif %}
+                {% endif %}
 
-                    <form method="post" action="{% url 'login' %}" class="form-group">
-                        {% csrf_token %}
-                        <div class="group">
-                            {{ form.username }}
-                            <span class="highlight"></span>
-                            <span class="bar"></span>
-                            <label>Usuario</label>
-                        </div>
+                <form method="post" action="{% url 'login' %}" class="form-group">
+                    {% csrf_token %}
+                    <div class="group">
+                        {{ form.username }}
+                        <span class="highlight"></span>
+                        <span class="bar"></span>
+                        <label>Usuario</label>
+                    </div>
 
-                        <div class="group">
-                            {{ form.password }}
-                            <span class="highlight"></span>
-                            <span class="bar"></span>
-                            <label>Password</label>
-                        </div>
+                    <div class="group">
+                        {{ form.password }}
+                        <span class="highlight"></span>
+                        <span class="bar"></span>
+                        <label>Password</label>
+                    </div>
 
-                            <input type="submit" class="btn-get-started scrollto" value="Ingresar" />
-                            <input type="hidden" name="next" value="{{ next }}" />
-                    </form>
+                    <input type="submit" class="btn-get-started scrollto" value="Ingresar" />
+                    <input type="hidden" name="next" value="{{ next }}" />
+                </form>
 
-                    {# Assumes you setup the password_reset view in your URLconf #}
-                    <!--
+                {# Assumes you setup the password_reset view in your URLconf #}
+                <!--
                         <p>
                             <a href="{% url 'password_reset' %}">¿Olvidaste tu password?</a>
                         </p>
                     -->
             </div>
+        </div>
     </div>
-</div>
-
 </section>
 <!-- #intro -->
 
 
-
-
-
-
-
-
-
 <main id="main">
 
+    <div id="app">
+        <div class="content align-center">
+            <h1 class="subtitle" style="margin-left: 35%;">
+                PIB en tiempo real
+            </h1>
+
+            <br>
+            <h4 class="title">Ultima actualización: 23/03/2021 </h4>
+            <section class="section">
+                <h3>Aeropuertos</h3>
+                <accordion id="accordion-example-1" :content="example1" multiple="multiple"></accordion>
+            </section>
+            <!--
+                <section class="section">
+                    <h3>2do Acordeon</h3>
+                    <accordion id="accordion-example-2" :content="example2" multiple="multiple"></accordion>
+                </section>
+
+                <section class="section">
+                    <h3>3er Acordeon</h3>
+                    <accordion id="accordion-example-3" :content="example3" multiple="multiple"></accordion>
+                </section>
+            -->
+        </div>
+    </div>
     <!--==========================
     BOLETIN DE INFORMACION RAPIDA
         <section id="PIB" class="section-bg" >
@@ -344,18 +511,7 @@
         </section>
 ============================-->
 
-
-
-
-
-
-
-
-
-
-
     <!--  style="background: linear-gradient(-45deg,#0399cf,#104e64, #104e64, #0399cf);"#features -->
-
 
     <!--==========================
       About Us Section
@@ -419,9 +575,6 @@
         </div>
     </section> -->
     <!-- #about -->
-
-
-
 
     <!--==========================
       Product Featuress Section
@@ -489,27 +642,362 @@
 </main>
 
 
+<main id="main">
+    <div class="contenedor">
+        <div class="mapa">
+            <div id="map"></div>
+        </div>
+        <div class="info_1">
+            <h2>NOTAM VIGENTES</h2>
+            <br>
+            <br>
+
+            <div class="container " style="margin-left: 5%;">
+                <div class="col">
+
+                    <div class="col-12 col-sm-6 col-lg-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">NOTAMR</h4>
+                                <h6 class="card-subtitle mb-2">C0063/21 NOTAMR C0016/21</h6>
+                                <p class="card-text">
+
+                                    Q) SLLF/QCAAS/IV/NBO/AE/000/999/1630S06810W010
+                                    <br>
+                                    A) SLLP B) 1201202031 C) 1201302200 EST
+                                    <br>
+                                    E) TMA FREQ 123,9 MHZ U/S
+                                    <br>
+                                    <br>
+                                </p>
+                                <a href="#" class="card-link text-primary">Ver histórico</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <div class="col-12 col-sm-6 col-lg-4">
+                        <div class="card text-left">
+                            <div class="card-body">
+                                <h4 class="card-title">NOTAMR</h4>
+                                <h6 class="card-subtitle mb-2">C0063/21 NOTAMR C0016/21</h6>
+                                <p class="card-text">
+
+                                    Q) SLLF/QCAAS/IV/NBO/AE/000/999/1630S06810W010
+                                    <br>
+                                    A) SLLP B) 1201202031 C) 1201302200 EST
+                                    <br>
+                                    E) TMA FREQ 123,9 MHZ U/S
+                                    <br>
+                                    <br>
+                                </p>
+                                <a href="#" class="card-link text-primary ">Ver histórico</a>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+
+
+                    <div class="col-12 col-sm-6 col-lg-4">
+                        <div class="card text-left">
+                            <div class="card-body">
+                                <h4 class="card-title">NOTAMR</h4>
+                                <h6 class="card-subtitle mb-2">C0063/21 NOTAMR C0016/21</h6>
+                                <p class="card-text">
+
+                                    Q) SLLF/QCAAS/IV/NBO/AE/000/999/1630S06810W010
+                                    <br>
+                                    A) SLLP B) 1201202031 C) 1201302200 EST
+                                    <br>
+                                    E) TMA FREQ 123,9 MHZ U/S
+                                    <br>
+                                    <br>
+                                </p>
+                                <a href="#" class="card-link text-primary ">Ver histórico</a>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+
+
+                    <div class="col-12 col-sm-6 col-lg-4">
+                        <div class="card text-left">
+                            <div class="card-body">
+                                <h4 class="card-title">NOTAMR</h4>
+                                <h6 class="card-subtitle mb-2">C0063/21 NOTAMR C0016/21</h6>
+                                <p class="card-text">
+
+                                    Q) SLLF/QCAAS/IV/NBO/AE/000/999/1630S06810W010
+                                    <br>
+                                    A) SLLP B) 1201202031 C) 1201302200 EST
+                                    <br>
+                                    E) TMA FREQ 123,9 MHZ U/S
+                                    <br>
+                                    <br>
+                                </p>
+                                <a href="#" class="card-link text-primary ">Ver histórico</a>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+
+
+                    <div class="col-12 col-sm-6 col-lg-4">
+                        <div class="card text-left">
+                            <div class="card-body">
+                                <h4 class="card-title">NOTAMR</h4>
+                                <h6 class="card-subtitle mb-2">C0063/21 NOTAMR C0016/21</h6>
+                                <p class="card-text">
+
+                                    Q) SLLF/QCAAS/IV/NBO/AE/000/999/1630S06810W010
+                                    <br>
+                                    A) SLLP B) 1201202031 C) 1201302200 EST
+                                    <br>
+                                    E) TMA FREQ 123,9 MHZ U/S
+                                    <br>
+                                    <br>
+                                </p>
+                                <a href="#" class="card-link text-primary ">Ver histórico</a>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+
+                </div>
+            </div>
+
+        </div>
+
+
+
+
+        <div class="info_2">
+            <h2>NOTAM NUEVOS</h2>
+            <div class="container py-2 mt-4 mb-4">
+                <!-- timeline item 1 -->
+                <div class="row">
+                    <!-- timeline item 1 left dot -->
+                    <div class="col-auto text-center flex-column d-none d-sm-flex">
+                        <div class="row h-50">
+                            <div class="col">&nbsp;</div>
+                            <div class="col">&nbsp;</div>
+                        </div>
+                        <h5 class="m-2">
+                            <span class="badge badge-pill bg-light border">&nbsp;</span>
+                        </h5>
+                        <div class="row h-50">
+                            <div class="col border-right">&nbsp;</div>
+                            <div class="col">&nbsp;</div>
+                        </div>
+                    </div>
+                    <!-- timeline item 1 event content -->
+                    <div class="py-2">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="float-right text-muted">Mon, Jan 9th 2019 7:00 AM</div>
+                                <h4 class="card-title text-muted">Day 1 Orientation</h4>
+                                <p class="card-text">Welcome to the campus, introduction and get started with the tour.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--/row-->
+                <!-- timeline item 2 -->
+                <div class="row">
+                    <div class="col-auto text-center flex-column d-none d-sm-flex">
+                        <div class="row h-50">
+                            <div class="col border-right">&nbsp;</div>
+                            <div class="col">&nbsp;</div>
+                        </div>
+                        <h5 class="m-2">
+                            <span class="badge badge-pill bg-light border">&nbsp;</span>
+                        </h5>
+                        <div class="row h-50">
+                            <div class="col border-right">&nbsp;</div>
+                            <div class="col">&nbsp;</div>
+                        </div>
+                    </div>
+                    <div class="py-2">
+                        <div class="card shadow">
+                            <div class="card-body">
+                                <div class="float-right">Tue, Jan 10th 2019 8:30 AM</div>
+                                <h4 class="card-title">Day 2 Sessions</h4>
+                                <p class="card-text">Sign-up for the lessons and speakers that coincide with your course
+                                    syllabus. Meet and greet with instructors.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--/row-->
+                <!-- timeline item 3 -->
+                <div class="row">
+                    <div class="col-auto text-center flex-column d-none d-sm-flex">
+                        <div class="row h-50">
+                            <div class="col border-right">&nbsp;</div>
+                            <div class="col">&nbsp;</div>
+                        </div>
+                        <h5 class="m-2">
+                            <span class="badge badge-pill bg-light border">&nbsp;</span>
+                        </h5>
+                        <div class="row h-50">
+                            <div class="col border-right">&nbsp;</div>
+                            <div class="col">&nbsp;</div>
+                        </div>
+                    </div>
+                    <div class=" py-2 ">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="float-right text-muted">Wed, Jan 11th 2019 8:30 AM</div>
+                                <h4 class="card-title">Day 3 Sessions</h4>
+                                <p>Shoreditch vegan artisan Helvetica. Tattooed Codeply Echo Park Godard kogi, next
+                                    level.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--/row-->
+                <!-- timeline item 4 -->
+                <div class="row">
+                    <div class="col-auto text-center flex-column d-none d-sm-flex">
+                        <div class="row h-50">
+                            <div class="col border-right">&nbsp;</div>
+                            <div class="col">&nbsp;</div>
+                        </div>
+                        <h5 class="m-2">
+                            <span class="badge badge-pill bg-light border">&nbsp;</span>
+                        </h5>
+                        <div class="row h-50">
+                            <div class="col">&nbsp;</div>
+                            <div class="col">&nbsp;</div>
+                        </div>
+                    </div>
+                    <div class="py-2">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="float-right text-muted">Thu, Jan 12th 2019 11:30 AM</div>
+                                <h4 class="card-title">Day 4 Wrap-up</h4>
+                                <p>Join us for lunch in Bootsy's cafe across from the Campus Center.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--/row-->
+            </div>
+        </div>
+    </div>
+</main>
+
+
+<div id="carousel">
+    <ul>
+        <li class="pane1">
+            <h2>
+                NOTAMN serie Charly Nacional
+            </h2>
+            <div id="area" style="height: 85%; width: 85%;margin-left: 3%;margin-top: 10%;">
+                {% area_chart areas with id='areas' %}
+            </div>                
+        </li>
+
+        <li class="pane2">
+            <h2>
+                NOTAMR serie Charly Nacional
+            </h2>
+            <div id="area" style="height: 85%; width: 85%;margin-left: 3%;margin-top: 10%;">
+                {% area_chart areas1 with id='areas1' %}
+            </div>                
+        </li>
+        <li class="pane3">
+            <h2>
+                NOTAMN serie Alfa Internacional
+            </h2>
+            <div id="area" style="height: 85%; width: 85%;margin-left: 3%;margin-top: 10%;">
+                {% area_chart areas2 with id='areas2' %}
+            </div>                
+        </li>
+        <li class="pane4">
+            <h2>
+                NOTAMR serie Alfa Internacional
+            </h2>
+            <div id="area" style="height: 85%; width: 85%;margin-left: 3%;margin-top: 10%;">
+                {% area_chart areas3 with id='areas3' %}
+            </div>                
+        </li>
+        <li class="pane5">
+            <h2>Estadistica General y Comparativa</h2>
+        </li>
+    </ul>
+</div>
+
+{% endblock content %}
 
 
 
 
 
+{% block footer %}
+<footer class="footer__abajo">
+    <div class="footer__arriba">
+        <div class="loader__footer">
+            <img src="{% static 'footer/img/footer/logo_1.svg' %}" alt="svg_1" class="svg__uno">
+            <img src="{% static 'footer/img/footer/logo_2.svg' %}" alt="svg_2" class="svg__dos">
+            <img src="{% static 'footer/img/footer/logo_3.svg' %}" alt="svg_3" class="svg__tres parpadeo__footer">
+        </div>
+    </div>
+
+    <div class="footer__medio">
+        <div class="links">
+            <p class="footer__links">
+                <a href="#">Inicio</a>
+                <a href="#">Boson</a><span class="a"></span>
+                <a href="#">Graviton</a><span class="b"></span>
+                <a href="#">Luczon</a>
+                <a href="#">Nuklear</a>
+                <a href="#">Upsilon</a>
+            </p>
+        </div>
+    </div>
+
+    <div class="footer__final">
+        <h3 class="primera">IFIS <span>Nuklear</span></h3>
+        <p class="empresa">Sistema de Información de Vuelo por Internet.</p>
+        <span class="footer__nombre">&copy; Inc</span>
+        <p class="footer__empresa">2021 | IFIS NUKLEAR</p>
+    </div>
+</footer>
+{% endblock footer %}
 
 
 
+{% block extra_js %}
+<!--PIB EN REAL TIME -->
+<script src="{% static 'pib_acordeon/acordeon.js' %}"></script>
+<!--MAPA NOTAM -->
+<script src='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.js'></script>
+<script src="{% static 'notam_map/map.js' %}"></script>
+<!--PRELOADER-->
+<script>
+    $(window).on('load', function () {
+        $(".loader__page").css({ visibility: "hidden", opacity: "0" });
+    });
+</script>
 
+<!-- BANNER MODAL LOGIN -->
 
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
 
+<!-- SLIDER IN HAMMER JS AND JQUERY -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="{% static 'notametro/script.js' %}"></script>
 
-
-
-
-
-
-
-
-
-
-
-
-{% endblock %}
+{% endblock extra_js %}

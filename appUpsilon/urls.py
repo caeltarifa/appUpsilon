@@ -38,7 +38,7 @@ urlpatterns = [
     path('ais/', include('apps.aro_ais.urls')),
     
         #path('plan_vuelo/postdetail/<int:pk>/', post_detail , name='post_detail')
-        #path('accounts/login/', control_acceso_login ,name='acceso_login'),
+    path('accounts/login/', view_pagina_principal ,name='acceso_login'),
     
     url('^comunicaciones$',view_panel_comunicaciones, name='view_panel_comunicaciones'),
     url('^comunicaciones$',view_admin_comunicaciones, name='view_admin_comunicaciones'),

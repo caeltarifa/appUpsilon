@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Banner</title>
+
+
+	
+	<link rel="stylesheet" href="css/estilos.css">
+	<link rel="stylesheet" href="css/formulario_login.css">
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body class="container-fluid">
+
+	<div class="loader__page">
+		<div class="loader">
+			<img src="img/banner/logo_1.svg" alt="logo_uno" class="inicial__uno">
+			<img src="img/banner/logo_2.svg" alt="logo_dos" class="inicial__dos">
+			<img src="img/banner/logo_3.svg" alt="logo_tres" class="inicial__tres">
+		</div>
+	</div>
+
+	<!--logo animado-->
+	<div class="row" style="height: 650px;">
+		<div class="col-lg-6" id="loginlogo">
+
+			<div class="loaderContainer">
+				<div class="loader__banner">
+					<img src="img/banner/logo_1.svg" alt="logo_uno" id="banner__logo1">
+					<img src="img/banner/logo_2.svg" alt="logo_dos" id="banner__logo2">
+					<img src="img/banner/logo_3.svg" alt="logo_tres" id="banner__logo3">
+				</div>
+			</div>
+
+			<p class="txtlogo">
+				Bienvenido a mi Sitio Web
+			</p>
+
+			<!-- Boton modal Login-->
+			<div class=btn-container>
+				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalLogin"
+					id="btn-form" style="background:#f39c12">
+					Inicio Sesión
+				</button>
+			</div>
+
+			<!-- Modal Login-->
+			<div class="modal fade" id=modalLogin tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+				aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered" role="document">
+					<div class="modal-content">
+						<div class="modal-body">
+							<div class="container">
+								<div class="card"></div>
+								<div class="card">
+									<h1 class="title">Inicio Sesión</h1>
+									<form>
+										<div class="input-container">
+											<input type="#{type}" id="#{label}" required="required" />
+											<label for="#{label}">Nombre de usuario</label>
+											<div class="bar"></div>
+										</div>
+										<div class="input-container">
+											<input type="#{type}" id="#{label}" required="required" />
+											<label for="#{label}">Contraseña</label>
+											<div class="bar"></div>
+										</div>
+										<div class="button-container">
+											<button><span>Ingresar</span></button>
+										</div>
+										<div class="footer"><a href="#">¿Olvidaste tu contraseña?</a></div>
+									</form>
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		<div class="col-lg-6" id="video">
+			<iframe width="500px" height="250px" src="https://www.youtube.com/embed/ZVQeTagj0AI" frameborder="0"
+				allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+				allowfullscreen></iframe>
+		</div>
+	</div>
+
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+		integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+		crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+		integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+		crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+		integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+		crossorigin="anonymous"></script>
+
+	<script>
+		$(window).on('load', function () {
+			$(".loader__page").css({visibility:"hidden",opacity:"0"});    
+		});
+	</script>
+	<script>
+		function w3_open() {
+			document.getElementById("main").style.marginRight = "25%";
+			document.getElementById("mySidebar").style.width = "25%";
+			document.getElementById("mySidebar").style.display = "block";
+			document.getElementById("openNav").style.display = 'none';
+		}
+		function w3_close() {
+			document.getElementById("main").style.marginRight = "0%";
+			document.getElementById("mySidebar").style.display = "none";
+			document.getElementById("openNav").style.display = "inline-block";
+		}
+	</script>
+</body>
+</html>

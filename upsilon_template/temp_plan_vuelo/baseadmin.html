@@ -137,10 +137,79 @@
 
                                 </ul>
                                 <!--VERSION MOVIL -->
+                                {% if user.get_username in 'notaminternacional@aasana'  %}
+                                    {% block addElement %}
+                                    <!--NOTIFICACION METAR        -->
+                                    <ul class="nav navbar-nav float-right">
+                                        <li class="dropdown dropdown-user nav-item">
+                                            <a class="dropdown-toggle nav-link dropdown-user-link" hred="#" data-toggle="dropdown">
+                                                <span class="avatar avatar-online" id="id_notificacion_metar" onclick="autofocus_metar()">
+                                                    <span class="material-icons">
+                                                        note_add
+                                                    </span>
+                                                </span>
+                                            </a>
 
-                                {% block addElement %}
-                                xz
-                                {% endblock addElement %}
+                                            <ul class="dropdown-menu dropdown-menu-right" style="background-color: #ffffff;">
+                                                <li>
+                                                    <!--class="arrow_box_right"-->
+                                                    <h4>
+                                                        &nbsp; &nbsp;
+                                                        Crear NOTAM
+                                                    </h4>
+                                                </li>
+                                                <!-- BUSCAR METAR-->
+                                                <li class="arrow_box_right">
+                                                    <div class="input-group search-box">
+                                                        <div class="position-relative has-icon-right full-width">
+                                                            <table class="table-responsive-sm">
+                                                                <tr>
+                                                                    <td >
+                                                                        <a class="btn btn-success" href="{% url 'view_new_notam' %}">
+                                                                            <span class="material-icons">
+                                                                                post_add
+                                                                            </span>
+                                                                        </a>
+                                                                    </td>
+
+                                                                    <td >
+                                                                        <a class="btn btn-warning" href="{% url 'view_replace_notam' %}">
+                                                                            <span class="material-icons">
+                                                                                sync_alt
+                                                                            </span>
+                                                                        </a>
+                                                                    </td>
+
+                                                                    <td >
+
+                                                                        <a class="btn btn-danger" href="{% url 'view_cancel_notam' %}">
+                                                                            <span class="material-icons">
+                                                                                delete_forever
+                                                                            </span>
+                                                                        </a>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+
+                                                        </div>
+                                                    </div>
+                                                    <!--
+                                                        <form>
+                                                        </form>
+                                                    -->
+                                                </li>
+                                                <!-- BUSCAR METAR-->
+                                                <div id="grupo_metars" style="height: 30px; overflow: auto;">
+
+                                                </div>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                    <!--NOTIFICACION METAR   -->
+                                    {% endblock addElement %}
+
+
+                                {% endif %}
 
                                 <!--NOTIFICACION METAR        -->                           
                                 <ul class="nav navbar-nav float-right" >
@@ -567,10 +636,12 @@
                     });
                 });
                 //FILTER FOR THE SEARCH PERSONS IN NAVBAR
-                new_notams_update();
+                //new_notams_update();
                 
+
+                //CALLING TO UPDATE IN REAL TIME THE NEW NOTAMS FOR TO CONVERTO TO PIB
                 setInterval(() => {
-                    new_notams_update();
+                    //--->new_notams_update();
                 }, 35000);
 
                 get_equipo_trabajo();

@@ -68,11 +68,27 @@ def view_admin_ais(request):
 
 
 
-def view_simulador(request):
+def view_new_notam(request):
     if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='AISNACIONAL').exists():
         letra_asunto = Letra_asunto.objects.all().order_by('id_letra')
         #letra_asunto = [x.id_letra for x in letra_asunto]
-        return render(request, 'temp_plan_vuelo/temp_aro_ais/simulador_notam.html', {'vec_letra': letra_asunto})
+        return render(request, 'temp_plan_vuelo/temp_aro_ais/new_notam.html', {'vec_letra': letra_asunto})
+    else:
+        return redirect('login')
+
+def view_replace_notam(request):
+    if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='AISNACIONAL').exists():
+        letra_asunto = Letra_asunto.objects.all().order_by('id_letra')
+        #letra_asunto = [x.id_letra for x in letra_asunto]
+        return render(request, 'temp_plan_vuelo/temp_aro_ais/replace_notam.html', {'vec_letra': letra_asunto})
+    else:
+        return redirect('login')
+
+def view_cancel_notam(request):
+    if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='AISNACIONAL').exists():
+        letra_asunto = Letra_asunto.objects.all().order_by('id_letra')
+        #letra_asunto = [x.id_letra for x in letra_asunto]
+        return render(request, 'temp_plan_vuelo/temp_aro_ais/cancel_notam.html', {'vec_letra': letra_asunto})
     else:
         return redirect('login')
 
@@ -345,50 +361,6 @@ def view_pibupdate_tiemporeal(request):
                 cuerpo
                 limit_superior
                 limit_inferior
-
-                SLAP
-                SLAS
-                SLBN
-                SLBJ
-                Cruz
-                SLCN
-                SLHI
-                SLCO
-                SLCB
-                SLCP
-                SLCC
-                SLAG
-                SLGY
-                SLLP
-                SLLJ
-                SLMG
-                SLOR
-                SLPO
-                SLPR
-                SLPS
-                SLRY
-                SLRI
-                SLRB
-                SLRQ
-                SLSB
-                SLSM
-                SLSI
-                SLJV
-                SLJO
-                SLJE
-                SLTI
-                SLRA
-                SLSA
-                SLET
-                SLVR
-                SLSU
-                SLTJ
-                SLTR
-                SLUY
-                SLVG
-                SLVM
-                SLTL
-                SLYA
             '''
             return HttpResponse(json.dumps(lista_pib_por_region), status=200)
 

@@ -31,7 +31,7 @@ SECRET_KEY = 'sb%@$i%e)zwtv=v_-p$^tc@%=%^kt7@becs*s0*m&tkhq^wp5c'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['212.115.109.148','upsilon.aasana.tk', 'upsilon.navae.tk', 'upsilon.aasana.bo']
+ALLOWED_HOSTS = ['212.115.109.148','upsilon.aasana.ga', 'upsilon.aasana.bo']
 
 
 # Application definition
@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'apps.generacion_fpl',
     'apps.trabajadoresATS',
     'apps.aro_ais',
+    'chartkick'
 ]
 
 MIDDLEWARE = [
@@ -85,14 +86,15 @@ WSGI_APPLICATION = 'appUpsilon.wsgi.application'
 
 DATABASES = {
     'default': {
-   #     'ENGINE': 'django.db.backends.sqlite3',
-   #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-
      'ENGINE': 'django.db.backends.postgresql_psycopg2',
      'NAME': 'upsilon_db', #nombre de la base de datos
 	 'USER': 'postgres', #usuario de base de datos
 	 'PASSWORD': 'nuclearaasana',
-	 'HOST': 'localhost',
+	 #'HOST': 'awsdatabase.clzuph1snvsw.eu-west-1.rds.amazonaws.com',
+
+	 'HOST': '181.115.145.236',
+	 #'HOST': 'upsilon2database.cyksvkkrkpzw.us-east-2.rds.amazonaws.com',
+	 #'HOST': '54.217.136.199',
 	 'PORT': 5432,
     },
     'aasana_bd': {
@@ -175,7 +177,12 @@ STATIC_URL =  '/static/'
 #  la carpeta  /var/www/nuclear/appBoson/sistema_aasana/back-end/server/uploads/fotografias                #
 #                                                                                                          #
 ############################################################################################################
-STATICFILES_DIRS = (os.path.join(BASE_DIR,'static'),'fotografias/',)
+import chartkick
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR,'static'),
+    'fotografias/',
+    chartkick.js() 
+    )
 
 
 # Redirect to home URL after login (Default redirects to /accounts/profile/)
