@@ -16,6 +16,15 @@ from apps.aro_ais.views import view_get_abreviatura8400
 from apps.aro_ais.views import view_get_codigo8126
 
 
+from appUpsilon.views import api_historico_charly_from_notamn
+from appUpsilon.views import api_historico_charly_from_notamr
+from appUpsilon.views import api_historico_charly_from_notamc
+
+
+from appUpsilon.views import api_historico_alfa_from_notamn
+from appUpsilon.views import api_historico_alfa_from_notamr
+from appUpsilon.views import api_historico_alfa_from_notamc
+
 urlpatterns = [
     path('',view_panel_aroaislp, name="view_panel_aroaislp"),
     
@@ -45,4 +54,14 @@ urlpatterns = [
     ## CODIGOS Y ABREVIATURAS
     path('responseabreviatura/', view_get_abreviatura8400, name="view_get_abreviatura8400"), #
     path('response8126/', view_get_codigo8126, name="view_get_codigo8126"), #
+
+    ## API PARA CONSUMO DE HISTORIALES NOTAM NEW, REPLA, CANCEL
+    path('charlyfrom_notamn/', api_historico_charly_from_notamn, name="api_historico_charly_from_notamn"), #
+    path('charlyfrom_notamr/', api_historico_charly_from_notamr, name="api_historico_charly_from_notamr"), #
+    path('charlyfrom_notamc/', api_historico_charly_from_notamc, name="api_historico_charly_from_notamc"), #
+
+
+    path('alfafrom_notamn/', api_historico_alfa_from_notamn, name="api_historico_alfa_from_notamn"), #
+    path('alfafrom_notamr/', api_historico_alfa_from_notamr, name="api_historico_alfa_from_notamr"), #
+    path('alfafrom_notamc/', api_historico_alfa_from_notamc, name="api_historico_alfa_from_notamc"), #
 ]

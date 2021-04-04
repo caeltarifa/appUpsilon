@@ -19,7 +19,7 @@ from apps.plan_vuelo.models import Notam_trafico_alfa_cancel
 
 from django.contrib.auth.models import Group
 
-#from apps.plan_vuelo.forms import Vuelo_Aprobado_form, PostForm
+# from apps.plan_vuelo.forms import Vuelo_Aprobado_form, PostForm
 from apps.plan_vuelo.models import Flp_trafico
 
 # Create your views here.
@@ -296,64 +296,194 @@ def view_pib_tiempo_real(request):
 
 ################################################################################################
 ################################################################################################
+################################################################################################
+################################################################################################
+# serializando .......
+
+
+def serializar_notam(obj_not):
+    if 'NOTAMC' in obj_not.idnotam:
+        notamc = False
+    else:
+        notamc = obj_not.es_pib
+
+    return {
+        'aftn1': obj_not.aftn1,
+        'aftn2': obj_not.aftn2,
+        'idnotam': obj_not.idnotam,
+        'resumen': obj_not.resumen,
+        'aplica_a': obj_not.aplica_a,
+        'valido_desde': obj_not.valido_desde,
+        'valido_hasta': obj_not.valido_hasta,
+        'mensaje': obj_not.mensaje,
+        'es_pib': notamc,
+        'ingresado': str(obj_not.ingresado),
+    }
+
+def serializar_notam_alfa(obj_not):
+    return {
+        'aftn1': obj_not.aftn1,
+        'aftn2': obj_not.aftn2,
+        'idnotam': obj_not.idnotam,
+        'resumen': obj_not.resumen,
+        'aplica_a': obj_not.aplica_a,
+        'valido_desde': obj_not.valido_desde,
+        'valido_hasta': obj_not.valido_hasta,
+        'mensaje': obj_not.mensaje,
+        'ingresado': str(obj_not.ingresado),
+    }
+
+
+def es_nuevo(cadena):
+    if 'NOTAMN' in cadena:
+        return True
+    return False
+
+
+def es_cancel(cadena):
+    if 'NOTAMC' in cadena:
+        return True
+    return False
+
+
+def es_replace(cadena):
+    if 'NOTAMR' in cadena:
+        return True
+    return False
+
+################################################################################################
+################################################################################################
 ################################ API's PARA DEVOLVER HISTORIAL #################################
 ################################################################################################
 ################################################################################################
 
 
 ################################################################################################
-############################ DESDE NOMTAM/ALFA DE NUEVO ####################################
-def historico_alfa_from_notamn(request):
-    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='AISNACIONAL').exists():
-        if request.method == "GET":
-            #get_abreviatura = str(request.GET.dict()['abreviatura'])
-            get_idnotam = str(request.GET.get('idnotam'))
+############################ DESDE NOMTAM/ALFA NUEVO ####################################
+def api_historico_alfa_from_notamn(request):
+    # if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='AISNACIONAL').exists():
+    if request.method == "GET":
+        # get_abreviatura = str(request.GET.dict()['abreviatura'])
+        notam_nuevo = str(request.GET.get('idnotam')).upper()
 
-            devolucion = {
-                'abreviaturas': lista_abreviaturas,
-            }
+        #notam_nuevo = '(A0227/21 NOTAMN'
+        try:
+            if len(notam_nuevo.split(' ')) ==2 and 'NOTAMN' in notam_nuevo:
+                historico = Notam_trafico_alfa_new.objects.raw("drop table if exists t1; select alpha_historico_from_notamn('"+notam_nuevo +"') as vector into t1 ;  select talfa.id_mensaje_a_n, t1.vector  from t1, plan_vuelo_notam_trafico_alfa_new as talfa  limit 1;")[0].vector
 
-            return HttpResponse(json.dumps(devolucion), content_type='application/json')
-        else:
-            return HttpResponse(json.dumps([{'msj': 'error!'}]), content_type='application/json')
-    return redirect('login')
+                historico = historico.split(';')
+                lista_notam_historico = []
+                for x in historico:
+                    if x:
+                        if es_nuevo(x):
+                            nuevo = Notam_trafico_alfa_new.objects.filter(
+                                idnotam=x).first()
+                            lista_notam_historico.append(serializar_notam_alfa(nuevo))
+                        if es_replace(x):
+                            repla = Notam_trafico_alfa_repla.objects.filter(
+                                idnotam=x).first()
+                            lista_notam_historico.append(serializar_notam_alfa(repla))
+                        if es_cancel(x):
+                            cancel = Notam_trafico_alfa_cancel.objects.filter(
+                                idnotam=x).first()
+                            lista_notam_historico.append(serializar_notam_alfa(cancel))
+
+                devolucion = {
+                    'lista_notam_historico': lista_notam_historico,
+                }
+                return HttpResponse(json.dumps(devolucion), content_type='application/json')
+            else:
+                return HttpResponse(json.dumps([{'Error en': notam_nuevo}]), content_type='application/json')
+        except:
+            return HttpResponse(json.dumps([{'Error en db': notam_nuevo}]), content_type='application/json')
+    else:
+        return HttpResponse(json.dumps([{'msj': "GET method no valid"}]), content_type='application/json')
+
+    # return redirect('login')
 
 
 ################################################################################################
-############################ DESDE NOMTAM/ALFA DE REEMPLAZO ####################################
-def historico_alfa_from_notamr(request):
-    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='AISNACIONAL').exists():
-        if request.method == "GET":
-            #get_abreviatura = str(request.GET.dict()['abreviatura'])
-            get_idnotam = str(request.GET.get('idnotam'))
+############################ DESDE NOMTAM/ALFA REEMPLAZO ####################################
+def api_historico_alfa_from_notamr(request):
+    #if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='AISNACIONAL').exists():
+    if request.method == "GET":
+        # get_abreviatura = str(request.GET.dict()['abreviatura'])
+        notam = str(request.GET.get('idnotam')).upper()
+        #notam = '(A0271/21 NOTAMR A0191/21'
+        try:
+            if len(notam.split(' ')) == 3 and 'NOTAMR' in notam:
+                lista_final=[]
+                # extraccion hacia atras del notam
+                historico = Notam_trafico_alfa_repla.objects.raw( "drop table if exists t1;  select alpha_historico_from_notamr2('"+notam+"') as vector into t1 ;  select talfa.id_mensaje_a_r, t1.vector  from t1, plan_vuelo_notam_trafico_alfa_repla as talfa  limit 1;" )[0].vector
+                lista_final = historico.split(';')[::-1]
 
-            devolucion = {
-                'abreviaturas': lista_abreviaturas,
-            }
+                # extraccion hacia adelante
+                historico = Notam_trafico_alfa_repla.objects.raw( "drop table if exists t1;  select alpha_historico_from_notamr('"+notam+"') as vector into t1 ;  select talfa.id_mensaje_a_r, t1.vector  from t1, plan_vuelo_notam_trafico_alfa_repla as talfa  limit 1;" )[0].vector
+                lista_final = lista_final + historico.split(';')
 
-            return HttpResponse(json.dumps(devolucion), content_type='application/json')
-        else:
-            return HttpResponse(json.dumps([{'msj': 'error!'}]), content_type='application/json')
-    return redirect('login')
+
+                lista_notam_historico=[]
+                for x in lista_final:
+                    if x:
+                        if es_nuevo(x):
+                            nuevo = Notam_trafico_alfa_new.objects.filter(idnotam=x).first()
+                            lista_notam_historico.append(serializar_notam_alfa(nuevo))
+                        if es_replace(x):
+                            repla = Notam_trafico_alfa_repla.objects.filter(idnotam=x).first()
+                            lista_notam_historico.append(serializar_notam_alfa(repla))
+                        if es_cancel(x):
+                            cancel = Notam_trafico_alfa_cancel.objects.filter(idnotam=x).first()
+                            lista_notam_historico.append(serializar_notam_alfa(cancel))
+                devolucion = {
+                    'lista_notam_historico': lista_notam_historico,
+                }
+                return HttpResponse(json.dumps(devolucion), content_type='application/json')
+            else:
+                return HttpResponse(json.dumps([{'Error en': notam}]), content_type='application/json')
+        except:
+            return HttpResponse(json.dumps([{'Error en db': notam}]), content_type='application/json')
+    else:
+        return HttpResponse(json.dumps([{'msj': 'GET method no valid'}]), content_type='application/json')
+    #return redirect('login')
 
 
 ################################################################################################
-############################ DESDE NOMTAM/ALFA DE CANCEL #######################################
-def historico_alfa_from_notamc(request):
-    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='AISNACIONAL').exists():
-        if request.method == "GET":
-            #get_abreviatura = str(request.GET.dict()['abreviatura'])
-            get_idnotam = str(request.GET.get('idnotam'))
+############################ DESDE NOMTAM/ALFA CANCEL #######################################
+def api_historico_alfa_from_notamc(request):
+    #if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='AISNACIONAL').exists():
+    if request.method == "GET":
+        # get_abreviatura = str(request.GET.dict()['abreviatura'])
+        notam = str(request.GET.get('idnotam')).upper()
+        #notam = '(A0167/21 NOTAMC A0166/21'
+        try:
+            if len(notam.split(' ')) == 3 and 'NOTAMC' in notam:
+                historico = Notam_trafico_alfa_new.objects.raw("drop table if exists t1; select alpha_historico_from_notamc('"+notam +
+                                                    "') as vector into t1 ;  select talfa.id_mensaje_a_n, t1.vector  from t1, plan_vuelo_notam_trafico_alfa_new as talfa  limit 1;")[0].vector
 
-            devolucion = {
-                'abreviaturas': lista_abreviaturas,
-            }
-
-            return HttpResponse(json.dumps(devolucion), content_type='application/json')
-        else:
-            return HttpResponse(json.dumps([{'msj': 'error!'}]), content_type='application/json')
-    return redirect('login')
-
+                historico = historico.split(';')
+                lista_notam_historico = []
+                for x in historico:
+                    if x:
+                        if es_nuevo(x):
+                            nuevo = Notam_trafico_alfa_new.objects.filter(idnotam=x).first()
+                            lista_notam_historico.append(serializar_notam_alfa(nuevo))
+                        if es_replace(x):
+                            repla = Notam_trafico_alfa_repla.objects.filter(idnotam=x).first()
+                            lista_notam_historico.append(serializar_notam_alfa(repla))
+                        if es_cancel(x):
+                            cancel = Notam_trafico_alfa_cancel.objects.filter(idnotam=x).first()
+                            lista_notam_historico.append(serializar_notam_alfa(cancel))
+                devolucion = {
+                    'lista_notam_historico': lista_notam_historico,
+                }
+                return HttpResponse(json.dumps(devolucion), content_type='application/json')
+            else:
+                return HttpResponse(json.dumps([{'Error en': notam}]), content_type='application/json')
+        except:
+            return HttpResponse(json.dumps([{'Error en db': notam}]), content_type='application/json')
+    else:
+        return HttpResponse(json.dumps([{'msj': 'GET method no valid'}]), content_type='application/json')
+    #return redirect('login')
 
 
 ################################################################################################
@@ -362,47 +492,133 @@ def historico_alfa_from_notamc(request):
 
 ################################################################################################
 ############################ DESDE NOMTAM/CHARLY NUEVO #######################################
-def historico_charly_from_notamn(request):
+def api_historico_charly_from_notamn(request):
     if request.method == "GET":
-        #get_abreviatura = str(request.GET.dict()['abreviatura'])
-        get_idnotam = str(request.GET.get('idnotam'))
+        # get_abreviatura = str(request.GET.dict()['abreviatura'])
+        notam_nuevo = str(request.GET.get('idnotam')).upper()
 
-        devolucion = {
-            'abreviaturas': lista_abreviaturas,
-        }
+        # notam_nuevo = '(C9990/21 NOTAMN'
+        try:
+            if len(notam_nuevo.split(' ')) == 2  and 'NOTAMN' in notam_nuevo:
+                historico = Notam_trafico_charly_new.objects.raw("drop table if exists t1; select charlie_historico_from_notamn('"+notam_nuevo +
+                                                                "') as vector into t1 ; select tcharly.id_mensaje_c_n, t1.vector from t1, plan_vuelo_notam_trafico_charly_new as tcharly limit 1; ")[0].vector
 
-        return HttpResponse(json.dumps(devolucion), content_type='application/json')
+                historico = historico.split(';')
+                lista_notam_historico = []
+                for x in historico:
+                    if x:
+                        if es_nuevo(x):
+                            nuevo = Notam_trafico_charly_new.objects.filter(
+                                idnotam=x).first()
+                            lista_notam_historico.append(serializar_notam(nuevo))
+                        if es_replace(x):
+                            repla = Notam_trafico_charly_repla.objects.filter(
+                                idnotam=x).first()
+                            lista_notam_historico.append(serializar_notam(repla))
+                        if es_cancel(x):
+                            cancel = Notam_trafico_charly_cancel.objects.filter(
+                                idnotam=x).first()
+                            lista_notam_historico.append(serializar_notam(cancel))
+
+                devolucion = {
+                    'lista_notam_historico': lista_notam_historico,
+                }
+
+                return HttpResponse(json.dumps(devolucion), content_type='application/json')
+            else:
+                return HttpResponse(json.dumps([{'Error en': notam_nuevo}]), content_type='application/json')
+        except:
+            return HttpResponse(json.dumps([{'Error en db': notam_nuevo}]), content_type='application/json')
     else:
         return HttpResponse(json.dumps([{'msj': 'error!'}]), content_type='application/json')
 
 
 ################################################################################################
 ############################ DESDE NOMTAM/CHARLY REPLACE #######################################
-def historico_charly_from_notamr(request):
+def api_historico_charly_from_notamr(request):
     if request.method == "GET":
-        #get_abreviatura = str(request.GET.dict()['abreviatura'])
-        get_idnotam = str(request.GET.get('idnotam'))
+        # get_abreviatura = str(request.GET.dict()['abreviatura'])
+        notam = str(request.GET.get('idnotam')).upper()
 
-        devolucion = {
-            'abreviaturas': lista_abreviaturas,
-        }
+        # notam = '(C9991/21 NOTAMR C9990/21'
+        try:
+            if notam and (len(notam.split(' ')) == 3) and 'NOTAMR' in notam:
+                lista_final = []
+                # extraccion hacia atras del notam
+                historico = Notam_trafico_charly_repla.objects.raw("drop table if exists t1;  select charlie_historico_from_notamr2('"+notam +
+                                                                "') as vector into t1 ;  select tcharly.id_mensaje_c_r, t1.vector  from t1, plan_vuelo_notam_trafico_charly_repla as tcharly  limit 1;")[0].vector
+                lista_final = historico.split(';')[::-1]
 
-        return HttpResponse(json.dumps(devolucion), content_type='application/json')
+                # extraccion hacia adelante
+                historico = Notam_trafico_charly_repla.objects.raw("drop table if exists t1;  select charlie_historico_from_notamr('"+notam +
+                                                                "') as vector into t1 ;  select tcharly.id_mensaje_c_r, t1.vector  from t1, plan_vuelo_notam_trafico_charly_repla as tcharly  limit 1;")[0].vector
+                if len(historico.split(';')) > 1:
+                    lista_final = lista_final + historico.split(';')[1:]
+
+                lista_notam_historico = []
+                for x in lista_final:
+                    if x:
+                        if es_nuevo(x):
+                            nuevo = Notam_trafico_charly_new.objects.filter(
+                                idnotam=x).first()
+                            lista_notam_historico.append(serializar_notam(nuevo))
+                        if es_replace(x):
+                            repla = Notam_trafico_charly_repla.objects.filter(
+                                idnotam=x).first()
+                            lista_notam_historico.append(serializar_notam(repla))
+                        if es_cancel(x):
+                            cancel = Notam_trafico_charly_cancel.objects.filter(
+                                idnotam=x).first()
+                            lista_notam_historico.append(serializar_notam(cancel))
+
+                devolucion = {
+                    'lista_notam_historico': lista_notam_historico,
+                }
+                return HttpResponse(json.dumps(devolucion), content_type='application/json')
+            else:
+                return HttpResponse(json.dumps([{'Error en': notam}]), content_type='application/json')
+        except:
+            return HttpResponse(json.dumps([{'Error en db': notam}]), content_type='application/json')
     else:
-        return HttpResponse(json.dumps([{'msj': 'error!'}]), content_type='application/json')
+        return HttpResponse(json.dumps([{'msj': 'GET METHOD NO VALID'}]), content_type='application/json')
 
 
 ################################################################################################
 ############################ DESDE NOMTAM/CHARLY CANCEL #######################################
-def historico_charly_from_notamc(request):
+def api_historico_charly_from_notamc(request):
     if request.method == "GET":
-        #get_abreviatura = str(request.GET.dict()['abreviatura'])
-        get_idnotam = str(request.GET.get('idnotam'))
+        # get_abreviatura = str(request.GET.dict()['abreviatura'])
+        notam = str(request.GET.get('idnotam')).upper()
 
-        devolucion = {
-            'abreviaturas': lista_abreviaturas,
-        }
+        # notam = '(C0295/21 NOTAMC C0292/21'
+        try:
+            if notam and (len(notam.split(' ')) == 3) and 'NOTAMC' in notam:
+                historico = Notam_trafico_charly_new.objects.raw("drop table if exists t1; select charlie_historico_from_notamc('"+notam +
+                                                                "') as vector into t1 ; select talfa.id_mensaje_c_n, t1.vector from t1, plan_vuelo_notam_trafico_charly_new as talfa limit 1;")[0].vector
+                historico = historico.split(';')
+                lista_notam_historico = []
+                for x in historico:
+                    if x:
+                        if es_nuevo(x):
+                            nuevo = Notam_trafico_charly_new.objects.filter(
+                                idnotam=x).first()
+                            lista_notam_historico.append(serializar_notam(nuevo))
+                        if es_replace(x):
+                            repla = Notam_trafico_charly_repla.objects.filter(
+                                idnotam=x).first()
+                            lista_notam_historico.append(serializar_notam(repla))
+                        if es_cancel(x):
+                            cancel = Notam_trafico_charly_cancel.objects.filter(
+                                idnotam=x).first()
+                            lista_notam_historico.append(serializar_notam(cancel))
 
-        return HttpResponse(json.dumps(devolucion), content_type='application/json')
+                devolucion = {
+                    'lista_notam_historico': lista_notam_historico,
+                }
+                return HttpResponse(json.dumps(devolucion), content_type='application/json')
+            else:
+                return HttpResponse(json.dumps([{'Error en': notam}]), content_type='application/json')
+        except:
+            return HttpResponse(json.dumps([{'Error en db': notam}]), content_type='application/json')
     else:
-        return HttpResponse(json.dumps([{'msj': 'error!'}]), content_type='application/json')
+        return HttpResponse(json.dumps([{'msj': 'GET method no valid'}]), content_type='application/json')
