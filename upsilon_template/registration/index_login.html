@@ -84,14 +84,15 @@
 
         <!-- Boton modal Login-->
         <div class=btn-container>
-            
+
             <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalLogin" id="btn-form"
                 style="background:#f39c12">
                 Iniciar Sesión
             </button>
              -->
-            
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalLogin" id="btn-form" style="background:#f39c12" onclick="abrir_modal( '{% url 'login' %}')">Iniciar sesión</button>
+
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalLogin" id="btn-form"
+                style="background:#f39c12" onclick="abrir_modal( '{% url 'login' %}')">Iniciar sesión</button>
         </div>
 
         <!-- /.modal 
@@ -101,8 +102,8 @@
 
 
         <!-- Modal Login-->
-        <div class="modal fade" id="modalLogin" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true"></div>
-        <div class="modal fade" id="modalLogi" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal fade" id="modalLogin" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+            aria-hidden="true">
         </div>
 
     </div>
@@ -114,78 +115,6 @@
     </div>
 </div>
 
-
-<!--==========================
-        mapa notam, notam tarjeta y notam timeline
-============================-->
-<section id="intro">
-    <div class="row h-100 align-items-center">
-        <div class="col-sm container my-auto bg-dark " style="width:100%;">
-            <div class="wow fadeInLeft " style="margin-top:10%;">
-                <div class="row h-100 align-items-center">
-                    <div class="col-sm">
-                        <h2>Upsilon v.7</h2>
-                        <p style="font-size: 15px; ">
-                            Sistema distribuido y en tiempo real de la gestión de información aeronáutica
-                        </p>
-                        <a href="#PIB" class="btn-get-started scrollto"> Comencemos</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <div class="col-sm container my-auto bg-danger">
-            <div class="wow fadeInRight " style="margin-top:10%;">
-                <h3 style="color: white;">Iniciar sesión</h3>
-                <br>
-
-
-    {% if form.errors %}
-    <p>El usuario y password no coinciden. Intentalo nuevamente.</p>
-    {% endif %}
-
-    {% if next %}
-    {% if user.is_authenticated %}
-    <p>Tu cuenta no tiene acceso a esta pagina. Para continuar,
-        por favor ingresa con una cuenta que tenga acceso.</p>
-    {% else %}
-    {% endif %}
-    {% endif %}
-
-    <form method="post" action="{% url 'login' %}" class="form-group">
-        {% csrf_token %}
-        <div class="group">
-            <br>
-            <br>
-            {{ form.username }}
-            <span class="highlight"></span>
-            <span class="bar"></span>
-            <label>Usuario</label>
-        </div>
-
-        <div class="group">
-            <br>
-            <br>
-            {{ form.password }}
-            <span class="highlight"></span>
-            <span class="bar"></span>
-            <label>Password</label>
-        </div>
-
-        <input type="submit" class="btn-get-started scrollto" value="Ingresar" />
-        <input type="hidden" name="next" value="{{ next }}" />
-    </form>
-
-    {# Assumes you setup the password_reset view in your URLconf #}
-                        <p>
-                            <a href="{% url 'password_reset' %}">¿Olvidaste tu password?</a>
-                        </p>
-            </div>
-        </div>
-    </div>
-</section>
-<!-- #intro -->
 
 
 <main id="main">
@@ -852,7 +781,44 @@
 
 <div id="carousel">
     <!--  -->
-    {{dato}}
+    <ul>
+        <li class="pane1">
+            <h2>
+                NOTAMN serie Charly Nacional
+            </h2>
+            <div id="area" style="height: 85%; width: 85%;margin-left: 3%;margin-top: 10%;">
+                {% area_chart areas with id='areas'  %}
+            </div>
+        </li>
+
+        <li class="pane2">
+            <h2>
+                NOTAMR serie Charly Nacional
+            </h2>
+            <div id="area" style="height: 85%; width: 85%;margin-left: 3%;margin-top: 10%;">
+                {% area_chart areas1 with id='areas1' %}
+            </div>
+        </li>
+        <li class="pane3">
+            <h2>
+                NOTAMN serie Alfa Internacional
+            </h2>
+            <div id="area" style="height: 85%; width: 85%;margin-left: 3%;margin-top: 10%;">
+                {% area_chart areas2 with id='areas2' %}
+            </div>
+        </li>
+        <li class="pane4">
+            <h2>
+                NOTAMR serie Alfa Internacional
+            </h2>
+            <div id="area" style="height: 85%; width: 85%;margin-left: 3%;margin-top: 10%;">
+                {% area_chart areas3 with id='areas3' %}
+            </div>
+        </li>
+        <li class="pane5">
+            <h2>Estadistica General y Comparativa</h2>
+        </li>
+    </ul>
 </div>
 
 {% endblock content %}
@@ -867,7 +833,7 @@
 <script>
     function abrir_modal(url) {
         //alert(url);
-        $("#modalLogin").load(url.trim(), function() {
+        $("#modalLogin").load(url.trim(), function () {
             $(this).modal('show');
         });
     }

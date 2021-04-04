@@ -8,6 +8,8 @@ from apps.plan_vuelo.models import Notam_trafico_alfa_repla
 from apps.plan_vuelo.models import Notam_trafico_alfa_cancel
 from apps.plan_vuelo.models import Notam_trafico_alfa_new
 
+
+
 # Register your models here.
 admin.site.register(Empresa_institucion)
 admin.site.register(Flp_trafico)

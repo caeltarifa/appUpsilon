@@ -39,7 +39,7 @@ class Cargo(models.Model):
 
 class Flp_trafico(models.Model):
     id_mensaje = models.CharField(max_length=22,primary_key=True)
-    aftn1 = models.CharField(max_length=11)
+    aftn1 = models.CharField(max_length=120)
     aftn2 = models.CharField(max_length=15)
     id_aeronave = models.CharField(max_length=50)
     reglas_vuelo = models.CharField(max_length=50)
@@ -220,7 +220,7 @@ class Punto_satelital(models.Model):
 
 class Notam_trafico(models.Model):
     id_mensaje = models.CharField(max_length=22,primary_key=True)
-    aftn1 = models.CharField(max_length=11)
+    aftn1 = models.CharField(max_length=120)
     aftn2 = models.CharField(max_length=15)
     idnotam = models.CharField(max_length=85)
     resumen = models.CharField(max_length=65) #Q
@@ -237,7 +237,7 @@ class Notam_trafico(models.Model):
 
 class Notam_trafico_charly_repla(models.Model):
     id_mensaje_c_r = models.CharField(max_length=22,primary_key=True)
-    aftn1 = models.CharField(max_length=11)
+    aftn1 = models.CharField(max_length=120)
     aftn2 = models.CharField(max_length=15)
     idnotam = models.CharField(max_length=85)
     resumen = models.CharField(max_length=65) #Q
@@ -253,7 +253,7 @@ class Notam_trafico_charly_repla(models.Model):
         ordering = ['idnotam']
 class Notam_trafico_charly_cancel(models.Model):
     id_mensaje_c_c = models.CharField(max_length=22,primary_key=True)
-    aftn1 = models.CharField(max_length=11)
+    aftn1 = models.CharField(max_length=120)
     aftn2 = models.CharField(max_length=15)
     idnotam = models.CharField(max_length=85)
     resumen = models.CharField(max_length=65) #Q
@@ -270,7 +270,7 @@ class Notam_trafico_charly_cancel(models.Model):
 
 class Notam_trafico_charly_new(models.Model):
     id_mensaje_c_n = models.CharField(max_length=22,primary_key=True)
-    aftn1 = models.CharField(max_length=11)
+    aftn1 = models.CharField(max_length=120)
     aftn2 = models.CharField(max_length=15)
     idnotam = models.CharField(max_length=85)
     resumen = models.CharField(max_length=65) #Q
@@ -305,7 +305,7 @@ class Notam_trafico_charly_new(models.Model):
 
 class Notam_trafico_alfa_repla(models.Model):
     id_mensaje_a_r = models.CharField(max_length=22,primary_key=True)
-    aftn1 = models.CharField(max_length=11)
+    aftn1 = models.CharField(max_length=120)
     aftn2 = models.CharField(max_length=15)
     idnotam = models.CharField(max_length=85)
     resumen = models.CharField(max_length=65) #Q
@@ -321,7 +321,7 @@ class Notam_trafico_alfa_repla(models.Model):
         ordering = ['idnotam']
 class Notam_trafico_alfa_cancel(models.Model):
     id_mensaje_a_c = models.CharField(max_length=22,primary_key=True)
-    aftn1 = models.CharField(max_length=11)
+    aftn1 = models.CharField(max_length=120)
     aftn2 = models.CharField(max_length=15)
     idnotam = models.CharField(max_length=85)
     resumen = models.CharField(max_length=65) #Q
@@ -339,7 +339,7 @@ class Notam_trafico_alfa_cancel(models.Model):
 
 class Notam_trafico_alfa_new(models.Model):
     id_mensaje_a_n = models.CharField(max_length=22,primary_key=True)
-    aftn1 = models.CharField(max_length=11)
+    aftn1 = models.CharField(max_length=120)
     aftn2 = models.CharField(max_length=15)
     idnotam = models.CharField(max_length=85)
     resumen = models.CharField(max_length=65) #Q
@@ -390,7 +390,7 @@ class Pib_tiempo_real(models.Model):
     def __str__(self):
         return '{}/{}'.format(self.id_notam_pib, self.hora_actualizacion)
     class Meta:
-        ordering=['hora_actualizacion',]
+        ordering=['-hora_actualizacion',]
 
 
 

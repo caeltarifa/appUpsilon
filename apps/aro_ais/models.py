@@ -284,11 +284,16 @@ class Banco_notam_charly(models.Model):
 
     desde = models.CharField(max_length=10)
     hasta = models.CharField(max_length=10)
+    est = models.BooleanField(default=False)
+    perm = models.BooleanField(default=False)
     horario = models.CharField(max_length=35)
     texto_notam = models.CharField(max_length=200)
     limite_inferior_casilla = models.CharField(max_length=300)
     limite_superior_casilla = models.CharField(max_length=300)
     firma = models.CharField(max_length=20)
+
+    espaniol_decodificado = models.CharField(max_length=1000)
+
     def __str__(self):
         return '{}/{}'.format(self.id_datanotam,self.tipo_notam)
 

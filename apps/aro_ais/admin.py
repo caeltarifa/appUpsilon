@@ -20,6 +20,11 @@ from apps.aro_ais.models import Tipo_notam
 from apps.aro_ais.models import Serie_notam
 from apps.aro_ais.models import Banco_notam_charly
 
+
+from apps.plan_vuelo.models import Notam_trafico_resumen
+from apps.plan_vuelo.models import Pib_tiempo_real
+
+
 admin.site.register(Pib_trafico)
 admin.site.register(Pib_extenso)
 admin.site.register(Pib_registro_documento)
@@ -36,3 +41,7 @@ admin.site.register(Prioridad)
 admin.site.register(Tipo_notam)
 admin.site.register(Serie_notam)
 admin.site.register(Banco_notam_charly)
+
+
+admin.site.register(Notam_trafico_resumen)
+admin.site.register(Pib_tiempo_real)
