@@ -2,7 +2,7 @@
 {% load static %} 
 
 {% block title %}
-<title>Upsilon | Simulador</title>
+<title>Upsilon | NOTAMC</title>
 {% endblock title %}
 
 
@@ -43,26 +43,30 @@
 
                             <div class="section-header" style="text-align:center;">
                                 <br><br><br>
-                                <h2 class="section-title">GENERADOR DE NOTAM</h2>
+                                <h2 class="section-title">
+                                  <span class="material-icons">
+                                    post_add
+                                  </span>
+                                  NUEVO NOTAM
+
+                                </h2>
                                 
                                 <span class="section-divider"></span>
                                 <p class="section-description">
-                                    Generacion guiado para la creacion de notam
-                                </p>
-
-                                <div class="btn-group btn-group-lg" >
-                                    <button type="button" class="btn btn-success" onclick="nuevo_notam()">NOTAMN</button>
-                                    <button type="button" class="btn btn-primary" onclick="reemplazo_notam()">NOTAMR</button>
-                                    <button type="button" class="btn btn-danger" onclick="cancelacion_notam()">NOTAMC</button>
-                                </div>
-
-                                <p class="section-description">
-                                  <h1 id="titulo_form">
-                                    NUEVO
-                                  </h1>
+                                    Generacion guiada de notam
                                 </p>
                                 
                                 <div class="container"  id="FORM_NOTAM">          
+
+                                  <div id="app2">
+                                    <input type="text" v-model="buscarCadena8126" v-on:keyup.enter="filtro_estado_asunto" class="form-control" placeholder="C0365/21 Buscar correlativo " style="text-transform:uppercase;" >
+                                    <button @click="buscar_correlativo">BUSCAR CORRELATIVO</button>
+                                    <br>                
+                                    <span>[[respuesta]]</span>
+                                    <br>
+                                  </div>
+
+                                  
                                     <table class="table table-bordered" >
                                       <tbody style="text-align:center;">            
                                         <tr>
@@ -126,7 +130,7 @@
                                               <form style="margin-left:5%;">
                                                   <div class="input-group ">
                                                     <div class="input-group-prepend">
-                                                      <span class="input-group-text" style="width:230px;">Indicador de prioridad</span>                                                        
+                                                      <span class="input-group-text" style="width:230px;">Prioridad</span>                                                        
                                                       <div>
                                                         <select class="form-control" >
                                                           <option>SS</option>
@@ -157,14 +161,14 @@
                                                 <form style="margin-left:5%;">
                                                     <div class="input-group ">
                                                       <div class="input-group-prepend">
-                                                        <span class="input-group-text" style="width:230px;">Fecha y hora de depósito</span>
+                                                        <span class="input-group-text" style="width:230px;">Depósito</span>
                                                       </div>
                                                       <input type="date" class="form-control" style="width:90px;">
                                                       
                                                       <input type="number" class="form-control" placeholder="HR" style="width:90px;" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==4) return false;">
                                                       
                                                       <div class="input-group-prepend">
-                                                        <span class="input-group-text" style="width:170px;">Indicador remitente</span>                                                        
+                                                        <span class="input-group-text" style="width:170px;">Remitente</span>                                                        
                                                         <input type="text" class="form-control" id="notam_id" value="NOTAM INTERNACIONAL" style="width:150px;"><<=(
                                                       </div>
 
@@ -183,7 +187,7 @@
                                             <form style="margin-left:5%;">
                                               <div class="input-group ">
                                                 <div class="input-group-prepend">
-                                                  <span class="input-group-text" style="width:230px;">Indicador del remitente</span>                                                        
+                                                  <span class="input-group-text" style="width:230px;">Remitente</span>                                                        
                                                   <input type="text" class="form-control" id="notam_id" value="NOTAM INTERNACIONAL" style="width:250px;"><<=(
                                                 </div>
                                               </div>
@@ -191,12 +195,6 @@
                                           </td>
                                         </tr>
                                         <!-- INDICADOR DEL REMITENTE -->
-                                          
-                                          
-                                        <tr>
-                                          <td><strong>Serie, número e indetificador del mensaje</strong></td>
-                                        </tr>
-
 
                                         <!--NOTAM NUEVO-->
                                         <tr>
@@ -204,10 +202,15 @@
                                                 <form style="margin-left:5%;">
                                                     <div class="input-group ">
                                                       <div class="input-group-prepend">
-                                                        <span class="input-group-text" style="width:300px;">NUEVO</span>                                                        
-                                                        <input type="text" class="form-control" id="notam_id" placeholder="C221/2020" style="width:180px;">
-                                                        NOTAMN
+                                                        <span class="input-group-text" style="width:300px;">Correlativo</span>                                                        
+                                                        <input type="text" class="form-control" id="notam_id" placeholder="C221/2021" style="width:180px;">
+
+                                                        <input type="checkbox"  data-toggle="modal" id="estimado_id"/>
+                                                        <label class="form-check-label" for="estimado_id">Internacional</label>
+
+                                                        <input type="text" class="form-control" id="notam_id" placeholder="A021/2021" style="width:180px;">
                                                       </div>
+
                                                     </div>
                                                 </form>
                                             </td>
@@ -391,396 +394,6 @@
                                     </div>
                                 </div>
 
-
-
-                                 <div class="container"  id="FORM_NOTAM">          
-                                    <table class="table table-bordered" >
-                                      <tbody style="text-align:center;">            
-                                        <tr>
-                                          <td>
-                                            <form style="margin-left:5%;">
-                                                  <div class="input-group ">
-                                                    <div class="input-group-prepend">
-                                                      <span class="input-group-text">Q)</span>
-                                                    </div>
-                                                    <input type="text" class="form-control" id="fname" name="fname" placeholder="SLLF" disabled><br><br>
-                                                    
-                                                    <select class="form-control" id="letra_asunto_id" onchange="getAsunto()">
-                                                      <option value="" selected="selected">Letra</option>
-                                                      {% for letra in vec_letra %}
-                                                        <option value="{{letra.id_letra}}">
-                                                          {{letra.id_letra}}
-                                                        </option>
-                                                      {% endfor %}
-                                                    </select>
-                                                    
-                                                    <select class="form-control" id="asunto_id" onchange="getEstadoAsunto()" >                                                          
-                                                      <option value="" selected="selected">Asunto</option>
-                                                    </select>
-
-                                                    <select class="form-control" id="estado_asunto_id">
-                                                      <option value="" selected="selected">Estado</option>
-                                                    </select>
-
-                                                    <input type="text" class="form-control" placeholder="IV" style="width:30px;">
-                                                    <input type="text" class="form-control" placeholder="NBO" style="width:30px;">
-                                                    <input type="text" class="form-control" placeholder="W" style="width:30px;" maxlength="1">
-                                                    <input type="number" class="form-control" placeholder="000" style="width:30px;" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==3) return false;">
-                                                    <input type="number" class="form-control" placeholder="160" style="width:30px;" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==3) return false;">
-                                                    
-                                                  </div>
-                                              </form>
-                                          </td>
-                                      </tr>
-                                      
-
-                                        <!--
-                                          <tr>
-                                              <td>
-                                                  <form style="margin-left:5%;">
-                                                      <div class="input-group ">
-                                                        <div class="input-group-prepend">
-                                                          <span class="input-group-text">Cabecera</span>
-                                                        </div>
-                                                        <input type="text" class="form-control" placeholder="Prioridad" style="width:110px;">
-                                                        <input type="text" class="form-control" placeholder="Originador" style="width:110px;">
-                                                      </div>
-                                                  </form>
-                                              </td>
-                                          </tr>
-                                        -->
-                                        
-                                        
-                                        <!-- PRIORIDAD -->
-                                        <tr>
-                                          <td>
-                                              <form style="margin-left:5%;">
-                                                  <div class="input-group ">
-                                                    <div class="input-group-prepend">
-                                                      <span class="input-group-text" style="width:230px;">Indicador de prioridad</span>                                                        
-                                                      <div>
-                                                        <select class="form-control" >
-                                                          <option>SS</option>
-                                                          <option>FF</option>
-                                                          <option>KK</option>
-                                                          <option>GG</option>
-                                                          <option>AA</option>
-                                                        </select>
-                                                      </div>
-                                                    </div>
-                                                    
-                                                  </div>
-                                              </form>
-                                          </td>
-                                        </tr>
-                                        <!-- PRIORIDAD -->
-
-
-                                        <!-- DIRECCION -->
-                                        <tr>
-                                          <td>
-                                              <form style="margin-left:5%;">
-                                                  <div class="input-group ">
-                                                    <div class="input-group-prepend">
-                                                      <span class="input-group-text" style="width:230px;">Dirección</span>                                                        
-                                                      <input type="text" class="form-control" id="notam_id" value="SLLPYNYX" style="width:250px;">
-                                                    </div>
-                                                  </div>
-                                              </form>
-                                          </td>
-                                        </tr>
-                                        <!-- DIRECCION -->
-
-
-
-                                        <!-- FECHA Y HORA DE DEPOSITO -->
-                                        <tr>
-                                            <td>
-                                                <form style="margin-left:5%;">
-                                                    <div class="input-group ">
-                                                      <div class="input-group-prepend">
-                                                        <span class="input-group-text" style="width:230px;">Fecha y hora de depósito</span>
-                                                      </div>
-                                                      <input type="date" class="form-control" style="width:90px;">
-                                                      
-                                                      <input type="number" class="form-control" placeholder="HR" style="width:90px;" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==4) return false;">
-                                                      
-                                                    </div>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                        <!-- FECHA Y HORA DE DEPOSITO -->
-                                        
-
-                                        
-                                        
-                                        <!-- INDICADOR DEL REMITENTE -->
-                                        <tr>
-                                          <td>
-                                            <form style="margin-left:5%;">
-                                              <div class="input-group ">
-                                                <div class="input-group-prepend">
-                                                  <span class="input-group-text" style="width:230px;">Indicador del remitente</span>                                                        
-                                                  <input type="text" class="form-control" id="notam_id" value="NOTAM INTERNACIONAL" style="width:250px;"><<=(
-                                                </div>
-                                              </div>
-                                            </form>
-                                          </td>
-                                        </tr>
-                                        <!-- INDICADOR DEL REMITENTE -->
-                                          
-                                          
-                                        <tr>
-                                          <td><strong>Serie, número e indetificador del mensaje</strong></td>
-                                        </tr>
-
-
-                                        <!--NOTAM NUEVO-->
-                                        <tr>
-                                            <td>
-                                                <form style="margin-left:5%;">
-                                                    <div class="input-group ">
-                                                      <div class="input-group-prepend">
-                                                        <span class="input-group-text" style="width:300px;">NUEVO</span>                                                        
-                                                        <input type="text" class="form-control" id="notam_id" placeholder="C221/2020" style="width:180px;">
-                                                        NOTAMN
-                                                      </div>
-                                                    </div>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                        <!--NOTAM NUEVO-->
-
-
-                                        <!--NOTAM REEMPLAZO -->
-                                        <tr>
-                                          <td>
-                                              <form style="margin-left:5%;">
-                                                  <div class="input-group ">
-                                                    <div class="input-group-prepend">
-                                                      <span class="input-group-text" style="width:300px;">REEMPLAZO</span>                                                        
-                                                        <input type="text" class="form-control" id="notam_id" placeholder="C221/2020" style="width:180px;">
-                                                        NOTAMR
-                                                        <input type="text" class="form-control" id="notam_id" placeholder="C221/2020" style="width:180px;">
-                                                    </div>
-                                                  </div>
-                                              </form>
-                                          </td>
-                                      </tr>
-                                      <!--NOTAM REEMPLAZO -->
-
-
-
-                                      <!--NOTAM CANCELADO -->
-                                      <tr>
-                                        <td>
-                                            <form style="margin-left:5%;">
-                                                <div class="input-group ">
-                                                  <div class="input-group-prepend">
-                                                    <span class="input-group-text" style="width:300px;">CANCELA</span>                                                        
-                                                      <input type="text" class="form-control" id="notam_id" placeholder="C221/2020" style="width:180px;">
-                                                  </div>
-                                                </div>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                    <!--NOTAM CANCELADO -->
-
-                                        <tr>
-                                          <td>
-                                              <form style="margin-left:5%;">
-                                                  <div class="input-group ">
-                                                    <div class="input-group-prepend">
-                                                      <span class="input-group-text">MAPA</span>
-                                                    </div>
-                                                      
-                                                      <input type="number" class="form-control" placeholder="Longitude" style="width:30px;" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==4) return false;">
-                                                      <input type="number" class="form-control" placeholder="Latitude" style="width:30px;" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;">
-                                                      <input type="number" class="form-control" placeholder="Ratio" style="width:30px;" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==3) return false;">
-                                                      <div class="input-group-append">
-                                                          <input type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal" value="Mapa"/>
-                                                      </div>
-                                                  
-                                                  </div>
-                                              </form>
-                                          </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>
-                                                <form style="margin-left:5%;">
-                                                    <div class="input-group ">
-                                                      <div class="input-group-prepend">
-                                                        <span class="input-group-text">A)</span>
-                                                      </div>
-                                                      <select class="form-control" >
-                                                        <option>SLLP</option>
-                                                        <option>SLCB</option>
-                                                        <option>SLVR</option>
-                                                        <option>SLET</option>
-                                                        <option>SLOR</option>
-                                                        <option>SLRB</option>
-                                                        <option>SLRQ</option>
-                                                        <option>SLGM</option>
-                                                        <option>SLCO</option>
-                                                        <option>SLSB</option>
-                                                        <option>SLUY</option>
-                                                      </select>
-                                                    </div>
-                                                </form>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>
-                                                <form style="margin-left:5%;">
-                                                    <div class="input-group ">
-                                                      <div class="input-group-prepend">
-                                                        <span class="input-group-text">B)</span>
-                                                      </div>
-                                                      <input type="date" class="form-control" style="width:90px;">
-                                                      <input type="number" class="form-control" placeholder="HR" style="width:90px;" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==4) return false;">
-                                                      <div class="input-group-append">
-                                                      </div>
-                                                    </div>
-                                                </form>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>
-                                                <form style="margin-left:5%;">
-                                                    <div class="input-group ">
-                                                      <div class="input-group-prepend">
-                                                        <span class="input-group-text">C)</span>
-                                                      </div>
-                                                      <input type="date" class="form-control" style="width:90px;">
-                                                      
-                                                      <input type="number" class="form-control" placeholder="HR" style="width:90px;" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==4) return false;">
-                                                      
-                                                      <div class="form-group">
-                                                        <input type="checkbox"  data-toggle="modal" id="estimado_id"/>
-                                                        <label class="form-check-label" for="estimado_id">EST</label>
-                                                      </div>
-
-                                                    </div>
-                                                </form>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>
-                                                <form style="margin-left:5%;">
-                                                    <div class="input-group ">
-                                                      <div class="input-group-prepend">
-                                                        <span class="input-group-text">D)</span>
-                                                      </div>
-                                                      <input type="text" class="form-control" placeholder="Horario" style="width:110px;">
-                                                    </div>
-                                                </form>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>
-                                                <form style="margin-left:5%;">
-                                                    <div class="input-group ">
-                                                      <div class="input-group-prepend">
-                                                        <span class="input-group-text">E)</span>
-                                                      </div>
-                                                      <input type="text" class="form-control" placeholder="Cuer" style="width:110px;">
-                                                    </div>
-                                                </form>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>
-                                                <form style="margin-left:5%;">
-                                                    <div class="input-group ">
-                                                      <div class="input-group-prepend">
-                                                        <span class="input-group-text">F)</span>
-                                                      </div>
-                                                      <input type="text" class="form-control" placeholder="Límite inferior" style="width:110px;">
-                                                    </div>
-                                                </form>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>
-                                                <form style="margin-left:5%;">
-                                                    <div class="input-group ">
-                                                      <div class="input-group-prepend">
-                                                        <span class="input-group-text">G)</span>
-                                                      </div>
-                                                      <input type="text" class="form-control" placeholder="Límite superior" style="width:110px;">
-                                                    </div>
-                                                </form>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>
-                                                <button class="btn btn-outline-info" onclick="printForm()">
-                                                    GENERAR
-                                                </button>
-                                            </td>
-                                        </tr>
-
-
-                                        <tr>
-                                            <td>
-                                                <div class="form-group">
-                                                    <label for="comment">Notam</label>
-                                                    <textarea class="form-control" rows="9" id="comment"></textarea>
-                                                </div> 
-                                            </td>
-                                        </tr>
-                                        
-                                        <tr>
-                                          <td>
-                                              <div class="form-group">
-                                                  <label for="comment">PIB</label>
-                                                  <input type="text" class="form-control" id="" placeholder="Instalación">
-                                                  <textarea class="form-control" rows="3" id="comment"></textarea>
-                                              </div> 
-                                          </td>
-                                        </tr>
-
-                                        
-                                      </tbody>
-                                    </table>
-                                    
-                                    <!-- The Modal -->
-                                    <div class="modal fade" id="myModal">
-                                        <div class="modal-dialog">
-                                          <div class="modal-content">
-                                          
-                                            <!-- Modal Header -->
-                                            <div class="modal-header">
-                                              <h4 class="modal-title">Ubicacion satelital</h4>
-                                              <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                            </div>
-                                            
-                                            <!-- Modal body -->
-                                            <div class="modal-body">
-                                              Mostrar mapa
-                                            </div>
-                                            
-                                            <!-- Modal footer -->
-                                            <div class="modal-footer">
-                                              <button type="button" class="btn btn-success" data-dismiss="modal">Listo</button>
-                                            </div>
-                                            
-                                          </div>
-                                        </div>
-                                    </div>
-                                 </div>
-
-
-
-
                             </div>
 
                         </div>
@@ -894,21 +507,6 @@
   }
 </script>
 
-<script>
-  //BUTTON NUEVO, REEMPLAZO , CANCELADO
-  function nuevo_notam() {
-   document.getElementById("titulo_form").innerHTML="NUEVO"
-
-  }
-
-  function reemplazo_notam() {
-   document.getElementById("titulo_form").innerHTML="REEMPLAZO"
-  }
-
-  function cancelacion_notam() {
-   document.getElementById("titulo_form").innerHTML="CANCELACIÓN"
-  }
-</script>
 
 <script>
   function printForm(){

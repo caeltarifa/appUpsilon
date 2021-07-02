@@ -14,6 +14,11 @@ from apps.aro_ais.views import view_getAsunto,view_getEstadoAsunto
 from apps.aro_ais.views import view_codigos_abreviaturas
 from apps.aro_ais.views import view_get_abreviatura8400
 from apps.aro_ais.views import view_get_codigo8126
+from apps.aro_ais.views import view_get_lista_asuntos_8126
+from apps.aro_ais.views import view_get_lista_estados_8126
+
+from apps.aro_ais.views import view_get_correlativo_charly
+from apps.aro_ais.views import view_get_correlativo_alfa
 
 
 from appUpsilon.views import api_historico_charly_from_notamn
@@ -24,6 +29,12 @@ from appUpsilon.views import api_historico_charly_from_notamc
 from appUpsilon.views import api_historico_alfa_from_notamn
 from appUpsilon.views import api_historico_alfa_from_notamr
 from appUpsilon.views import api_historico_alfa_from_notamc
+
+from apps.aro_ais.views import view_todos_notams
+
+##CREAR NOTAM
+from apps.aro_ais.views import view_post_crear_notam
+
 
 urlpatterns = [
     path('',view_panel_aroaislp, name="view_panel_aroaislp"),
@@ -54,6 +65,13 @@ urlpatterns = [
     ## CODIGOS Y ABREVIATURAS
     path('responseabreviatura/', view_get_abreviatura8400, name="view_get_abreviatura8400"), #
     path('response8126/', view_get_codigo8126, name="view_get_codigo8126"), #
+    path('responseLetter8126/', view_get_lista_asuntos_8126, name="view_get_lista_asuntos_8126"), #
+    path('responseEstados8126/', view_get_lista_estados_8126, name="view_get_lista_estados_8126"), #
+
+    ## OBTENIENDO CORRELATIVO    
+    path('correlativocharlie/', view_get_correlativo_charly, name="view_get_correlativo_charly"), #
+    path('correlativoalpha/', view_get_correlativo_alfa, name="view_get_correlativo_alfa"), #
+
 
     ## API PARA CONSUMO DE HISTORIALES NOTAM NEW, REPLA, CANCEL
     path('charlyfrom_notamn/', api_historico_charly_from_notamn, name="api_historico_charly_from_notamn"), #
@@ -64,4 +82,10 @@ urlpatterns = [
     path('alfafrom_notamn/', api_historico_alfa_from_notamn, name="api_historico_alfa_from_notamn"), #
     path('alfafrom_notamr/', api_historico_alfa_from_notamr, name="api_historico_alfa_from_notamr"), #
     path('alfafrom_notamc/', api_historico_alfa_from_notamc, name="api_historico_alfa_from_notamc"), #
+
+    path('allnotams/',view_todos_notams, name='view_todos_notams'),
+
+    ## API PARA GUARDAR NOTAM CREADO
+    path('createnotam/', view_post_crear_notam, name="view_post_crear_notam"), #
+    
 ]

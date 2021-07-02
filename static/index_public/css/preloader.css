@@ -1,0 +1,60 @@
+.loader__page .inicial__uno,
+.loader__page .inicial__dos,
+.loader__page .inicial__tres{
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  margin: auto;
+}
+.loader__page .inicial__uno{
+  width: 100px;
+  -webkit-animation: inicial__uno 5s infinite linear;
+}
+.loader__page .inicial__dos{
+  width: 200px;
+  z-index: 20;
+  -webkit-animation: inicial__dos 7s infinite linear;
+}
+.loader__page .inicial__tres{
+  width: 305px;
+  -webkit-animation: inicial__tres 200s infinite linear;
+}
+@-webkit-keyframes inicial__uno{
+  from{
+    -webkit-transform: rotate(0deg);
+  }
+  to{
+    -webkit-transform: rotate(359deg);
+  }
+}
+@-webkit-keyframes inicial__dos{
+  from{
+    -webkit-transform: rotate(359deg);
+  }
+  to{
+    -webkit-transform: rotate(0deg);
+  }
+}
+@-webkit-keyframes inicial__tres{
+  from{
+    -webkit-transform: rotate(0deg);
+  }
+  to{
+    -webkit-transform: rotate(359deg);
+  }
+}
+.loader__page{
+  position: fixed;
+  z-index: 25000;
+  background: #fff;
+  left: 0px;
+  top: 0px;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all .3s ease;
+}

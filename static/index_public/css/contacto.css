@@ -1,0 +1,129 @@
+.contacto{
+  width: 100%;
+  height: 100%;
+  background: #0f0330;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.footer{
+  width: 100%;
+}
+.footer h2{
+  font-family: 'Oswald',sans-serif;
+}
+.footer .footer__logo{
+  position: relative;
+  width: 100%;
+  height: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.footer .footer__logo .footer__uno,
+.footer .footer__logo .footer__dos,
+.footer .footer__logo .footer__tres{
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  margin: auto;
+}
+.footer .footer__logo .footer__uno{
+  width: 100px;
+  -webkit-animation: footer__uno 3s infinite linear;
+}
+.footer .footer__logo .footer__dos{
+  width: 200px;
+  z-index: 20;
+  -webkit-animation: footer__dos 6s infinite linear;
+}
+.footer .footer__logo .footer__tres{
+  width: 450px;
+  top: 65px;
+}
+@-webkit-keyframes footer__uno{
+  from{
+    -webkit-transform: rotate(0deg);
+  }
+  to{
+    -webkit-transform: rotate(359deg);
+  }
+}
+@-webkit-keyframes footer__dos{
+  from{
+    -webkit-transform: rotate(359deg);
+  }
+  to{
+    -webkit-transform: rotate(0deg);
+  }
+}
+.footer .footer__logo .parpadeo__footer{
+  animation-name: parpadeo;
+  animation-duration: 10s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+
+  -webkit-animation-name: parpadeo;
+  -webkit-animation-duration: 10s;
+  -webkit-animation-timing-function: linear;
+  -webkit-animation-iteration-count: infinite;
+}
+@-moz-keyframes parpadeo{
+  0%{opacity: 1.0;}
+  50%{opacity: 0.0;}
+  100%{opacity: 1.0}
+}
+@-webkit-keyframes parpadeo{
+  0%{opacity: 1.0;}
+  50%{opacity: 0.0;}
+  100%{opacity: 1.0}
+}
+@keyframes parpadeo{
+  0%{opacity: 1.0;}
+  50%{opacity: 0.0;}
+  100%{opacity: 1.0}
+}
+.footer .primera{
+  color: #fff;
+  font: normal 36px 'Open Sans',cursive;
+  margin: 0; 
+}
+.footer .primera > span{
+  color: #7f8c8d;
+}
+.footer .empresa{
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: normal;
+  margin-bottom: 0;
+}
+.footer .footer__nombre{
+  color: #636e72;
+  font-size: 17px;
+  font-weight: 900;
+}
+.footer .footer__empresa{
+  color: #b2bec3;
+  font-size: 20px;
+  font-weight: 900;
+  margin-top: 10px;
+}
+.footer .logo__epb{
+  width: 200px;
+  height: 100px;
+}
+@media screen and (max-width: 900px){
+  .footer .footer__logo .footer__uno{
+    width: 70px;
+  }
+  .footer .footer__logo .footer__dos{
+    width: 150px;
+  }
+  .footer .footer__logo .footer__tres{
+    width: 300px;
+    top: 80px;
+  }
+}

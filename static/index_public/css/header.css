@@ -1,0 +1,183 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap");
+*,::before,::after{
+  box-sizing: border-box;
+}
+html,body{
+  margin: 0;
+  padding: 0;
+  scroll-behavior: smooth;
+  height: 100%;
+}
+body{
+  margin: 3rem 0 0 0;
+  font-family: 'Montserrat', sans-serif;
+  font-size: .938rem;
+  font-weight: 500;
+  color: #697477;
+  line-height: 1.6;
+  height: 100%;
+}
+/* ---------------------------------------- */
+/* HEADER */
+/* ---------------------------------------- */
+header ul
+{
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+header a
+{
+  text-decoration: none;
+  color: #697477;
+}
+header .bd-grid
+{
+  max-width: 95%;
+  display: grid;
+  grid-template-columns: 100%;
+  grid-column-gap: 2rem;
+  width: calc(100% - 2rem);
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+.l-header
+{
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  background: #1B9CFC;
+}
+.l-header .nav__logo
+{
+  font-size: 15pt;
+}
+header .nav
+{
+  height: 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+header .nav__apps
+{
+  color: #fff;
+  margin-left: 10px;
+}
+@media screen and (max-width: 768px)
+{
+  header .nav__menu
+  {
+    position: fixed;
+    top: 3rem;
+    right: -100%;
+    width: 80%;
+    height: 100%;
+    padding: 2rem;
+    background-color: rgba(0,0,0);
+    transition: .5s;
+    backdrop-filter: blur(10px);
+  }
+}
+header .nav__item
+{
+  margin-bottom: 2rem;
+}
+header .nav__link
+{
+  position: relative;
+  color: #fff;
+}
+header .nav__link:hover
+{
+  color: #aaaaaa;
+  text-decoration: none;
+}
+header .nav__logo
+{
+  color: #fff;
+}
+header .nav__logo:hover
+{
+  color: #fff;
+  text-decoration: none;
+}
+header .nav__toggle
+{
+  color: #fafaff;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+header .show
+{
+  right: 0;
+}
+header .active::after
+{
+  position: absolute;
+  content: "";
+  width: 100%;
+  height: .18rem;
+  left: 0;
+  top: 1.5rem;
+  background-color: rgba(72,84,96);
+}
+header .logo__aasana
+{
+  width: 130px;
+  margin-right: 20px;
+}
+header .optionsbar
+{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+@media screen and (min-width: 768px)
+{
+  body
+  {
+    margin: 0;
+  }
+  header .nav
+  {
+    height: calc(3rem+1rem);
+  }
+  header .nav__list
+  {
+    display: flex;
+  }
+  header .nav__item
+  {
+    margin-left: 2rem;
+    margin-bottom: 0;
+  }
+  header .nav__toggle
+  {
+    display: none;
+  }
+  header .nav__link
+  {
+    color:  #fafaff;
+  }
+  header .nav__link:hover
+  {
+    color: #fafaff;
+    text-decoration: none;
+  }
+  header .active::after
+  {
+    background-color: #fafaff;
+  }
+  .l-header .nav__logo:hover
+  {
+    color: #fafaff;
+    text-decoration: none;
+  }
+}
+@media screen and (max-width: 450px)
+{
+  header .nav__menu{width: 100%;}
+}

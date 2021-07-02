@@ -1,0 +1,79 @@
+.pushbar
+{
+  z-index: 2100;
+  background: #000;
+  padding: 20px;
+  width: 350px !important;
+}
+.pushbar .btn-cerrar.derecha
+{
+  text-align: right;
+}
+.pushbar .btn-cerrar.izquierda
+{
+  text-align: left;
+}
+.pushbar .btn-cerrar button
+{
+  background: none;
+  color: #808080;
+  border: none;
+  cursor: pointer;
+  font-size: 25px;
+}
+.pushbar a
+{
+  text-decoration: none;
+  color: #fff;
+}
+.pushbar a:hover
+{
+  text-decoration: none;
+  color: #fff;
+}
+.pushbar .pushbar-app
+{
+  background: #000;
+  width: 365px;
+  font-size-adjust: 18px;
+  font-weight: 300;
+}
+.pushbar-app .titulo
+{
+  font-size: 15pt;
+  padding: 20px 0;
+  border-bottom: 1px solid rgba(112,112,112,.60);
+  margin-bottom: 20px;
+  text-align: center;
+  text-transform: uppercase;
+  color: #fff;
+  letter-spacing: 15px;
+}
+.pushbar-app .item
+{
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 0;
+  border-bottom: 1px solid rgba(112,112,112,.60);
+}
+.pushbar-app .item img
+{
+  width: 100%;
+  max-width: 120px;
+}
+.pushbar-app .textos
+{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+.pushbar-app .textos .nombre-item
+{
+  color: #aaaaaa;
+}
+@media screen and (max-width: 450px)
+{
+  .pushbar{width: 100% !important;}
+  .pushbar .pushbar-app{width: 100% !important;}
+}

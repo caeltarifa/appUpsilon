@@ -50,11 +50,22 @@
           <i class="ft-home"></i>
         </a>
       </li>
+      
+
+      <li class=" nav-item">
+        <a href="#_letra_8126">
+          <i class="ft-pie-chart"></i>
+        </a>
+      </li>
+
+
       <li class=" nav-item">
         <a href="#_8126">
           <i class="ft-pie-chart"></i>
         </a>
       </li>
+
+      
 
     </ul>
   </div>
@@ -179,6 +190,100 @@
 
 
 
+<!-- LETRA Y ASUNTOS 8126 -->
+<div id="_letra_8126"></div><br><br><br><br>
+<section>
+  <div class="row justify-content-center">
+    <div class="col-10" style="align-content: center;">
+      <div class="card" style="box-shadow: 2px 2px 8px 0 black; min-height: 30%;  max-height: 100%; ">
+
+        <!--CONTENIDO DE LA TABLA DE PLANES RECIENTES-->
+
+        <div class="card-content collapse show" style="height: 75%; overflow-y: auto;">
+
+          <!--==========================
+            BOLETIN DE INFORMACION RAPIDA
+          ============================-->
+          <section class="section-bg">
+            <div class="container-fluid">
+
+              <div class="section-header" style="text-align:center;">
+                <br><br><br>
+
+                <h2 class="section-title">DOCUMENTO 8126 - ASUNTOS</h2>
+
+                <span class="section-divider"></span>
+                <p class="section-description">
+                  Lista de asuntos por título
+                </p>
+
+
+                <div class="container">
+                  <div id="app3">
+
+                    <div>
+                      <select class="form-control" id="sel1" name="sellist1" v-on:change="changeItem(rowId, $event)">
+                        <option>Selecciona una letra</option>
+                        {% for letra in lista_letras %}
+                          <option value="{{letra.id_letra}}"> {{letra.id_letra}} {{letra.titulo_letra}} {{letra.acronimo}} </option>
+                        {% endfor %}
+                      </select>
+                    </div>
+
+                    <br>
+                      <h3 v-model="acronimo_letra" v-model="titulo_letra"> [[selected]] </h3>
+                    <br>
+
+                    <table class="table table-striped">
+
+                      <thead>
+                        <tr>
+                          <th v-for ="column in columns_asunto">
+                            <a href="#"><!--  v-on="click: sortBy(column)" v-class="active: sortKey == column">  --> 
+                              [[ column ]]
+                            </a>
+                          </th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <!-- <tr v-repeat="people | filterBy search | orderBy sortKey reverse"> -->
+                        <tr v-for="asunto in lista_asuntos">
+                          <td> [[ asunto.id_asunto ]] </td>
+                          <td> [[ asunto.descripcion_asunto ]] </td>
+                          <td> [[ asunto.fraseologia_asunto ]] </td>
+                        </tr>
+                        
+                        <tr>
+                          <td>-</td>
+                          <td>-</td>
+                          <td>-</td>
+                        </tr>
+                        
+                       
+                      </tbody>
+                    </table>
+
+                    
+                    
+
+                  </div>
+                </div>
+
+
+
+              </div>
+
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- LETRA Y ASUNTOS 8126 -->
+
+
 
 
 <!-- DOCUMENTO 8126 -->
@@ -201,7 +306,7 @@
               <div class="section-header" style="text-align:center;">
                 <br><br><br>
 
-                <h2 class="section-title">DOCUMENTO 8126</h2>
+                <h2 class="section-title">DOCUMENTO 8126 - ESTADO DEL ASUNTO</h2>
 
                 <span class="section-divider"></span>
                 <p class="section-description">
@@ -288,13 +393,12 @@
 
 
 
+
 {% endblock content %}
 
 
 {% block extrajs %}
 <script src='https://harvesthq.github.io/chosen/chosen.jquery.js'></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/vue/0.11.10/vue.min.js'></script>
-<script src='https://unpkg.com/vue/dist/vue.js'></script>
 
 <script type="text/javascript">
 
@@ -402,183 +506,236 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
   new Vue({
-    el: '#app',
-    delimiters: ['[[', ']]'],
-    data: {
-      // -------------- 8400 -----------------
-      searchQuery: '',
-      respuesta:'',
-      people: ['Apple', 'Banana', 'Orange', 'Facebook', 'Twitter', 'Youtube'],
-      columns: ['Abreviatura', 'Descripción'],
-      diccionario: [],
-      diccionario2: [],
-      // -------------- 8400 -----------------
+      el: '#app',
+      delimiters: ['[[', ']]'],
+      data: {
+        // -------------- 8400 -----------------
+        searchQuery: '',
+        respuesta:'',
+        people: ['Apple', 'Banana', 'Orange', 'Facebook', 'Twitter', 'Youtube'],
+        columns: ['Abreviatura', 'Descripción'],
+        diccionario: [],
+        diccionario2: [],
+        // -------------- 8400 -----------------
 
-      
-      buscarCadena8126: '',
-      
-    },
-    computed: {
-      // -------------- 8400 -----------------
-      filtro: function () {
-        var self = this;
-        self.searchQuery=self.searchQuery.toUpperCase();
-        variable=self.diccionario.filter(function (user) {
-          return user.abreviatura.indexOf(self.searchQuery) !== -1;
-        })
-        if(variable.length>0){
-          return variable 
-        }
-      },
-      filtro_texto_claro: function () {
-        var self = this;
-        self.searchQuery=self.searchQuery.toUpperCase();
-        variable=self.diccionario2.filter(function (user) {
-          return user.abreviatura.indexOf(self.searchQuery) !== -1;
-        })
-        if(variable.length>0){
-          return variable 
-        }
-      },
-      // -------------- 8400 -----------------
-
-    },
-    methods: {
-      // -------------- 8400 -----------------
-      filteredPeople: function () {
-        var self = this;
-        variable=self.diccionario.filter(function (user) {
-          return user.abreviatura.indexOf(self.searchQuery) !== -1;
-        })
-        if(variable.length>0){
-          return variable 
-        }else{
-          this.created(this.searchQuery)
-        }
-      },
-      created: function (parametro) {
         
-        (async() => {
-          //alert("INTENTANDO EN LA bd")
-
-          await this.getResponse(parametro)
-          
-          if(this.diccionario.length >0 || this.diccionario2.length >0 ){
-            this.respuesta='';
-            this.searchQuery="";
-          }else{
-            this.respuesta="No se encontraron resultados.";
+        buscarCadena8126: '',
+        
+      },
+      computed: {
+        // -------------- 8400 -----------------
+        filtro: function () {
+          var self = this;
+          self.searchQuery=self.searchQuery.toUpperCase();
+          variable=self.diccionario.filter(function (user) {
+            return user.abreviatura.indexOf(self.searchQuery) !== -1;
+          })
+          if(variable.length>0){
+            return variable 
           }
-        })();
+        },
+        filtro_texto_claro: function () {
+          var self = this;
+          self.searchQuery=self.searchQuery.toUpperCase();
+          variable=self.diccionario2.filter(function (user) {
+            return user.abreviatura.indexOf(self.searchQuery) !== -1;
+          })
+          if(variable.length>0){
+            return variable 
+          }
+        },
+        // -------------- 8400 -----------------
+
       },
-      getResponse: async function(parametro){
-        parametro = parametro.toUpperCase();
-        const url = '{% url 'view_get_abreviatura8400' %}' + "?abreviatura="+parametro
-        await axios.get(url).then(response => {this.diccionario = (response.data.abreviaturas); this.diccionario2 = (response.data.texto_claro)}).catch(function (error) { console.log(error); });
-        //console.log(this.diccionario2)
-      },
-      // -------------- 8400 -----------------
+      methods: {
+        // -------------- 8400 -----------------
+        filteredPeople: function () {
+          var self = this;
+          variable=self.diccionario.filter(function (user) {
+            return user.abreviatura.indexOf(self.searchQuery) !== -1;
+          })
+          if(variable.length>0){
+            return variable 
+          }else{
+            this.created(this.searchQuery)
+          }
+        },
+        created: function (parametro) {
+          
+          (async() => {
+            //alert("INTENTANDO EN LA bd")
+
+            await this.getResponse(parametro)
+            
+            if(this.diccionario.length >0 || this.diccionario2.length >0 ){
+              this.respuesta='';
+              this.searchQuery="";
+            }else{
+              this.respuesta="No se encontraron resultados.";
+            }
+          })();
+        },
+        getResponse: async function(parametro){
+          parametro = parametro.toUpperCase();
+          const url = '{% url 'view_get_abreviatura8400' %}' + "?abreviatura="+parametro
+          await axios.get(url).then(response => {this.diccionario = (response.data.abreviaturas); this.diccionario2 = (response.data.texto_claro)}).catch(function (error) { console.log(error); });
+          //console.log(this.diccionario2)
+        },
+        // -------------- 8400 -----------------
 
 
+      }
+        
+        
     }
-      
-      
-  });
-
-  
+  ); 
 </script>
+
+
 
 <script>
   new Vue({
-    el: '#app2',
-    delimiters: ['[[', ']]'],
-    data: {
-      // -------------- 8400 -----------------
-      titulo_letra: "Titulo de la letra",
-      acronimo_letra: "",
-      buscarCadena8126: '',
-      
-      respuesta:'',
-      
-      people: ['Apple', 'Banana', 'Orange', 'Facebook', 'Twitter', 'Youtube'],
-      
-      columns_asunto: ['Asunto', 'Descripción','Fraseología'],
-      columns_estado: ['Estado de asunto', 'Descripción','Fraseología'],
-      
-      asuntos: [],
-      estados_asunto: [],
-      // -------------- 8400 -----------------
+      el: '#app2',
+      delimiters: ['[[', ']]'],
+      data: {
+        // -------------- 8400 -----------------
+        titulo_letra: "Titulo de la letra",
+        acronimo_letra: "",
+        buscarCadena8126: '',
+        
+        respuesta:'',
+        
+        people: ['Apple', 'Banana', 'Orange', 'Facebook', 'Twitter', 'Youtube'],
+        
+        columns_asunto: ['Asunto', 'Descripción','Fraseología'],
+        columns_estado: ['Estado de asunto', 'Descripción','Fraseología'],
+        
+        asuntos: [],
+        estados_asunto: [],
+        // -------------- 8400 -----------------
 
-      
-      
-    },
-    computed: {
-      filtro_asunto_inicial: function () {
-        var self = this;
-        self.buscarCadena8126=self.buscarCadena8126.toUpperCase();
-        variable=self.asuntos.filter(function (user) {
-          return user.id_asunto.indexOf(self.buscarCadena8126) !== -1;
-        })
-        if(variable.length>0){
-          return variable 
-        }
+        
+        
       },
-      filtro_estado_asunto_inicial: function () {
-        var self = this;
-        self.buscarCadena8126=self.buscarCadena8126.toUpperCase();
-        variable=self.estados_asunto.filter(function (user) {
-          return user.id_estado_asunto.indexOf(self.buscarCadena8126) !== -1;
-        })
-        if(variable.length>0){
-          return variable 
-        }
-      },
-    },
-    methods: {
-      filtro_estado_asunto: function () {
-        //SE ACTIVA CUANDO SE PRESIONA LA TECLA ENTER
-        var self = this;
-        variable=self.asuntos.filter(function (user) {
-          return user.id_asunto.indexOf(self.buscarCadena8126) !== -1;
-        })
-        if(variable.length>0){
-          return variable 
-        }else{
-          if(this.buscarCadena8126.length > 0 && this.buscarCadena8126.length < 3){
-            this.buscando_8126(this.buscarCadena8126)
+      computed: {
+        filtro_asunto_inicial: function () {
+          var self = this;
+          self.buscarCadena8126=self.buscarCadena8126.toUpperCase();
+          variable=self.asuntos.filter(function (user) {
+            return user.id_asunto.indexOf(self.buscarCadena8126) !== -1;
+          })
+          if(variable.length>0){
+            return variable 
           }
-        }
+        },
+        filtro_estado_asunto_inicial: function () {
+          var self = this;
+          self.buscarCadena8126=self.buscarCadena8126.toUpperCase();
+          variable=self.estados_asunto.filter(function (user) {
+            return user.id_estado_asunto.indexOf(self.buscarCadena8126) !== -1;
+          })
+          if(variable.length>0){
+            return variable 
+          }
+        },
       },
-      buscando_8126: function (parametro) {
-        (async() => {
-          //alert("INTENTANDO EN LA bd")
-
-          await this.getResponse8126(parametro)
-          
-          if(this.asuntos.length >0 || this.estados_asunto.length >0 ){
-            this.respuesta='';
-            this.buscarCadena8126="";
+      methods: {
+        filtro_estado_asunto: function () {
+          //SE ACTIVA CUANDO SE PRESIONA LA TECLA ENTER
+          var self = this;
+          variable=self.asuntos.filter(function (user) {
+            return user.id_asunto.indexOf(self.buscarCadena8126) !== -1;
+          })
+          if(variable.length>0){
+            return variable 
           }else{
-            this.respuesta="No se encontraron resultados.";
+            if(this.buscarCadena8126.length > 0 && this.buscarCadena8126.length < 3){
+              this.buscando_8126(this.buscarCadena8126)
+            }
           }
-        })();
-      },
-      getResponse8126: async function(parametro){
-        parametro = parametro.toUpperCase();
-        const url = '{% url 'view_get_codigo8126' %}' + "?string8126="+parametro
-        await axios.get(url).then(response => {this.titulo_letra=response.data.titulo_letra; this.acronimo_letra=response.data.acronimo_letra ; this.asuntos = (response.data.asuntos); this.estados_asunto = (response.data.estados_asuntos)}).catch(function (error) { console.log(error); });
-        console.log(this.asuntos)
-        console.log(this.estados_asunto)
-        //titulo_letra
-      },
+        },
+        buscando_8126: function (parametro) {
+          (async() => {
+            //alert("INTENTANDO EN LA bd")
 
+            await this.getResponse8126(parametro)
+            
+            if(this.asuntos.length >0 || this.estados_asunto.length >0 ){
+              this.respuesta='';
+              this.buscarCadena8126="";
+            }else{
+              this.respuesta="No se encontraron resultados.";
+            }
+          })();
+        },
+        getResponse8126: async function(parametro){
+          parametro = parametro.toUpperCase();
+          const url = '{% url 'view_get_codigo8126' %}' + "?string8126="+parametro
+          await axios.get(url).then(response => {this.titulo_letra=response.data.titulo_letra; this.acronimo_letra=response.data.acronimo_letra ; this.asuntos = (response.data.asuntos); this.estados_asunto = (response.data.estados_asuntos)}).catch(function (error) { console.log(error); });
+          console.log(this.asuntos)
+          console.log(this.estados_asunto)
+          //titulo_letra
+        },
+
+      }
+        
+        
     }
-      
-      
-  });
-
-  
+  );  
 </script>
+
+
+
+<script>
+  "use strict";
+
+var app = new Vue({
+  el: '#app3',
+  delimiters: ['[[', ']]'],
+  data: {
+    selected: "",
+    rowId: 99,
+    columns_asunto: ['Asunto', 'Descripción','Fraseología'],
+    lista_asuntos: [
+      {
+        id_asunto: "***",
+        descripcion_asunto: "***",
+        fraseologia_asunto: "***"
+      }
+    ]
+  },
+  methods: {
+    changeItem: function changeItem(rowId, event) {
+      this.selected = event.target.value + " - " + event.target.selectedOptions[0].label.substring(2,);
+      /*
+      ACTIVAR UNA FUNCION PIDIENDO LISTA DE ASUNTOS
+      */
+      (async() => {
+            //alert("INTENTANDO EN LA bd")
+            await this.getResponse_letra8126(event.target.value)
+      })();
+    }, 
+
+    getResponse_letra8126: async function(parametro){
+        parametro = parametro.toUpperCase();
+        const url = '{% url 'view_get_lista_asuntos_8126' %}' + "?string8126="+parametro;
+        
+        await axios.get(url).then(response => {
+            this.lista_asuntos = response.data.lista_asuntos; 
+          }
+        ).catch(
+          function (error) { 
+            console.log(error); 
+          }
+        );
+    },
+    
+  }
+});
+</script>
+
+
+
 {% endblock extrajs %}
 
 

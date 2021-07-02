@@ -4,36 +4,35 @@
 
 
 {% block title %}
-<title>Upsilon | login</title>
+<title>appUpsilon</title>
 {% endblock title %}
 
 
 
 
-{% block extra_head %}
-<!--PIB EN REAL TIME 
-    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.css'>
--->
-<link rel="stylesheet" href="{% static 'pib_acordeon/acordeon.css' %}">
+{% block extra_head %}q
 
-<!--MAPA NOTAM-->
+<link rel="stylesheet" href="{% static 'index_public/css/preloader.css' %} ">
+
+<link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+<link rel="stylesheet" href="{% static 'index_public/css/header.css' %}">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pushbar.js@1.0.0/src/pushbar.min.css">
+<link rel="stylesheet" href="{% static 'index_public/css/banner.css' %}">
+
+<link rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css"/>
+<link rel="stylesheet" href="{% static 'index_public/css/tiempo.css' %}">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pushbar.js@1.0.0/src/pushbar.min.css">
+<link rel="stylesheet" href="{% static 'index_public/css/sidebar.css' %}">
+
 <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.css'>
-<link rel="stylesheet" href="{% static 'notam_map/map.css' %}">
+<link rel="stylesheet" href="{% static 'index_public/css/mapa.css' %}">
 
-<!--agregando el FOOTER-->
-<link rel="stylesheet" href="{% static 'footer/css/footer.css' %}">
-
-<!--agregando el preloader y banner-->
-<link rel="stylesheet" href="{% static 'banner/css/estilos.css' %}">
-
-<!-- AGREGANDO BANNER MODAL LOGIN -->
-<link rel="stylesheet" href="{% static 'banner/css/formulario_login.css' %}">
-
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+<link rel="stylesheet" href="{% static 'index_public/css/acordeon.css' %}">
+<link rel="stylesheet" href="{% static 'index_public/css/grafico.css' %}">
 
 <!--Agregando data visualization-->
 
@@ -41,9 +40,10 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.bundle.js"></script>
 <script src="https://www.gstatic.com/charts/loader.js"></script>
 
-<!--  Agregando el slider  -->
+<!--  Agregando el slider  touch -->
 <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
 <link rel="stylesheet" href="{% static 'notametro/estilos.css' %}">
+
 {% endblock extra_head %}
 
 
@@ -55,771 +55,281 @@
 <!--==========================
         preloader
 ============================-->
-<div class="loader__page">
-    <div class="loader">
-        <img src="{% static 'banner/img/banner/logo_1.svg' %}" alt="logo_uno" class="inicial__uno">
-        <img src="{% static 'banner/img/banner/logo_2.svg' %}" alt="logo_dos" class="inicial__dos">
-        <img src="{% static 'banner/img/banner/logo_3.svg' %}" alt="logo_tres" class="inicial__tres">
-    </div>
-</div>
 
-<!--==========================
-    banner  y logo animado y modal login
-============================-->
-
-<div class="row" style="height: 650px;">
-    <div class="col-lg-6" id="loginlogo">
-
-        <div class="loaderContainer">
-            <div class="loader__banner">
-                <img src="{% static 'banner/img/banner/logo_1.svg' %}" alt="logo_uno" id="banner__logo1">
-                <img src="{% static 'banner/img/banner/logo_2.svg' %}" alt="logo_dos" id="banner__logo2">
-                <img src="{% static 'banner/img/banner/logo_3.svg' %}" alt="logo_tres" id="banner__logo3">
-            </div>
-        </div>
-
-        <p class="txtlogo">
-            Sistema distribuido y en tiempo real de la gestión de información aeronáutica
-        </p>
-
-        <!-- Boton modal Login-->
-        <div class=btn-container>
-
-            <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalLogin" id="btn-form"
-                style="background:#f39c12">
-                Iniciar Sesión
-            </button>
-             -->
-
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalLogin" id="btn-form"
-                style="background:#f39c12" onclick="abrir_modal( '{% url 'login' %}')">Iniciar sesión</button>
-        </div>
-
-        <!-- /.modal 
-            <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            </div>
-        -->
-
-
-        <!-- Modal Login-->
-        <div class="modal fade" id="modalLogin" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-            aria-hidden="true">
-        </div>
-
-    </div>
-
-    <div class="col-lg-6" id="video">
-        <iframe width="500px" height="250px" src="https://www.youtube.com/embed/ZVQeTagj0AI" frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen></iframe>
-    </div>
-</div>
+  <div class="loader__page">
+    <img src="{% static 'index_public/img/preloader/logo_1.svg' %}" alt="logo_uno" class="inicial__uno">
+    <img src="{% static 'index_public/img/preloader/logo_2.svg' %}" alt="logo_dos" class="inicial__dos">
+    <img src="{% static 'index_public/img/preloader/logo_3.svg' %}" alt="logo_tres" class="inicial__tres">
+  </div>
 
 
 
-<main id="main">
 
-    <div id="app">
-        <div class="content align-center">
-            <h1 class="subtitle" style="margin-left: 35%;">
-                PIB en tiempo real
-            </h1>
-
-            <br>
-            <h4 class="title">Ultima actualización: 23/03/2021 </h4>
-            <section class="section">
-                <h3>Aeropuertos</h3>
-                <accordion id="accordion-example-1" :content="example1" multiple="multiple"></accordion>
-            </section>
-            <!--
-                <section class="section">
-                    <h3>2do Acordeon</h3>
-                    <accordion id="accordion-example-2" :content="example2" multiple="multiple"></accordion>
-                </section>
-
-                <section class="section">
-                    <h3>3er Acordeon</h3>
-                    <accordion id="accordion-example-3" :content="example3" multiple="multiple"></accordion>
-                </section>
-            -->
-        </div>
-    </div>
-    <!--==========================
-    BOLETIN DE INFORMACION RAPIDA
-        <section id="PIB" class="section-bg" >
-            <div class="container-fluid">
-
-                <div class="section-header">
-                    <br><br><br>
-                    <h3 class="section-title">PIB</h3>
-                    <span class="section-divider"></span>
-                    <p class="section-description">
-                        Boletín de información previa al vuelo.
-                    </p>
-                </div>
-
-                <div class="row">
-                    <div class="col-lg-6  wow fadeInLeft">
-                        <div class="containerpib">
-                            <div id="accordion" class="panel-group">
-                                <div class="panel">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title">
-                                            <a href="#panelBodySLLP" class="accordion-toggle" data-toggle="collapse"
-                                                data-parent="#accordion">SLLP</a>
-                                        </h4>
-                                    </div>
-                                    <div id="panelBodySLLP" class="panel-collapse collapse in">
-                                        <div class="panel-body">
-                                            <div class=" table-responsive">
-                                                <table class="table table-hover ">
-                                                    <thead>
-                                                        <tr>
-                                                            <th style="width:30px;">Instalacion</th>
-                                                            <th class="col-md-6">Informacion</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>ACC</td>
-                                                            <td>DESDE 30/DIC/19 HR 2145 FREQ 128,2 MHZ SECTOR NORESTE
-                                                                POSICION UDIDI, ILRES, ARMUK, COBERTURA REDUCIDA HASTA
-                                                                29/ENE/20 HR 2200 EST. (C3293) </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>ACC</td>
-                                                            <td>DESDE 30/DIC/19 HR 2148 FREQ 128,2 MHZ SECTOR NOROESTE POSICION ELAKO, DOBNI, RAXUN, COBERTURA REDUCIDA HASTA 29/ENE/20 HR 2200 EST.   (C3294) </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>ACC</td>
-                                                            <td>DESDE 30/DIC/19 HR 2151 FREQ 128.2 MHZ POSICION, EMPEX, ILPEM, SOTKU, UBSAS, COBERTURA REDUCIDA HASTA 29/ENE/20 HR 2200 EST.   (C3295) </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-
-                                <div class="panel">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title">
-                                            <a href="#panelBodySLAL" class="accordion-toggle collapsed"
-                                                data-toggle="collapse" data-parent="#accordion">SLAL</a>
-                                        </h4>
-                                    </div>
-
-                                    <div id="panelBodySLAL" class="panel-collapse collapse">
-                                        <div class="panel-body">
-                                            <div class=" table-responsive">
-                                                <table class="table table-hover ">
-                                                    <thead>
-                                                        <tr>
-                                                            <th style="width:30px;">Instalacion</th>
-                                                            <th class="col-md-6">Informacion</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>AD</td>
-                                                            <td>DESDE 31/DIC/19 HR 2330 LAS OPERACIONES NOCTURNAS A SOLICITUD HASTA 0100 DE 31/ENE/20 EST.   (C3310)  </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>ILS</td>
-                                                            <td>DESDE 07/ENE/20 HR 1922 SISTEMA DE ATERRIZAJE POR INSTRUMENTOS PISTA 36 EN PRUEBA HASTA 07/FEB/20 HR 2200 EST.   (C0039)  </td>
-                                                        </tr>
-                                                        
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                </div>
-
-                                
-                                <div class="panel">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title">
-                                            <a href="#panelBodySLAP" class="accordion-toggle collapsed"
-                                                data-toggle="collapse" data-parent="#accordion">SLAP</a>
-                                        </h4>
-                                    </div>
-                                    <div id="panelBodySLAP" class="panel-collapse collapse">
-                                        <div class="panel-body">
-                                            <div class=" table-responsive">
-                                                <table class="table table-hover ">
-                                                    <thead>
-                                                        <tr>
-                                                            <th style="width:30px;">Instalacion</th>
-                                                            <th class="col-md-6">Informacion</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>TWR</td>
-                                                            <td>DESDE 31/DIC/19 HR 1255 FRECUENCIA 118.9 MHZ INUTILIZABLE HASTA 31/ENE/20 HR 1800 EST.   (C3297)   </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-6  wow fadeInRight">
-                        <div class="containerpib">
-                            <div id="accordion" class="panel-group">
-                                <div class="panel">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title">
-                                            <a href="#panelBodySLBJ" class="accordion-toggle" data-toggle="collapse"
-                                                data-parent="#accordion">SLBJ</a>
-                                        </h4>
-                                    </div>
-                                    <div id="panelBodySLBJ" class="panel-collapse collapse in">
-                                        <div class="panel-body">
-                                            <div class=" table-responsive">
-                                                <table class="table table-hover ">
-                                                    <thead>
-                                                        <tr>
-                                                            <th style="width:30px;">Instalacion</th>
-                                                            <th class="col-md-6">Informacion</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>ATS/COM/MET</td>
-                                                            <td>DESDE 31/DIC/19 HR 1405 SERVICIOS EN AERODROMO SIN ATENCION HASTA 31/ENE/20 HR 1800 EST.   (C3299)  </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="panel">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title">
-                                            <a href="#panelBodySLCO" class="accordion-toggle collapsed"
-                                                data-toggle="collapse" data-parent="#accordion">SLCO</a>
-                                        </h4>
-                                    </div>
-                                    <div id="panelBodySLCO" class="panel-collapse collapse">
-                                        <div class="panel-body">
-                                            <div class=" table-responsive">
-                                                <table class="table table-hover ">
-                                                    <thead>
-                                                        <tr>
-                                                            <th style="width:30px;">Instalacion</th>
-                                                            <th class="col-md-6">Informacion</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>AD</td>
-                                                            <td>DESDE 29/DIC/19 HR 1325 OPERACIONES NOCTURNAS EN AERODROMO SIN ATENCION HASTA 28/FEB/20 HR 2359   (C3261) </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>AVGAS 100</td>
-                                                            <td>DESDE 16/ENE/20 HR 1300 NO DISPONIBLE HASTA 20/ENE/20 HR 2200 EST.   (C0115)   </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>DTHR</td>
-                                                            <td> 	DESDE 29/DIC/19 HR 1357 UMBRAL DE PISTA 02/20 DESPLAZADO PRIMEROS 100 M PISTA DISPONIBLE 1 800 M OPERACIONES CON PRECAUCION COORDINAR CON TORRE HASTA 28/FEB/20 HR 2359   (C3265) </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>IAC</td>
-                                                            <td>DESDE 30/NOV/19 HR 2032 CARTA DE APROXIMACION POR INSTRUMENTOS RNAV GNSS "Z" PISTA/02 SLCO SOLAMENTE UTILIZACION MINIMOS PUBLICADOS PARA CIRCULACION VISUAL, MINIMOS DE TECHO Y VISIBILIDAD PARA APROXIMACION DIRECTA PISTA/02 SUSPENDIDOS HASTA 30/MAR/20 HR 2300 EST.   (C2991)  </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>REDL</td>
-                                                            <td>DESDE 29/DIC/19 HR 1335 LUCES DE BORDE DE PISTA 02/20 INUTILIZABLE HASTA 28/FEB/20 HR 2359   (C3263)   </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>RTHL</td>
-                                                            <td>DESDE 29/DIC/19 HR 1329 LUCES DE UMBRAL DE PISTA 02/20 INUTILIZABLE HASTA 28/FEB/20 HR 2359   (C3262)  </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>TWY</td>
-                                                            <td>DESDE 15/ENE/20 HR 1955 CALLE DE RODAJE "B" TEMPORALMENTE HABILITADA:
-                                                                ANCHURA:23 M
-                                                                SUPERFICIE: PAVIMENTO FLEXIBLE
-                                                                RESISTENCIA: PCN 43/F/C/X/T
-                                                                HASTA 30/ABR/ HR 2300 EST.   (C0109)    </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-
-                                <div class="panel">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title">
-                                            <a href="#panelBodySLCC" class="accordion-toggle collapsed"
-                                                data-toggle="collapse" data-parent="#accordion">SLCC</a>
-                                        </h4>
-                                    </div>
-                                    <div id="panelBodySLCC" class="panel-collapse collapse">
-                                        <div class="panel-body">
-                                            <div class=" table-responsive">
-                                                <table class="table table-hover ">
-                                                    <thead>
-                                                        <tr>
-                                                            <th style="width:30px;">Instalacion</th>
-                                                            <th class="col-md-6">Informacion</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>AD</td>
-                                                            <td>DESDE 29/NOV/19 HR 1547 AERODROMO CERRADO HASTA 28/FEB/20 HR 2200 EST.   (C2970)  </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <br><br><br><br>
-
-            </div>
-
-        </section>
-============================-->
-
-    <!--  style="background: linear-gradient(-45deg,#0399cf,#104e64, #104e64, #0399cf);"#features -->
-
-    <!--==========================
-      About Us Section
-    ============================-->
-    <!-- <section id="about" class="section-bg">
-        <div class="container-fluid">
-            
-            <div class="section-header">
-                <h3 class="section-title">About Us</h3>
-                <span class="section-divider"></span>
-                <p class="section-description">
-                    Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque<br>
-                    sunt in culpa qui officia deserunt mollit anim id est laborum
-                </p>
-            </div>
-
-            <div class="row">
-                <div class="col-lg-6 about-img wow fadeInLeft">
-                    <img src="img/about-img.jpg" alt="">
-                </div>
-
-                <div class="col-lg-6 content wow fadeInRight">
-                    <h2>Lorem ipsum dolor sit amet, consectetur adipiscing elite storium paralate</h2>
-                    <h3>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit
-                        anim id est
-                        laborum.</h3>
-                    <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                        labore et
-                        dolore magna aliqua ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                    </p>
-
-                    <ul>
-                        <li><i class="ion-android-checkmark-circle"></i> Ullamco laboris nisi ut aliquip ex ea
-                            commodo consequat.
-                        </li>
-                        <li><i class="ion-android-checkmark-circle"></i> Duis aute irure dolor in reprehenderit in
-                            voluptate
-                            velit.</li>
-                        <li><i class="ion-android-checkmark-circle"></i> Ullamco laboris nisi ut aliquip ex ea
-                            commodo consequat.
-                            Duis aute irure dolor in reprehenderit in voluptate trideta storacalaperda mastiro
-                            dolore eu fugiat
-                            nulla pariatur.</li>
-                    </ul>
-
-                    <p>
-                        Ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-                        reprehenderit in
-                        voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-                        cupidatat non
-                        proident, sunt in culpa qui officia deserunt mollit anim id est laborum Libero justo laoreet
-                        sit amet
-                        cursus sit amet dictum sit. Commodo sed egestas egestas fringilla phasellus faucibus
-                        scelerisque eleifend
-                        donec
-                    </p>
-                </div>
-            </div>
-
-        </div>
-    </section> -->
-    <!-- #about -->
-
-    <!--==========================
-      Product Featuress Section
-    ============================-
-    <section id="features">
-        <div class="container">
-
-            <div class="row">
-
-                <div class="col-lg-8 offset-lg-4">
-                    <div class="section-header wow fadeIn" data-wow-duration="1s">
-                        <h3 class="section-title">Product Featuress</h3>
-                        <span class="section-divider"></span>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-5 features-img">
-                    <img src="img/product-features.png" alt="" class="wow fadeInLeft">
-                </div>
-
-                <div class="col-lg-8 col-md-7 ">
-
-                    <div class="row">
-
-                        <div class="col-lg-6 col-md-6 box wow fadeInRight">
-                            <div class="icon"><i class="ion-ios-speedometer-outline"></i></div>
-                            <h4 class="title"><a href="">Lorem Ipsum</a></h4>
-                            <p class="description">Voluptatum deleniti atque corrupti quos dolores et quas molestias
-                                excepturi sint
-                                occaecati cupiditate non provident clarida perendo.</p>
-                        </div>
-                        <div class="col-lg-6 col-md-6 box wow fadeInRight" data-wow-delay="0.1s">
-                            <div class="icon"><i class="ion-ios-flask-outline"></i></div>
-                            <h4 class="title"><a href="">Dolor Sitema</a></h4>
-                            <p class="description">Minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                                aliquip ex ea
-                                commodo consequat tarad limino ata noble dynala mark.</p>
-                        </div>
-                        <div class="col-lg-6 col-md-6 box wow fadeInRight" data-wow-delay="0.2s">
-                            <div class="icon"><i class="ion-social-buffer-outline"></i></div>
-                            <h4 class="title"><a href="">Sed ut perspiciatis</a></h4>
-                            <p class="description">Duis aute irure dolor in reprehenderit in voluptate velit esse
-                                cillum dolore eu
-                                fugiat nulla pariatur teleca starter sinode park ledo.</p>
-                        </div>
-                        <div class="col-lg-6 col-md-6 box wow fadeInRight" data-wow-delay="0.3s">
-                            <div class="icon"><i class="ion-ios-analytics-outline"></i></div>
-                            <h4 class="title"><a href="">Magni Dolores</a></h4>
-                            <p class="description">Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
-                                officia
-                                deserunt mollit anim id est laborum dinoun trade capsule.</p>
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </secton>
-    
-    #features -->
-
-</main>
-
-
-<main id="main">
+  <section id="particles-js">
     <div class="contenedor">
-        <div class="mapa">
-            <div id="map"></div>
+      <div class="banner__logo">
+        <div class="banner__loader">
+          <img src="{% static 'index_public/img/banner/logo_1.svg' %}" alt="banner_uno" class="banner__uno">
+          <img src="{% static 'index_public/img/banner/logo_2.svg' %}" alt="banner_dos" class="banner__dos">
+          <img src="{% static 'index_public/img/banner/logo_3.svg' %}" alt="banner_tres" class="banner__tres">
         </div>
-        <div class="info_1">
-            <h2>NOTAM VIGENTES</h2>
-            <br>
-            <br>
-
-            <div class="container " style="margin-left: 5%;">
-                <div class="col">
-
-                    <div class="col-12 col-sm-6 col-lg-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <h4 class="card-title">NOTAMR</h4>
-                                <h6 class="card-subtitle mb-2">C0063/21 NOTAMR C0016/21</h6>
-                                <p class="card-text">
-
-                                    Q) SLLF/QCAAS/IV/NBO/AE/000/999/1630S06810W010
-                                    <br>
-                                    A) SLLP B) 1201202031 C) 1201302200 EST
-                                    <br>
-                                    E) TMA FREQ 123,9 MHZ U/S
-                                    <br>
-                                    <br>
-                                </p>
-                                <a href="#" class="card-link text-primary">Ver histórico</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <br>
-
-                    <div class="col-12 col-sm-6 col-lg-4">
-                        <div class="card text-left">
-                            <div class="card-body">
-                                <h4 class="card-title">NOTAMR</h4>
-                                <h6 class="card-subtitle mb-2">C0063/21 NOTAMR C0016/21</h6>
-                                <p class="card-text">
-
-                                    Q) SLLF/QCAAS/IV/NBO/AE/000/999/1630S06810W010
-                                    <br>
-                                    A) SLLP B) 1201202031 C) 1201302200 EST
-                                    <br>
-                                    E) TMA FREQ 123,9 MHZ U/S
-                                    <br>
-                                    <br>
-                                </p>
-                                <a href="#" class="card-link text-primary ">Ver histórico</a>
-                            </div>
-                        </div>
-                    </div>
-                    <br>
-
-
-                    <div class="col-12 col-sm-6 col-lg-4">
-                        <div class="card text-left">
-                            <div class="card-body">
-                                <h4 class="card-title">NOTAMR</h4>
-                                <h6 class="card-subtitle mb-2">C0063/21 NOTAMR C0016/21</h6>
-                                <p class="card-text">
-
-                                    Q) SLLF/QCAAS/IV/NBO/AE/000/999/1630S06810W010
-                                    <br>
-                                    A) SLLP B) 1201202031 C) 1201302200 EST
-                                    <br>
-                                    E) TMA FREQ 123,9 MHZ U/S
-                                    <br>
-                                    <br>
-                                </p>
-                                <a href="#" class="card-link text-primary ">Ver histórico</a>
-                            </div>
-                        </div>
-                    </div>
-                    <br>
-
-
-                    <div class="col-12 col-sm-6 col-lg-4">
-                        <div class="card text-left">
-                            <div class="card-body">
-                                <h4 class="card-title">NOTAMR</h4>
-                                <h6 class="card-subtitle mb-2">C0063/21 NOTAMR C0016/21</h6>
-                                <p class="card-text">
-
-                                    Q) SLLF/QCAAS/IV/NBO/AE/000/999/1630S06810W010
-                                    <br>
-                                    A) SLLP B) 1201202031 C) 1201302200 EST
-                                    <br>
-                                    E) TMA FREQ 123,9 MHZ U/S
-                                    <br>
-                                    <br>
-                                </p>
-                                <a href="#" class="card-link text-primary ">Ver histórico</a>
-                            </div>
-                        </div>
-                    </div>
-                    <br>
-
-
-                    <div class="col-12 col-sm-6 col-lg-4">
-                        <div class="card text-left">
-                            <div class="card-body">
-                                <h4 class="card-title">NOTAMR</h4>
-                                <h6 class="card-subtitle mb-2">C0063/21 NOTAMR C0016/21</h6>
-                                <p class="card-text">
-
-                                    Q) SLLF/QCAAS/IV/NBO/AE/000/999/1630S06810W010
-                                    <br>
-                                    A) SLLP B) 1201202031 C) 1201302200 EST
-                                    <br>
-                                    E) TMA FREQ 123,9 MHZ U/S
-                                    <br>
-                                    <br>
-                                </p>
-                                <a href="#" class="card-link text-primary ">Ver histórico</a>
-                            </div>
-                        </div>
-                    </div>
-                    <br>
-
-                </div>
-            </div>
-
-        </div>
-
-
-
-
-        <div class="info_2">
-            <h2>NOTAM NUEVOS</h2>
-            <div class="container py-2 mt-4 mb-4">
-                <!-- timeline item 1 -->
-                <div class="row">
-                    <!-- timeline item 1 left dot -->
-                    <div class="col-auto text-center flex-column d-none d-sm-flex">
-                        <div class="row h-50">
-                            <div class="col">&nbsp;</div>
-                            <div class="col">&nbsp;</div>
-                        </div>
-                        <h5 class="m-2">
-                            <span class="badge badge-pill bg-light border">&nbsp;</span>
-                        </h5>
-                        <div class="row h-50">
-                            <div class="col border-right">&nbsp;</div>
-                            <div class="col">&nbsp;</div>
-                        </div>
-                    </div>
-                    <!-- timeline item 1 event content -->
-                    <div class="py-2">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="float-right text-muted">Mon, Jan 9th 2019 7:00 AM</div>
-                                <h4 class="card-title text-muted">Day 1 Orientation</h4>
-                                <p class="card-text">Welcome to the campus, introduction and get started with the tour.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!--/row-->
-                <!-- timeline item 2 -->
-                <div class="row">
-                    <div class="col-auto text-center flex-column d-none d-sm-flex">
-                        <div class="row h-50">
-                            <div class="col border-right">&nbsp;</div>
-                            <div class="col">&nbsp;</div>
-                        </div>
-                        <h5 class="m-2">
-                            <span class="badge badge-pill bg-light border">&nbsp;</span>
-                        </h5>
-                        <div class="row h-50">
-                            <div class="col border-right">&nbsp;</div>
-                            <div class="col">&nbsp;</div>
-                        </div>
-                    </div>
-                    <div class="py-2">
-                        <div class="card shadow">
-                            <div class="card-body">
-                                <div class="float-right">Tue, Jan 10th 2019 8:30 AM</div>
-                                <h4 class="card-title">Day 2 Sessions</h4>
-                                <p class="card-text">Sign-up for the lessons and speakers that coincide with your course
-                                    syllabus. Meet and greet with instructors.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!--/row-->
-                <!-- timeline item 3 -->
-                <div class="row">
-                    <div class="col-auto text-center flex-column d-none d-sm-flex">
-                        <div class="row h-50">
-                            <div class="col border-right">&nbsp;</div>
-                            <div class="col">&nbsp;</div>
-                        </div>
-                        <h5 class="m-2">
-                            <span class="badge badge-pill bg-light border">&nbsp;</span>
-                        </h5>
-                        <div class="row h-50">
-                            <div class="col border-right">&nbsp;</div>
-                            <div class="col">&nbsp;</div>
-                        </div>
-                    </div>
-                    <div class=" py-2 ">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="float-right text-muted">Wed, Jan 11th 2019 8:30 AM</div>
-                                <h4 class="card-title">Day 3 Sessions</h4>
-                                <p>Shoreditch vegan artisan Helvetica. Tattooed Codeply Echo Park Godard kogi, next
-                                    level.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!--/row-->
-                <!-- timeline item 4 -->
-                <div class="row">
-                    <div class="col-auto text-center flex-column d-none d-sm-flex">
-                        <div class="row h-50">
-                            <div class="col border-right">&nbsp;</div>
-                            <div class="col">&nbsp;</div>
-                        </div>
-                        <h5 class="m-2">
-                            <span class="badge badge-pill bg-light border">&nbsp;</span>
-                        </h5>
-                        <div class="row h-50">
-                            <div class="col">&nbsp;</div>
-                            <div class="col">&nbsp;</div>
-                        </div>
-                    </div>
-                    <div class="py-2">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="float-right text-muted">Thu, Jan 12th 2019 11:30 AM</div>
-                                <h4 class="card-title">Day 4 Wrap-up</h4>
-                                <p>Join us for lunch in Bootsy's cafe across from the Campus Center.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!--/row-->
-            </div>
-        </div>
+      </div>
+      <div class="banner__info">
+        <h1>Sistema de Información Aeronautica.</h1>
+        <!--
+          <button class="btn__ingresar">Iniciar Sesión</button>
+        -->
+        <a href="{% url 'login' %}" class="btn__ingresar" style="height: 200px;" >Iniciar Sesión</a>
+      </div>
+      <div class="banner__video">
+        <!-- <iframe src="https://www.youtube.com/embed/C64kj7-oKpM" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+        </iframe> -->
+      </div>
     </div>
-</main>
+  </section>
+  
+  <!-- IFIS SERVER NUKLEAR https://www.youtube.com/embed/BoGlBg8bDJA -->
+  
+  <section id="segundo" class="acordeones">
+      <div style="height: 8%; background-color: rgb(175, 229, 250);color: rgb(29, 103, 163);margin-bottom: 0%; ">
+        <div style="margin-left:35%;">
+          <h2 >PIB EN TIEMPO REAL</h2>
+        </div>
+
+        <div class="container">
+          <table>
+            <thead>
+              <tr>
+                <th>BOLETIN DE INFORMACIÓN PREVIA AL VUELO</th>
+                <th>SERVICIO DE INFORMACIÓN AERONÁUTICA</th>
+                <th>Fecha y Hora de Publicación</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td>INFORMACIÓN GENERAL</td>
+                <td>AASANA</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
 
-<div id="carousel">
-    <!--  -->
-    <ul>
-        <li class="pane1">
-            <h2>
-                NOTAMN serie Charly Nacional
-            </h2>
-            <div id="area" style="height: 85%; width: 85%;margin-left: 3%;margin-top: 10%;">
-                {% area_chart areas with id='areas'  %}
-            </div>
-        </li>
+      </div>
+      
+    <div class="menu__acordeon" id="app2">
+      <div class="menu__acordeon__uno">
+        <div class="contenido__menu">      
+          [[listado]]
+          <div class="accordion accordion-flush" id="accordion">
+            <div class="accordion-item" style="padding-top: 5px; background-color: rgb(175, 229, 250);" v-for="imp of impar" v-for="nombre of nombres">
+              <h2 class="accordion-header" :id="[imp.f]">
+                <button  class="accordion-button collapsed" type="button" data-bs-toggle="collapse" :data-bs-target="[imp.h2]" aria-expanded="false" :aria-controls="[imp.h]" @click="mensaje">
+                  Aeropuerto [[imp.lugar]]
+                </button>
+              </h2>
+              <div :id="[imp.h]" class="accordion-collapse collapse" :aria-labelledby="[imp.f]" data-bs-parent="#accordion">
+                <div class="accordion-body">
+                  <!-- 
+                    <h4><code>Aeropuerto de</code></h4>
+                    <h5>Historial del Lugar</h5>
+                    <h6><code>Nombre Lugar: [[imp.lugar]] </code></h6> 
+                  -->
 
-        <li class="pane2">
-            <h2>
-                NOTAMR serie Charly Nacional
-            </h2>
-            <div id="area" style="height: 85%; width: 85%;margin-left: 3%;margin-top: 10%;">
-                {% area_chart areas1 with id='areas1' %}
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th scope="col">Instalación</th>
+                          <th scope="col">Información</th>
+                          <th scope="col">Referencia</th>
+                        </tr>
+                      </thead>
+  
+                      <tbody>
+                        <tr v-for="nombre of nombres" v-if="imp.lugar === nombre.lugar">
+                          <th scope="row"> [[nombre.asunto]] </th>
+                          <td> [[nombre.desde]] [[nombre.espaniol_decodificado]] [[nombre.hasta]] </td>
+                          <td>[[nombre.correlativo]]</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
             </div>
-        </li>
-        <li class="pane3">
-            <h2>
-                NOTAMN serie Alfa Internacional
-            </h2>
-            <div id="area" style="height: 85%; width: 85%;margin-left: 3%;margin-top: 10%;">
-                {% area_chart areas2 with id='areas2' %}
+          </div>
+        </div>
+      </div>
+      <div class="menu__acordeon__dos">
+        <div class="contenido__menu">
+          [[listado]]
+          <div class="accordion accordion-flush" id="accordion2">
+            <div class="accordion-item" style="padding-top: 5px; background-color: rgb(175, 229, 250);" v-for="pa of par" v-for="nombre of nombres">
+              <h2 class="accordion-header" :id="[pa.f]">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" :data-bs-target="[pa.h2]" aria-expanded="false" :aria-controls="[pa.h]" @click="mensaje">
+                  Aeropuerto [[pa.lugar]]
+                </button>
+              </h2>
+              <div :id="[pa.h]" class="accordion-collapse collapse" :aria-labelledby="[pa.f]" data-bs-parent="#accordion2">
+                <div class="accordion-body">
+                  <!-- <h4><code>Aeropuerto de </code></h4>
+                  <h5>Historial del Lugar</h5>
+                  <h6><code>Nombre Lugar: [[pa.lugar]] </code></h6> -->
+
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th scope="col">Asunto</th>
+                          <th scope="col">Estado</th>
+                          <th scope="col">Referencia</th>
+                        </tr>
+                      </thead>
+  
+                      <tbody>
+                        <tr v-for="nombre of nombres" v-if="pa.lugar === nombre.lugar">
+                          <th scope="row"> [[nombre.asunto]] </th>
+                          <td> [[nombre.desde]] [[nombre.espaniol_decodificado]] [[nombre.hasta]] </td>
+                          <td>[[nombre.correlativo]]</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
             </div>
-        </li>
-        <li class="pane4">
-            <h2>
-                NOTAMR serie Alfa Internacional
-            </h2>
-            <div id="area" style="height: 85%; width: 85%;margin-left: 3%;margin-top: 10%;">
-                {% area_chart areas3 with id='areas3' %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section id="tercero" class="mapa__colores">
+    <div class="contenido__mapa__col">
+      <div class="cont__mapa__col">
+        <div id="map"></div>
+      </div>
+
+      <div class="cont__mapa_info"  id="notam_query" style="overflow: auto;">
+        
+          <div>
+            <ul class="nav nav-tabs" role="tablist">
+              <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#tabs-1" role="tab">NOTAM CHARLIE</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#tabs-2" role="tab">NOTAM ALPHA</a>
+              </li>
+            </ul>
+          </div>
+          
+          <div class="tab-content">
+            <div class="tab-pane active" id="tabs-1" role="tabpanel">
+              <h3 style="margin-left: 40%;">[[titulo]]</h3>
+              <div v-if="sw_c" class="spinner-border text-info" style="width: 60px; height: 60px; margin-top: 3%;margin-left: 40%;"></div>
+              <h5 v-if="vector_notam.length == 0">[[respuesta_charlie]]</h5>
+              <div v-else v-for ="notam in vector_notam"  class="card">
+                <div class="card-body">
+                  <p style="font-size: small;">
+                    [[notam.idnotam]]
+                    <br>
+                    [[notam.resumen]]
+                    <br>
+                    [[notam.aplica_a]]
+                    [[notam.valido_desde]]
+                    [[notam.valido_hasta]]
+                    <br>
+                    [[notam.mensaje]]
+                    <br>
+                  </p>
+                </div>
+              </div>
             </div>
-        </li>
-        <li class="pane5">
-            <h2>Estadistica General y Comparativa</h2>
-        </li>
-    </ul>
-</div>
+
+            <div class="tab-pane" id="tabs-2" role="tabpanel">
+              <h3 style="margin-left: 40%;">[[titulo]]</h3>
+              <div v-if="sw_a" class="spinner-border text-info" style="width: 60px; height: 60px; margin-top: 3%;margin-left: 40%;"></div>
+              <h5 v-if="vector_notam.length == 0">[[respuesta_alpha]]</h5>
+              <div v-else v-for ="notam in vector_notam_alpha" class="card">
+                <div class="card-body">
+                  <p>
+                    [[notam.idnotam]]
+                    <br>
+                    [[notam.resumen]]
+                    <br>
+                    [[notam.aplica_a]]
+                    [[notam.valido_desde]]
+                    [[notam.valido_hasta]]
+                    <br>
+                    [[notam.mensaje]]
+                    <br>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        
+      </div>
+
+
+
+    </div>
+  </section>
+
+  
+  <section id="cuarto">
+    <div id="carousel">
+        <ul>
+            <li class="pane1">
+                <h2>
+                  NOTAM - Nacional e Internacional
+                </h2>
+                <div id="area" style="height: 85%; width: 85%;margin-left: 3%;margin-top: 10%;">
+                    {% area_chart areas with id='areas'  %}
+                </div>
+            </li>
+    <!-- 
+            <li class="pane2">
+                <h2>
+                    NOTAMR serie Charly Nacional
+                </h2>
+                <div id="area" style="height: 85%; width: 85%;margin-left: 3%;margin-top: 10%;">
+                    {% area_chart areas1 with id='areas1' %}
+                </div>
+            </li>
+            <li class="pane3">
+                <h2>
+                    NOTAMN serie Alfa Internacional
+                </h2>
+                <div id="area" style="height: 85%; width: 85%;margin-left: 3%;margin-top: 10%;">
+                    {% area_chart areas2 with id='areas2' %}
+                </div>
+            </li>
+            <li class="pane4">
+                <h2>
+                    NOTAMR serie Alfa Internacional
+                </h2>
+                <div id="area" style="height: 85%; width: 85%;margin-left: 3%;margin-top: 10%;">
+                    {% area_chart areas3 with id='areas3' %}
+                </div>
+            </li>
+            <li class="pane5">
+                <h2>Estadistica General y Comparativa</h2>
+            </li> -->
+        </ul>
+    </div>
+    
+  </section>
+
+
+
+
 
 {% endblock content %}
 
@@ -830,41 +340,89 @@
 
 
 {% block extra_js %}
-<script>
-    function abrir_modal(url) {
-        //alert(url);
-        $("#modalLogin").load(url.trim(), function () {
-            $(this).modal('show');
-        });
-    }
-</script>
+<script src="{% static 'index_public/js/header.js' %}"></script>
 
-<!--PIB EN REAL TIME -->
-<script src="{% static 'pib_acordeon/acordeon.js' %}"></script>
-<!--MAPA NOTAM -->
-<script src='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.js'></script>
-<script src="{% static 'notam_map/map.js' %}"></script>
-<!--PRELOADER-->
-<script>
-    $(window).on('load', function () {
-        $(".loader__page").css({ visibility: "hidden", opacity: "0" });
-    });
-</script>
+  <script src="http://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+  <script src="{% static 'index_public/js/particles.js' %}"></script>
 
-<!-- BANNER MODAL LOGIN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.3/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.16/vue.min.js"></script>
+  <script src="https://unpkg.com/babel-polyfill@latest/dist/polyfill.min.js"></script>
+  <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js"></script>
 
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-    crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-    crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-    crossorigin="anonymous"></script>
+  <script src="{% static 'index_public/js/mapa.js' %}"></script>
 
-<!-- SLIDER IN HAMMER JS AND JQUERY -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="{% static 'index_public/js/preloader.js' %}"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/pushbar.js@1.0.0/src/pushbar.min.js"></script>
+  <script src="{% static 'index_public/js/sidebar.js' %}"></script>
+
+
+
+  
+  <script>
+    var componente = new Vue({
+        el: '#notam_query',
+        delimiters: ['[[', ']]'],
+        data: {
+          titulo:"",
+          respuesta_charlie: "",
+          respuesta_alpha: "",
+          vector_notam:[],
+          vector_notam_alpha:[],
+          sw_a:false,
+          sw_c:false
+        },
+        computed: {
+          funcion1: function (vector_obj) {
+            this.respuesta_charlie="DB";
+          },
+        },
+        methods: {
+          recibiendo_datos_db: function ( vector_obj, vector_obj2) {
+            if (vector_obj.length > 0 ) {
+              this.vector_notam = vector_obj;
+            }else{
+              this.vector_notam = [];
+              this.respuesta_charlie = "Ningún resultado charlie.";
+            }
+            this.sw_c=false;
+
+            if (vector_obj2.length > 0 ) {
+              this.vector_notam_alpha = vector_obj2;
+            }else{
+              this.vector_notam_alpha = [];
+              this.respuesta_alpha = "Ningún resultado alpha.";
+            }
+            this.sw_a=false;
+
+          },
+          cambiando_titulo: function(titulo) {
+            this.titulo=titulo;
+            this.respuesta_charlie = "";
+            this.respuesta_alpha = "";
+            this.vector_notam = [];
+            this.vector_notam_alpha = [];
+          }
+        }
+      }
+    ); 
+  </script>
+
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.js'></script>
+  <script src="{% static 'index_public/js/map_color.js' %}"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.3/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js" integrity="sha384-SR1sx49pcuLnqZUnnPwx6FCym0wLsk5JZuNx2bPPENzswTNFaQU1RDvt3wT4gWFG" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.min.js" integrity="sha384-j0CNLUeiqtyaRmlzUHCPZ+Gy5fQu0dQ6eZ/xAww941Ai1SxSY+0EQqNXNE6DZiVc" crossorigin="anonymous"></script>
+  <script src="{% static 'index_public/js/acordeon_vue.js' %}"></script>
+
+  <!-- SLIDER IN HAMMER JS AND JQUERY -->
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 <script src="{% static 'notametro/script.js' %}"></script>
+
 
 {% endblock extra_js %}

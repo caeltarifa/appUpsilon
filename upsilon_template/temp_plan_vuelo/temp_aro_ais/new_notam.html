@@ -2,7 +2,7 @@
 {% load static %} 
 
 {% block title %}
-<title>Upsilon | Simulador</title>
+<title>appUpsilon | Crear</title>
 {% endblock title %}
 
 
@@ -24,377 +24,549 @@
 {% block content %}
 
 
-<!-- Plan de vuelos recientes -->
-<div id="_planes_recientes"></div><br><br><br><br>
+<style>
+  #map { position: absolute;  height: 100% ;width: 350px; }
+
+  .subscription-container {
+    display: flex;
+    align-items: center;
+    flex-flow: row wrap;
+    justify-content: space-around;
+    width: 100%;
+    max-width: 560px;
+  }
+  
+  .subscription__title {
+    text-transform: uppercase;
+    font-family: "Open Sans", sans-serif;
+    margin-top: 0;
+    margin-bottom: 0;
+    color: #2789ca;
+  }
+  
+  .subscription__button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 170px;
+    margin: 5px 0;
+    padding: 5px 0;
+    border-radius: 5px;
+    border: solid 3px white;
+    background: white;
+    box-shadow: 0px 0px 20px -10px rgba(0, 0, 0, 0.4);
+    transition: transform 0.5s;
+    cursor: pointer;
+  }
+  .subscription__button:before {
+    content: "";
+    display: block;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    margin: 10px;
+    border: solid 3px #bebdbd;
+    transform: translateY(-30%);
+  }
+  
+  input[type=radio] {
+    display: none;
+  }
+  input[type=radio]:checked + label:before {
+    background: #1292e7;
+    font-size: 50px;
+  }
+  input[type=radio]:checked + label {
+    border: solid 3px #51b9ff;
+    background: white;
+    transform: translateY(-10%);
+    transition: transform 0.5s;
+  }
+  input[type=radio]:checked + label .subscription__title {
+    color: #1292e7;
+  }
+</style>
+
+
+
+
+<br><br>
 <section>
-    <div class="row justify-content-center">
-        <div class="col-10" style="align-content: center;">
-            <div class="card" style="box-shadow: 2px 2px 8px 0 black; min-height: 30%;  max-height: 100%; ">
-                
-                <!--CONTENIDO DE LA TABLA DE PLANES RECIENTES-->
-               
-                <div class="card-content collapse show" style="height: 75%; overflow-y: auto;">
-
-                    <!--==========================
-                    BOLETIN DE INFORMACION RAPIDA
-                     ============================-->
-                    <section class="section-bg" >
-                        <div class="container-fluid">
-
-                            <div class="section-header" style="text-align:center;">
-                                <br><br><br>
-                                <h2 class="section-title">
-                                  <span class="material-icons">
-                                    post_add
-                                  </span>
-                                  NUEVO NOTAM
-
-                                </h2>
+  <div class="row justify-content-center">
+      <div class="col-10" style="align-content: center;">
+          <div class="card" style="box-shadow: 2px 2px 8px 0 black; min-height: 30%;  max-height: 100%; ">
+              <!--CONTENIDO DEL FORMULARIO NOTAM NUEVO-->
+              <div class="card-content collapse show" style="height: 75%; overflow-y: auto;">
+                  <!--==========================
+                  BOLETIN DE INFORMACION RAPIDA
+                   ============================-->
+                  <section class="section-bg" >
+                      <div class="container-fluid">
+                          <div class="section-header" style="text-align:center;">
+                              <br><br><br>
+                              <h2 class="section-title">
+                                <span class="material-icons">
+                                  post_add
+                                </span>
+                                NUEVO NOTAM
+                              </h2>
+                              <span class="section-divider"></span>
+                              <p class="section-description">
+                                  Generacion guiada de notam
+                              </p>
+                              
+                              
+                              <div class="container"  id="FORM_NOTAM"> 
                                 
-                                <span class="section-divider"></span>
-                                <p class="section-description">
-                                    Generacion guiada de notam
-                                </p>
-                                
-                                <div class="container"  id="FORM_NOTAM">          
-                                    <table class="table table-bordered" >
-                                      <tbody style="text-align:center;">            
-                                        <tr>
-                                          <td>
-                                            <form style="margin-left:5%;">
-                                                  <div class="input-group ">
-                                                    <div class="input-group-prepend">
-                                                      <span class="input-group-text">Q)</span>
-                                                    </div>
-                                                    <input type="text" class="form-control" id="fname" name="fname" placeholder="SLLF" disabled><br><br>
-                                                    
-                                                    <select class="form-control" id="letra_asunto_id" onchange="getAsunto()">
-                                                      <option value="" selected="selected">Letra</option>
-                                                      {% for letra in vec_letra %}
-                                                        <option value="{{letra.id_letra}}">
-                                                          {{letra.id_letra}}
-                                                        </option>
-                                                      {% endfor %}
-                                                    </select>
-                                                    
-                                                    <select class="form-control" id="asunto_id" onchange="getEstadoAsunto()" >                                                          
-                                                      <option value="" selected="selected">Asunto</option>
-                                                    </select>
+                                <section id="appNewnotam" class="section">
 
-                                                    <select class="form-control" id="estado_asunto_id">
-                                                      <option value="" selected="selected">Estado</option>
-                                                    </select>
-
-                                                    <input type="text" class="form-control" placeholder="IV" style="width:30px;">
-                                                    <input type="text" class="form-control" placeholder="NBO" style="width:30px;">
-                                                    <input type="text" class="form-control" placeholder="W" style="width:30px;" maxlength="1">
-                                                    <input type="number" class="form-control" placeholder="000" style="width:30px;" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==3) return false;">
-                                                    <input type="number" class="form-control" placeholder="160" style="width:30px;" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==3) return false;">
-                                                    
-                                                  </div>
-                                              </form>
-                                          </td>
-                                      </tr>
+                                  <div class="row justify-content-center input-group" >
+                                    <!--
+                                      RADIO BUTTON SELECT TIPO DE NOTAM 
+                                    -->
+                                    <div class="subscription-container">
                                       
-
-                                        <!--
-                                          <tr>
-                                              <td>
-                                                  <form style="margin-left:5%;">
-                                                      <div class="input-group ">
-                                                        <div class="input-group-prepend">
-                                                          <span class="input-group-text">Cabecera</span>
-                                                        </div>
-                                                        <input type="text" class="form-control" placeholder="Prioridad" style="width:110px;">
-                                                        <input type="text" class="form-control" placeholder="Originador" style="width:110px;">
-                                                      </div>
-                                                  </form>
-                                              </td>
-                                          </tr>
-                                        -->
-                                        
-                                        
-                                        <!-- PRIORIDAD -->
-                                        <tr>
-                                          <td>
-                                              <form style="margin-left:5%;">
-                                                  <div class="input-group ">
-                                                    <div class="input-group-prepend">
-                                                      <span class="input-group-text" style="width:230px;">Prioridad</span>                                                        
-                                                      <div>
-                                                        <select class="form-control" >
-                                                          <option>SS</option>
-                                                          <option>FF</option>
-                                                          <option>KK</option>
-                                                          <option>GG</option>
-                                                          <option>AA</option>
-                                                        </select>
-                                                      </div>
-                                                    </div>
-                                                    
-                                                    <!-- DIRECCION -->
-                                                    <div class="input-group-prepend">
-                                                      <span class="input-group-text" style="width:230px;">Dirección</span>                                                        
-                                                      <input type="text" class="form-control" id="notam_id" value="SLLPYNYX" style="width:250px;">
-                                                    </div>
-                                                    <!-- DIRECCION -->
-                                                  </div>
-
-                                              </form>
-                                          </td>
-                                        </tr>
-                                        <!-- PRIORIDAD -->
-
-                                        <!-- FECHA Y HORA DE DEPOSITO -->
-                                        <tr>
-                                            <td>
-                                                <form style="margin-left:5%;">
-                                                    <div class="input-group ">
-                                                      <div class="input-group-prepend">
-                                                        <span class="input-group-text" style="width:230px;">Depósito</span>
-                                                      </div>
-                                                      <input type="date" class="form-control" style="width:90px;">
-                                                      
-                                                      <input type="number" class="form-control" placeholder="HR" style="width:90px;" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==4) return false;">
-                                                      
-                                                      <div class="input-group-prepend">
-                                                        <span class="input-group-text" style="width:170px;">Remitente</span>                                                        
-                                                        <input type="text" class="form-control" id="notam_id" value="NOTAM INTERNACIONAL" style="width:150px;"><<=(
-                                                      </div>
-
-                                                    </div>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                        <!-- FECHA Y HORA DE DEPOSITO -->
-                                        
-
-                                        
-                                        
-                                        <!-- INDICADOR DEL REMITENTE -->
-                                        <tr>
-                                          <td>
-                                            <form style="margin-left:5%;">
-                                              <div class="input-group ">
-                                                <div class="input-group-prepend">
-                                                  <span class="input-group-text" style="width:230px;">Remitente</span>                                                        
-                                                  <input type="text" class="form-control" id="notam_id" value="NOTAM INTERNACIONAL" style="width:250px;"><<=(
-                                                </div>
-                                              </div>
-                                            </form>
-                                          </td>
-                                        </tr>
-                                        <!-- INDICADOR DEL REMITENTE -->
-
-                                        <!--NOTAM NUEVO-->
-                                        <tr>
-                                            <td>
-                                                <form style="margin-left:5%;">
-                                                    <div class="input-group ">
-                                                      <div class="input-group-prepend">
-                                                        <span class="input-group-text" style="width:300px;">Correlativo</span>                                                        
-                                                        <input type="text" class="form-control" id="notam_id" placeholder="C221/2021" style="width:180px;">
-
-                                                        <input type="checkbox"  data-toggle="modal" id="estimado_id"/>
-                                                        <label class="form-check-label" for="estimado_id">Internacional</label>
-
-                                                        <input type="text" class="form-control" id="notam_id" placeholder="A021/2021" style="width:180px;">
-                                                      </div>
-
-                                                    </div>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                        <!--NOTAM NUEVO-->
-
-                                        <tr>
-                                            <td>
-                                                <form style="margin-left:5%;">
-                                                    <div class="input-group ">
-                                                      <div class="input-group-prepend">
-                                                        <span class="input-group-text">A)</span>
-                                                      </div>
-                                                      <select class="form-control" >
-                                                        <option>SLLP</option>
-                                                        <option>SLCB</option>
-                                                        <option>SLVR</option>
-                                                        <option>SLET</option>
-                                                        <option>SLOR</option>
-                                                        <option>SLRB</option>
-                                                        <option>SLRQ</option>
-                                                        <option>SLGM</option>
-                                                        <option>SLCO</option>
-                                                        <option>SLSB</option>
-                                                        <option>SLUY</option>
-                                                      </select>
-
-                                                      <div class="input-group-append">
-                                                        <input type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal" value="Mapa"/>
-                                                      </div>
-
-                                                    </div>
-                                                </form>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>
-                                                <form style="margin-left:5%;">
-                                                    <div class="input-group ">
-                                                      <div class="input-group-prepend">
-                                                        <span class="input-group-text">B)</span>
-                                                      </div>
-                                                      <input type="date" class="form-control" style="width:90px;">
-                                                      <input type="number" class="form-control" placeholder="HR" style="width:90px;" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==4) return false;">
-                                                      <div class="input-group-append">
-                                                      </div>
-                                                    </div>
-                                                </form>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>
-                                                <form style="margin-left:5%;">
-                                                    <div class="input-group ">
-                                                      <div class="input-group-prepend">
-                                                        <span class="input-group-text">C)</span>
-                                                      </div>
-                                                      <input type="date" class="form-control" style="width:90px;">
-                                                      
-                                                      <input type="number" class="form-control" placeholder="HR" style="width:90px;" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==4) return false;">
-                                                      
-                                                      <div class="form-group">
-                                                        <input type="checkbox"  data-toggle="modal" id="estimado_id"/>
-                                                        <label class="form-check-label" for="estimado_id">EST</label>
-                                                      </div>
-
-                                                    </div>
-                                                </form>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>
-                                                <form style="margin-left:5%;">
-                                                    <div class="input-group ">
-                                                      <div class="input-group-prepend">
-                                                        <span class="input-group-text">D)</span>
-                                                      </div>
-                                                      <input type="text" class="form-control" placeholder="Horario" style="width:110px;">
-                                                    </div>
-                                                </form>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>
-                                                <form style="margin-left:5%;">
-                                                    <div class="input-group ">
-                                                      <div class="input-group-prepend">
-                                                        <span class="input-group-text">E)</span>
-                                                      </div>
-                                                      <input type="text" class="form-control" placeholder="Cuerpo" style="width:110px;" id="cuerpo_notam_nuevo">
-                                                    </div>
-                                                </form>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>
-                                                <form style="margin-left:5%;">
-                                                    <div class="input-group ">
-                                                      <div class="input-group-prepend">
-                                                        <span class="input-group-text">F)</span>
-                                                      </div>
-                                                      <input type="text" class="form-control" placeholder="Límite inferior" style="width:110px;">
-                                                    </div>
-                                                </form>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>
-                                                <form style="margin-left:5%;">
-                                                    <div class="input-group ">
-                                                      <div class="input-group-prepend">
-                                                        <span class="input-group-text">G)</span>
-                                                      </div>
-                                                      <input type="text" class="form-control" placeholder="Límite superior" style="width:110px;">
-                                                    </div>
-                                                </form>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>
-                                                <button class="btn btn-outline-info" onclick="printForm()">
-                                                    GENERAR
-                                                </button>
-                                            </td>
-                                        </tr>
-
-
-                                        <tr>
-                                            <td>
-                                                <div class="form-group">
-                                                    <label for="comment">Notam</label>
-                                                    <textarea class="form-control" rows="9" id="comment"></textarea>
-                                                </div> 
-                                            </td>
-                                        </tr>
-                                        
-                                        <tr>
-                                          <td>
-                                              <div class="form-group">
-                                                  <label for="comment">PIB</label>
-                                                  <input type="text" class="form-control" id="" placeholder="Instalación">
-                                                  <textarea class="form-control" rows="3" id="pib_notam_nuevo"></textarea>
-                                              </div> 
-                                          </td>
-                                        </tr>
-
-                                        
-                                      </tbody>
-                                    </table>
+                                      <input type="radio" name="radio" id="option1" value="NOTAMN" v-model="form.model_tiponotam" checked="checked">
+                                      <label for="option1" class="subscription__button">
+                                          <h6 class="subscription__title">NOTAMN</h6>
+                                      </label>
                                     
-                                    <!-- The Modal -->
-                                    <div class="modal fade" id="myModal">
-                                        <div class="modal-dialog">
-                                          <div class="modal-content">
-                                          
-                                            <!-- Modal Header -->
-                                            <div class="modal-header">
-                                              <h4 class="modal-title">Ubicacion satelital</h4>
-                                              <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                            </div>
-                                            
-                                            <!-- Modal body -->
-                                            <div class="modal-body">
-                                              Mostrar mapa
-                                            </div>
-                                            
-                                            <!-- Modal footer -->
-                                            <div class="modal-footer">
-                                              <button type="button" class="btn btn-success" data-dismiss="modal">Listo</button>
-                                            </div>
-                                            
-                                          </div>
-                                        </div>
+                                      <input type="radio" name="radio" id="option2" value="NOTAMR" v-model="form.model_tiponotam">
+                                      <label for="option2" class="subscription__button">
+                                          <h6 class="subscription__title">NOTAMR</h6>
+                                      </label>
+                                      
+                                      <input type="radio" name="radio" id="option3" value="NOTAMC" v-model="form.model_tiponotam">
+                                      <label for="option3" class="subscription__button">
+                                          <h6 class="subscription__title">NOTAMC</h6>
+                                      </label>
                                     </div>
-                                </div>
+                                      <!--
+                                      RADIO BUTTON SELECT TIPO DE NOTAM 
+                                    -->
+                                  </div>
 
-                            </div>
+                                  <div id="accordion"  v-if="form.model_tiponotam">
+                                    <div class="input-group" v-if="form.model_tiponotam == 'NOTAMR' || form.model_tiponotam == 'NOTAMC' ">
+                                      <input class="input form-control" placeholder="Buscar NOTAM a cambiar" type="text" />
+                                    </div>
 
-                        </div>
-                    </section>
-                </div>
-            </div>
-        </div>
-    </div>
+                                    <br>
+                                    <div class="card" >
+                                      <div style="padding: 0px;" class="card-header" id="headingOne">
+                                        <h5 class="mb-0">
+                                          <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="width: 100%; background-color: rgb(229, 242, 252);">
+                                            Encabezado del mensaje
+                                          </button>
+                                        </h5>
+                                      </div>
+                                  
+                                      <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                                        <div class="card-body">
+                                          
+                                          <div class="input-group">
+                                            
+                                            <select class="form-control" v-model="form.model_prioridad">
+                                              <option v-for="prioridad in form.prioridad" :value="prioridad" >
+                                                  [[prioridad]]
+                                              </option>
+                                            </select>
+
+                                            <input class="input form-control" placeholder="Fecha deposito" type="date" v-model="form.fecha_deposito" />
+                                            <input class="input form-control" placeholder="HR DEPOSITO" type="text" v-model="form.hora_deposito"/>
+                                            <input class="input form-control" placeholder="REMITENTE" type="text" v-model="form.remitente" />
+
+                                          </div>
+
+                                        </div>
+                                      </div>
+                                    </div>
+       
+                                    <div class="card">
+                                      <div style="padding: 0px;"  class="card-header" id="headingTwo">
+                                        <h5 class="mb-0">
+                                          <button style="width: 100%; background-color: rgb(229, 242, 252);" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" style="width: 100%; height: 100%;">
+                                            Correlativo y Casilla Q
+                                          </button>
+                                        </h5>
+                                      </div>
+                                      <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordion">
+                                        <div class="card-body">
+                                          
+                                          <div class="input-group">
+                                            <input class="input form-control" placeholder="C0001/21" type="text" v-model="form.correlativo_charly" v-on:keyup.enter="buscar_correlativo_charly" />
+                                            <input class="input form-control" placeholder="A0001/21" type="text" v-model="form.correlativo_alfa" v-on:keyup.enter="buscar_correlativo_alfa" />
+                                          </div>
+
+                                          <div class="input-group" >
+                                              <select class="form-control" v-model="form.model_titulo_asunto" v-on:change="buscar_lista_asuntos($event)">
+                                                <option disabled> Titulo del asunto</option>
+                                                {% for letra in lista_letras %}
+                                                  <option value="{{letra.id_letra}}"> {{letra.id_letra}} {{letra.titulo_letra}}</option>
+                                                {% endfor %}
+                                              </select>
+
+                                              <select class="form-control" v-model="form.model_asunto" v-on:change="buscar_lista_estado_asuntos($event)">
+                                                <option disabled> Asunto</option>
+                                                <option v-for="obj in form.asunto" :value="obj.id_asunto">
+                                                    [[obj.id_asunto]]
+                                                    [[obj.descripcion_asunto]]
+                                                </option>
+                                              </select>
+
+
+                                              <select class="form-control" v-model="form.model_estado_asunto"  v-on:change="asignar_estado_asunto_pib($event)">
+                                                <option disabled> Estado de asunto</option>
+                                                <option v-for="obj in form.estado_asunto" :value="obj.id_estado_asunto">
+                                                  [[obj.id_estado_asunto]]
+                                                  [[obj.descripcion_estado]]
+                                                </option>
+                                              </select>
+                                          </div>
+
+                                          <div class="input-group"> 
+                                            <select class="form-control" v-model="form.model_tipo">
+                                              <option v-for="tipo in form.tipo" :value="tipo">
+                                                  [[tipo]]
+                                              </option>
+                                            </select>
+
+                                            <select class="form-control" v-model="form.model_nbo">
+                                              <option v-for="nbo in form.nbo" :value="nbo" >
+                                                  [[nbo]]
+                                              </option>
+                                            </select>
+
+                                            <select class="form-control" v-model="form.model_alcance">
+                                              <option v-for="alcance in form.alcance" :value="alcance" >
+                                                  [[alcance]]
+                                              </option>
+                                            </select>
+                                          </div>
+    
+                                          <div class="input-group">
+                                              <input class="input" placeholder="Inferior" type="text" v-model="form.nivel_inf" />
+                                              <input class="input" placeholder="superior" type="text" v-model="form.nivel_sup" />
+  
+                                              <select class="form-control" v-model="form.model_coordenadas" @change="actualizar_casilla_a($event)">
+                                                <option disabled> Seleccione un lugar</option>
+                                                <option v-for="coord in form.coordenadas" :value="coord" >
+                                                    [[coord]]
+                                                </option>
+                                              </select>
+                                              <input class="input" placeholder="Radio" type="text" v-model="form.radio" />
+                                          </div>
+
+                                        </div>
+                                      </div>
+                                    </div>
+    
+                                    <div class="card">
+                                      <div style="padding: 0px;"  class="card-header" id="headingThree">
+                                          <button style="width: 100%; background-color: rgb(229, 242, 252);" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree" style="width: 100%; height: 100%;">
+                                            Casillas A B C D E F G
+                                          </button>
+                                      </div>
+                                      <div id="collapseThree" class="collapse show" aria-labelledby="headingThree" data-parent="#accordion">
+                                        <div class="card-body">
+
+                                          <div class="input-group">
+                                            &nbsp;&nbsp;A) &nbsp;&nbsp;
+                                            <input class="input form-control" placeholder="Lugar" type="text" v-model="form.lugar" />
+                                            
+                                            &nbsp;&nbsp;B) &nbsp;&nbsp;
+                                            <input class="input form-control" type="date" v-model="form.desde_fecha"/>
+                                            <input class="input form-control" placeholder="0000" type="text" v-model="form.desde_hora" />
+
+                                            &nbsp;&nbsp;C) &nbsp;&nbsp;
+                                            <input class="input form-control" type="date" v-model="form.hasta_fecha"/>
+                                            <input class="input form-control" placeholder="0000" type="text" v-model="form.hasta_hora" />
+
+                                            <div class="field">
+                                              <div class="control" >
+                                                  <label>
+                                                    &nbsp;
+                                                    <input type="checkbox" value="EST" v-model="form.estimado"  />
+                                                    EST&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                  </label>
+                                                  <br>
+                                                  <label >
+                                                    <input type="checkbox" value="PERM" v-model="form.permanente"  />
+                                                    PERM
+                                                  </label>
+                                              </div>
+                                            </div>
+  
+                                          </div>
+
+                                          <div class="input-group">
+                                            &nbsp;&nbsp;D) &nbsp;&nbsp;
+                                            <input class="input form-control" placeholder="Intervalo" type="text" v-model="form.casilla_d" />
+                                          </div>
+
+                                          <div class="input-group">
+                                            &nbsp;&nbsp;E) &nbsp;&nbsp;&nbsp;
+                                            <input class="input form-control" placeholder="Cuerpo" type="text" v-model="form.cuerpo1" />
+                                            <input class="input form-control" placeholder="Cuerpo" type="text" v-model="form.cuerpo2" />
+                                          </div>
+
+                                          <div class="input-group">
+                                            &nbsp;&nbsp;F) &nbsp;&nbsp;&nbsp;
+                                            <input class="input form-control" placeholder="Limite inf" type="text" v-model="form.limite_inferior" />
+                                                                                        
+                                            &nbsp;&nbsp;G) &nbsp;&nbsp;
+                                            <input class="input form-control" placeholder="Limite sup" type="text" v-model="form.limite_superior" />
+                                          </div>
+
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    <div class="card" v-if="form.correlativo_charly">
+                                      <div style="padding: 0px;"  class="card-header" id="headingFour">
+                                          <button style="width: 100%; background-color: rgb(229, 242, 252);" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseThree" style="width: 100%; height: 100%;">
+                                             Boletin PIB
+                                          </button>
+                                      </div>
+                                      <div id="collapseFour" class="collapse show" aria-labelledby="headingThree" data-parent="#accordion">
+                                        <div class="card-body">
+  
+                                         
+                                          <div class="input-group">
+                                            &nbsp;&nbsp;Instalación &nbsp;&nbsp;
+                                            <input class="input form-control" placeholder="Asunto" type="text" v-model="form.pib_asunto" />
+                                                                                        
+                                            &nbsp;&nbsp;Estado&nbsp;&nbsp;
+                                            <input class="input form-control" placeholder="Estado del asunto" type="text" v-model="form.pib_estado_asunto" />
+                                          </div>
+                                          <br>
+                                          <textarea disabled id="pib_publicar" v-if="form.hasta_fecha" class="form-control" style="width: 100%;" rows="2"> DESDE [[form.desde_fecha]] HR [[form.desde_hora]] [[form.pib_asunto]] [[form.pib_estado_asunto]] HASTA [[form.hasta_fecha]] HR [[form.hasta_hora]]  [[ form.estimado[form.estimado.length -1] ]] ([[form.correlativo_charly]]) </textarea>
+                                          <textarea disabled id="pib_publicar" v-else class="form-control" style="width: 100%;" rows="2"> DESDE [[form.desde_fecha]] HR [[form.desde_hora]] [[form.pib_asunto]] [[form.pib_estado_asunto]] ([[form.correlativo_charly]]) </textarea>
+
+  
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                  </div>
+
+                                  <!--
+                                    <h1 class="title is-1" v-text="form.formName"></h1>
+                                    <div class="columns">
+                                      <div class="column">
+                                        <form>
+                                            <div class="field">
+                                              <label class="label">fromname Name</label>
+                                              <div class="control">
+                                                  <input class="input" type="text" v-model="form.formName" />
+                                              </div>
+                                            </div>
+  
+                                            <div class="field">
+                                                <label class="label">Name</label>
+                                                <div class="control">
+                                                    <input class="input" type="text" v-model="form.userName" />
+                                                </div>
+                                            </div>
+                            
+                                            <div class="field">
+                                                <label class="label">Favorite Color</label>
+                                                <div class="control">
+                                                    <div class="select">
+                                                        <select class="form-control" v-model="form.favoriteColor">
+                                                            <option v-for="color in form.arrayColors" :value="color">
+                                                                [[color]]
+                                                            </option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                            
+                                            <div class="field">
+                                                <label class="label">Favorite Hamburger Place</label>
+                                                <div class="control">
+                                                    <label>
+                                                        <input type="radio" name="hamburgerPlace" value="whataburger" v-model="form.favoriteHamburger" />
+                                                        Whataburger
+                                                    </label>
+                                                    <br>
+                                                    <label>
+                                                        <input type="radio" name="hamburgerPlace" value="pterrys" v-model="form.favoriteHamburger" />
+                                                        P.Terry's
+                                                    </label>
+                                                    <br>
+                                                    <label>
+                                                        <input type="radio" name="hamburgerPlace" value="hopdoddy" v-model="form.favoriteHamburger" />
+                                                        Hopdoddy
+                                                    </label>
+                                                </div>
+                                            </div>
+                            
+                                            <div class="field">
+                                                <label class="label">Favorite Hangout</label>
+                                                <div class="control">
+                                                    <label>
+                                                        <input type="checkbox" value="barton-springs" v-model="form.favoriteHangout" />
+                                                        Barton Springs
+                                                    </label>
+                                                    <br>
+                                                    <label>
+                                                        <input type="checkbox" value="zilker-park" v-model="form.favoriteHangout" />
+                                                        Zilker Park
+                                                    </label>
+                                                    <br>
+                                                    <label>
+                                                        <input type="checkbox" value="sixth-street" v-model="form.favoriteHangout" />
+                                                        Sixth Street
+                                                    </label>
+                                                </div>
+                                            </div>
+                            
+                                            <div class="field">
+                                                <label class="label">How many hours a week do you work?</label>
+                                                <div class="control">
+                                                    <h4 class="title is-4">
+                                                        [[form.workHours]] / 80
+                                                    </h4>
+                                                    <input type="range" min="0" max="80" v-model="form.workHours" />
+                                                </div>
+                                            </div>
+                            
+                                            <input class="button is-primary margin-bottom" type="submit" @click.prevent="fakeSubmit" />
+                            
+                                        </form>
+                            
+                                        <transition name="fade" mode="out-in">
+                                            <article class="message is-primary" v-show="showSubmitFeedback">
+                                                <div class="message-header">
+                                                    <p>Fake Send Status:</p>
+                                                </div>
+                                                <div class="message-body">
+                                                    Successfully Submitted!
+                                                </div>
+                                            </article>
+                                        </transition>
+                                      </div>
+                                    </div>
+                                  -->
+
+                                  <div class="container">
+                                    <div class="row">
+
+                                      <div class="col" v-if="form.correlativo_charly">
+                                        <h5>
+                                            SERIE CHARLIE
+                                        </h5>
+                                        <!--
+                                          <pre><code>[[form]]</code></pre>
+                                        -->
+                                        <pre style="text-align: left;">
+                                          <code id="copy-notam-charly">
+  [[form.model_prioridad]] 
+  [[form.fecha_deposito.substring(8,)]][[form.hora_deposito]] [[form.remitente]]
+  ([[form.correlativo_charly]] NOTAMN
+  Q) SLLF/Q[[form.model_asunto]][[form.model_estado_asunto]]/[[form.model_tipo]]/[[form.model_nbo]]/[[form.model_alcance]]/[[form.nivel_inf]]/[[form.nivel_sup]]/[[form.model_coordenadas.split(" ")[2] ]][[form.radio]]
+  A) [[form.lugar]] B) [[( form.desde_fecha.substring(2,) ).replace("-","").replace("-","") ]][[form.desde_hora]] C) [[form.hasta_fecha.substring(2,).replace("-","").replace("-","")]][[form.hasta_hora]] [[ form.estimado[form.estimado.length -1] ]]
+  <span v-if="form.casilla_d"> D) [[form.casilla_d]] </span>
+  E) [[form.cuerpo1]] [[form.cuerpo2]]
+  <span v-if="form.limite_inferior"> F) [[form.limite_inferior]] </span>
+  <span v-if="form.limite_superior"> G) [[form.limite_superior]] </span>)
+                                          </code>
+                                          <span class="btn btn-info text-white copy-btn ml-auto" @click="copy_clipboard('copy-notam-charly')">
+                                            AMHS CHARLIE
+                                          </span>
+                                        </pre>
+                                      </div>
+  
+                                      &nbsp;
+                                      &nbsp;
+
+                                      <div class="col" v-if="form.correlativo_alfa">
+                                        <h5>
+                                            SERIE ALPHA
+                                        </h5>
+                                        <!--
+                                          <pre><code>[[form]]</code></pre>
+                                        -->
+                                        <pre style="text-align: left;">
+                                          <code id="copy-notam-alfa" >
+[[form.model_prioridad]]  
+[[form.fecha_deposito.substring(8,)]][[form.hora_deposito]] [[form.remitente]]
+([[form.correlativo_alfa]] NOTAMN
+Q) SLLF/Q[[form.model_asunto]][[form.model_estado_asunto]]/[[form.model_tipo]]/[[form.model_nbo]]/[[form.model_alcance]]/[[form.nivel_inf]]/[[form.nivel_sup]]/[[form.model_coordenadas.split(" ")[2] ]][[form.radio]]
+A) [[form.lugar]] B) [[form.desde_fecha.substring(2,).replace("-","").replace("-","")]][[form.desde_hora]] C) [[form.hasta_fecha.substring(2,).replace("-","").replace("-","")]][[form.hasta_hora]] [[ form.estimado[form.estimado.length -1] ]]
+<span v-if="form.casilla_d"> D) [[form.casilla_d]] </span>
+E) [[form.cuerpo1]] [[form.cuerpo2]]
+<span v-if="form.limite_inferior"> F) [[form.limite_inferior]] </span>
+<span v-if="form.limite_superior"> G) [[form.limite_superior]] </span>)
+                                          </code>
+                                          <span class="btn btn-info text-white copy-btn ml-auto" @click="copy_clipboard('copy-notam-alfa')">
+                                            AMHS ALPHA
+                                          </span>
+                                        </pre>
+                                      </div>
+
+                                      &nbsp;
+                                      &nbsp;
+
+                                      <br>
+                                      
+                                      <div class="col">
+                                        <!--mita 2-->
+                                        <div id='map'></div>
+                                      </div>
+                                        
+
+
+
+
+                                        
+                                        
+                                        
+                                        
+                                    </div>
+                                  </div>
+
+                                  <div style="width: 100%;">
+                                    <form id="data_srv_id" action="{% url 'view_post_crear_notam' %}" method="POST" >
+                                      {% csrf_token %}
+                                      <input style="display: none;" type="text" name="tipo" v-model="data_srv.tipo">
+                                      <input style="display: none;" type="text" name="notam_header" v-model="data_srv.notam_header">
+                                      <input style="display: none;" type="text" name="amhs1" v-model="data_srv.amhs1">
+                                      <input style="display: none;" type="text" name="amhs2" v-model="data_srv.amhs2">
+                                      <input style="display: none;" type="text" name="resumen" v-model="data_srv.resumen">
+                                      <input style="display: none;" type="text" name="aplica_a" v-model="data_srv.aplica_a">
+                                      <input style="display: none;" type="text" name="valido_desde" v-model="data_srv.valido_desde">
+                                      <input style="display: none;" type="text" name="valido_hasta" v-model="data_srv.valido_hasta">
+                                      <input style="display: none;" type="text" name="mensaje" v-model="data_srv.mensaje">
+                                      <input style="display: none;" type="text" name="asunto" v-model="data_srv.asunto">
+                                      <input style="display: none;" type="text" name="estado_asunto" v-model="data_srv.estado_asunto">
+                                      <input style="display: none;" type="text" name="pib_publicar" v-model="data_srv.pib_publicar">
+                                      <input style="display: none;" type="text" name="estimado" v-model="data_srv.estimado_srv">
+                                      <input style="display: none;" type="text" name="permanente" v-model="data_srv.permanente_srv">
+                                      <!-- BUTTON PARA ENVIAR
+                                      -->
+                                      <input class="btn btn-info text-white copy-btn" type="submit" value="GUARDAR NOTAM" @click="guardar_notam()">
+                                    </form>
+                                  </div>
+                                </section>
+                              </div>
+
+                              
+                              <br>
+                              <br>
+
+                          </div>
+                      </div>
+                  </section>
+              </div>
+          </div>
+      </div>
+  </div>
 </section>
 
-<!-- Planes de vuelo recientes -->
+
+
 
 
 
@@ -422,8 +594,6 @@
     });
 
 </script>
-
-
 
 
 <script>
@@ -511,9 +681,748 @@
 
   }
 </script>
+
+
+<script>
+  Vue.component('my-button', {
+    template: '\
+      <button class="normal"\
+        :class="type"\
+        :disabled="disabled"\
+        @click="callback($event)"\
+        >\
+          <slot></slot>\
+      </button>\
+    ',
+    props: {
+      type: String,
+      disabled: Boolean
+    },
+    methods: {
+      callback: function(e) {
+        this.$emit('click', e);
+      }
+    }
+  });
+
+  new Vue({
+      el: '#app2',
+      delimiters: ['[[', ']]'],
+      data: {
+        // -------------- 8400 -----------------
+        titulo_letra: "Titulo de la letra",
+        acronimo_letra: "",
+        buscarCadena8126: '',
+        
+        respuesta:'',
+        
+        columns_asunto: ['Asunto', 'Descripción','Fraseología'],
+        columns_estado: ['Estado de asunto', 'Descripción','Fraseología'],
+        
+        asuntos: [],
+        estados_asunto: [],
+        // -------------- 8400 -----------------
+        
+      },
+      computed: {
+        filtro_asunto_inicial: function () {
+          var self = this;
+          self.buscarCadena8126=self.buscarCadena8126.toUpperCase();
+          variable=self.asuntos.filter(function (user) {
+            return user.id_asunto.indexOf(self.buscarCadena8126) !== -1;
+          })
+          if(variable.length>0){
+            return variable 
+          }
+        },
+        filtro_estado_asunto_inicial: function () {
+          var self = this;
+          self.buscarCadena8126=self.buscarCadena8126.toUpperCase();
+          variable=self.estados_asunto.filter(function (user) {
+            return user.id_estado_asunto.indexOf(self.buscarCadena8126) !== -1;
+          })
+          if(variable.length>0){
+            return variable 
+          }
+        },
+      },
+      methods: {
+        filtro_estado_asunto: function () {
+          //SE ACTIVA CUANDO SE PRESIONA LA TECLA ENTER
+          var self = this;
+          variable=self.asuntos.filter(function (user) {
+            return user.id_asunto.indexOf(self.buscarCadena8126) !== -1;
+          })
+          if(variable.length>0){
+            return variable 
+          }else{
+            if(this.buscarCadena8126.length > 0 && this.buscarCadena8126.length < 3){
+              this.buscando_8126(this.buscarCadena8126)
+            }
+          }
+        },
+
+        buscando_8126: function (parametro) {
+          (async() => {
+            //alert("INTENTANDO EN LA bd")
+
+            await this.getResponse8126(parametro)
+            
+            if(this.asuntos.length >0 || this.estados_asunto.length >0 ){
+              this.respuesta='';
+              this.buscarCadena8126="";
+            }else{
+              this.respuesta="No se encontraron resultados.";
+            }
+          })();
+        },
+
+        getResponse8126: async function(parametro){
+          parametro = parametro.toUpperCase();
+          const url = '{% url 'view_get_codigo8126' %}' + "?string8126="+parametro
+          await axios.get(url).then(response => {this.titulo_letra=response.data.titulo_letra; this.acronimo_letra=response.data.acronimo_letra ; this.asuntos = (response.data.asuntos); this.estados_asunto = (response.data.estados_asuntos)}).catch(function (error) { console.log(error); });
+          console.log(this.asuntos)
+          console.log(this.estados_asunto)
+          //titulo_letra
+        },
+
+        buscar_correlativo: function() {
+          // buscar_correlativo 
+          this.respuesta="C000A/11"
+        }
+
+      }
+        
+        
+    }
+  );  
+</script>
+
+<script src="https://unpkg.com/vue-toasted"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://unpkg.com/sweetalert@2.1.0/dist/sweetalert.min.js"></script>
+
+
+<!-- ////////////////////////////////////////////////////////////////////////////-->
+<script src="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js"></script>
+<script>
+  Vue.config.productionTip = false;
+  Vue.config.devtools = false;
+
+  Vue.use(Toasted);
+  //Vue.use(Toasted, {duration: 1000});
+
+
+  var app_vue = new Vue({
+    el: "#appNewnotam",
+    delimiters: ['[[', ']]'],
+    data: {
+        form: {
+          //formName: "Tell Us About Yourself",
+          //userName: "",
+          //favoriteColor: "Red",
+          //favoriteHamburger: "",
+          //favoriteHangout: [],
+          //workHours: 0,
+          //arrayColors: [
+          //  'Red', 
+          //  'Blue', 
+          //  'Green'
+          //],
+
+          //------------------------------------------------------------------------------------------------------------------------------------
+          model_prioridad:"GG",
+          prioridad: ['GG','FF','KK','SS','AA'],
+          fecha_deposito: new Date().toISOString().slice(0,10),
+          hora_deposito: new Date().toISOString().slice(11,16).replace(':',''),
+          remitente:"SLLPYNYX",
+          //------------------------------------------------------------------------------------------------------------------------------------
+          
+          model_tiponotam:'',
+          tiponotam: ['NOTAMN','NOTAMR','NOTAMC'],
+
+
+          model_titulo_asunto:"Titulo del asunto",
+          titulo_asunto:[
+            {
+              letra:"",
+              descripcion:""
+            }
+          ],
+
+          model_asunto:"Asunto",
+          asunto:[
+            {
+              id_asunto:"",
+              descripcion_asunto:"",
+              fraseologia_asunto:""
+            }
+          ],
+
+          model_estado_asunto:"Estado de asunto",
+          estado_asunto:[
+            {
+              id_estado_asunto:"",
+              descripcion_estado:"",
+              fraseologia_estado:"",
+            }
+          ],
+
+          model_tipo:"IV",
+          tipo:[
+            'IV',
+            'I',
+            'V',
+            'K'
+          ],
+
+          model_nbo:"NBO",
+          nbo:['NBO','N','B','O','M','K'],
+          
+          model_alcance:"A",
+          alcance:['A','E','W','K','AE'],
+          
+          nivel_inf:'000',
+          nivel_sup:'999',
+
+
+          model_coordenadas:"Seleccione un lugar",
+          coordenadas:["SLLP SLLF 1630S06811W","SLLP VOR 1630S06811W", "SLPS ARP 1858S05749W", "SLCB VOR 1725S06610W","SLAP ARP 1144S06824W"],
+          radio:'000',
+          //------------------------------------------------------------------------------------------------------------------------------------
+          correlativo_charly:"",
+          correlativo_alfa:"",
+          lugar:"",
+          desde_fecha:new Date().toISOString().slice(0,10),
+          desde_hora:new Date().toISOString().slice(11,16).replace(':',''),
+          hasta_fecha:"",
+          hasta_hora:"",
+          estimado:[""],
+          permanente:[""],
+          casilla_d: "",
+          cuerpo1: " ",
+          cuerpo2: " ",
+          limite_inferior: "",
+          limite_superior: "",
+
+
+          pib_asunto:"",
+          pib_estado_asunto:""
+        },
+
+        showSubmitFeedback: false, 
+
+        data_srv: {
+          tipo:"",
+          notam_header:"",
+          amhs1:"",
+          amhs2:"",
+          resumen:"",
+          aplica_a:"",
+          valido_desde:"",
+          valido_hasta:"",
+          mensaje:"",
+          asunto:"",
+          estado_asunto:"",
+          pib_publicar:"",
+          estimado_srv:"",
+          permanente_srv:"",
+        }
+    },
+    
+    //created(){},
+    methods: {
+      fakeSubmit() {
+          this.showSubmitFeedback = true;
+          setTimeout(() => {
+              this.showSubmitFeedback = false;
+          }, 3000);
+      },
+      buscar_correlativo_charly: function() {
+        (async() => {
+              //alert("INTENTANDO EN LA bd")
+              await this.get_correlativo_charlie()
+        })();
+      },
+      get_correlativo_charlie: async function(){
+        const url = '{% url 'view_get_correlativo_charly' %}';
+        await axios.get(url).then(response => {
+          this.form.correlativo_charly=response.data.correlativo;
+        }
+        ).catch(
+          function (error) { 
+            console.log(error); 
+          }
+        );
+      },
+      buscar_correlativo_alfa: function() {
+        (async() => {
+              //alert("INTENTANDO EN LA bd")
+              await this.get_correlativo_alpha()
+        })();
+      },
+      get_correlativo_alpha: async function(){
+        const url = '{% url 'view_get_correlativo_alfa' %}';
+        await axios.get(url).then(response => {
+          this.form.correlativo_alfa=response.data.correlativo;
+        }
+        ).catch(
+          function (error) { 
+            console.log(error); 
+          }
+        );
+      },
+      actualizar_casilla_a: function (event) {
+        cadena=event.target.value;
+        this.form.lugar=cadena.split(' ')[0];
+
+        coordenadas_lugar=cadena.split(" ")[2];
+        coordenadas_lugar=coordenadas_lugar.split("S")
+
+        //CREAR EL MAPA 
+        mapboxgl.accessToken = 'pk.eyJ1IjoiY2FlbHQiLCJhIjoiY2tmNGx4MDY3MDBnNTJ5cDh2aHhjOTQyciJ9.juIQGQyyJdwT0cIfnbFA3Q';
+        
+        latitude=coordenadas_lugar[0]  + "S";
+        latitude= latitude.substr(0,2) + " " + latitude.substr(2, latitude.length);
+        
+        longitude=coordenadas_lugar[1];
+        longitude= longitude.substr(0,3) + " " + longitude.substr(3, longitude.length);
+
+        //alert(latitude, longitude)
+        //radius = parseInt(this.radio);
+        radius = 2;
+        
+        if (radius ==0 || radius==999) {
+            radius=0;
+        }else{
+            radius=1852*radius;
+        }
+        var vector_posicion = this.parse_gps(longitude +" "+latitude);
+
+        longitude=vector_posicion[1];
+        latitude=vector_posicion[0];
+
+        
+        var map = new mapboxgl.Map({
+          container: 'map',
+          //style: 'mapbox://styles/mapbox/streets-v11',
+          style: 'mapbox://styles/caelt/ckgljytdo02dj19pnnzqpr7sc',
+          center: [longitude, latitude],
+          zoom: 10,
+          minZoom: 7,
+          maxZoom: 15,
+        });
+
+        map.on('load', function() {
+          map.addSource("source_circle_500", {
+            "type": "geojson",
+            "data": {
+              "type": "FeatureCollection",
+              "features": [{
+                "type": "Feature",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": [longitude, latitude]
+                }
+              }]
+            }
+          });
+
+          map.addLayer({
+            "id": "circle500",
+            "type": "circle",
+            "source": "source_circle_500",
+            "paint": {
+              "circle-radius": {
+                  stops: [
+                    [0, 0],
+                    [20, this.metersToPixelsAtMaxZoom(radius,latitude)]
+                  ],
+                  base: 2
+              },
+              "circle-color": "#FA8258",
+              "circle-opacity": 0.2
+            }
+          });
+        });
+        //FIN CREAR MAPA
+
+      },
+      //FUNCIONES PARA CREAR MAPA
+      metersToPixelsAtMaxZoom(meters, latitude) {
+        return (meters / 0.075 / Math.cos(latitude * Math.PI / 180))
+      },
+
+      //LAT': '1725S', 'LONG': '06610W'
+      parse_gps: function ( input ) {
+
+        if( input.indexOf( 'N' ) == -1 && input.indexOf( 'S' ) == -1 &&
+            input.indexOf( 'W' ) == -1 && input.indexOf( 'E' ) == -1 ) {
+            return input.split(',');
+        }
+
+        var parts = input.split(/[°'"]+/).join(' ').split(/[^\w\S]+/);
+
+        var directions = [];
+        var coords = [];
+        var dd = 0;
+        var pow = 0;
+
+        for( i in parts ) {
+            // we end on a direction
+            if( isNaN( parts[i] ) ) {
+            
+                var _float = parseFloat( parts[i] );
+            
+                var direction = parts[i];
+            
+                if( !isNaN(_float ) ) {
+                    dd += ( _float / Math.pow( 60, pow++ ) );
+                    direction = parts[i].replace( _float, '' );
+                }
+              
+                direction = direction[0];
+              
+                if( direction == 'S' || direction == 'W' )
+                    dd *= -1;
+              
+                directions[ directions.length ] = direction;
+              
+                coords[ coords.length ] = dd;
+                dd = pow = 0;
+              
+            } else {
+            
+                dd += ( parseFloat(parts[i]) / Math.pow( 60, pow++ ) );
+            
+            }
+          
+        }
+
+        if( directions[0] == 'W' || directions[0] == 'E' ) {
+            var tmp = coords[0];
+            coords[0] = coords[1];
+            coords[1] = tmp;
+        }
+
+        return coords;
+      },
+
+      //FIN FUNCIONES PARA CREAR MAPA
+      
+      copy_clipboard: function (id_code) {
+        var elm = document.getElementById(id_code);
+        // other browsers
+        var selection = window.getSelection();
+        var range = document.createRange();
+        range.selectNodeContents(elm);
+        selection.removeAllRanges();
+        selection.addRange(range);
+        document.execCommand("Copy");
+        
+        this.showToast2()
+        
+
+      },
+      showToast2() {
+        Vue.toasted.show('Copiado!', {
+          duration: 2000
+        });
+      },
+      buscar_lista_asuntos(event) {
+        this.form.estado_asunto=[
+          {
+            id_estado_asunto:"",
+            descripcion_estado:"",
+            fraseologia_estado:"",
+          }
+        ];
+
+
+        /*
+        ACTIVAR UNA FUNCION PIDIENDO LISTA DE ASUNTOS
+        */
+        (async() => {
+              //alert("INTENTANDO EN LA bd")
+              await this.getResponse_asuntos8126(event.target.value)
+        })();
+      },
+      getResponse_asuntos8126: async function(parametro){
+        parametro = parametro.toUpperCase();
+        const url = '{% url 'view_get_lista_asuntos_8126' %}' + "?string8126="+parametro;
+        
+        await axios.get(url).then(response => {
+            this.form.asunto = response.data.lista_asuntos; 
+          }
+        ).catch(
+          function (error) { 
+            console.log(error); 
+          }
+        );
+      },
+      buscar_lista_estado_asuntos(event) {
+        
+        vector_descripcion_fraseologia =this.buscar_descripcion_dentro_asunto(event.target.value).split('/');
+
+        this.form.pib_asunto= vector_descripcion_fraseologia[0];
+        this.form.cuerpo1 = vector_descripcion_fraseologia[1];
+        
+        /*
+        ACTIVAR UNA FUNCION PIDIENDO LISTA DE ESTADOS ASUNTOS
+        */
+        (async() => {
+              //alert("INTENTANDO EN LA bd")
+              await this.getResponse_estados8126(event.target.value)
+        })();
+      },
+      getResponse_estados8126: async function(parametro){
+        parametro = parametro.toUpperCase();
+        const url = '{% url 'view_get_lista_estados_8126' %}' + "?string8126="+parametro;
+        
+        await axios.get(url).then(response => {
+            this.form.estado_asunto = response.data.lista_estados; 
+          }
+        ).catch(
+          function (error) { 
+            console.log(error); 
+          }
+        );
+      },
+      buscar_descripcion_dentro_asunto(cod_asunto) {
+        for (let i = 0; i < this.form.asunto.length; i++) {
+          if (this.form.asunto[i].id_asunto==cod_asunto){
+            return this.form.asunto[i].descripcion_asunto + "/" + this.form.asunto[i].fraseologia_asunto ;
+          }
+        }
+        return "No encontrado"
+      },
+      asignar_estado_asunto_pib(event) {
+        cod_estado=event.target.value.trim();
+        
+        vector_descripcion_fraseologia =this.buscar_descripcion_estado_asunto(cod_estado).split('/');
+
+        this.form.pib_estado_asunto= vector_descripcion_fraseologia[0];
+        this.form.cuerpo2= vector_descripcion_fraseologia[1];
+      },
+      buscar_descripcion_estado_asunto(cod_estado){
+
+        for (let i = 0; i < this.form.estado_asunto.length; i++) {
+          //alert(this.form.estado_asunto[i].id_estado_asunto)
+          if (this.form.estado_asunto[i].id_estado_asunto.toUpperCase() === cod_estado.toUpperCase()){
+            return this.form.estado_asunto[i].descripcion_estado + '/' + this.form.estado_asunto[i].fraseologia_estado;
+          }
+        }
+        return "No encontrado"
+      },
+
+      guardar_notam: function() {
+
+        this.data_srv.tipo=this.form.model_tiponotam
+
+        this.data_srv.notam_header=this.form.correlativo_charly + '+' + this.form.correlativo_alfa;
+
+
+        this.data_srv.amhs1=this.form.model_prioridad;
+        this.data_srv.amhs2=this.form.fecha_deposito.substring(8,)+""+this.form.hora_deposito+" "+this.form.remitente;
+        
+      
+        
+        this.data_srv.resumen="Q) SLLF/Q"+this.form.model_asunto+this.form.model_estado_asunto+"/"+this.form.model_tipo+"/"+this.form.model_nbo+"/"+this.form.model_alcance+"/"+this.form.nivel_inf+"/"+this.form.nivel_sup+"/"+this.form.model_coordenadas.split(" ")[2]+this.form.radio;
+        this.data_srv.aplica_a="A) " + this.form.lugar ;
+        this.data_srv.valido_desde="B) "+this.form.desde_fecha.substring(2,).replace("-","").replace("-","")+this.form.desde_hora ;
+        
+        if (this.form.estimado[this.form.estimado.length -1]) {
+          this.data_srv.valido_hasta="C) "+this.form.hasta_fecha.substring(2,).replace("-","").replace("-","")+this.form.hasta_hora +" "+ this.form.estimado[this.form.estimado.length -1];
+        }
+
+        if (this.form.permanente[this.form.permanente.length -1]) {
+          this.data_srv.valido_hasta="C) "+this.form.hasta_fecha.substring(2,).replace("-","").replace("-","")+this.form.hasta_hora +" "+ this.form.permanente[this.form.permanente.length -1];
+        }
+        
+        this.data_srv.mensaje="";
+        sw=false;
+        if (this.form.casilla_d) {
+          this.data_srv.mensaje= "D) "+this.form.casilla_d +" E) "+this.form.cuerpo1+" "+this.form.cuerpo2;
+          sw=true;
+        }
+        if (this.form.limite_inferior) {
+          this.data_srv.mensaje = mensaje +"F) "+this.form.limite_inferior +"G) "+this.form.limite_superior;
+          sw=true;
+        }
+        if (!sw) {
+          this.data_srv.mensaje="E) "+this.form.cuerpo1+" "+this.form.cuerpo2;
+        }
+
+        this.data_srv.asunto=this.form.pib_asunto;
+        this.data_srv.estado_asunto=this.form.pib_estado_asunto;
+
+        this.data_srv.estado_asunto=this.form.pib_estado_asunto;
+        this.data_srv.estado_asunto=this.form.pib_estado_asunto;
+
+        this.data_srv.estimado_srv=this.form.estimado[this.form.estimado.length -1]
+        this.data_srv.permanente_srv=this.form.permanente[this.form.permanente.length -1]
+
+
+        try {
+          this.data_srv.pib_publicar = document.getElementById("pib_publicar").textContent;
+        } catch (error) {
+          this.data_srv.pib_publicar = "";
+        }
+      },
+    },
+  
+  }); 
+</script>
+
+<script>
+  const form = document.querySelector('#data_srv_id')
+
+  form.addEventListener('submit', event => {
+    event.preventDefault();
+    swal('¿ Guardar en banco NOTAM ?' , {
+        buttons: true,
+    }).then( val => {
+      if (val) {
+        app_vue.guardar_notam()
+        form.submit();
+      }
+    })
+  }
+  )
+</script>
+
+
+
+<script>
+  /*
+  mapboxgl.accessToken = 'pk.eyJ1IjoiY2FlbHQiLCJhIjoiY2tmNGx4MDY3MDBnNTJ5cDh2aHhjOTQyciJ9.juIQGQyyJdwT0cIfnbFA3Q';
+  latitude='1724S'
+  latitude= latitude.substr(0,2) + " " + latitude.substr(2, latitude.length)
+  longitude='06611W'
+  longitude= longitude.substr(0,3) + " " + longitude.substr(3, longitude.length)
+
+  //alert(latitude, longitude)
+  radius=parseInt('5')
+  if (radius ==0 || radius==999) {
+      radius=0;
+  }else{
+      radius=1852*radius;
+  }
+  var vector_posicion = parse_gps(longitude +" "+latitude)
+
+  longitude=vector_posicion[1]
+  latitude=vector_posicion[0]
+
+  
+  var map = new mapboxgl.Map({
+    container: 'map',
+    //style: 'mapbox://styles/mapbox/streets-v11',
+    style: 'mapbox://styles/caelt/ckgljytdo02dj19pnnzqpr7sc',
+    center: [longitude, latitude],
+    zoom: 10,
+    minZoom: 7,
+    maxZoom: 15,
+  });
+
+  map.on('load', function() {
+    map.addSource("source_circle_500", {
+      "type": "geojson",
+      "data": {
+        "type": "FeatureCollection",
+        "features": [{
+          "type": "Feature",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [longitude, latitude]
+          }
+        }]
+      }
+    });
+
+    map.addLayer({
+      "id": "circle500",
+      "type": "circle",
+      "source": "source_circle_500",
+      "paint": {
+        "circle-radius": {
+            stops: [
+              [0, 0],
+              [20, metersToPixelsAtMaxZoom(radius,latitude)]
+            ],
+            base: 2
+        },
+        "circle-color": "#FA8258",
+        "circle-opacity": 0.2
+      }
+    });
+  });
+
+  function metersToPixelsAtMaxZoom (meters, latitude){
+    return (meters / 0.075 / Math.cos(latitude * Math.PI / 180))
+  }
+
+  //LAT': '1725S', 'LONG': '06610W'
+  function parse_gps( input ) {
+
+    if( input.indexOf( 'N' ) == -1 && input.indexOf( 'S' ) == -1 &&
+        input.indexOf( 'W' ) == -1 && input.indexOf( 'E' ) == -1 ) {
+        return input.split(',');
+    }
+
+    var parts = input.split(/[°'"]+/).join(' ').split(/[^\w\S]+/);
+
+    var directions = [];
+    var coords = [];
+    var dd = 0;
+    var pow = 0;
+
+    for( i in parts ) {
+    
+        // we end on a direction
+        if( isNaN( parts[i] ) ) {
+        
+            var _float = parseFloat( parts[i] );
+        
+            var direction = parts[i];
+        
+            if( !isNaN(_float ) ) {
+                dd += ( _float / Math.pow( 60, pow++ ) );
+                direction = parts[i].replace( _float, '' );
+            }
+          
+            direction = direction[0];
+          
+            if( direction == 'S' || direction == 'W' )
+                dd *= -1;
+          
+            directions[ directions.length ] = direction;
+          
+            coords[ coords.length ] = dd;
+            dd = pow = 0;
+          
+        } else {
+        
+            dd += ( parseFloat(parts[i]) / Math.pow( 60, pow++ ) );
+        
+        }
+      
+    }
+
+    if( directions[0] == 'W' || directions[0] == 'E' ) {
+        var tmp = coords[0];
+        coords[0] = coords[1];
+        coords[1] = tmp;
+    }
+
+    return coords;
+  }
+  
+*/
+</script>
+
+
 {% endblock extrajs %}
 
 
 
-<!-- ////////////////////////////////////////////////////////////////////////////-->
 <!-- ////////////////////////////////////////////////////////////////////////////-->

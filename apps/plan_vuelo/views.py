@@ -600,6 +600,8 @@ def stringToDatetimefield( cadena ):
     return tempo 
 
 from ast import literal_eval
+
+
 def view_notam_modal(request, id_notam_mensaje):
     if request.user.is_authenticated and request.user.is_active: #and request.user.groups.filter(name='CONTROLADORESLP').exists():        
         #plan_completo = Flp_trafico.objects.filter(id_mensaje=id_plancompleto)[0]

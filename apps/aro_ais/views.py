@@ -1,10 +1,23 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
+from django.urls import reverse
 from django.db import connection
 from django.contrib.auth.models import Group
 import datetime
 import json
+
+
+
+##IMPORTANDO MODELOS DE BANCO DE DATOS NOTAM 
+from apps.aro_ais.models import Notam_trafico_charly_repla as Banco_charly_repla
+from apps.aro_ais.models import Notam_trafico_charly_cancel as Banco_charly_cancel
+from apps.aro_ais.models import Notam_trafico_charly_new as Banco_charly_new
+#######
+#######
+from apps.aro_ais.models import Notam_trafico_alfa_repla as Banco_alfa_repla
+from apps.aro_ais.models import Notam_trafico_alfa_cancel as Banco_alfa_cancel
+from apps.aro_ais.models import Notam_trafico_alfa_new as Banco_alfa_new
 
 
 # Create your views here.
@@ -72,7 +85,10 @@ def view_new_notam(request):
     if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='AISNACIONAL').exists():
         letra_asunto = Letra_asunto.objects.all().order_by('id_letra')
         #letra_asunto = [x.id_letra for x in letra_asunto]
-        return render(request, 'temp_plan_vuelo/temp_aro_ais/new_notam.html', {'vec_letra': letra_asunto})
+
+        lista_letras = Letra_asunto.objects.all().order_by('id_letra')
+
+        return render(request, 'temp_plan_vuelo/temp_aro_ais/new_notam.html', {'vec_letra': letra_asunto, 'lista_letras': lista_letras})
     else:
         return redirect('login')
 
@@ -114,7 +130,8 @@ def view_getEstadoAsunto(request):
 def view_codigos_abreviaturas(request):
     if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='AISNACIONAL').exists():
         
-        return render(request, 'temp_plan_vuelo/temp_aro_ais/diccionario8400.html')
+        lista_letras = Letra_asunto.objects.all().order_by('id_letra')
+        return render(request, 'temp_plan_vuelo/temp_aro_ais/diccionario_aeronautico.html', {'lista_letras':lista_letras} )
     else:
         return redirect('login')
 
@@ -161,25 +178,25 @@ def view_imprimir_pibrealtime(request):
 
 def view_todos_notams(request):
     if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='TODOS_SERVICIOS').exists():
-        lista_pib_pendiente = Pib_trafico.objects.raw("select * from aro_ais_pib_trafico inner join aro_ais_pib_extenso on ref_notam_amhs_id = notam_extenso_id and pendiente='t' ")
-        lista_pib_archivado = Pib_trafico.objects.raw("select * from aro_ais_pib_trafico inner join aro_ais_pib_extenso on ref_notam_amhs_id = notam_extenso_id and archivado='t'  ")
-        lista_pib_publicado = Pib_trafico.objects.raw("select * from aro_ais_pib_trafico inner join aro_ais_pib_extenso on ref_notam_amhs_id = notam_extenso_id and vigente='t' and msj_publicado!=''  ")
         lista_notams_recientes=Notam_trafico.objects.all().order_by('-ingresado')[:100]
+   
+        #lista_notams_recientes=[serializar_notam(notamx) for notamx in lista_notams_recientes]
 
-        # ref_notam_amhs_id | decodificado | publicado | vigente | archivado | oficialaro_id | pendiente   | msj_publicado |    notam_extenso_id    | notam_id |
-        # notam_tipo | ref_notam_id | fir  | notam_codigo |  tipo_trafico  | proposito |    alcance    | fl_inferior | fl_superior | area |  
-        # lugar   |      valid_desde       |      valid_hasta       |   agendado    | cuerpo | limit_superior | limit_inferior | indices_item_a |
-        # indices_item_b | indices_item_c | indices_item_d | indices_item_e | indices_item_f | indices_item_g
-        lista_pib_pendiente=[serializar_pibtrafico_pibextenso(pib) for pib in lista_pib_pendiente]
-        lista_pib_archivado=[serializar_pibtrafico_pibextenso(pib) for pib in lista_pib_archivado]
-        lista_pib_publicado=[serializar_pibtrafico_pibextenso(pib) for pib in lista_pib_publicado]
-        lista_notams_recientes=[serializar_notam(notamx) for notamx in lista_notams_recientes]
-
-        #equipo_activo = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and activo=true and empresa_institucion_id=1 order by activo")
+        lista_notam_charly = []
+        lista_notam_alfa = []
         
-        return render(request, 'temp_plan_vuelo/temp_aro_ais/lista_notam.html' ,{'lista_notam':lista_notams_recientes} )
+        for notam in lista_notams_recientes:
+            if '(C' in notam.idnotam:
+                lista_notam_charly.append(serializar_notam(notam))
+            else:
+                lista_notam_alfa.append(serializar_notam(notam))
+        
+        return render(request, 'temp_plan_vuelo/temp_aro_ais/lista_notam.html' ,{'lista_notam_charly':lista_notam_charly, 'lista_notam_alfa':lista_notam_alfa} )
     else:
         return redirect('login')
+
+
+
 
 
 def serializar_notam(notamx):
@@ -501,5 +518,261 @@ def serializarEstadoAsunto(estado):
         'fraseologia_estado' : estado.fraseologia_estado,
     }
 
+
+
+def view_get_lista_asuntos_8126(request):
+    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='AISNACIONAL').exists():
+        #equipo_coordinacion = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and empresa_institucion_id=1 order by activo")
+        if request.method =="GET":
+            #get_abreviatura = str(request.GET.dict()['abreviatura'])
+            get_letra = str(request.GET.get('string8126')).upper()
+            #buscamos coincidencias en SIGNIFICADO_COMPLETO o ABREVIATURA
+            
+            # id_asunto | descripcion_asunto | fraseologia_asunto
+            lista_asuntos = Asunto.objects.raw("select * from aro_ais_asunto where letra_asunto_id like  %(letra)s order by id_asunto asc" , { 'letra' : ""+get_letra+""} )
+
+            lista_asuntos = [ serializarLista_Asuntos(codig) for codig in lista_asuntos ]
+
+            devolucion = {
+                'lista_asuntos': lista_asuntos,
+            }
+
+            return HttpResponse(json.dumps(devolucion), content_type='application/json')
+        else:
+            return HttpResponse(json.dumps([{'HOLA':'hola'}]), content_type='application/json')
+    else:
+        return redirect('login')
+
+def serializarLista_Asuntos(asunto):
+    return {
+        'id_asunto' : asunto.id_asunto,
+        'descripcion_asunto' : asunto.descripcion_asunto,
+        'fraseologia_asunto' : asunto.fraseologia_asunto,
+    }
+
+
+
+def view_get_lista_estados_8126(request):
+    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='AISNACIONAL').exists():
+        #equipo_coordinacion = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and empresa_institucion_id=1 order by activo")
+        if request.method =="GET":
+            #get_abreviatura = str(request.GET.dict()['abreviatura'])
+            get_asunto = str(request.GET.get('string8126')).upper()
+            #buscamos coincidencias en SIGNIFICADO_COMPLETO o ABREVIATURA
+            
+            # id_estado_asunto | descripcion_estado | fraseologia_estado
+            lista_estados = Estado_asunto.objects.raw("select id_estado_asunto, descripcion_estado, fraseologia_estado from  aro_ais_estado_asunto as tx2 inner join  aro_ais_estado_asunto_id_asunto as tx1 on tx2.id_estado_asunto like tx1.estado_asunto_id where tx1.asunto_id like %(asunto)s order by id_estado_asunto asc" , { 'asunto' : ""+get_asunto+""} )
+
+            lista_estados = [ serializarLista_Estados(estado) for estado in lista_estados ]
+
+            devolucion = {
+                'lista_estados': lista_estados,
+            }
+
+            return HttpResponse(json.dumps(devolucion), content_type='application/json')
+        else:
+            return HttpResponse(json.dumps([{'HOLA':'hola'}]), content_type='application/json')
+    else:
+        return redirect('login')
+
+def serializarLista_Estados(estado):
+    return {
+        'id_estado_asunto' : estado.id_estado_asunto,
+        'descripcion_estado' : estado.descripcion_estado,
+        'fraseologia_estado' : estado.fraseologia_estado,
+    }
+
+##CREAR NOTAM
+from appUpsilon.views import view_pagina_principal  # , control_acceso_login
+def view_post_crear_notam(request):
+    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='AISNACIONAL').exists():
+        if request.method =="POST" and request.POST:
+            post_tipo = str(request.POST.get('tipo'))
+            
+            inf_constante = {
+                'post_amhs1' : str(request.POST.get('amhs1')),
+                'post_amhs2' : str(request.POST.get('amhs2')),
+                'post_resumen' : str(request.POST.get('resumen')),
+                'post_aplica_a' : str(request.POST.get('aplica_a')),
+                'post_valido_desde' : str(request.POST.get('valido_desde')),
+                'post_valido_hasta' : str(request.POST.get('valido_hasta')),
+                'post_mensaje' : str(request.POST.get('mensaje')),
+                'post_asunto' : str(request.POST.get('asunto')),
+                'post_estado_asunto' : str(request.POST.get('estado_asunto')),
+                'post_estimado' : str(request.POST.get('estimado')),
+                'post_permanente' : str(request.POST.get('permanente')),
+            }
+
+            ############ CONTROL DE ID_MENSAJE           
+            id_charly=""
+            id_alfa=""
+
+            post_notam_header = str(request.POST.get('notam_header'))
+            array_notam_header = post_notam_header.split("+")
+            for id_n in array_notam_header:
+                if id_n:
+                    if 'C' in id_n:
+                        id_charly=id_n
+                    if 'A' in id_n:
+                        id_alfa=id_n
+            ############ CONTROL DE ID_MENSAJE       
+            
+            post_pib_publicar = str(request.POST.get('pib_publicar'))
+
+
+
+            ############ CONTROL DE ID_NOTAM           
+            if id_charly:
+                if 'NOTAMN' in post_tipo:
+                    guardar_nuevo_charly(id_charly, inf_constante, post_pib_publicar)
+
+                #if 'NOTAMR' in post_tipo:
+                #    guardar_repla_charly(id_mensaje, charly, inf_constante, post_pib_publicar)
+#
+                #if 'NOTAMC' in post_tipo:
+                #    guardar_cancel_charly(id_mensaje, charly, inf_constante)
+
+            
+            if id_alfa:
+                if 'NOTAMN' in post_tipo:
+                    guardar_nuevo_alfa(id_alfa, inf_constante)
+
+                #if 'NOTAMR' in post_tipo:
+                #    guardar_repla_alfa(id_mensaje, alfa, inf_constante)
+#
+                #if 'NOTAMC' in post_tipo:
+                #    guardar_cancel_alfa(id_mensaje, alfa, inf_constante)
+            
+            
+            ############ CONTROL DE ID_NOTAM           
+
+            #return render(request, 'temp_ais_nacional/blanco.html',{'devolucion':devolucion})
+            return HttpResponseRedirect(reverse( view_pagina_principal ))
+        else:
+            return render(request, 'temp_plan_vuelo/temp_aro_ais/new_notam.html' , locals())
+            #return HttpResponse(json.dumps([{'Response':'Envie datos validos.'}]), content_type='application/json')
+    else:
+        return redirect('login')
+
+
+## FUNCIONES PARA GUARDAR NOTAM CLASIFICADO
+def guardar_nuevo_charly(id_charly, inf_constante, post_pib_publicar):
+    banco_charly=Banco_charly_new()
+
+    banco_charly.id_mensaje_c_n = id_charly
+    banco_charly.aftn1 = inf_constante['post_amhs1']
+    banco_charly.aftn2 = inf_constante['post_amhs2']
+    banco_charly.idnotam = '(' +id_charly + ' NOTAMN'
+    banco_charly.resumen = inf_constante['post_resumen']
+    banco_charly.aplica_a = inf_constante['post_aplica_a']
+    banco_charly.valido_desde = inf_constante['post_valido_desde']
+    banco_charly.valido_hasta = inf_constante['post_valido_hasta']
+    banco_charly.mensaje = inf_constante['post_mensaje']
+
+    if 'EST' in inf_constante['post_estimado']:
+        banco_charly.est = True
+    if 'PERM' in inf_constante['post_permanente']:
+        banco_charly.perm = True
+
+    banco_charly.es_pib = True
+
+    banco_charly.asunto = inf_constante['post_asunto']
+    banco_charly.estado_asunto = inf_constante['post_estado_asunto']
+
+    banco_charly.pib_publicar = post_pib_publicar
+
+    banco_charly.save()
+'''
+def guardar_repla_charly(id_mensaje, charly, inf_constante, post_pib_publicar):
+    banco_charly=Banco_charly_repla()
+
+    banco_charly.id_mensaje_c_r = id_mensaje
+    banco_charly.aftn1 = inf_constante['post_amhs1']
+    banco_charly.aftn2 = inf_constante['post_amhs2']
+    banco_charly.idnotam = charly + ' NOTAMR'
+    banco_charly.resumen = inf_constante['post_resumen']
+    banco_charly.aplica_a = inf_constante['post_aplica_a']
+    banco_charly.valido_desde = inf_constante['post_valido_desde']
+    banco_charly.valido_hasta = inf_constante['post_valido_hasta']
+    banco_charly.mensaje = inf_constante['post_mensaje']
+
+    banco_charly.es_pib = True
+
+    banco_charly.asunto = inf_constante['post_asunto']
+    banco_charly.estado_asunto = inf_constante['post_estado_asunto']
+
+    banco_charly.pib_publicar = post_pib_publicar
+
+    banco_charly.save()
+'''
+
+#def guardar_cancel_charly(id_mensaje, alfa, inf_constante):
+#######
+def guardar_nuevo_alfa(id_alfa, inf_constante):
+    banco_alfa=Banco_alfa_new()
+
+    banco_alfa.id_mensaje_a_n = id_alfa
+    banco_alfa.aftn1 = inf_constante['post_amhs1']
+    banco_alfa.aftn2 = inf_constante['post_amhs2']
+    banco_alfa.idnotam = '('+id_alfa + ' NOTAMN'
+    banco_alfa.resumen = inf_constante['post_resumen']
+    banco_alfa.aplica_a = inf_constante['post_aplica_a']
+    banco_alfa.valido_desde = inf_constante['post_valido_desde']
+    banco_alfa.valido_hasta = inf_constante['post_valido_hasta']
+    banco_alfa.mensaje = inf_constante['post_mensaje']
+
+    if inf_constante['post_estimado']:
+        banco_alfa.est = True
+    if inf_constante['post_permanente']:
+        banco_alfa.perm = True
+
+    banco_alfa.asunto = inf_constante['post_asunto']
+    banco_alfa.estado_asunto = inf_constante['post_estado_asunto']
+
+    banco_alfa.save()
+
+'''
+def guardar_repla_alfa(id_mensaje, alfa, inf_constante):
+
+def guardar_cancel_alfa(id_mensaje, alfa, inf_constante):
+'''
+
+def view_get_correlativo_charly(request):
+    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='AISNACIONAL').exists():
+        if request.method =="GET":
+            get_anio = str(datetime.datetime.now().year)[2:]
+            lista_correlativos = Banco_charly_repla.objects.raw("select * from ( 	select id_mensaje_c_r,substring( id_mensaje_c_r, 2, 4) as idnotam 	from aro_ais_notam_trafico_charly_repla 	where id_mensaje_c_r like %(anio)s 	union  	select id_mensaje_c_n,substring( id_mensaje_c_n, 2, 4) as idnotam 	from aro_ais_notam_trafico_charly_new 	where id_mensaje_c_n like %(anio)s 	union  	select id_mensaje_c_c,substring( id_mensaje_c_c, 2, 4)  as idnotam 	from aro_ais_notam_trafico_charly_cancel 	where id_mensaje_c_c like %(anio)s ) as t_correlativo order by  idnotam desc limit 1" , { 'anio' : "%/"+get_anio} )
+            if len(lista_correlativos) > 0:
+                correlativo = "C" + str(int(lista_correlativos[0].idnotam)+1) + "/" + get_anio
+            else:
+                correlativo = 'C0001/' + get_anio
+
+            devolucion = {
+                'correlativo': correlativo,
+            }
+            return HttpResponse(json.dumps(devolucion), content_type='application/json')
+        else:
+            return HttpResponse(json.dumps([{'Error':'No method get'}]), content_type='application/json')
+    else:
+        return redirect('login')
+
+def view_get_correlativo_alfa(request):
+    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='AISNACIONAL').exists():
+        if request.method =="GET":
+            get_anio = str(datetime.datetime.now().year)[2:]
+            lista_correlativos = Banco_alfa_new.objects.raw("select *  from ( 	select id_mensaje_a_n,substring( id_mensaje_a_n, 2, 4) as idnotam 	from aro_ais_notam_trafico_alfa_new 	where id_mensaje_a_n like %(anio)s 	union  	select id_mensaje_a_r,substring( id_mensaje_a_r, 2, 4) as idnotam 	from aro_ais_notam_trafico_alfa_repla 	where id_mensaje_a_r like %(anio)s 	union  	select id_mensaje_a_c,substring( id_mensaje_a_c, 2, 4)  as idnotam 	from aro_ais_notam_trafico_alfa_cancel 	where id_mensaje_a_c like %(anio)s ) as t_correlativo order by  idnotam desc limit 1" , { 'anio' : "%/"+get_anio} )
+            if len(lista_correlativos) > 0:
+                correlativo = "A" + str(int(lista_correlativos[0].idnotam)+1) + "/" + get_anio
+            else:
+                correlativo = 'A0001/' + get_anio
+
+            devolucion = {
+                'correlativo': correlativo,
+            }
+            return HttpResponse(json.dumps(devolucion), content_type='application/json')
+        else:
+            return HttpResponse(json.dumps([{'Error':'No method get'}]), content_type='application/json')
+    else:
+        return redirect('login')
 
 # AIM ################################################################################################################

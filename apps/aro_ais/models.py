@@ -218,8 +218,6 @@ class Historico_pib(models.Model):
 
 
 
-
-
 class Direccion_amhs(models.Model):
     direccionamiento = models.CharField(max_length=8, primary_key=True)
     def __str__(self):
@@ -254,6 +252,7 @@ class Serie_notam(models.Model):
         ordering = ('serie_notam',)
 
 
+
 class Banco_notam_charly(models.Model):
     id_datanotam = models.AutoField(primary_key=True)
 
@@ -277,28 +276,173 @@ class Banco_notam_charly(models.Model):
     transito = models.CharField(max_length=2)
     objetivo = models.CharField(max_length=3)
     alcance = models.CharField(max_length=2)
-    limite_inferior = models.CharField(max_length=3)
-    limite_superior = models.CharField(max_length=3)
-    coordenadas = models.CharField(max_length=14)
+    limite_inferior = models.CharField(max_length=3, blank=True)
+    limite_superior = models.CharField(max_length=3, blank=True)
+    coordenadas = models.CharField(max_length=14, blank=True)
     lugar = models.ForeignKey(Aeropuerto, on_delete=models.PROTECT, blank=False, null=False)
 
     desde = models.CharField(max_length=10)
-    hasta = models.CharField(max_length=10)
+    hasta = models.CharField(max_length=10, blank=True)
     est = models.BooleanField(default=False)
     perm = models.BooleanField(default=False)
-    horario = models.CharField(max_length=35)
-    texto_notam = models.CharField(max_length=200)
-    limite_inferior_casilla = models.CharField(max_length=300)
-    limite_superior_casilla = models.CharField(max_length=300)
-    firma = models.CharField(max_length=20)
+    horario = models.CharField(max_length=35, blank=True)
+    texto_notam = models.CharField(max_length=800)
+    limite_inferior_casilla = models.CharField(max_length=300, blank=True)
+    limite_superior_casilla = models.CharField(max_length=300, blank=True)
+    firma = models.CharField(max_length=20, blank=True)
 
     espaniol_decodificado = models.CharField(max_length=1000)
+    ingresado = models.DateTimeField(default=datetime.now, blank=False, null=False)
 
     def __str__(self):
-        return '{}/{}'.format(self.id_datanotam,self.tipo_notam)
+        return '{} {} - {}'.format(self.correlativo,self.tipo_notam, self.ingresado)
 
     class Meta:
-        ordering = ('tipo_notam',)
+        ordering = ('-correlativo','ingresado')
+
+
+
+#############
+#############
+
+class Notam_trafico_charly_repla(models.Model):
+    id_mensaje_c_r = models.CharField(max_length=8,primary_key=True)
+    aftn1 = models.CharField(max_length=120)
+    aftn2 = models.CharField(max_length=15)
+    idnotam = models.CharField(max_length=85)
+    resumen = models.CharField(max_length=65) #Q
+    aplica_a = models.CharField(max_length=15) #A
+    valido_desde = models.CharField(max_length=20) #B
+    valido_hasta = models.CharField(max_length=20) #C
+    mensaje = models.CharField(max_length=1200)
+    es_pib = models.BooleanField(default=True)
+
+    perm = models.BooleanField(default=False)
+    est = models.BooleanField(default=False)
+
+    asunto = models.CharField(max_length=100)
+    estado_asunto = models.CharField(max_length=500)
+
+    pib_publicar = models.CharField(max_length=1000)
+
+    ingresado = models.DateTimeField(default=datetime.now, blank=True, null=True)
+    def __str__(self):
+        return '{}'.format(self.idnotam)
+    class Meta:
+        ordering = ['idnotam']
+class Notam_trafico_charly_cancel(models.Model):
+    id_mensaje_c_c = models.CharField(max_length=8,primary_key=True)
+    aftn1 = models.CharField(max_length=120)
+    aftn2 = models.CharField(max_length=15)
+    idnotam = models.CharField(max_length=85)
+    resumen = models.CharField(max_length=65) #Q
+    aplica_a = models.CharField(max_length=15) #A
+    valido_desde = models.CharField(max_length=20) #B
+    valido_hasta = models.CharField(max_length=20) #C
+    mensaje = models.CharField(max_length=1200)
+
+    asunto = models.CharField(max_length=100)
+    estado_asunto = models.CharField(max_length=500)
+
+    ingresado = models.DateTimeField(default=datetime.now, blank=True, null=True)
+    def __str__(self):
+        return '{}'.format(self.idnotam)
+    class Meta:
+        ordering = ['idnotam']
+class Notam_trafico_charly_new(models.Model):
+    id_mensaje_c_n = models.CharField(max_length=8,primary_key=True)
+    aftn1 = models.CharField(max_length=120)
+    aftn2 = models.CharField(max_length=15)
+    idnotam = models.CharField(max_length=85)
+    resumen = models.CharField(max_length=65) #Q
+    aplica_a = models.CharField(max_length=15) #A
+    valido_desde = models.CharField(max_length=20) #B
+    valido_hasta = models.CharField(max_length=20) #C
+    mensaje = models.CharField(max_length=1200)
+    es_pib = models.BooleanField(default=False)
+
+    perm = models.BooleanField(default=False)
+    est = models.BooleanField(default=False)
+
+    asunto = models.CharField(max_length=100)
+    estado_asunto = models.CharField(max_length=500)
+
+    pib_publicar = models.CharField(max_length=1000)
+
+    ingresado = models.DateTimeField(default=datetime.now, blank=True, null=True)
+    
+    def __str__(self):
+        return '{}'.format(self.idnotam)
+    class Meta:
+        ordering = ['idnotam']
+#############
+#############
+class Notam_trafico_alfa_repla(models.Model):
+    id_mensaje_a_r = models.CharField(max_length=8,primary_key=True)
+    aftn1 = models.CharField(max_length=120)
+    aftn2 = models.CharField(max_length=15)
+    idnotam = models.CharField(max_length=85)
+    resumen = models.CharField(max_length=65) #Q
+    aplica_a = models.CharField(max_length=15) #A
+    valido_desde = models.CharField(max_length=20) #B
+    valido_hasta = models.CharField(max_length=20) #C
+    mensaje = models.CharField(max_length=1200)
+
+    perm = models.BooleanField(default=False)
+    est = models.BooleanField(default=False)
+
+    asunto = models.CharField(max_length=100)
+    estado_asunto = models.CharField(max_length=1000)
+
+    ingresado = models.DateTimeField(default=datetime.now, blank=True, null=True)
+    def __str__(self):
+        return '{}'.format(self.idnotam)
+    class Meta:
+        ordering = ['idnotam']
+class Notam_trafico_alfa_cancel(models.Model):
+    id_mensaje_a_c = models.CharField(max_length=8,primary_key=True)
+    aftn1 = models.CharField(max_length=120)
+    aftn2 = models.CharField(max_length=15)
+    idnotam = models.CharField(max_length=85)
+    resumen = models.CharField(max_length=65) #Q
+    aplica_a = models.CharField(max_length=15) #A
+    valido_desde = models.CharField(max_length=20) #B
+    valido_hasta = models.CharField(max_length=20) #C
+    mensaje = models.CharField(max_length=1200)
+
+    asunto = models.CharField(max_length=100)
+    estado_asunto = models.CharField(max_length=500)
+
+    ingresado = models.DateTimeField(default=datetime.now, blank=True, null=True)
+    def __str__(self):
+        return '{}'.format(self.idnotam)
+class Notam_trafico_alfa_new(models.Model):
+    class Meta:
+        ordering = ['idnotam']
+    id_mensaje_a_n = models.CharField(max_length=8,primary_key=True)
+    aftn1 = models.CharField(max_length=120)
+    aftn2 = models.CharField(max_length=15)
+    idnotam = models.CharField(max_length=85)
+    resumen = models.CharField(max_length=65) #Q
+    aplica_a = models.CharField(max_length=15) #A
+    valido_desde = models.CharField(max_length=20) #B
+    valido_hasta = models.CharField(max_length=20) #C
+    mensaje = models.CharField(max_length=1200)
+
+    perm = models.BooleanField(default=False)
+    est = models.BooleanField(default=False)
+
+    asunto = models.CharField(max_length=100)
+    estado_asunto = models.CharField(max_length=1000)
+
+    ingresado = models.DateTimeField(default=datetime.now, blank=True, null=True)
+    
+    def __str__(self):
+        return '{}'.format(self.idnotam)
+    class Meta:
+        ordering = ['idnotam']
+
+
 
 
 #class Banco_notam_alfa(models.Model):
@@ -348,34 +492,3 @@ class Banco_notam_charly(models.Model):
     # indices_item_f
     # indices_item_g
 
-    # n.notam_id
-    # n.notam_type
-    # n.ref_notam_id
-    # n.fir
-    # n.notam_code
-    # n.traffic_type
-    #
-    # n.purpose
-    # n.scope
-    #
-    # n.fl_lower
-    # n.fl_upper
-    #
-    # n.area
-    #
-    # n.location
-    # n.valid_from
-    # n.valid_till
-    # n.schedule
-    #
-    # n.body
-    #
-    # n.limit_lower
-    # n.limit_upper
-    # n.indices_item_a
-    # n.indices_item_b
-    # n.indices_item_c
-    # n.indices_item_d
-    # n.indices_item_e
-    # n.indices_item_f
-    # n.indices_item_g

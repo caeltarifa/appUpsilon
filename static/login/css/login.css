@@ -1,0 +1,200 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&display=swap');
+*
+{
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	user-select: none;
+}
+html,body
+{
+  height: 100%;
+  width: 100%;
+}
+.bg-img
+{
+  height: 100vh;
+}
+.bg-img:after
+{
+  position: absolute;
+  content: '';
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: rgba(27,156,252,.55);
+}
+/* ------------------------------ */
+/* Fondo animado */
+/* ------------------------------ */
+.img__mov
+{
+  height: 100%;
+  background: #130f40;
+}
+.bg-img .img__mov .login__uno,
+.bg-img .img__mov .login__dos,
+.bg-img .img__mov .login__tres
+{
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+}
+.bg-img .img__mov .login__uno
+{
+  width: 110px;
+  animation: login__der 4s infinite linear;
+}
+.bg-img .img__mov .login__dos
+{
+  width: 230px;
+  animation: login__izq 6s infinite linear;
+}
+.bg-img .img__mov .login__tres
+{
+  width: 400px;
+  animation: login__der 30s infinite linear;
+}
+@keyframes login__der
+{
+	from{transform: rotate(0deg);}
+	to{transform: rotate(359deg);}
+}
+@keyframes login__izq
+{
+	from{transform: rotate(359deg);}
+	to{transform: rotate(0deg);}
+}
+/* ------------------------------ */
+/* Contenido Login */
+/* ------------------------------ */
+.bg-img .content
+{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 999;
+  text-align: center;
+  padding: 60px 32px;
+  width: 370px;
+  transform: translate(-50%,-50%);
+  /*background: rgba(255,255,255,0.04);
+  box-shadow: 0px 0px 15px 10px rgba(255,255,255,0.75);*/
+}
+.bg-img .content header
+{
+  color: #fff;
+  font-size: 33px;
+  font-weight: 600;
+  margin: 0 0 35px 0;
+  font-family: 'Open Sans',sans-serif;
+  letter-spacing: 2px;
+}
+.bg-img .content .field
+{
+  position: relative;
+  height: 45px;
+  width: 100%;
+  display: flex;
+  background: rgba(255,255,255,0);
+}
+.bg-img .content .field span
+{
+  color: #fff;
+  width: 40px;
+  line-height: 45px;
+}
+.bg-img .content .field input
+{
+  height: 100%;
+  width: 100%;
+  /*border: 3px solid #48dbfb;*/
+  border: none;
+  border-bottom: 4px solid #fff;
+  outline: none;
+  color: #fff;
+  font-size: 16px;
+  font-family: 'Open Sans',sans-serif;
+  text-transform: uppercase;
+  background: transparent;
+}
+.bg-img .content .space
+{
+  margin-top: 16px;
+}
+.bg-img .content .field .show
+{
+  position: absolute;
+  right: 30px;
+  width: 30px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #aaa;
+  display: none;
+  cursor: pointer;
+  font-family: 'Open Sans',sans-serif;
+}
+.bg-img .content .field .pass-key:valid ~ .show
+{
+  display: block;
+}
+.bg-img .content .pass
+{
+  text-align: center;
+  margin: 30px 0;
+}
+.bg-img .content .pass a
+{
+  color: #fff;
+  text-decoration: none;
+  font-family: 'Open Sans',sans-serif;
+}
+.bg-img .content .pass a:hover
+{
+  color: #cacaca;
+}
+.bg-img .content .field input[type="submit"]
+{
+  background: rgba(255,255,255,0);
+  border: none;
+  border-bottom: 5px solid #130f40;
+  color: #fff;
+  font-size: 18px;
+  letter-spacing: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Open Sans',sans-serif;
+}
+.bg-img .content .field input[type="submit"]:hover
+{
+  border: none;
+  border-bottom: 5px solid white;
+}
+.bg-img .content .signup
+{
+  font-size: 15px;
+  color: #fff;
+  font-family: 'Open Sans',sans-serif;
+  margin-top: 20px;
+}
+.bg-img .content .signup a
+{
+  color: #b2bec3;
+  text-decoration: none;
+  margin-left: 10px;
+}
+.bg-img .content .signup a:hover
+{
+  color: #fff;
+}
+@media screen and (max-width: 500px)
+{
+  .bg-img .img__mov .login__uno{width: 80px;}
+  .bg-img .img__mov .login__dos{width: 160px;}
+  .bg-img .img__mov .login__tres{width: 250px;}
+  .bg-img .content{width: 350px;}
+}

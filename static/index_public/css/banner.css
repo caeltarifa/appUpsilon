@@ -1,0 +1,152 @@
+.banner{
+  width: 100%;
+  height: 100%;
+  background: blueviolet;
+} 
+canvas{
+  display: block;
+  vertical-align: bottom;
+}
+#particles-js{
+  width: 100%;
+  height: 100%;
+  background-color: #1B9CFC;
+  background-image: url("");
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+}
+#particles-js .contenedor{
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  margin: auto;
+  width: 100%;
+  height: 100%;
+  margin: 0px auto;
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  grid-template-rows: repeat(4,auto);
+  grid-template-areas: "logo video"
+  "logo video"
+  "info video"
+  "info video";
+}
+#particles-js .contenedor .banner__logo,
+#particles-js .contenedor .banner__info,
+#particles-js .contenedor .banner__video{
+  padding: 0px;
+  border-radius: 10px;
+}
+#particles-js .contenedor .banner__logo{
+  color: #fff;
+  grid-area: logo;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#particles-js .contenedor .banner__logo .banner__loader{
+  position: relative;
+  width: 100%;
+  height: 300px;
+  top: 20px;
+}
+#particles-js .contenedor .banner__logo .banner__loader .banner__uno,
+#particles-js .contenedor .banner__logo .banner__loader .banner__dos,
+#particles-js .contenedor .banner__logo .banner__loader .banner__tres{
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  margin: auto;
+}
+#particles-js .contenedor .banner__logo .banner__loader .banner__uno{
+  width: 100px;
+  -webkit-animation: banner__uno 5s infinite linear;
+}
+#particles-js .contenedor .banner__logo .banner__loader .banner__dos{
+  width: 200px;
+  z-index: 20;
+  -webkit-animation: banner__dos 7s infinite linear;
+}
+#particles-js .contenedor .banner__logo .banner__loader .banner__tres{
+  width: 315px;
+  -webkit-animation: banner__tres 200s infinite linear;
+}
+@-webkit-keyframes banner__uno{
+  from{
+    -webkit-transform: rotate(0deg);
+  }
+  to{
+    -webkit-transform: rotate(359deg);
+  }
+}
+@-webkit-keyframes banner__dos{
+  from{
+    -webkit-transform: rotate(359deg);
+  }
+  to{
+    -webkit-transform: rotate(0deg);
+  }
+}
+@-webkit-keyframes banner__tres{
+  from{
+    -webkit-transform: rotate(0deg);
+  }
+  to{
+    -webkit-transform: rotate(359deg);
+  }
+}
+#particles-js .contenedor .banner__info{
+  color: #fff;
+  grid-area: info;
+  text-align: center;
+}
+#particles-js .contenedor .banner__info h1{
+  font-size: 25px;
+  margin-bottom: 30px;
+}
+#particles-js .contenedor .banner__info .btn__ingresar{
+  border: none;
+	color: #FFFFFF;
+	background: none;
+	border: 1px solid #FFFFFF;
+	height: 50px;
+	line-height: 50px;
+	font-size: 16px;
+	font-weight: 300;
+	padding: 20px 50px;
+	transition: .3s ease all;
+  margin-bottom: 30px;
+}
+#particles-js .contenedor .banner__info .btn__ingresar:hover{
+  color: #fff;
+	border: 1px solid #fff;
+}
+
+
+#particles-js .contenedor .banner__video{                      
+  color: #fff;
+  grid-area: video;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#particles-js .contenedor .banner__video iframe{
+  width: 90%;
+  height: 350px;
+}
+@media screen and (max-width: 900px){
+  #particles-js{
+    height: 140vh;
+  }
+  #particles-js .contenedor{
+    grid-template-areas: "logo logo"
+    "logo logo"
+    "info info"
+    "video video";
+  }
+}

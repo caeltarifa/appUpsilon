@@ -1,0 +1,117 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&display=swap');
+.contacto
+{
+  width: 100%;
+  height: 100%;
+  background: #1B9CFC;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-family: 'Open Sans',sans-serif;
+}
+.footer{width: 100%;}
+.footer .footer__logo
+{
+  position: relative;
+  width: 100%;
+  height: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.footer .footer__logo .footer__uno,
+.footer .footer__logo .footer__dos,
+.footer .footer__logo .footer__tres
+{
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  margin: auto;
+}
+.footer .footer__logo .footer__uno
+{
+  width: 100px;
+  animation: footer_der 5s infinite linear;
+}
+.footer .footer__logo .footer__dos
+{
+  width: 200px;
+  z-index: 20;
+  animation: footer_izq 7s infinite linear;
+}
+.footer .footer__logo .footer__tres
+{
+  width: 500px;
+  top: 80px;
+  animation: footer_apa_des 60s infinite linear;
+}
+@keyframes footer_der
+{
+  from{transform: rotate(0deg);}
+  to{transform: rotate(359deg);}
+}
+@keyframes footer_izq
+{
+  from{transform: rotate(359deg);}
+  to{transform: rotate(0deg);}
+}
+@keyframes footer_apa_des
+{
+  0%{opacity: 1;}
+  10%{opacity: 0.8;}
+  20%{opacity: 0.6;}
+  30%{opacity: 0.4;}
+  40%{opacity: 0.2;}
+  50%{opacity: 0;}
+  60%{opacity: 0.2;}
+  70%{opacity: 0.4;}
+  80%{opacity: 0.6;}
+  90%{opacity: 0.8;}
+  100%{opacity: 1;}
+}
+.footer .logo_epb{width: 250px; height: 140px;}
+.footer .primera
+{
+  color: rgb(163, 162, 162);
+  letter-spacing: 10px;
+  margin: 0;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+.footer .primera > span{
+  color: #05359c;
+  font-weight: 900;
+}
+.footer .empresa
+{
+  color: #fff;
+  font-size: 15px;
+  font-weight: normal;
+  margin-bottom: 10px;
+  letter-spacing: 5px;
+}
+.footer .footer__empresa
+{
+  color: #b1b1b1;
+  font-size: 20px;
+  font-weight: normal;
+  letter-spacing: 2px;
+}
+@media screen and (max-width: 768px)
+{
+  .footer .footer__logo .footer__uno{width: 80px;}
+  .footer .footer__logo .footer__dos{width: 160px;}
+  .footer .footer__logo .footer__tres{width: 400px; top: 60px;}
+  .footer .logo_epb{width: 280px; height: 150px;}
+  .footer .footer__logo{height: 200px;}
+}
+@media screen and (max-width: 450px)
+{
+  .footer .footer__logo .footer__uno{width: 70px;}
+  .footer .footer__logo .footer__dos{width: 140px;}
+  .footer .footer__logo .footer__tres{width: 300px; top: 60px;}
+  .footer .footer__logo{height: 160px;}
+}

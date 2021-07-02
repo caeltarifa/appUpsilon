@@ -1,3 +1,6 @@
+{% load static %}
+
+<!--
 <div class="modal-dialog  modal-dialog-centered " role="document" >
     <div class="modal-content">
         <div class="modal-body">
@@ -22,17 +25,11 @@
                         {% csrf_token %}
                         <div class="input-container">
                             {{ form.username }}
-                            <!--
-                                <input type="#{type}" id="#{label}" required="required" />
-                            -->
                             <label for="#{label}">Nombre de usuario</label>
                             <div class="bar"></div>
                         </div>
                         <div class="input-container">
                             {{ form.password }}
-                            <!--
-                                <input type="#{type}" id="#{label}" required="required" />
-                            -->
                             <label for="#{label}">Contraseña</label>
                             <div class="bar"></div>
                         </div>
@@ -46,7 +43,6 @@
             </div>
 
         </div>
-
         <div class="modal-footer">
             <br><br>
             <button class="btn btn-danger " type="button" data-dismiss="modal" style="z-index:900;">Cerrar</button>
@@ -55,3 +51,219 @@
 
     </div>
 </div>
+
+-->
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Upsilon | login </title>
+    
+  <link rel="stylesheet" href="{% static 'login/css/preloader.css' %}">
+
+
+  <link rel="stylesheet" href="{% static 'login/css/app.css' %}">
+
+  <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+  <link rel="stylesheet" href="{% static 'login/css/navbar.css' %}">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pushbar.js@1.0.0/src/pushbar.min.css">
+  <link rel="stylesheet" href="{% static 'login/css/sidebar.css' %}">
+
+  <link rel="stylesheet" href="{% static 'login/css/login.css' %}">
+
+  <link rel="stylesheet" href="{% static 'login/css/contacto.css' %}">
+</head>
+<body>
+  
+  <div class="loader__page">
+    <img src="{% static 'login/img/preloader/logo_1.svg' %}" alt="logo_uno" class="inicial__uno">
+    <img src="{% static 'login/img/preloader/logo_2.svg' %}" alt="logo_dos" class="inicial__dos">
+    <img src="{% static 'login/img/preloader/logo_3.svg' %}" alt="logo_tres" class="inicial__tres">
+  </div>
+
+  <header class="l-header">
+    
+    <nav class="nav bd-grid" style="display: flex; align-items: center; justify-content: space-between;">
+      <div>
+        <a href="{% url 'view_pagina_principal' %}" class="nav__logo">appUpsilon </a>
+      </div>
+
+      <div class="nav__menu" id="nav-menu">
+        <ul class="nav__list">
+          <li class="nav__item"><a href="#primero" class="nav__link active link">Iniciar Sesion</a></li>
+          <li class="nav__item"><a href="#segundo" class="nav__link link">Contacto</a></li>
+          <li class="nav__item">
+              <a href="#" class="nav__logo" data-pushbar-target="pushbar-app"><i class='bx bxs-category'></i></a>
+          </li>
+
+        </ul>
+      </div>
+
+      <img src="{% static 'login/img/navbar/LOGO_AASANA.png' %}" class="logo__aasana">
+      
+      <div class="nav__toggle" id="nav-toggle">
+        <i class="bx bx-menu"></i>
+      </div>
+      
+    </nav>
+
+  </header>
+
+<!--
+
+  <header class="l-header">
+    <div class="optionsbar">
+      
+      <nav class="nav bd-grid">
+        <div>
+          <a href="#" class="nav__logo">Upsilon</a>
+          <a href="#" class="nav__apps" data-pushbar-target="pushbar-app"><i class='bx bxs-dashboard bx-sm'></i></a>
+        </div>
+        <div class="nav__menu" id="nav-menu">
+          <ul class="nav__list">
+            <li class="nav__item"><a href="#primero" class="nav__link active link">Inicio</a></li>
+            <li class="nav__item"><a href="#segundo" class="nav__link link">Contacto</a></li>
+          </ul>
+        </div>
+        <div class="nav__toggle" id="nav-toggle">
+          <i class="bx bx-menu"></i>
+        </div>
+
+        <img src="img/navbar/LOGO_AASANA.png" class="logo__aasana">
+        
+      </nav>
+
+    </div>
+
+  </header>
+-->
+
+
+  <div data-pushbar-id="pushbar-app" data-pushbar-direction="left" class="pushbar pushbar-app">
+    <div class="contenedor">
+      <div class="btn-cerrar izquierda">
+        <button data-pushbar-close><i class='bx bx-x'></i></button>
+      </div>
+      <p class="titulo">Ifis Nuklear</p>
+      <a href="#">
+        <div class="item">
+          <img src="{% static 'login/img/sidebar/5.png' %}">
+          <div class="textos">
+            <p class="nombre-item">App Ezpin</p>
+            <p>Mensajeria Aeronautica</p>
+          </div>
+        </div>
+      </a>
+      <a href="#">
+        <div class="item">
+          <img src="{% static 'login/img/sidebar/1.png' %}">
+          <div class="textos">
+            <p class="nombre-item">App Graviton</p>
+            <p>Sistema Metereologica</p>
+          </div>
+        </div>
+      </a>
+      <a href="#">
+        <div class="item">
+          <img src="{% static 'login/img/sidebar/3.png' %}">
+          <div class="textos">
+            <p class="nombre-item">App Luczon</p>
+            <p>Plan de Vuelo</p>
+          </div>
+        </div>
+      </a>
+      <a href="#">
+        <div class="item">
+          <img src="{% static 'login/img/sidebar/4.png' %}">
+          <div class="textos">
+            <p class="nombre-item">App Upsilon</p>
+            <p>Sistema Información</p>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+
+
+  <section id="primero" class="bg-img">
+  	    <div class="img__mov">
+			<img src="{% static 'login/img/login/logo_1.svg' %}" class="login__uno">
+			<img src="{% static 'login/img/login/logo_2.svg' %}" class="login__dos">
+			<img src="{% static 'login/img/login/logo_3.svg' %}" class="login__tres">
+		</div>
+		<div class="content">
+			<header>INICIAR SESION</header>
+            {% if form.errors %}
+                <p>El usuario y password no coinciden. Intentalo nuevamente.</p>
+            {% endif %}
+
+            {% if next %}
+            {% if user.is_authenticated %}
+            <p>Tu cuenta no tiene acceso a esta pagina. Para continuar,
+                por favor ingresa con una cuenta que tenga acceso.</p>
+            {% else %}
+            {% endif %}
+            {% endif %}
+
+			<form method="post" action="{% url 'login' %}">
+                {% csrf_token %}
+
+				<div class="field">
+					<span class="fas fa-user"></span>
+					<!-- <input type="text" required placeholder="Correo..."> -->
+                    {{ form.username }}
+				</div>
+
+				<div class="field space">
+					<span class="fas fa-lock"></span>
+					<!-- <input type="password" class="pass-key" required placeholder="Contraseña..."> -->
+                    {{ form.password }}
+					<span class="show">SHOW</span>
+				</div>
+				<div class="pass">
+					<a href="#">¿ Olvidó su Contraseña ?</a>
+				</div>
+				<div class="field">
+					<input type="submit" value="INGRESAR">
+				</div>
+			</form>
+			<div class="signup">
+				<!-- ¿ No tienes Cuenta ? -->
+                <a href="{% url 'view_pagina_principal' %}">Salir</a>
+			</div>
+		</div>
+  </section>
+
+
+  <section id="segundo" class="contacto">
+  	<footer class="footer">
+      <div class="footer__logo">
+        <img src="{% static 'index_public/img/footer/logo_1.svg' %}" class="footer__uno">
+        <img src="{% static 'index_public/img/footer/logo_2.svg' %}" class="footer__dos">
+        <img src="{% static 'index_public/img/footer/logo_3.svg' %}" class="footer__tres">
+      </div>
+      <img src="{% static 'login/img/contacto/LOGO_EPB.png' %}" class="logo_epb">
+      <h3 class="primera">Ifis <span>Nuklear</span></h3>
+      <p class="empresa">Sistema de Informacion de Vuelo por Internet</p>
+      <p class="footer__empresa">2021 | IFIS NUKLEAR</p>
+    </footer>
+  </section>
+
+
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://kit.fontawesome.com/1ac5dcfffc.js" crossorigin="anonymous"></script>
+
+  <script src="{% static 'login/js/navbar.js' %}"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/pushbar.js@1.0.0/src/pushbar.min.js"></script>
+
+  <script src="{% static 'login/js/sidebar.js' %}"></script>
+</body>
+</html>

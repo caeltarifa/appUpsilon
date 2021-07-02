@@ -4,7 +4,7 @@
 
 
 {% block title %}
-<title>Upsilon | login</title>
+<title>appUpsilon</title>
 {% endblock title %}
 
 
@@ -41,7 +41,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.bundle.js"></script>
 <script src="https://www.gstatic.com/charts/loader.js"></script>
 
-<!--  Agregando el slider  -->
+<!--  Agregando el slider  touch -->
 <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
 <link rel="stylesheet" href="{% static 'notametro/estilos.css' %}">
 {% endblock extra_head %}
@@ -91,7 +91,9 @@
             </button>
              -->
             
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalLogin" id="btn-form" style="background:#f39c12" onclick="abrir_modal( '{% url 'login' %}')">Iniciar sesión</button>
+            <a href="{% url 'login' %}" class="btn btn-primary" id="btn-form" style="background:#f39c12">
+                Iniciar sesión
+            </a>
         </div>
 
         <!-- /.modal 

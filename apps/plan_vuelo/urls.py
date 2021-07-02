@@ -3,7 +3,6 @@ from django.urls import path, re_path
 from apps.plan_vuelo.views import view_plan_vuelo, view_panel_coordinacion, view_admin_coordinacion , view_aprobar_flp, view_tablero, view_update_flp, view_template_prueba, view_identificacion, view_validar_passwd, view_cerrar_sesion , view_recordar_ruta, view_rutas_guardadas, view_get_trabajadores
 
 from apps.plan_vuelo.views import view_update_notam_realtime,view_notam_modal
-from apps.aro_ais.views import view_todos_notams
 
 
 from apps.plan_vuelo.views import view_getmetar
@@ -80,7 +79,6 @@ urlpatterns = [
     ######################### NOTAMS REAL TIME
     path('notamsupdate/', view_update_notam_realtime, name="view_update_notam_realtime"), #
     path('notammodal/<path:id_notam_mensaje>/',view_notam_modal, name='view_notam_modal'),
-    path('allnotams/',view_todos_notams, name='view_todos_notams'),
 
     ######################### QUERY METARS
     path('getmetar/<path:id_aeropuerto>/',view_getmetar, name='view_getmetar'),
