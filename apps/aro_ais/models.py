@@ -324,6 +324,10 @@ class Notam_trafico_charly_repla(models.Model):
     estado_asunto = models.CharField(max_length=500)
 
     pib_publicar = models.CharField(max_length=1000)
+    
+    antecedente = models.CharField(max_length=2000, default='')
+
+    form_oaci = models.FileField(upload_to='documents-%Y-%m-%d/', blank=True, null=True)
 
     ingresado = models.DateTimeField(default=datetime.now, blank=True, null=True)
     def __str__(self):
@@ -343,6 +347,8 @@ class Notam_trafico_charly_cancel(models.Model):
 
     asunto = models.CharField(max_length=100)
     estado_asunto = models.CharField(max_length=500)
+
+    antecedente = models.CharField(max_length=2000, default='')
 
     ingresado = models.DateTimeField(default=datetime.now, blank=True, null=True)
     def __str__(self):
@@ -369,6 +375,8 @@ class Notam_trafico_charly_new(models.Model):
 
     pib_publicar = models.CharField(max_length=1000)
 
+    antecedente = models.CharField(max_length=2000, default='')
+
     ingresado = models.DateTimeField(default=datetime.now, blank=True, null=True)
     
     def __str__(self):
@@ -394,6 +402,8 @@ class Notam_trafico_alfa_repla(models.Model):
     asunto = models.CharField(max_length=100)
     estado_asunto = models.CharField(max_length=1000)
 
+    antecedente = models.CharField(max_length=2000, default='')
+
     ingresado = models.DateTimeField(default=datetime.now, blank=True, null=True)
     def __str__(self):
         return '{}'.format(self.idnotam)
@@ -412,6 +422,8 @@ class Notam_trafico_alfa_cancel(models.Model):
 
     asunto = models.CharField(max_length=100)
     estado_asunto = models.CharField(max_length=500)
+
+    antecedente = models.CharField(max_length=2000, default='')
 
     ingresado = models.DateTimeField(default=datetime.now, blank=True, null=True)
     def __str__(self):
@@ -434,6 +446,8 @@ class Notam_trafico_alfa_new(models.Model):
 
     asunto = models.CharField(max_length=100)
     estado_asunto = models.CharField(max_length=1000)
+
+    antecedente = models.CharField(max_length=2000, default='')
 
     ingresado = models.DateTimeField(default=datetime.now, blank=True, null=True)
     

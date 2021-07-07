@@ -401,8 +401,19 @@ class Aeropuerto(models.Model):
     icao = models.CharField(max_length=4)
     longitude = models.FloatField()
     latitude = models.FloatField()
+
+    geo_arp = models.CharField(max_length=25, blank=True, null=True)
+    geo_vor = models.CharField(max_length=25, blank=True, null=True, default='NIL')
+    geo_ils = models.CharField(max_length=25, blank=True, null=True, default='NIL')
+    geo_ils_gp_dme = models.CharField(max_length=25, blank=True, null=True, default='NIL')
+    geo_l = models.CharField(max_length=25, blank=True, null=True, default='NIL')
+    geo_gpe_dme = models.CharField(max_length=25, blank=True, null=True, default='NIL')
+    geo_marcador = models.CharField(max_length=25, blank=True, null=True, default='NIL')
+    geo_ndb = models.CharField(max_length=25, blank=True, null=True, default='NIL')
+
     def __str__(self):
         return '{}'.format(self.icao)
 
     class Meta:
         ordering = ('icao',)
+

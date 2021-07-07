@@ -12,6 +12,13 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!-- <link rel="stylesheet" href="{% static 'theme-assets/css/aprobar_plan.css' %}"> -->
     <link rel="stylesheet" href="{% static 'theme-assets/css/pib.css' %}">
+
+
+
+
+    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css'>
+
+
 {% endblock extra_head %}
     
 <!-- ////////////////////////////////////////////////////////////////////////////-->
@@ -153,6 +160,29 @@
 
                                     <br>
                                     <div class="card" >
+                                      <div style="padding: 0px;" class="card-header" id="headingZero">
+                                        <h5 class="mb-0">
+                                          <button class="btn btn-link" data-toggle="collapse" data-target="#collapseZero" aria-expanded="true" aria-controls="collapseZero" style="width: 100%; background-color: rgb(229, 242, 252);">
+                                            Antecedente del NOTAM
+                                          </button>
+                                        </h5>
+                                      </div>
+                                  
+                                      <div id="collapseZero" class="collapse show" aria-labelledby="headingZero" data-parent="#accordion">
+                                        <div class="card-body">
+                                          
+                                          <div class="input-group">
+                                            <textarea v-model="form.antecedente_notam" id="id_antecedente_notam" class="form-control" style="width: 100%;" rows="2"  placeholder="Antecedente NOTAM"> </textarea>
+                                          </div>
+
+                                        </div>
+                                      </div>
+                                    </div>
+
+
+
+                                    <br>
+                                    <div class="card" >
                                       <div style="padding: 0px;" class="card-header" id="headingOne">
                                         <h5 class="mb-0">
                                           <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="width: 100%; background-color: rgb(229, 242, 252);">
@@ -250,9 +280,9 @@
   
                                               <select class="form-control" v-model="form.model_coordenadas" @change="actualizar_casilla_a($event)">
                                                 <option disabled> Seleccione un lugar</option>
-                                                <option v-for="coord in form.coordenadas" :value="coord" >
-                                                    [[coord]]
-                                                </option>
+                                                {% for geo in lista_georeferencias %}
+                                                  <option value="{{geo.icao}} {{geo.fuente}} {{geo.georef}}">{{geo.icao}} {{geo.fuente}} {{geo.georef}}</option>
+                                                {% endfor %}
                                               </select>
                                               <input class="input" placeholder="Radio" type="text" v-model="form.radio" />
                                           </div>
@@ -279,18 +309,18 @@
                                             <input class="input form-control" placeholder="0000" type="text" v-model="form.desde_hora" />
 
                                             &nbsp;&nbsp;C) &nbsp;&nbsp;
-                                            <input class="input form-control" type="date" v-model="form.hasta_fecha"/>
-                                            <input class="input form-control" placeholder="0000" type="text" v-model="form.hasta_hora" />
+                                            <input v-if="form.model_tiponotam != 'NOTAMC' " class="input form-control" type="date" v-model="form.hasta_fecha"/>
+                                            <input v-if="form.model_tiponotam != 'NOTAMC' " class="input form-control" placeholder="0000" type="text" v-model="form.hasta_hora" />
 
                                             <div class="field">
-                                              <div class="control" >
+                                              <div class="control" v-if="form.model_tiponotam != 'NOTAMC' " >
                                                   <label>
                                                     &nbsp;
                                                     <input type="checkbox" value="EST" v-model="form.estimado"  />
                                                     EST&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                   </label>
                                                   <br>
-                                                  <label >
+                                                  <label>
                                                     <input type="checkbox" value="PERM" v-model="form.permanente"  />
                                                     PERM
                                                   </label>
@@ -461,7 +491,7 @@
                                           <pre><code>[[form]]</code></pre>
                                         -->
                                         <pre style="text-align: left;">
-                                          <code id="copy-notam-charly">
+                                          <code id="copy-notam-charly" >
   [[form.model_prioridad]] 
   [[form.fecha_deposito.substring(8,)]][[form.hora_deposito]] [[form.remitente]]
   ([[form.correlativo_charly]] NOTAMN
@@ -527,6 +557,8 @@ E) [[form.cuerpo1]] [[form.cuerpo2]]
                                     </div>
                                   </div>
 
+                              
+
                                   <div style="width: 100%;">
                                     <form id="data_srv_id" action="{% url 'view_post_crear_notam' %}" method="POST" >
                                       {% csrf_token %}
@@ -544,12 +576,22 @@ E) [[form.cuerpo1]] [[form.cuerpo2]]
                                       <input style="display: none;" type="text" name="pib_publicar" v-model="data_srv.pib_publicar">
                                       <input style="display: none;" type="text" name="estimado" v-model="data_srv.estimado_srv">
                                       <input style="display: none;" type="text" name="permanente" v-model="data_srv.permanente_srv">
+                                      <input style="display: none;" type="text" name="antecedente" v-model="data_srv.antecedente_notam">
                                       <!-- BUTTON PARA ENVIAR
                                       -->
                                       <input class="btn btn-info text-white copy-btn" type="submit" value="GUARDAR NOTAM" @click="guardar_notam()">
                                     </form>
                                   </div>
                                 </section>
+                                
+                                <div id="appFormularioOaci">
+                                  <v-btn @click='generatePDF'>
+                                    <span class="material-icons">
+                                      post_add
+                                    </span>
+                                  </v-btn>
+                                </div>
+
                               </div>
 
                               
@@ -704,7 +746,7 @@ E) [[form.cuerpo1]] [[form.cuerpo2]]
       }
     }
   });
-
+/*
   new Vue({
       el: '#app2',
       delimiters: ['[[', ']]'],
@@ -785,17 +827,11 @@ E) [[form.cuerpo1]] [[form.cuerpo2]]
           console.log(this.estados_asunto)
           //titulo_letra
         },
-
-        buscar_correlativo: function() {
-          // buscar_correlativo 
-          this.respuesta="C000A/11"
-        }
-
       }
         
         
     }
-  );  
+  );  */
 </script>
 
 <script src="https://unpkg.com/vue-toasted"></script>
@@ -813,7 +849,7 @@ E) [[form.cuerpo1]] [[form.cuerpo2]]
   //Vue.use(Toasted, {duration: 1000});
 
 
-  var app_vue = new Vue({
+  app_vue = new Vue({
     el: "#appNewnotam",
     delimiters: ['[[', ']]'],
     data: {
@@ -888,7 +924,7 @@ E) [[form.cuerpo1]] [[form.cuerpo2]]
 
           model_coordenadas:"Seleccione un lugar",
           coordenadas:["SLLP SLLF 1630S06811W","SLLP VOR 1630S06811W", "SLPS ARP 1858S05749W", "SLCB VOR 1725S06610W","SLAP ARP 1144S06824W"],
-          radio:'000',
+          radio:'005',
           //------------------------------------------------------------------------------------------------------------------------------------
           correlativo_charly:"",
           correlativo_alfa:"",
@@ -905,6 +941,7 @@ E) [[form.cuerpo1]] [[form.cuerpo2]]
           limite_inferior: "",
           limite_superior: "",
 
+          antecedente_notam:"",
 
           pib_asunto:"",
           pib_estado_asunto:""
@@ -927,6 +964,7 @@ E) [[form.cuerpo1]] [[form.cuerpo2]]
           pib_publicar:"",
           estimado_srv:"",
           permanente_srv:"",
+          antecedente_notam:"",
         }
     },
     
@@ -1259,8 +1297,10 @@ E) [[form.cuerpo1]] [[form.cuerpo2]]
         this.data_srv.estado_asunto=this.form.pib_estado_asunto;
         this.data_srv.estado_asunto=this.form.pib_estado_asunto;
 
-        this.data_srv.estimado_srv=this.form.estimado[this.form.estimado.length -1]
-        this.data_srv.permanente_srv=this.form.permanente[this.form.permanente.length -1]
+        this.data_srv.estimado_srv=this.form.estimado[this.form.estimado.length -1];
+        this.data_srv.permanente_srv=this.form.permanente[this.form.permanente.length -1];
+
+        this.data_srv.antecedente_notam = this.form.antecedente_notam;
 
 
         try {
@@ -1269,6 +1309,17 @@ E) [[form.cuerpo1]] [[form.cuerpo2]]
           this.data_srv.pib_publicar = "";
         }
       },
+    
+      obtener_codigo_charly_amhs: function() {
+        amhs_charly = document.getElementById('copy-notam-charly').textContent;
+        return amhs_charly;
+      }, 
+      obtener_codigo_alfa_amhs: function() {
+        //document.getElementById(id_code)
+        amhs_alfa = document.getElementById('copy-notam-alfa').textContent;
+        return amhs_alfa;
+
+      }
     },
   
   }); 
@@ -1418,6 +1469,878 @@ E) [[form.cuerpo1]] [[form.cuerpo2]]
   }
   
 */
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src='https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.2.4/jspdf.plugin.autotable.min.js'></script>
+
+
+<script>
+  // jsPDF docs are found here:
+  // http://raw.githack.com/MrRio/jsPDF/master/docs/
+  form_oaci = new Vue({
+    el: "#appFormularioOaci",
+    vuetify: new Vuetify(),
+    data() {
+      return {
+        heading: "Administración de Aeropuertos y \nServicios Auxiliares a la Navegación Aérea",
+        
+        datos_formulario:
+        {
+          indicador_prioridad: "GG",
+          direccion: "TODAS LAS DIRECCIONES AMHS DESTINO",
+          fecha_hora_deposito: "2103251200",
+          indicador_remitente: "SLLPYNYX",
+          //parte 2 del formulario notam
+          serie_numero_charly: "C0092/21",
+          serie_numero_alfa: "A0092/21",
+          serie_numero_charly_repla: "C0054/21",
+          serie_numero_alfa_repla: "A0054/21",
+          serie_numero_charly_cancel: "C0043/21",
+          serie_numero_alfa_cancel: "A0043/21",
+          //parte 3 del formulario notam
+          fir: 'SLLF',
+          codigo_notam: 'QWER',
+          transito: '12',
+          objetivo: 'OBJ',
+          alcance: 'AL',
+          limite_inferior: 'INF',
+          limite_superior: 'SUP',
+          coordenadas: '12321S12320W012',
+          lugar: 'SLVR',
+          //parte 4 del formulario notam: periodo de validez
+          desde: '2103212243',
+          hasta: '2103212243',
+          horario: 'BTWN 1500 - 1800',
+          texto_notam: ' ESTE ES EL TEXTO NOTAM',
+          limite_inferior_casilla: 'LIMITE INFERIOR CASILLA',
+          limite_superior_casilla: 'LIMITE SUPERIOR CASILLA',
+          firma: 'tecnico de turno',
+          
+          dato_charly_amhs:"",
+          dato_alfa_amhs:"",
+
+          antecedente_notam:"ANTECEDENTE NOTAM ", 
+        },
+
+      };
+    },
+    methods: {
+
+      generatePDF() {
+
+        
+/***********************DATOS INICIO */
+        this.datos_formulario.indicador_prioridad = app_vue.form.model_prioridad;
+        this.datos_formulario.direccion = "TODAS LAS DIRECCIONES AMHS DESTINO";
+        this.datos_formulario.fecha_hora_deposito = app_vue.form.fecha_deposito.substring(8,)+""+app_vue.form.hora_deposito;//"2103251200",
+        this.datos_formulario.indicador_remitente = app_vue.form.remitente;//"SLLPYNYX",
+        //parte 2 del formulario notam
+        this.datos_formulario.serie_numero_charly = app_vue.form.correlativo_charly;//String(app_vue.form.correlativo_charly),
+        this.datos_formulario.serie_numero_alfa = app_vue.form.correlativo_alfa;
+        
+        this.datos_formulario.serie_numero_charly_repla = "C0054/21";
+        this.datos_formulario.serie_numero_alfa_repla = "A0054/21";
+        
+        this.datos_formulario.serie_numero_charly_cancel = "C0043/21";
+        this.datos_formulario.serie_numero_alfa_cancel = "A0043/21";
+        //parte 3 del formulario notam
+        this.datos_formulario.fir =  'SLLF';
+        this.datos_formulario.codigo_notam =  app_vue.form.model_asunto+app_vue.form.model_estado_asunto;
+        this.datos_formulario.transito =  app_vue.form.model_tipo;
+        this.datos_formulario.objetivo =  app_vue.form.model_nbo;//'OBJ',
+        this.datos_formulario.alcance =  app_vue.form.model_alcance;//'AL',
+        this.datos_formulario.limite_inferior =  app_vue.form.nivel_inf;//'INF',
+        this.datos_formulario.limite_superior =  app_vue.form.nivel_sup;//'SUP',
+        this.datos_formulario.coordenadas =  app_vue.form.model_coordenadas.split(" ")[2]+app_vue.form.radio;
+        this.datos_formulario.lugar =  app_vue.form.lugar;//'SLLP',
+        //parte 4 del formulario notam: periodo de validez
+        this.datos_formulario.desde = app_vue.form.desde_fecha.substring(2,).replace("-","").replace("-","")+app_vue.form.desde_hora;//'2103212243',
+        this.datos_formulario.hasta = app_vue.form.hasta_fecha.substring(2,).replace("-","").replace("-","")+app_vue.form.hasta_hora;
+
+        this.datos_formulario.estimado = app_vue.form.estimado[app_vue.form.estimado.length -1];
+        this.datos_formulario.permanente = app_vue.form.permanente[app_vue.form.permanente.length -1];
+
+        this.datos_formulario.horario = app_vue.form.casilla_d;
+        this.datos_formulario.texto_notam = app_vue.form.cuerpo1+" "+app_vue.form.cuerpo2;
+        this.datos_formulario.limite_inferior_casilla = app_vue.form.limite_inferior;
+        this.datos_formulario.limite_superior_casilla = app_vue.form.limite_superior;
+
+        this.datos_formulario.firma = 'ESPECIALISTA AIS';
+        
+        this.datos_formulario.dato_charly_amhs = app_vue.obtener_codigo_charly_amhs()
+        this.datos_formulario.dato_alfa_amhs = app_vue.obtener_codigo_alfa_amhs()
+
+        this.datos_formulario.antecedente_notam = document.getElementById('id_antecedente_notam').textContent;
+
+/***********************DATOS FIN*/
+
+        const columns = [
+          { title: "Title", dataKey: "title" },
+          { title: "Body", dataKey: "body" },
+          { title: "Cuerpo", dataKey: "cuerpo" }
+        ];
+        const doc = new jsPDF({
+          orientation: "portrait",
+          unit: "in",
+          format: "letter",
+        });
+
+        const logo_aasana = "data:image/png;base64,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";
+        doc.addImage(logo_aasana, "PNG", 1, 0.2, 1, 0.5);
+
+        // text is placed using x, y coordinates
+        doc.setFontSize(11).text(this.heading, 0.5, 0.85);
+        doc.setFontSize(9).text("FORM AIS 001", 7, 1.0);
+        // create a line under heading 
+        doc.setLineWidth(0.01).line(0.5, 1.1, 8.0, 1.1);
+
+        // Using autoTable plugin
+        const color_celda = [230, 230, 255];
+        doc.autoTable(
+          {
+            bodyStyles: {
+              lineWidth: 0.01,
+              lineColor: [0, 0, 0],
+              fontSize: 8,
+              cellPadding: 0
+            },
+            theme: "plain",
+            
+            cellWidth: 'wrap',
+            columnStyles: {
+              nombre_campo: { halign: 'center', valign: 'middle', minCellWidth: 1 },
+              valor_campo: { minCellWidth: 5 }
+            },
+            columns: [
+              { dataKey: 'nombre_campo', header: { content: "", colSpan: 3, styles: { halign: 'center', valign: 'middle', display:'none' } } },
+              { dataKey: 'valor_campo', header: 'Valor_campo', },
+              { dataKey: 'simbolo', header: 'Simbolo', },
+            ],
+            body: [
+              { nombre_campo: { content: 'Indicador de prioridad', styles: { fillColor: color_celda } }, valor_campo: this.datos_formulario.indicador_prioridad, simbolo: '--->' },
+              { nombre_campo: { content: 'Dirección', styles: { fillColor: color_celda } }, valor_campo: { content: this.datos_formulario.direccion, colSpan: 2 }, simbolo: '--->' },
+              [{ content: " ", colSpan: 3, styles: { halign: 'center', valign: 'middle' } }],
+              [{ content: " ", colSpan: 3, styles: { halign: 'center', valign: 'middle' } }],
+              { nombre_campo: { content: ' ', colSpan: 2 }, simbolo: '<<<=' },
+              { nombre_campo: { content: 'Fecha y hora de deposito', styles: { fillColor: color_celda } }, valor_campo: this.datos_formulario.fecha_hora_deposito, simbolo: '--->' },
+              { nombre_campo: { content: 'Indicador del remitente', styles: { fillColor: color_celda } }, valor_campo: this.datos_formulario.indicador_remitente, simbolo: '<<= (' },
+            ],
+
+            margin: { left: 0.5, top: 1.25, bottom: 0, }
+          })
+
+        doc.autoTable(
+          {
+            startY: doc.lastAutoTable.finalY + 0.01,
+            bodyStyles: {
+              lineWidth: 0.005,
+              lineColor: [0, 0, 0],
+              fontSize: 8,
+              cellPadding: 0
+            },
+            theme: "plain",
+            headStyles: {
+              fillColor: color_celda,
+              lineWidth: 0.01,
+              lineColor: [0, 0, 0],
+              fontSize: 8,
+            },
+            columnStyles: {
+              0: {
+                cellWidth: 1.3, valign: 'middle', halign: 'center'
+              },
+              1: {
+                cellWidth: 0.7
+              },
+              2: {
+                cellWidth: 0.6
+              },
+              3: {
+                cellWidth: 1.5
+              },
+            },
+
+            // European countries centered
+            columns: [
+              { dataKey: 'principal', header: { content: "Serie, número e identificador del mensaje", colSpan: 4, styles: { halign: 'center', valign: 'middle' } } },
+              { dataKey: 'uno', header: 'Serie, número e identificador del mensaje', },
+              { dataKey: 'dos', header: 'Europe' },
+              { dataKey: 'tres', header: 'Asia' },
+              //{ header: 'America', dataKey: 'america' },
+            ],
+
+            body: [
+              {
+                principal:
+                {
+                  content: 'NOTAM que contiene nueva información',
+                  rowSpan: 2,
+                  styles: { fillColor: color_celda }
+                },
+
+                //llenando el NOTAM NUEVO o el NUEVO CORRELATIVO
+                uno: this.datos_formulario.serie_numero_charly + '\n' + this.datos_formulario.serie_numero_alfa,
+                dos: {
+                  content: 'NOTAMN',
+                  rowSpan: 2,
+                  styles: {
+                    valign: 'middle',
+                    halign: 'center'
+                  }
+                },
+                tres: {
+                  content: '',
+                  rowSpan: 2,
+                }
+              },
+
+              {
+                principal: {
+                  content: ' '
+                },
+                uno: "(Serie y número/año) "
+              },
+              {
+                principal: {
+                  content: 'NOTAM que reemplaza un NOTAM anterior',
+                  rowSpan: 2,
+                  styles: {
+                    fillColor: color_celda
+                  }
+                },
+
+                //llenando el NOTAM NUEVO o el NUEVO CORRELATIVO
+                uno: this.datos_formulario.serie_numero_charly + '\n' + this.datos_formulario.serie_numero_alfa,
+                dos: {
+                  content: 'NOTAMR',
+                  rowSpan: 2,
+                  styles: {
+                    valign: 'middle',
+                    halign: 'center'
+                  }
+                },
+                tres: this.datos_formulario.serie_numero_charly_repla + '\n' + this.datos_formulario.serie_numero_alfa_repla
+              },
+
+              { principal: { content: ' ' }, uno: "(Serie y número/año) ", tres: "(Serie y número/año del NOTAM remplazado) " },
+
+              {
+                principal: {
+                  content: 'NOTAM que cancela un NOTAM anterior',
+                  rowSpan: 2,
+                  styles: {
+                    fillColor: color_celda
+                  }
+                },
+
+                //llenando el NOTAM NUEVO o el NUEVO CORRELATIVO
+                uno: this.datos_formulario.serie_numero_charly + '\n' + this.datos_formulario.serie_numero_alfa,
+                dos: {
+                  content: 'NOTAMC',
+                  rowSpan: 2,
+                  styles: {
+                    valign: 'middle',
+                    halign: 'center'
+                  }
+                },
+                tres: this.datos_formulario.serie_numero_charly_cancel + '\n' + this.datos_formulario.serie_numero_alfa_cancel
+              },
+
+              { principal: { content: ' ' }, uno: "(Serie y número/año) ", tres: "(Serie y número/año del NOTAM cancelado) " },
+            ],
+            margin: { left: 0.5, top: 1.25, bottom: 0, }
+
+          })
+
+        doc.autoTable(
+          {
+            startY: doc.lastAutoTable.finalY + 0.01,
+            bodyStyles: {
+              lineWidth: 0.005,
+              lineColor: [0, 0, 0],
+              fontSize: 8,
+              cellPadding: 0
+            },
+            theme: "plain",
+            headStyles: {
+              fillColor: color_celda,
+              lineWidth: 0.01,
+              lineColor: [0, 0, 0],
+              fontSize: 8,
+            },
+            /*
+            columnStyles: {
+              0: {
+                cellWidth: 1.3, valign: 'middle',halign: 'center'
+              },
+              1: {
+                cellWidth: 0.7
+              },
+              2: {
+                cellWidth: 0.6
+              },
+              3: {
+                cellWidth: 1.5
+              },
+            },
+            */
+            // European countries centered
+            columns: [
+              //{ dataKey: 'principal', header:  },
+              { dataKey: 'cell1', header: { content: "Calificativos", colSpan: 46, styles: { halign: 'center', valign: 'middle' } }, },
+              { dataKey: 'cell2', header: '', },
+              { dataKey: 'cell3', header: '', },
+              { dataKey: 'cell4', header: '', },
+              { dataKey: 'cell5', header: '', },
+              { dataKey: 'cell6', header: '', },
+              { dataKey: 'cell7', header: '', },
+              { dataKey: 'cell8', header: '', },
+              { dataKey: 'cell9', header: '', },
+              { dataKey: 'cell10', header: '', },
+              { dataKey: 'cell11', header: '', },
+              { dataKey: 'cell12', header: '', },
+              { dataKey: 'cell13', header: '', },
+              { dataKey: 'cell14', header: '', },
+              { dataKey: 'cell15', header: '', },
+              { dataKey: 'cell16', header: '', },
+              { dataKey: 'cell17', header: '', },
+              { dataKey: 'cell18', header: '', },
+              { dataKey: 'cell19', header: '', },
+              { dataKey: 'cell20', header: '', },
+              { dataKey: 'cell21', header: '', },
+              { dataKey: 'cell22', header: '', },
+              { dataKey: 'cell23', header: '', },
+              { dataKey: 'cell24', header: '', },
+              { dataKey: 'cell25', header: '', },
+              { dataKey: 'cell26', header: '', },
+              { dataKey: 'cell27', header: '', },
+              { dataKey: 'cell28', header: '', },
+              { dataKey: 'cell29', header: '', },
+              { dataKey: 'cell30', header: '', },
+              { dataKey: 'cell31', header: '', },
+              { dataKey: 'cell32', header: '', },
+              { dataKey: 'cell33', header: '', },
+              { dataKey: 'cell34', header: '', },
+              { dataKey: 'cell35', header: '', },
+              { dataKey: 'cell36', header: '', },
+              { dataKey: 'cell37', header: '', },
+              { dataKey: 'cell38', header: '', },
+              { dataKey: 'cell39', header: '', },
+              { dataKey: 'cell40', header: '', },
+              { dataKey: 'cell41', header: '', },
+              { dataKey: 'cell42', header: '', },
+              { dataKey: 'cell43', header: '', },
+              { dataKey: 'cell44', header: '', },
+              { dataKey: 'cell45', header: '', },
+        { dataKey: 'cell46', header: '', },
+              //{ header: 'America', dataKey: 'america' },
+            ],
+            body: [
+              //FILA 1: TITULOS DE LAS CASILLAS
+              {
+                cell1: { content: " ", styles: { fillColor: color_celda, halign: 'center', valign: 'middle' } },
+                //FIR
+                cell2: { content: "FIR", colSpan: 5, styles: { fillColor: color_celda, halign: 'center', valign: 'middle' } },
+                //codigo NOTAM
+                cell7: { content: "Código NOTAM", colSpan: 6, styles: { fillColor: color_celda, halign: 'center', valign: 'middle' } },
+                //TRANSITO
+                cell13: { content: "Tránsito", colSpan: 3, styles: { fillColor: color_celda, halign: 'center', valign: 'middle' } },
+                //OBJETIVO
+                cell16: { content: "Objetivo", colSpan: 4, styles: { fillColor: color_celda, halign: 'center', valign: 'middle' } },
+                //ALCANCE
+                cell20: { content: "Alcance", colSpan: 3, styles: { fillColor: color_celda, halign: 'center', valign: 'middle' } },
+                //LIMITE INFERIOR
+                cell23: { content: "Límite inferior", colSpan: 4, styles: { fillColor: color_celda, halign: 'center', valign: 'middle' } },
+                //LIMITE SUPERIOR
+                cell27: { content: "Limite superior", colSpan: 4, styles: { fillColor: color_celda, halign: 'center', valign: 'middle' } },
+                //COORDENADAS RADIO
+                cell31: { content: "Coordenadas, Radio", colSpan: 15, styles: { fillColor: color_celda, halign: 'center', valign: 'middle' } },
+
+                cell46: "<<=/",
+              },
+              //FILA 2: CASILLAS PARA LLENAR EL FORMULARIO
+              {
+                cell1: { content: "Q)", rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                //FIR
+                cell2: { content: this.datos_formulario.fir.substring(0, 1), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell3: { content: this.datos_formulario.fir.substring(1, 2), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell4: { content: this.datos_formulario.fir.substring(2, 3), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell5: { content: this.datos_formulario.fir.substring(3, 4), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell6: { content: '/', rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                //codigo NOTAM
+                cell7: { content: "Q", rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell8: { content: this.datos_formulario.codigo_notam.substring(0, 1), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell9: { content: this.datos_formulario.codigo_notam.substring(1, 2), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell10: { content: this.datos_formulario.codigo_notam.substring(2, 3), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell11: { content: this.datos_formulario.codigo_notam.substring(3, 4), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell12: { content: "/", rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                //TRANSITO
+                cell13: { content: this.datos_formulario.transito.substring(0, 1), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell14: { content: this.datos_formulario.transito.substring(1, 2), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell15: { content: "/", rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                //OBJETIVO
+                cell16: { content: this.datos_formulario.objetivo.substring(0, 1), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell17: { content: this.datos_formulario.objetivo.substring(1, 2), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell18: { content: this.datos_formulario.objetivo.substring(2, 3), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell19: { content: "/", rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                //ALCANCE
+                cell20: { content: this.datos_formulario.alcance.substring(0, 1), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell21: { content: this.datos_formulario.alcance.substring(1, 2), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell22: { content: "/", rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                //LIMITE INFERIOR
+                cell23: { content: this.datos_formulario.limite_inferior.substring(0, 1), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell24: { content: this.datos_formulario.limite_inferior.substring(1, 2), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell25: { content: this.datos_formulario.limite_inferior.substring(2, 3), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell26: { content: "/", rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                //LIMITE SUPERIOR
+                cell27: { content: this.datos_formulario.limite_superior.substring(0, 1), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell28: { content: this.datos_formulario.limite_superior.substring(1, 2), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell29: { content: this.datos_formulario.limite_superior.substring(2, 3), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell30: { content: "/", rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                //COORDENADAS RADIO
+                cell31: { content: this.datos_formulario.coordenadas.substring(0, 1), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell32: { content: this.datos_formulario.coordenadas.substring(1, 2), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell33: { content: this.datos_formulario.coordenadas.substring(2, 3), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell34: { content: this.datos_formulario.coordenadas.substring(3, 4), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell35: { content: this.datos_formulario.coordenadas.substring(4, 5), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell36: { content: this.datos_formulario.coordenadas.substring(5, 6), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell37: { content: this.datos_formulario.coordenadas.substring(6, 7), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell38: { content: this.datos_formulario.coordenadas.substring(7, 8), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell39: { content: this.datos_formulario.coordenadas.substring(8, 9), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell40: { content: this.datos_formulario.coordenadas.substring(9, 10), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell41: { content: this.datos_formulario.coordenadas.substring(10, 11), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell42: { content: this.datos_formulario.coordenadas.substring(11, 12), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell43: { content: this.datos_formulario.coordenadas.substring(12, 13), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell44: { content: this.datos_formulario.coordenadas.substring(13, 14), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+          cell45: { content: this.datos_formulario.coordenadas.substring(14, 15), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+
+                cell46: "<<=/",
+              },
+              //FILA 3: SOLO PARA COMBINAR COLUMNAS
+              {
+                cell1: '',
+                cell2: '',
+                cell3: '',
+                cell4: '',
+                cell5: '',
+                cell6: '',
+                cell7: '',
+                cell8: '',
+                cell9: '',
+                cell10: '',
+                cell11: '',
+                cell12: '',
+                cell13: '',
+                cell14: '',
+                cell15: '',
+                cell16: '',
+                cell17: '',
+                cell18: '',
+                cell19: '',
+                cell20: '',
+                cell21: '',
+                cell22: '',
+                cell23: '',
+                cell24: '',
+                cell25: '',
+                cell26: '',
+                cell27: '',
+                cell28: '',
+                cell29: '',
+                cell30: '',
+                cell31: '',
+                cell32: '',
+                cell33: '',
+                cell34: '',
+                cell35: '',
+                cell36: '',
+                cell37: '',
+                cell38: '',
+                cell39: '',
+                cell40: '',
+                cell41: '',
+                cell42: '',
+                cell43: '',
+                cell44: ' ',
+                cell45: ' ',
+                cell46: ' ',
+              },
+              //FILA 4: IDENTIFICACION DEL LUGAR
+              {
+                cell1: { content: "Identificación del indicador de lugar OACI correspondiente a la instalación, espacio aéreo o condición notificados", colSpan: 30, styles: { fillColor: color_celda, halign: 'center', valign: 'middle', cellPadding: 0.03 } },
+                cell31: { content: "A)   " + this.datos_formulario.lugar, colSpan: 15, styles: { halign: 'left', valign: 'middle', cellPadding: 0.03 } },
+                cell46: { content: '-->', styles: { halign: 'left', valign: 'middle', cellPadding: 0.03 } }
+              }
+            ],
+            margin: { left: 0.5, top: 1.25, bottom: 0, }
+
+          })
+
+        doc.autoTable(
+          {
+            startY: doc.lastAutoTable.finalY + 0.01,
+            bodyStyles: {
+              lineWidth: 0.005,
+              lineColor: [0, 0, 0],
+              fontSize: 8,
+              cellPadding: 0
+            },
+            theme: "plain",
+            headStyles: {
+              fillColor: color_celda,
+              lineWidth: 0.01,
+              lineColor: [0, 0, 0],
+              fontSize: 8,
+            },
+            columnStyles: {
+              0: {
+                cellWidth: 1, valign: 'middle', halign: 'center'
+              },
+
+            },
+            columns: [
+              { dataKey: 'cell1', header: { content: "Período de validez", colSpan: 15, styles: { halign: 'center', valign: 'middle' } }, },
+              { dataKey: 'cell2', header: '', },
+              { dataKey: 'cell3', header: '', },
+              { dataKey: 'cell4', header: '', },
+              { dataKey: 'cell5', header: '', },
+              { dataKey: 'cell6', header: '', },
+              { dataKey: 'cell7', header: '', },
+              { dataKey: 'cell8', header: '', },
+              { dataKey: 'cell9', header: '', },
+              { dataKey: 'cell10', header: '', },
+              { dataKey: 'cell11', header: '', },
+              { dataKey: 'cell12', header: '', },
+              { dataKey: 'cell13', header: '', },
+              { dataKey: 'cell14', header: '', },
+              { dataKey: 'cell15', header: '', },
+              //{ header: 'America', dataKey: 'america' },
+            ],
+            body: [
+              //FILA 1: CASILLAS PARA LLENAR EL FORMULARIO DESDE
+              {
+                cell1: { content: "Desde (grupo fecha-hora)", rowSpan: 2, styles: { fillColor: color_celda, halign: 'left', valign: 'middle', cellPadding: 0.1 } },
+                cell2: { content: 'B)', rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                //PERIODO VALIDEZ CASILLA B)
+                cell3: { content: this.datos_formulario.desde.substring(0, 1), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell4: { content: this.datos_formulario.desde.substring(1, 2), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell5: { content: this.datos_formulario.desde.substring(2, 3), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell6: { content: this.datos_formulario.desde.substring(3, 4), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell7: { content: this.datos_formulario.desde.substring(4, 5), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell8: { content: this.datos_formulario.desde.substring(5, 6), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell9: { content: this.datos_formulario.desde.substring(6, 7), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell10: { content: this.datos_formulario.desde.substring(7, 8), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell11: { content: this.datos_formulario.desde.substring(8, 9), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell12: { content: this.datos_formulario.desde.substring(9, 10), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                //FLECHA
+                cell13: { content: "-->", rowSpan: 2, colSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell15: "s"
+              },
+              //SOLO PARA COMBINAR COLUMNAS
+              {
+                cell1: '',
+                cell2: '',
+                cell3: '',
+                cell4: '',
+                cell5: '',
+                cell6: '',
+                cell7: '',
+                cell8: '',
+                cell9: '',
+                cell10: '',
+                cell11: '',
+                cell12: '',
+                cell13: '',
+                cell14: '',
+                cell15: '',
+
+              },
+
+              //FILA 2: CASILLAS PARA LLENAR EL FORMULARIO HASTA
+              {
+                cell1: { content: "Hasta (PERM o grupo fecha-hora)", rowSpan: 2, styles: { fillColor: color_celda, halign: 'left', valign: 'middle', cellPadding: 0.1 } },
+                cell2: { content: 'C)', rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                //PERIODO VALIDEZ CASILLA B)
+                cell3: { content: this.datos_formulario.hasta.substring(0, 1), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell4: { content: this.datos_formulario.hasta.substring(1, 2), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell5: { content: this.datos_formulario.hasta.substring(2, 3), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell6: { content: this.datos_formulario.hasta.substring(3, 4), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell7: { content: this.datos_formulario.hasta.substring(4, 5), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell8: { content: this.datos_formulario.hasta.substring(5, 6), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell9: { content: this.datos_formulario.hasta.substring(6, 7), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell10: { content: this.datos_formulario.hasta.substring(7, 8), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell11: { content: this.datos_formulario.hasta.substring(8, 9), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell12: { content: this.datos_formulario.hasta.substring(9, 10), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                //FLECHA
+                cell13: { content:  this.datos_formulario.estimado + "\n" + this.datos_formulario.permanente , rowSpan: 2, colSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                cell14: "SA",
+                cell15: "s"
+              },
+              // SOLO PARA COMBINAR COLUMNAS
+              {
+                cell1: '',
+                cell2: '',
+                cell3: '',
+                cell4: '',
+                cell5: '',
+                cell6: '',
+                cell7: '',
+                cell8: '',
+                cell9: '',
+                cell10: '',
+                cell11: '',
+                cell12: '',
+                cell13: '',
+                cell14: '',
+                cell15: '',
+
+              },
+              //FILA 3: horario si corresponde
+              {
+                cell1: { content: "Horario (si corresponde)", rowSpan: 4, styles: { fillColor: color_celda, halign: 'left', valign: 'middle', cellPadding: 0.1 } },
+                cell2: { content: 'D)', rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                //PERIODO VALIDEZ CASILLA D)
+                cell3: { content: this.datos_formulario.horario, rowSpan: 2, colSpan: 12, styles: { halign: 'left', valign: 'middle', cellPadding: 0.05, } },
+                cell15: { content: " ", },
+              },
+              // SOLO PARA COMBINAR COLUMNAS
+              {
+                cell1: '',
+                cell2: '',
+                cell3: '',
+                cell4: '',
+                cell5: '',
+                cell6: '',
+                cell7: '',
+                cell8: '',
+                cell9: '',
+                cell10: '',
+                cell11: '',
+                cell12: '',
+                cell13: '',
+                cell14: '',
+                cell15: '',
+              },
+              //FILA 4: horario si corresponde, parte 2
+              {
+                cell1: { content: "" },
+                cell2: { content: '', rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
+                //PERIODO VALIDEZ CASILLA B)
+                cell3: { content: "horario alternativo", colSpan: 12, rowSpan: 2, styles: { halign: 'left', valign: 'middle', cellPadding: 0.05 } },
+                cell15: ""
+              },
+              // SOLO PARA COMBINAR COLUMNAS
+              {
+                cell1: '',
+                cell2: '',
+                cell3: '',
+                cell4: '',
+                cell5: '',
+                cell6: '',
+                cell7: '',
+                cell8: '',
+                cell9: '',
+                cell10: '',
+                cell11: '',
+                cell12: '',
+                cell13: '',
+                cell14: '',
+                cell15: '',
+              },
+            ],
+            margin: { left: 0.5, top: 1.25, bottom: 0, }
+
+          })
+
+        doc.autoTable(
+          {
+            startY: doc.lastAutoTable.finalY + 0.01,
+            bodyStyles: {
+              lineWidth: 0.005,
+              lineColor: [0, 0, 0],
+              fontSize: 8,
+              cellPadding: 0
+            },
+            theme: "plain",
+            headStyles: {
+              fillColor: color_celda,
+              lineWidth: 0.01,
+              lineColor: [0, 0, 0],
+              fontSize: 8,
+            },
+            columnStyles: {
+              0: {
+                cellWidth: 0.45, valign: 'middle', halign: 'center'
+              },
+            },
+            columns: [
+              //{ dataKey: 'principal', header:  },
+              { dataKey: 'cell1', header: { content: "Texto del NOTAM; Entradas en lenguaje claro (con abreviaturas OACI)", colSpan: 3, styles: { halign: 'center', valign: 'middle' } }, },
+              { dataKey: 'cell2', header: '', },
+              { dataKey: 'cell3', header: '', },
+            ],
+            body: [
+              //FILA 1: CUERPO DEL MENSAJE E)
+              {
+                cell1: { content: "E) " + this.datos_formulario.texto_notam + "\n", rowSpan: 1, colSpan: 3, styles: { halign: 'left', valign: 'middle', cellPadding: 0.1 } },
+              },
+              //FILA 2: limite inferior
+              {
+                cell1: { content: "Limite inferior", styles: { fillColor: color_celda, halign: 'left', valign: 'middle', cellPadding: 0.02 } },
+                cell2: { content: 'F) ' + this.datos_formulario.limite_inferior_casilla, styles: { halign: 'left', valign: 'middle', cellPadding: 0.02 } },
+                cell3: { content: '-->', styles: { halign: 'center', valign: 'middle' } },
+              },
+              //FILA 3: limite superior
+              {
+                cell1: { content: "Limite superior", styles: { fillColor: color_celda, halign: 'left', valign: 'middle', cellPadding: 0.02 } },
+                cell2: { content: 'G) ' + this.datos_formulario.limite_superior_casilla, styles: { halign: 'left', valign: 'middle', cellPadding: 0.02 } },
+                cell3: { content: ")<<=", styles: { halign: 'center', valign: 'middle' } },
+              },
+              //FILA 4: firma
+              {
+                cell1: { content: "Firma " + this.datos_formulario.firma, colSpan: 3, styles: { fillColor: color_celda, halign: 'left', valign: 'middle', cellPadding: 0.02 } },
+              },
+            ],
+            margin: { left: 0.5, top: 1.25, bottom: 0, }
+          })
+
+//-------------------------------- PAGINA DOS
+          doc
+          .setFontSize(11)
+          .setFontStyle("italic")
+          .setTextColor(0, 0, 255)
+          .text(
+            "@upsilon from @ifisnuklear",
+            0.5,
+            doc.internal.pageSize.height - 0.5
+          );
+
+
+        doc.addPage();
+
+              doc.addImage(logo_aasana, "PNG", 1, 0.2, 1, 0.5);
+
+              // text is placed using x, y coordinates
+              doc.setFontSize(11).setFontStyle("normal").setTextColor(0, 0, 0).text(this.heading, 0.5, 0.8);
+              doc.setFontSize(9).text("Anexos", 7, 1.0);
+              // create a line under heading 
+              doc.setLineWidth(0.01).line(0.5, 1.1, 8.0, 1.1);
+
+
+        doc.autoTable(
+          {
+            //startY: doc.lastAutoTable.finalY + 0.1,
+            bodyStyles: {
+              lineWidth: 0.005,
+              lineColor: [0, 0, 0],
+              fontSize: 8,
+              cellPadding: 0
+            },
+            theme: "plain",
+            headStyles: {
+              fillColor: color_celda,
+              lineWidth: 0.01,
+              lineColor: [0, 0, 0],
+              fontSize: 8,
+            },
+            columnStyles: {
+              0: {
+                cellWidth: 0.45, valign: 'middle', halign: 'center'
+              },
+            },
+            columns: [
+              //{ dataKey: 'principal', header:  },
+              { dataKey: 'cell1', header: { content: "Antecedente", styles: { halign: 'center', valign: 'middle' } }, },
+            ],
+            body: [
+              //FILA 1: CUERPO DEL MENSAJE E)
+              {
+                cell1: { content: this.datos_formulario.antecedente_notam , styles: { halign: 'left', valign: 'middle', cellPadding: 0.1 } },
+              },
+            ],
+            margin: { left: 0.5, top: 1.25, bottom: 0, }
+          })
+
+
+        doc.autoTable(
+          {
+            //startY: doc.lastAutoTable.finalY + 0.1,
+            bodyStyles: {
+              lineWidth: 0.005,
+              lineColor: [0, 0, 0],
+              fontSize: 8,
+              cellPadding: 0
+            },
+            theme: "plain",
+            headStyles: {
+              fillColor: color_celda,
+              lineWidth: 0.01,
+              lineColor: [0, 0, 0],
+              fontSize: 8,
+            },
+            columnStyles: {
+              0: {
+                cellWidth: 0.45, valign: 'middle', halign: 'center'
+              },
+            },
+            columns: [
+              //{ dataKey: 'principal', header:  },
+              { dataKey: 'cell1', header: { content: "Notam serie C", styles: { halign: 'center', valign: 'middle' } }, },
+              { dataKey: 'cell2', header: { content: "Notam serie A", styles: { halign: 'center', valign: 'middle' } }, },
+            ],
+            body: [
+              //FILA 1: CUERPO DEL MENSAJE E)
+              {
+                cell1: { content: this.datos_formulario.dato_charly_amhs + "\n \n", styles: { halign: 'left', valign: 'middle', cellPadding: 0.1 } },
+                cell2: { content: this.datos_formulario.dato_alfa_amhs + "\n \n", styles: { halign: 'left', valign: 'middle', cellPadding: 0.1 } },
+              },
+            ],
+            margin: { left: 0.5, top: 1.25, bottom: 0, }
+          })
+
+
+
+         
+        // Using array of sentences
+        //doc.setFont("helvetica").setFontSize(12).text(this.moreText, 0.5, 3.5, { align: "left", maxWidth: "7.5" });
+
+        // Creating footer and saving file
+        doc
+          .setFontSize(11)
+          .setFontStyle("italic")
+          .setTextColor(0, 0, 255)
+          .text(
+            "@upsilon from @ifisnuklear",
+            0.5,
+            doc.internal.pageSize.height - 0.5
+          )
+          .save(`${this.heading}.pdf`);
+      }
+    }
+  });
+
 </script>
 
 

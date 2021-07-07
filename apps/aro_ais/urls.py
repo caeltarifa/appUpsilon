@@ -32,6 +32,9 @@ from appUpsilon.views import api_historico_alfa_from_notamc
 
 from apps.aro_ais.views import view_todos_notams
 
+
+from apps.aro_ais.views import view_get_aed_georef
+
 ##CREAR NOTAM
 from apps.aro_ais.views import view_post_crear_notam
 
@@ -87,5 +90,9 @@ urlpatterns = [
 
     ## API PARA GUARDAR NOTAM CREADO
     path('createnotam/', view_post_crear_notam, name="view_post_crear_notam"), #
+
+
+    ##API PARA CONSULTAR AED GEOREFERENCIADOS
+    path('georefaed/', view_get_aed_georef, name="view_get_aed_georef"), #
     
 ]

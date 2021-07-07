@@ -83,12 +83,17 @@ def view_admin_ais(request):
 
 def view_new_notam(request):
     if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='AISNACIONAL').exists():
-        letra_asunto = Letra_asunto.objects.all().order_by('id_letra')
-        #letra_asunto = [x.id_letra for x in letra_asunto]
-
         lista_letras = Letra_asunto.objects.all().order_by('id_letra')
 
-        return render(request, 'temp_plan_vuelo/temp_aro_ais/new_notam.html', {'vec_letra': letra_asunto, 'lista_letras': lista_letras})
+        lista_georeferencias = Aeropuerto.objects.raw( "(select aeropuerto, icao, fuente, geo_arp AS georef   from plan_vuelo_aeropuerto  inner join (VALUES ('ARP')) AS t (fuente)  on geo_arp not like %(nil)s and aeropuerto <> 39)  union  (select aeropuerto, icao, fuente, geo_vor AS georef  from plan_vuelo_aeropuerto  inner join (VALUES ('VOR')) AS t (fuente)  on geo_vor not like %(nil)s)   union  (select aeropuerto, icao, fuente, geo_ils AS georef  from plan_vuelo_aeropuerto  inner join (VALUES ('ILS')) AS t (fuente)  on geo_ils not like %(nil)s)   union  (select aeropuerto, icao, fuente, geo_ils_gp_dme AS georef  from plan_vuelo_aeropuerto  inner join (VALUES ('ILS_GP_DME')) AS t (fuente)  on geo_ils_gp_dme not like %(nil)s)  union  (select aeropuerto, icao, fuente, geo_l AS georef  from plan_vuelo_aeropuerto  inner join (VALUES ('L')) AS t (fuente)  on geo_l not like %(nil)s)   union  (select aeropuerto, icao, fuente, geo_gpe_dme AS georef  from plan_vuelo_aeropuerto  inner join (VALUES ('GPE_DME')) AS t (fuente)  on geo_gpe_dme not like %(nil)s)   union  (select aeropuerto, icao, fuente, geo_marcador AS georef  from plan_vuelo_aeropuerto  inner join (VALUES ('MM')) AS t (fuente)  on geo_marcador not like %(nil)s)   union  (select aeropuerto, icao, fuente, geo_ndb AS georef  from plan_vuelo_aeropuerto  inner join (VALUES ('NDB')) AS t (fuente)  on geo_ndb not like %(nil)s)   union  (select aeropuerto, icao, iata AS fuente, geo_arp AS georef  from plan_vuelo_aeropuerto  where iata like 'SLLF')  order by icao asc, fuente asc" , { 'nil' : "NIL"} )
+
+        for geo in lista_georeferencias:
+            part1 = str(geo.georef.split('S')[0])[0:4]
+            part2 = str(geo.georef.split('S')[1])[0:5]
+
+            geo.georef = part1 + 'S' + part2 + 'W'
+
+        return render(request, 'temp_plan_vuelo/temp_aro_ais/new_notam.html', {'lista_georeferencias': lista_georeferencias, 'lista_letras': lista_letras})
     else:
         return redirect('login')
 
@@ -601,6 +606,7 @@ def view_post_crear_notam(request):
                 'post_estado_asunto' : str(request.POST.get('estado_asunto')),
                 'post_estimado' : str(request.POST.get('estimado')),
                 'post_permanente' : str(request.POST.get('permanente')),
+                'antecedente' : str(request.POST.get('antecedente')),
             }
 
             ############ CONTROL DE ID_MENSAJE           
@@ -680,6 +686,8 @@ def guardar_nuevo_charly(id_charly, inf_constante, post_pib_publicar):
     banco_charly.estado_asunto = inf_constante['post_estado_asunto']
 
     banco_charly.pib_publicar = post_pib_publicar
+    
+    banco_charly.antecedente = inf_constante['antecedente']
 
     banco_charly.save()
 '''
@@ -729,6 +737,8 @@ def guardar_nuevo_alfa(id_alfa, inf_constante):
     banco_alfa.asunto = inf_constante['post_asunto']
     banco_alfa.estado_asunto = inf_constante['post_estado_asunto']
 
+    banco_alfa.antecedente = inf_constante['antecedente']
+
     banco_alfa.save()
 
 '''
@@ -774,5 +784,29 @@ def view_get_correlativo_alfa(request):
             return HttpResponse(json.dumps([{'Error':'No method get'}]), content_type='application/json')
     else:
         return redirect('login')
+
+def view_get_aed_georef(request):
+    if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='AISNACIONAL').exists():
+        if request.method =="GET":
+            
+            lista_georeferencias = Aeropuerto.objects.raw( "(select aeropuerto, icao, fuente, geo_arp AS georef  from plan_vuelo_aeropuerto inner join (VALUES ('ARP')) AS t (fuente) on geo_arp not like %(nil)s ) union (select aeropuerto, icao, fuente, geo_vor AS georef from plan_vuelo_aeropuerto inner join (VALUES ('VOR')) AS t (fuente) on geo_vor not like %(nil)s)  union (select aeropuerto, icao, fuente, geo_ils AS georef from plan_vuelo_aeropuerto inner join (VALUES ('ILS')) AS t (fuente) on geo_ils not like %(nil)s)  union (select aeropuerto, icao, iata AS fuente, geo_arp AS georef from plan_vuelo_aeropuerto where iata like 'SLLF') order by icao" , { 'nil' : "NIL"} )
+            
+            lista_georeferencias = [ serializar_georef( geo ) for geo in lista_georeferencias ]
+
+            devolucion = {
+                'lista_georeferencias': lista_georeferencias,
+            }
+            return HttpResponse(json.dumps(devolucion), content_type='application/json')
+        else:
+            return HttpResponse(json.dumps([{'Error':'No method get'}]), content_type='application/json')
+    else:
+        return redirect('login')
+
+def serializar_georef( geo ):
+    return {
+        'icao' : geo.icao,
+        'fuente' : geo.fuente,
+        'georef' : geo.georef,
+    }
 
 # AIM ################################################################################################################
