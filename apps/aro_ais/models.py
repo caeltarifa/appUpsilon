@@ -206,7 +206,7 @@ class Significado_8400(models.Model):
 
 class Historico_pib(models.Model):
     id_pib_historico = models.AutoField(primary_key=True)
-    lista_notam = models.CharField(max_length=8000)
+    lista_notam = models.CharField(max_length=20000)
     fecha_modificado = models.DateTimeField(
         default=datetime.now, blank=False, null=False)
 
@@ -349,6 +349,8 @@ class Notam_trafico_charly_cancel(models.Model):
     estado_asunto = models.CharField(max_length=500)
 
     antecedente = models.CharField(max_length=2000, default='')
+    
+    form_oaci = models.FileField(upload_to='documents-%Y-%m-%d/', blank=True, null=True)
 
     ingresado = models.DateTimeField(default=datetime.now, blank=True, null=True)
     def __str__(self):
@@ -377,6 +379,8 @@ class Notam_trafico_charly_new(models.Model):
 
     antecedente = models.CharField(max_length=2000, default='')
 
+    form_oaci = models.FileField(upload_to='documents-%Y-%m-%d/', blank=True, null=True)
+
     ingresado = models.DateTimeField(default=datetime.now, blank=True, null=True)
     
     def __str__(self):
@@ -403,6 +407,8 @@ class Notam_trafico_alfa_repla(models.Model):
     estado_asunto = models.CharField(max_length=1000)
 
     antecedente = models.CharField(max_length=2000, default='')
+    
+    form_oaci = models.FileField(upload_to='documents-%Y-%m-%d/', blank=True, null=True)
 
     ingresado = models.DateTimeField(default=datetime.now, blank=True, null=True)
     def __str__(self):
@@ -424,6 +430,8 @@ class Notam_trafico_alfa_cancel(models.Model):
     estado_asunto = models.CharField(max_length=500)
 
     antecedente = models.CharField(max_length=2000, default='')
+    
+    form_oaci = models.FileField(upload_to='documents-%Y-%m-%d/', blank=True, null=True)
 
     ingresado = models.DateTimeField(default=datetime.now, blank=True, null=True)
     def __str__(self):
@@ -448,6 +456,8 @@ class Notam_trafico_alfa_new(models.Model):
     estado_asunto = models.CharField(max_length=1000)
 
     antecedente = models.CharField(max_length=2000, default='')
+
+    form_oaci = models.FileField(upload_to='documents-%Y-%m-%d/', blank=True, null=True)
 
     ingresado = models.DateTimeField(default=datetime.now, blank=True, null=True)
     

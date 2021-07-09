@@ -32,7 +32,7 @@
 
 
 <style>
-  #map { position: absolute;  height: 100% ;width: 350px; }
+  #map { position: relative; width: 65%; }
 
   .subscription-container {
     display: flex;
@@ -172,7 +172,7 @@
                                         <div class="card-body">
                                           
                                           <div class="input-group">
-                                            <textarea v-model="form.antecedente_notam" id="id_antecedente_notam" class="form-control" style="width: 100%;" rows="2"  placeholder="Antecedente NOTAM"> </textarea>
+                                            <textarea v-model="form.model_antecedente_notam" id="id_antecedente_notam" class="form-control" style="width: 100%;" rows="2"  placeholder="Antecedente NOTAM"> </textarea>
                                           </div>
 
                                         </div>
@@ -274,17 +274,18 @@
                                             </select>
                                           </div>
     
-                                          <div class="input-group">
-                                              <input class="input" placeholder="Inferior" type="text" v-model="form.nivel_inf" />
-                                              <input class="input" placeholder="superior" type="text" v-model="form.nivel_sup" />
-  
-                                              <select class="form-control" v-model="form.model_coordenadas" @change="actualizar_casilla_a($event)">
+                                          <div class="form-row">
+                                              <input class="input form-control col-md-2" placeholder="Inferior" type="text" v-model="form.nivel_inf" />
+                                              <input class="input form-control col-md-2" placeholder="superior" type="text" v-model="form.nivel_sup" />
+                                              <input class="input form-control col-md-2" placeholder="Radio" type="text" v-model="form.radio" />
+                                            
+                                              <select class="form-control col-md-1" style="width: 10px;border: 3px solid rgb(167, 231, 71);"  v-model="form.model_coordenadas" @change="actualizar_casilla_a($event)">
                                                 <option disabled> Seleccione un lugar</option>
                                                 {% for geo in lista_georeferencias %}
                                                   <option value="{{geo.icao}} {{geo.fuente}} {{geo.georef}}">{{geo.icao}} {{geo.fuente}} {{geo.georef}}</option>
                                                 {% endfor %}
                                               </select>
-                                              <input class="input" placeholder="Radio" type="text" v-model="form.radio" />
+                                              <input class="input form-control col-md-5"  placeholder="Coordenada" type="text" v-model="form.model_coordenadas">
                                           </div>
 
                                         </div>
@@ -370,8 +371,8 @@
                                             <input class="input form-control" placeholder="Estado del asunto" type="text" v-model="form.pib_estado_asunto" />
                                           </div>
                                           <br>
-                                          <textarea disabled id="pib_publicar" v-if="form.hasta_fecha" class="form-control" style="width: 100%;" rows="2"> DESDE [[form.desde_fecha]] HR [[form.desde_hora]] [[form.pib_asunto]] [[form.pib_estado_asunto]] HASTA [[form.hasta_fecha]] HR [[form.hasta_hora]]  [[ form.estimado[form.estimado.length -1] ]] ([[form.correlativo_charly]]) </textarea>
-                                          <textarea disabled id="pib_publicar" v-else class="form-control" style="width: 100%;" rows="2"> DESDE [[form.desde_fecha]] HR [[form.desde_hora]] [[form.pib_asunto]] [[form.pib_estado_asunto]] ([[form.correlativo_charly]]) </textarea>
+                                          <textarea disabled  id="pib_publicar" v-if="form.hasta_fecha" class="form-control" style="width: 100%;" rows="2"> DESDE [[form.desde_fecha]] HR [[form.desde_hora]] [[form.pib_asunto]] [[form.pib_estado_asunto]] HASTA [[form.hasta_fecha]] HR [[form.hasta_hora]]  [[ form.estimado[form.estimado.length -1] ]] ([[form.correlativo_charly]]) </textarea>
+                                          <textarea disabled  id="pib_publicar" v-else class="form-control" style="width: 100%;" rows="2"> DESDE [[form.desde_fecha]] HR [[form.desde_hora]] [[form.pib_asunto]] [[form.pib_estado_asunto]] ([[form.correlativo_charly]]) </textarea>
 
   
                                         </div>
@@ -481,86 +482,69 @@
                                   -->
 
                                   <div class="container">
-                                    <div class="row">
-
-                                      <div class="col" v-if="form.correlativo_charly">
-                                        <h5>
-                                            SERIE CHARLIE
-                                        </h5>
-                                        <!--
-                                          <pre><code>[[form]]</code></pre>
-                                        -->
-                                        <pre style="text-align: left;">
-                                          <code id="copy-notam-charly" >
-  [[form.model_prioridad]] 
-  [[form.fecha_deposito.substring(8,)]][[form.hora_deposito]] [[form.remitente]]
-  ([[form.correlativo_charly]] NOTAMN
-  Q) SLLF/Q[[form.model_asunto]][[form.model_estado_asunto]]/[[form.model_tipo]]/[[form.model_nbo]]/[[form.model_alcance]]/[[form.nivel_inf]]/[[form.nivel_sup]]/[[form.model_coordenadas.split(" ")[2] ]][[form.radio]]
-  A) [[form.lugar]] B) [[( form.desde_fecha.substring(2,) ).replace("-","").replace("-","") ]][[form.desde_hora]] C) [[form.hasta_fecha.substring(2,).replace("-","").replace("-","")]][[form.hasta_hora]] [[ form.estimado[form.estimado.length -1] ]]
-  <span v-if="form.casilla_d"> D) [[form.casilla_d]] </span>
+                                      <div class="row justify-content-center" v-if="form.correlativo_charly">
+                                        <p style="text-align: left;min-height: 100px; width:65%; background-color: rgb(222, 248, 240);"  id="copy-notam-charly">
+                                          <!-- <code id="copy-notam-charly" > -->
+  <!-- [[form.model_prioridad]]  <br>
+  [[form.fecha_deposito.substring(8,)]][[form.hora_deposito]] [[form.remitente]] <br> -->
+  ([[form.correlativo_charly]] NOTAMN <br>
+  Q) SLLF/Q[[form.model_asunto]][[form.model_estado_asunto]]/[[form.model_tipo]]/[[form.model_nbo]]/[[form.model_alcance]]/[[form.nivel_inf]]/[[form.nivel_sup]]/[[form.model_coordenadas.split(" ")[2] ]][[form.radio]] <br>
+  A) [[form.lugar]] B) [[( form.desde_fecha.substring(2,) ).replace("-","").replace("-","") ]][[form.desde_hora]] C) [[form.hasta_fecha.substring(2,).replace("-","").replace("-","")]][[form.hasta_hora]] [[ form.estimado[form.estimado.length -1] ]] <br>
+  <span v-if="form.casilla_d"> D) [[form.casilla_d]] <br> </span> 
   E) [[form.cuerpo1]] [[form.cuerpo2]]
-  <span v-if="form.limite_inferior"> F) [[form.limite_inferior]] </span>
-  <span v-if="form.limite_superior"> G) [[form.limite_superior]] </span>)
-                                          </code>
-                                          <span class="btn btn-info text-white copy-btn ml-auto" @click="copy_clipboard('copy-notam-charly')">
-                                            AMHS CHARLIE
-                                          </span>
-                                        </pre>
+  <span v-if="form.limite_inferior"><br> F) [[form.limite_inferior]]  </span>
+  <span v-if="form.limite_superior"><br> G) [[form.limite_superior]]  </span>)
+                                          <br>
+                                          <!-- </code> -->
+                                        </p>
+                                        <span class="btn btn-info text-white text-justify" style=" height: 100px;" @click="copy_clipboard('copy-notam-charly')">
+                                            AMHS
+                                            <br>
+                                            CHARLIE
+                                        </span>
                                       </div>
   
                                       &nbsp;
                                       &nbsp;
 
-                                      <div class="col" v-if="form.correlativo_alfa">
-                                        <h5>
-                                            SERIE ALPHA
-                                        </h5>
-                                        <!--
-                                          <pre><code>[[form]]</code></pre>
-                                        -->
-                                        <pre style="text-align: left;">
-                                          <code id="copy-notam-alfa" >
-[[form.model_prioridad]]  
-[[form.fecha_deposito.substring(8,)]][[form.hora_deposito]] [[form.remitente]]
-([[form.correlativo_alfa]] NOTAMN
-Q) SLLF/Q[[form.model_asunto]][[form.model_estado_asunto]]/[[form.model_tipo]]/[[form.model_nbo]]/[[form.model_alcance]]/[[form.nivel_inf]]/[[form.nivel_sup]]/[[form.model_coordenadas.split(" ")[2] ]][[form.radio]]
-A) [[form.lugar]] B) [[form.desde_fecha.substring(2,).replace("-","").replace("-","")]][[form.desde_hora]] C) [[form.hasta_fecha.substring(2,).replace("-","").replace("-","")]][[form.hasta_hora]] [[ form.estimado[form.estimado.length -1] ]]
-<span v-if="form.casilla_d"> D) [[form.casilla_d]] </span>
-E) [[form.cuerpo1]] [[form.cuerpo2]]
-<span v-if="form.limite_inferior"> F) [[form.limite_inferior]] </span>
-<span v-if="form.limite_superior"> G) [[form.limite_superior]] </span>)
-                                          </code>
-                                          <span class="btn btn-info text-white copy-btn ml-auto" @click="copy_clipboard('copy-notam-alfa')">
-                                            AMHS ALPHA
-                                          </span>
-                                        </pre>
+                                      <div class="row justify-content-center" v-if="form.correlativo_alfa" style="min-height: 100px; min-width: 70%;">
+                                        <p style="text-align: left;min-height: 100px; width:65%; background-color: rgb(222, 248, 240);" id="copy-notam-alfa">
+  <!--                                           <code id="copy-notam-alfa" > -->
+  <!-- [[form.model_prioridad]]   <br> -->
+  <!-- [[form.fecha_deposito.substring(8,)]][[form.hora_deposito]] [[form.remitente]] <br> -->
+  ([[form.correlativo_alfa]] NOTAMN <br>
+  Q) SLLF/Q[[form.model_asunto]][[form.model_estado_asunto]]/[[form.model_tipo]]/[[form.model_nbo]]/[[form.model_alcance]]/[[form.nivel_inf]]/[[form.nivel_sup]]/[[form.model_coordenadas.split(" ")[2] ]][[form.radio]] <br>
+  A) [[form.lugar]] B) [[form.desde_fecha.substring(2,).replace("-","").replace("-","")]][[form.desde_hora]] C) [[form.hasta_fecha.substring(2,).replace("-","").replace("-","")]][[form.hasta_hora]] [[ form.estimado[form.estimado.length -1] ]] <br>
+  <span v-if="form.casilla_d"> D) [[form.casilla_d]] <br> </span>
+  E) [[form.cuerpo1]] [[form.cuerpo2]] 
+  <span v-if="form.limite_inferior"> <br> F) [[form.limite_inferior]] </span>
+  <span v-if="form.limite_superior"> <br> G) [[form.limite_superior]] </span>)
+                                            <!-- </code> -->
+                                            <br>
+                                        </p>
+                                        <span class="btn btn-info text-white text-justify" style=" height: 100px;" @click="copy_clipboard('copy-notam-alfa')">
+                                        AMHS 
+                                        <br>
+                                        ALPHA&nbsp;&nbsp;
+                                        </span>
                                       </div>
 
-                                      &nbsp;
-                                      &nbsp;
 
                                       <br>
+                                      <br>
                                       
-                                      <div class="col">
+                                      <div class="row justify-content-center">
                                         <!--mita 2-->
-                                        <div id='map'></div>
+                                        <div id='map' v-bind:style="[form.model_coordenadas != 'Seleccione un lugar'?{ 'height':'300px' }:{'height':'0%'}]"></div>
                                       </div>
-                                        
 
 
-
-
-                                        
-                                        
-                                        
-                                        
-                                    </div>
                                   </div>
 
                               
 
                                   <div style="width: 100%;">
-                                    <form id="data_srv_id" action="{% url 'view_post_crear_notam' %}" method="POST" >
+                                    <form class="form-group" id="data_srv_id" action="{% url 'view_post_crear_notam' %}" method="POST"  enctype="multipart/form-data">
                                       {% csrf_token %}
                                       <input style="display: none;" type="text" name="tipo" v-model="data_srv.tipo">
                                       <input style="display: none;" type="text" name="notam_header" v-model="data_srv.notam_header">
@@ -577,16 +561,23 @@ E) [[form.cuerpo1]] [[form.cuerpo2]]
                                       <input style="display: none;" type="text" name="estimado" v-model="data_srv.estimado_srv">
                                       <input style="display: none;" type="text" name="permanente" v-model="data_srv.permanente_srv">
                                       <input style="display: none;" type="text" name="antecedente" v-model="data_srv.antecedente_notam">
+                                      
+                                      <input class="btn btn-outline-dark" type="file" name="formulario_oaci" id="id_formulario_oaci" required style="height: 50px; font-size: 15px;">
+
+                                      <br>
                                       <!-- BUTTON PARA ENVIAR
                                       -->
+
+                                      <br>
+
                                       <input class="btn btn-info text-white copy-btn" type="submit" value="GUARDAR NOTAM" @click="guardar_notam()">
                                     </form>
                                   </div>
                                 </section>
                                 
-                                <div id="appFormularioOaci">
-                                  <v-btn @click='generatePDF'>
-                                    <span class="material-icons">
+                                <div id="appFormularioOaci" style="position: fixed; top: 35%; right: 30px;">
+                                  <v-btn @click='generatePDF' style="background-color: rgb(83, 201, 255);height: 70px;">
+                                    <span class="material-icons" >
                                       post_add
                                     </span>
                                   </v-btn>
@@ -841,13 +832,11 @@ E) [[form.cuerpo1]] [[form.cuerpo2]]
 
 <!-- ////////////////////////////////////////////////////////////////////////////-->
 <script src="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js"></script>
+
+
 <script>
   Vue.config.productionTip = false;
   Vue.config.devtools = false;
-
-  Vue.use(Toasted);
-  //Vue.use(Toasted, {duration: 1000});
-
 
   app_vue = new Vue({
     el: "#appNewnotam",
@@ -941,10 +930,11 @@ E) [[form.cuerpo1]] [[form.cuerpo2]]
           limite_inferior: "",
           limite_superior: "",
 
-          antecedente_notam:"",
+          model_antecedente_notam:"",
 
           pib_asunto:"",
-          pib_estado_asunto:""
+          pib_estado_asunto:"",
+
         },
 
         showSubmitFeedback: false, 
@@ -1028,7 +1018,7 @@ E) [[form.cuerpo1]] [[form.cuerpo2]]
 
         //alert(latitude, longitude)
         //radius = parseInt(this.radio);
-        radius = 2;
+        radius = parseInt(this.form.radio);
         
         if (radius ==0 || radius==999) {
             radius=0;
@@ -1039,7 +1029,6 @@ E) [[form.cuerpo1]] [[form.cuerpo2]]
 
         longitude=vector_posicion[1];
         latitude=vector_posicion[0];
-
         
         var map = new mapboxgl.Map({
           container: 'map',
@@ -1050,7 +1039,6 @@ E) [[form.cuerpo1]] [[form.cuerpo2]]
           minZoom: 7,
           maxZoom: 15,
         });
-
         map.on('load', function() {
           map.addSource("source_circle_500", {
             "type": "geojson",
@@ -1065,7 +1053,6 @@ E) [[form.cuerpo1]] [[form.cuerpo2]]
               }]
             }
           });
-
           map.addLayer({
             "id": "circle500",
             "type": "circle",
@@ -1074,7 +1061,7 @@ E) [[form.cuerpo1]] [[form.cuerpo2]]
               "circle-radius": {
                   stops: [
                     [0, 0],
-                    [20, this.metersToPixelsAtMaxZoom(radius,latitude)]
+                    [20, metersToPixelsAtMaxZoom(radius,latitude)]
                   ],
                   base: 2
               },
@@ -1084,12 +1071,8 @@ E) [[form.cuerpo1]] [[form.cuerpo2]]
           });
         });
         //FIN CREAR MAPA
-
       },
       //FUNCIONES PARA CREAR MAPA
-      metersToPixelsAtMaxZoom(meters, latitude) {
-        return (meters / 0.075 / Math.cos(latitude * Math.PI / 180))
-      },
 
       //LAT': '1725S', 'LONG': '06610W'
       parse_gps: function ( input ) {
@@ -1149,11 +1132,12 @@ E) [[form.cuerpo1]] [[form.cuerpo2]]
       //FIN FUNCIONES PARA CREAR MAPA
       
       copy_clipboard: function (id_code) {
+
         var elm = document.getElementById(id_code);
         // other browsers
-        var selection = window.getSelection();
         var range = document.createRange();
         range.selectNodeContents(elm);
+        var selection = window.getSelection();
         selection.removeAllRanges();
         selection.addRange(range);
         document.execCommand("Copy");
@@ -1163,6 +1147,7 @@ E) [[form.cuerpo1]] [[form.cuerpo2]]
 
       },
       showToast2() {
+        Vue.use(Toasted);
         Vue.toasted.show('Copiado!', {
           duration: 2000
         });
@@ -1269,13 +1254,18 @@ E) [[form.cuerpo1]] [[form.cuerpo2]]
         this.data_srv.aplica_a="A) " + this.form.lugar ;
         this.data_srv.valido_desde="B) "+this.form.desde_fecha.substring(2,).replace("-","").replace("-","")+this.form.desde_hora ;
         
-        if (this.form.estimado[this.form.estimado.length -1]) {
-          this.data_srv.valido_hasta="C) "+this.form.hasta_fecha.substring(2,).replace("-","").replace("-","")+this.form.hasta_hora +" "+ this.form.estimado[this.form.estimado.length -1];
-        }
-
         if (this.form.permanente[this.form.permanente.length -1]) {
-          this.data_srv.valido_hasta="C) "+this.form.hasta_fecha.substring(2,).replace("-","").replace("-","")+this.form.hasta_hora +" "+ this.form.permanente[this.form.permanente.length -1];
+          this.data_srv.valido_hasta="C) "+'PERM';
+        }else{
+          if (this.form.estimado[this.form.estimado.length -1]) {
+            this.data_srv.valido_hasta="C) "+this.form.hasta_fecha.substring(2,).replace("-","").replace("-","")+this.form.hasta_hora +" "+ this.form.estimado[this.form.estimado.length -1];
+          }else{
+            this.data_srv.valido_hasta="C) "+this.form.hasta_fecha.substring(2,).replace("-","").replace("-","")+this.form.hasta_hora
+          }
         }
+        
+
+        
         
         this.data_srv.mensaje="";
         sw=false;
@@ -1300,7 +1290,7 @@ E) [[form.cuerpo1]] [[form.cuerpo2]]
         this.data_srv.estimado_srv=this.form.estimado[this.form.estimado.length -1];
         this.data_srv.permanente_srv=this.form.permanente[this.form.permanente.length -1];
 
-        this.data_srv.antecedente_notam = this.form.antecedente_notam;
+        this.data_srv.antecedente_notam = this.form.model_antecedente_notam;
 
 
         try {
@@ -1311,18 +1301,29 @@ E) [[form.cuerpo1]] [[form.cuerpo2]]
       },
     
       obtener_codigo_charly_amhs: function() {
-        amhs_charly = document.getElementById('copy-notam-charly').textContent;
+        try {
+          amhs_charly = document.getElementById('copy-notam-charly').textContent;
+        } catch (error) {
+          amhs_charly = "";
+        }
         return amhs_charly;
       }, 
       obtener_codigo_alfa_amhs: function() {
-        //document.getElementById(id_code)
-        amhs_alfa = document.getElementById('copy-notam-alfa').textContent;
+        try {
+          amhs_alfa = document.getElementById('copy-notam-alfa').textContent;
+        } catch (error) {
+          amhs_alfa = "";
+        }
         return amhs_alfa;
 
       }
     },
   
   }); 
+
+  function  metersToPixelsAtMaxZoom(meters, latitude) {
+        return (meters / 0.075 / Math.cos(latitude * Math.PI / 180));
+      }
 </script>
 
 <script>
@@ -1499,12 +1500,14 @@ E) [[form.cuerpo1]] [[form.cuerpo2]]
 <script>
   // jsPDF docs are found here:
   // http://raw.githack.com/MrRio/jsPDF/master/docs/
+  current = new Date();
+
   form_oaci = new Vue({
     el: "#appFormularioOaci",
     vuetify: new Vuetify(),
     data() {
       return {
-        heading: "Administración de Aeropuertos y \nServicios Auxiliares a la Navegación Aérea",
+        heading: "AIS_FORM_001_"+String(current.getDate())+'_'+String(current.getMonth()+1) + '_' + String(current.getFullYear()) +'='+ String(current.getHours()) + String(current.getMinutes()),
         
         datos_formulario:
         {
@@ -1513,12 +1516,19 @@ E) [[form.cuerpo1]] [[form.cuerpo2]]
           fecha_hora_deposito: "2103251200",
           indicador_remitente: "SLLPYNYX",
           //parte 2 del formulario notam
-          serie_numero_charly: "C0092/21",
-          serie_numero_alfa: "A0092/21",
-          serie_numero_charly_repla: "C0054/21",
-          serie_numero_alfa_repla: "A0054/21",
-          serie_numero_charly_cancel: "C0043/21",
-          serie_numero_alfa_cancel: "A0043/21",
+          serie_numero_charly_origen_new: "C0092/21",
+          serie_numero_alfa_origen_new: "A0092/21",
+
+          serie_numero_charly_origen_repla: "C0092/21",
+          serie_numero_alfa_origen_repla: "A0092/21",
+
+          serie_numero_charly_origen_cancel: "C0092/21",
+          serie_numero_alfa_origen_cancel: "A0092/21",
+
+          serie_numero_charly_repla: "",
+          serie_numero_alfa_repla: "",
+          serie_numero_charly_cancel: "",
+          serie_numero_alfa_cancel: "",
           //parte 3 del formulario notam
           fir: 'SLLF',
           codigo_notam: 'QWER',
@@ -1542,6 +1552,8 @@ E) [[form.cuerpo1]] [[form.cuerpo2]]
           dato_alfa_amhs:"",
 
           antecedente_notam:"ANTECEDENTE NOTAM ", 
+
+          pib_publicar: ""
         },
 
       };
@@ -1557,14 +1569,31 @@ E) [[form.cuerpo1]] [[form.cuerpo2]]
         this.datos_formulario.fecha_hora_deposito = app_vue.form.fecha_deposito.substring(8,)+""+app_vue.form.hora_deposito;//"2103251200",
         this.datos_formulario.indicador_remitente = app_vue.form.remitente;//"SLLPYNYX",
         //parte 2 del formulario notam
-        this.datos_formulario.serie_numero_charly = app_vue.form.correlativo_charly;//String(app_vue.form.correlativo_charly),
-        this.datos_formulario.serie_numero_alfa = app_vue.form.correlativo_alfa;
+        if (app_vue.form.model_tiponotam == "NOTAMN") {
+          this.datos_formulario.serie_numero_charly_origen_new = app_vue.form.correlativo_charly;//String(app_vue.form.correlativo_charly),
+          this.datos_formulario.serie_numero_alfa_origen_new = app_vue.form.correlativo_alfa;  
+        }else{
+          this.datos_formulario.serie_numero_charly_origen_new = "";
+          this.datos_formulario.serie_numero_alfa_origen_new = "";
+        }
         
-        this.datos_formulario.serie_numero_charly_repla = "C0054/21";
-        this.datos_formulario.serie_numero_alfa_repla = "A0054/21";
+        if (app_vue.form.model_tiponotam == "NOTAMR") {
+          this.datos_formulario.serie_numero_charly_origen_repla = app_vue.form.correlativo_charly;
+          this.datos_formulario.serie_numero_alfa_origen_repla = app_vue.form.correlativo_alfa;
+        }else{
+          this.datos_formulario.serie_numero_charly_origen_repla = "";
+          this.datos_formulario.serie_numero_alfa_origen_repla = "";
+        }
         
-        this.datos_formulario.serie_numero_charly_cancel = "C0043/21";
-        this.datos_formulario.serie_numero_alfa_cancel = "A0043/21";
+        if (app_vue.form.model_tiponotam == "NOTAMC") {
+          this.datos_formulario.serie_numero_charly_origen_cancel = app_vue.form.correlativo_charly;
+          this.datos_formulario.serie_numero_alfa_origen_cancel = app_vue.form.correlativo_alfa;
+        }else{
+          this.datos_formulario.serie_numero_charly_origen_cancel = "";
+          this.datos_formulario.serie_numero_alfa_origen_cancel = "";
+        }
+        
+        
         //parte 3 del formulario notam
         this.datos_formulario.fir =  'SLLF';
         this.datos_formulario.codigo_notam =  app_vue.form.model_asunto+app_vue.form.model_estado_asunto;
@@ -1592,7 +1621,13 @@ E) [[form.cuerpo1]] [[form.cuerpo2]]
         this.datos_formulario.dato_charly_amhs = app_vue.obtener_codigo_charly_amhs()
         this.datos_formulario.dato_alfa_amhs = app_vue.obtener_codigo_alfa_amhs()
 
-        this.datos_formulario.antecedente_notam = document.getElementById('id_antecedente_notam').textContent;
+        this.datos_formulario.antecedente_notam = app_vue.form.model_antecedente_notam;
+
+        try {
+          this.datos_formulario.pib_publicar = document.getElementById("pib_publicar").textContent;
+        } catch (error) {
+          this.datos_formulario.pib_publicar = ""
+        }
 
 /***********************DATOS FIN*/
 
@@ -1701,7 +1736,7 @@ E) [[form.cuerpo1]] [[form.cuerpo2]]
                 },
 
                 //llenando el NOTAM NUEVO o el NUEVO CORRELATIVO
-                uno: this.datos_formulario.serie_numero_charly + '\n' + this.datos_formulario.serie_numero_alfa,
+                uno: this.datos_formulario.serie_numero_charly_origen_new + '\n' + this.datos_formulario.serie_numero_alfa_origen_new,
                 dos: {
                   content: 'NOTAMN',
                   rowSpan: 2,
@@ -1732,7 +1767,7 @@ E) [[form.cuerpo1]] [[form.cuerpo2]]
                 },
 
                 //llenando el NOTAM NUEVO o el NUEVO CORRELATIVO
-                uno: this.datos_formulario.serie_numero_charly + '\n' + this.datos_formulario.serie_numero_alfa,
+                uno: this.datos_formulario.serie_numero_charly_origen_repla + '\n' + this.datos_formulario.serie_numero_alfa_origen_repla,
                 dos: {
                   content: 'NOTAMR',
                   rowSpan: 2,
@@ -1756,7 +1791,7 @@ E) [[form.cuerpo1]] [[form.cuerpo2]]
                 },
 
                 //llenando el NOTAM NUEVO o el NUEVO CORRELATIVO
-                uno: this.datos_formulario.serie_numero_charly + '\n' + this.datos_formulario.serie_numero_alfa,
+                uno: this.datos_formulario.serie_numero_charly_origen_cancel + '\n' + this.datos_formulario.serie_numero_alfa_origen_cancel,
                 dos: {
                   content: 'NOTAMC',
                   rowSpan: 2,
@@ -1989,7 +2024,7 @@ E) [[form.cuerpo1]] [[form.cuerpo2]]
               },
               //FILA 4: IDENTIFICACION DEL LUGAR
               {
-                cell1: { content: "Identificación del indicador de lugar OACI correspondiente a la instalación, espacio aéreo o condición notificados", colSpan: 30, styles: { fillColor: color_celda, halign: 'center', valign: 'middle', cellPadding: 0.03 } },
+                cell1: { content: "Identificación del indicador de lugar OACI correspondiente a la instalación, espacio aéreo o condición notificados", colSpan: 30, styles: { fillColor: color_celda, halign: 'left', valign: 'middle', cellPadding: 0.03 } },
                 cell31: { content: "A)   " + this.datos_formulario.lugar, colSpan: 15, styles: { halign: 'left', valign: 'middle', cellPadding: 0.03 } },
                 cell46: { content: '-->', styles: { halign: 'left', valign: 'middle', cellPadding: 0.03 } }
               }
@@ -2056,7 +2091,7 @@ E) [[form.cuerpo1]] [[form.cuerpo2]]
                 cell12: { content: this.datos_formulario.desde.substring(9, 10), rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
                 //FLECHA
                 cell13: { content: "-->", rowSpan: 2, colSpan: 2, styles: { halign: 'center', valign: 'middle' } },
-                cell15: "s"
+                cell15: "_"
               },
               //SOLO PARA COMBINAR COLUMNAS
               {
@@ -2096,7 +2131,7 @@ E) [[form.cuerpo1]] [[form.cuerpo2]]
                 //FLECHA
                 cell13: { content:  this.datos_formulario.estimado + "\n" + this.datos_formulario.permanente , rowSpan: 2, colSpan: 2, styles: { halign: 'center', valign: 'middle' } },
                 cell14: "SA",
-                cell15: "s"
+                cell15: "_"
               },
               // SOLO PARA COMBINAR COLUMNAS
               {
@@ -2147,8 +2182,8 @@ E) [[form.cuerpo1]] [[form.cuerpo2]]
               {
                 cell1: { content: "" },
                 cell2: { content: '', rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
-                //PERIODO VALIDEZ CASILLA B)
-                cell3: { content: "horario alternativo", colSpan: 12, rowSpan: 2, styles: { halign: 'left', valign: 'middle', cellPadding: 0.05 } },
+                //PERIODO VALIDEZ CASILLA D) extendido
+                cell3: { content: " ", colSpan: 12, rowSpan: 2, styles: { halign: 'left', valign: 'middle', cellPadding: 0.05 } },
                 cell15: ""
               },
               // SOLO PARA COMBINAR COLUMNAS
@@ -2318,9 +2353,42 @@ E) [[form.cuerpo1]] [[form.cuerpo2]]
               },
             ],
             margin: { left: 0.5, top: 1.25, bottom: 0, }
-          })
+          });
 
 
+          doc.autoTable(
+          {
+            //startY: doc.lastAutoTable.finalY + 0.1,
+            bodyStyles: {
+              lineWidth: 0.005,
+              lineColor: [0, 0, 0],
+              fontSize: 8,
+              cellPadding: 0
+            },
+            theme: "plain",
+            headStyles: {
+              fillColor: color_celda,
+              lineWidth: 0.01,
+              lineColor: [0, 0, 0],
+              fontSize: 8,
+            },
+            columnStyles: {
+              0: {
+                cellWidth: 0.45, valign: 'middle', halign: 'center'
+              },
+            },
+            columns: [
+              //{ dataKey: 'principal', header:  },
+              { dataKey: 'cell1', header: { content: "BOLETIN DE INFORMACIÓN PREVIA AL VUELO", styles: { halign: 'center', valign: 'middle' } }, },
+            ],
+            body: [
+              //FILA 1: PIB DEL MENSAJE
+              {
+                cell1: { content: this.datos_formulario.pib_publicar , styles: { halign: 'left', valign: 'middle', cellPadding: 0.1 } },
+              },
+            ],
+            margin: { left: 0.5, top: 1.25, bottom: 0, }
+          });
 
          
         // Using array of sentences
@@ -2337,6 +2405,8 @@ E) [[form.cuerpo1]] [[form.cuerpo2]]
             doc.internal.pageSize.height - 0.5
           )
           .save(`${this.heading}.pdf`);
+
+          //alert(doc.path())
       }
     }
   });

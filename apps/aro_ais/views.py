@@ -593,6 +593,8 @@ def view_post_crear_notam(request):
     if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='AISNACIONAL').exists():
         if request.method =="POST" and request.POST:
             post_tipo = str(request.POST.get('tipo'))
+            var_file = request.FILES['formulario_oaci']
+            print("var CAEL >>>>>>>>>>>> ", var_file)
             
             inf_constante = {
                 'post_amhs1' : str(request.POST.get('amhs1')),
@@ -607,6 +609,7 @@ def view_post_crear_notam(request):
                 'post_estimado' : str(request.POST.get('estimado')),
                 'post_permanente' : str(request.POST.get('permanente')),
                 'antecedente' : str(request.POST.get('antecedente')),
+                #'formulario_oaci' : "var_file",
             }
 
             ############ CONTROL DE ID_MENSAJE           
@@ -630,7 +633,7 @@ def view_post_crear_notam(request):
             ############ CONTROL DE ID_NOTAM           
             if id_charly:
                 if 'NOTAMN' in post_tipo:
-                    guardar_nuevo_charly(id_charly, inf_constante, post_pib_publicar)
+                    guardar_nuevo_charly(id_charly, inf_constante, post_pib_publicar, var_file)
 
                 #if 'NOTAMR' in post_tipo:
                 #    guardar_repla_charly(id_mensaje, charly, inf_constante, post_pib_publicar)
@@ -641,7 +644,7 @@ def view_post_crear_notam(request):
             
             if id_alfa:
                 if 'NOTAMN' in post_tipo:
-                    guardar_nuevo_alfa(id_alfa, inf_constante)
+                    guardar_nuevo_alfa(id_alfa, inf_constante, var_file)
 
                 #if 'NOTAMR' in post_tipo:
                 #    guardar_repla_alfa(id_mensaje, alfa, inf_constante)
@@ -655,14 +658,15 @@ def view_post_crear_notam(request):
             #return render(request, 'temp_ais_nacional/blanco.html',{'devolucion':devolucion})
             return HttpResponseRedirect(reverse( view_pagina_principal ))
         else:
-            return render(request, 'temp_plan_vuelo/temp_aro_ais/new_notam.html' , locals())
+            return redirect('view_new_notam' )
+            #return render(request, 'temp_plan_vuelo/temp_aro_ais/new_notam.html' , locals())
             #return HttpResponse(json.dumps([{'Response':'Envie datos validos.'}]), content_type='application/json')
     else:
         return redirect('login')
 
 
 ## FUNCIONES PARA GUARDAR NOTAM CLASIFICADO
-def guardar_nuevo_charly(id_charly, inf_constante, post_pib_publicar):
+def guardar_nuevo_charly(id_charly, inf_constante, post_pib_publicar, var_file):
     banco_charly=Banco_charly_new()
 
     banco_charly.id_mensaje_c_n = id_charly
@@ -688,6 +692,8 @@ def guardar_nuevo_charly(id_charly, inf_constante, post_pib_publicar):
     banco_charly.pib_publicar = post_pib_publicar
     
     banco_charly.antecedente = inf_constante['antecedente']
+    
+    banco_charly.form_oaci = var_file #inf_constante['formulario_oaci']
 
     banco_charly.save()
 '''
@@ -716,7 +722,7 @@ def guardar_repla_charly(id_mensaje, charly, inf_constante, post_pib_publicar):
 
 #def guardar_cancel_charly(id_mensaje, alfa, inf_constante):
 #######
-def guardar_nuevo_alfa(id_alfa, inf_constante):
+def guardar_nuevo_alfa(id_alfa, inf_constante, var_file):
     banco_alfa=Banco_alfa_new()
 
     banco_alfa.id_mensaje_a_n = id_alfa
@@ -738,6 +744,8 @@ def guardar_nuevo_alfa(id_alfa, inf_constante):
     banco_alfa.estado_asunto = inf_constante['post_estado_asunto']
 
     banco_alfa.antecedente = inf_constante['antecedente']
+
+    banco_alfa.form_oaci = var_file #inf_constante['formulario_oaci']
 
     banco_alfa.save()
 
