@@ -187,6 +187,8 @@ STATICFILES_DIRS = (
 
 # Redirect to home URL after login (Default redirects to /accounts/profile/)
 LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
 #LOGIN_REDIRECT_URL = '/plan_vuelo/admin'
 
 MEDIA_URL = '/documents/'

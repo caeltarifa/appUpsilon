@@ -21,6 +21,10 @@ from django.urls import path, include
 from django.contrib import admin
 
 
+
+from django.conf import settings
+from django.conf.urls.static import static
+
 # vistas para la pagina principal
 from .views import view_pagina_principal  # , control_acceso_login
 
@@ -61,3 +65,8 @@ urlpatterns = [
 urlpatterns += [
     path('accounts/', include('django.contrib.auth.urls')),
 ]
+
+
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

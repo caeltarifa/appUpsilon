@@ -129,18 +129,34 @@
                                                 &nbsp;&nbsp;&nbsp;
                                                 <img  src="{% static 'servicios_logos/aasana_alas_nucleo.svg' %}"  style="width:105px;" alt=""> <!-- id="logofooter" class="rotating" -->
                                                 &nbsp;&nbsp;&nbsp;
-                                                <h1 class="brand-text " style="color: white;">Upsilon | Información aeronáutica<!-- {{user.get_username}} --> </h1>
+                                                <h1 class="brand-text " style="color: white;">Upsilon | AIS<!-- {{user.get_username}} --> </h1>
                                             </div>
                                         </a>
                                     </li>
                                     <!--LOGO DE PAGINA-->
 
                                 </ul>
+
+
+                               
+
+
                                 <!--VERSION MOVIL -->
                                 {% if user.get_username in 'notaminternacional@aasana'  %}
                                     {% block addElement %}
-                                    <!--NOTIFICACION METAR        -->
                                     <ul class="nav navbar-nav float-right">
+                                        <li class="dropdown dropdown-user nav-item">
+                                            <a class="dropdown-toggle nav-link dropdown-user-link" href="{% url 'view_new_notam' %}" >
+                                                <span class="avatar avatar-online" id="id_notificacion_metar">
+                                                    <span class="material-icons">
+                                                        note_add
+                                                    </span>
+                                                </span>
+                                            </a>
+                                            
+                                        </li>
+                                    </ul>
+                                    <!-- <ul class="nav navbar-nav float-right">
                                         <li class="dropdown dropdown-user nav-item">
                                             <a class="dropdown-toggle nav-link dropdown-user-link" hred="#" data-toggle="dropdown">
                                                 <span class="avatar avatar-online" id="id_notificacion_metar" onclick="autofocus_metar()">
@@ -150,15 +166,14 @@
                                                 </span>
                                             </a>
 
+                                            
                                             <ul class="dropdown-menu dropdown-menu-right" style="background-color: #ffffff;">
                                                 <li>
-                                                    <!--class="arrow_box_right"-->
                                                     <h4>
                                                         &nbsp; &nbsp;
                                                         Crear NOTAM
                                                     </h4>
                                                 </li>
-                                                <!-- BUSCAR METAR-->
                                                 <li class="arrow_box_right">
                                                     <div class="input-group search-box">
                                                         <div class="position-relative has-icon-right full-width">
@@ -193,19 +208,12 @@
 
                                                         </div>
                                                     </div>
-                                                    <!--
-                                                        <form>
-                                                        </form>
-                                                    -->
                                                 </li>
-                                                <!-- BUSCAR METAR-->
                                                 <div id="grupo_metars" style="height: 30px; overflow: auto;">
-
                                                 </div>
                                             </ul>
                                         </li>
-                                    </ul>
-                                    <!--NOTIFICACION METAR   -->
+                                    </ul> -->
                                     {% endblock addElement %}
 
 

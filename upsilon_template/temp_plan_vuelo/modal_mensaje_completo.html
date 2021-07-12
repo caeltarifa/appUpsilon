@@ -1,7 +1,6 @@
 <!-- SE RECIBE aero, plan, detalles de la ficha, ruta del fpl, rutas all, puntosall   -->
     <div class="modal-dialog  modal-dialog-centered modal-xl " role="document" style="width: 62.5%; margin:auto;" >
         <div class="modal-content">
-         
 
             <div class="modal-body">
 
@@ -23,13 +22,31 @@
                                 <div class="containerpib">
                                     <div id="accordion" class="panel-group">
                                         {% for key , value in data.items %}
-                                            {% if not forloop.first %}
-                                                {{value}} <br>
+                                            {% if key == 'pib_publicar' and key %}
+                                            <h4>PIB publicado</h4>
                                             {% endif %}
+
+                                            {% if key == 'antecedente' and key %}
+                                            <h4>Antecedente</h4>
+                                            {% endif %}
+
+                                            {% if key == 'form_oaci' and key %}
+                                                <h4>
+                                                    <a target="_blank" href="http://upsilon.aasana.ga{{value}}">Formulario OACI</a>
+                                                </h4>
+                                            {% endif %}
+                                            
+
+                                            {% if not forloop.first %}
+                                            {{value}} 
+                                            <br>
+                                            {% endif %}
+                                            
+                                            
+                                                
                                         {% endfor %}
                                         <br>
-                                        <h4>Decodificado: </h4>
-                                        {{decodificado}}
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -42,7 +59,7 @@
                                 <div class="containerpib">
                                     <div id="accordion" class="panel-group">
                                         <!--mita 2-->
-                                        <div id='map' style="z-index:0; border-radius: 25px 25px 25px ;position: absolute; top: -55px; bottom: 0; margin-right:5px; width: 500px; height:500px;"></div>
+                                        <div id='map' style="z-index:0; border-radius: 25px 25px ; width: 350px; height:350px;"></div>
                                     </div>
                                 </div>
                             </div>

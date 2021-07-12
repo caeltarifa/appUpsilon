@@ -4,6 +4,9 @@ from django.urls import path, re_path
 # ARO AIS ################################################################################################################
 from apps.aro_ais.views import view_admin_ais, view_panel_aroaislp, view_panel_notaminternacional
 from apps.aro_ais.views import view_pib_automatizado, view_archivar_pib, view_publicarguardar_pib, view_pib_tiemporeal,view_pibupdate_tiemporeal
+
+from apps.aro_ais.views import view_pib_tiemporeal2
+
 from apps.aro_ais.views import view_guardarregistro_pib
 from apps.aro_ais.views import view_imprimir_pibrealtime
 from apps.aro_ais.views import view_panel_serviciosaroais_aasana
@@ -31,6 +34,11 @@ from appUpsilon.views import api_historico_alfa_from_notamr
 from appUpsilon.views import api_historico_alfa_from_notamc
 
 from apps.aro_ais.views import view_todos_notams
+from apps.aro_ais.views import view_banco_notam
+
+
+from apps.aro_ais.views import view_notam_modal_charly
+from apps.aro_ais.views import view_notam_modal_alfa
 
 
 from apps.aro_ais.views import view_get_aed_georef
@@ -38,6 +46,7 @@ from apps.aro_ais.views import view_get_aed_georef
 ##CREAR NOTAM
 from apps.aro_ais.views import view_post_crear_notam
 
+from apps.aro_ais.views import view_api_notam_search
 
 urlpatterns = [
     path('',view_panel_aroaislp, name="view_panel_aroaislp"),
@@ -56,6 +65,9 @@ urlpatterns = [
     path('archivarpib/', view_archivar_pib, name="view_archivar_pib"), #archiva pib
     path('publicarguardar/', view_publicarguardar_pib, name="view_publicarguardar_pib"), #archiva pib
     path('pibtiemporeal/', view_pib_tiemporeal, name="view_pib_tiemporeal"), #archiva pib
+    
+    path('pibtiemporeal2/', view_pib_tiemporeal2, name="view_pib_tiemporeal2"), #archiva pib
+    
     path('verpib/', view_pibupdate_tiemporeal, name="view_pibupdate_tiemporeal"), #envia al frontend datos actualizados
     path('guardarregistropib/', view_guardarregistro_pib, name="view_guardarregistro_pib"), #envia al frontend datos actualizados
     path('imprimirpib/', view_imprimir_pibrealtime, name="view_imprimir_pibrealtime"), #INTERFAZ PARA IMPRIMIR EL PIB
@@ -87,10 +99,18 @@ urlpatterns = [
     path('alfafrom_notamc/', api_historico_alfa_from_notamc, name="api_historico_alfa_from_notamc"), #
 
     path('allnotams/',view_todos_notams, name='view_todos_notams'),
+    path('banconotam/',view_banco_notam, name='view_banco_notam'),
+
+    path('view_charlie/<path:id_notam>/',view_notam_modal_charly, name='view_notam_modal_charly'),
+    path('view_alpha/<path:id_notam>/',view_notam_modal_alfa, name='view_notam_modal_alfa'),
+    
 
     ## API PARA GUARDAR NOTAM CREADO
     path('createnotam/', view_post_crear_notam, name="view_post_crear_notam"), #
-
+    
+    
+    path('notamsearch/', view_api_notam_search, name="view_api_notam_search"), #
+    
 
     ##API PARA CONSULTAR AED GEOREFERENCIADOS
     path('georefaed/', view_get_aed_georef, name="view_get_aed_georef"), #
