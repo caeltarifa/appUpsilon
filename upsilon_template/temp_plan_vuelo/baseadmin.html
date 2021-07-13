@@ -80,6 +80,57 @@
                 background-position: 0% 50%;
             }
         }
+
+        /*--------------------------------------------------------------
+        #                           BUSCADOR
+        --------------------------------------------------------------*/
+        .search-box_cael {
+            position: absolute;
+            margin-top: 2.5em;
+            margin-left:40%;
+            transform: translate(-50%,-50%);
+            background: rgb(255, 255, 255);
+            height: 35px;
+            border-radius: 50px;
+            padding: 3px;
+            }
+
+            .search-btn_cael {
+            color: rgb(255, 255, 255);
+            float: right;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgb(14, 148, 226);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: 2s;
+            }
+
+        .fa-search_cael {
+            background: rgb(20, 161, 243);
+            font-size: 12px;
+        }
+
+        .search-input_cael {
+            border: none;
+            background: none;
+            outline: none;
+            float: left;
+            padding: 0;
+            color: rgb(0, 123, 160);
+            font-size: 12px;
+            transition: 0.4s;
+/*             line-height: 50px;*/
+            margin-top: 5px;
+            width: 0;
+        }
+
+        .search-box_cael:hover > .search-input_cael {
+            width: 240px;
+            padding: 0 3px;
+        }
     </style>   
 
 
@@ -108,396 +159,331 @@
                 <nav class="header-navbar navbar-expand-md navbar navbar-with-menu navbar-without-dd-arrow fixed-top navbar-semi-light">
                     <div class="navbar-wrapper">
                         <div class="navbar-container content">
-                            <div class="collapse navbar-collapse show" id="navbar-mobile" >
-
-                                <!--VERSION MOVIL -->
-                                <ul class="nav navbar-nav mr-auto float-left">
-
-                                    <!--TOGGLE MENU VERSION MOVIL-->
-                                    <li class="nav-item d-block d-md-none">
-                                        <a class="nav-link nav-menu-main menu-toggle hidden-xs" href="#">
-                                            <i class="ft-menu"></i></a>
-                                    </li>
-                                    <!--TOGGLE MENU VERSION MOVIL-->
-
-                                    <!--LOGO DE PAGINA-->
-                                    <li class="mr-auto">
-                                        <a class="navbar-brand" href="{% url 'view_pagina_principal' %}">
-                                            <!-- <img class="brand-logo" alt="Chameleon admin logo"
-                                    src="theme-assets/images/logo/logo.png" /> -->
-                                            <div class="row">
-                                                &nbsp;&nbsp;&nbsp;
-                                                <img  src="{% static 'servicios_logos/aasana_alas_nucleo.svg' %}"  style="width:105px;" alt=""> <!-- id="logofooter" class="rotating" -->
-                                                &nbsp;&nbsp;&nbsp;
-                                                <h1 class="brand-text " style="color: white;">Upsilon | AIS<!-- {{user.get_username}} --> </h1>
-                                            </div>
+                                <div class="row">
+                                    <div class="col" >
+                                        <a class="navbar-brand row" href="{% url 'view_pagina_principal' %}" >
+                                            <img  src="{% static 'servicios_logos/aasana_alas_nucleo.svg' %}" style="width:35%;height: 35%;">
+                                            <h3 class="brand-text " style="color: white; width:3em;height: 3em;" >Upsilon | AIS </h3>
                                         </a>
-                                    </li>
-                                    <!--LOGO DE PAGINA-->
-
-                                </ul>
-
-
-                               
-
-
-                                <!--VERSION MOVIL -->
-                                {% if user.get_username in 'notaminternacional@aasana'  %}
-                                    {% block addElement %}
-                                    <ul class="nav navbar-nav float-right">
-                                        <li class="dropdown dropdown-user nav-item">
-                                            <a class="dropdown-toggle nav-link dropdown-user-link" href="{% url 'view_new_notam' %}" >
-                                                <span class="avatar avatar-online" id="id_notificacion_metar">
-                                                    <span class="material-icons">
-                                                        note_add
-                                                    </span>
-                                                </span>
-                                            </a>
-                                            
-                                        </li>
-                                    </ul>
-                                    <!-- <ul class="nav navbar-nav float-right">
-                                        <li class="dropdown dropdown-user nav-item">
-                                            <a class="dropdown-toggle nav-link dropdown-user-link" hred="#" data-toggle="dropdown">
-                                                <span class="avatar avatar-online" id="id_notificacion_metar" onclick="autofocus_metar()">
-                                                    <span class="material-icons">
-                                                        note_add
-                                                    </span>
-                                                </span>
-                                            </a>
-
-                                            
-                                            <ul class="dropdown-menu dropdown-menu-right" style="background-color: #ffffff;">
-                                                <li>
-                                                    <h4>
-                                                        &nbsp; &nbsp;
-                                                        Crear NOTAM
-                                                    </h4>
-                                                </li>
-                                                <li class="arrow_box_right">
-                                                    <div class="input-group search-box">
-                                                        <div class="position-relative has-icon-right full-width">
-                                                            <table class="table-responsive-sm">
-                                                                <tr>
-                                                                    <td >
-                                                                        <a class="btn btn-success" href="{% url 'view_new_notam' %}">
-                                                                            <span class="material-icons">
-                                                                                post_add
-                                                                            </span>
-                                                                        </a>
-                                                                    </td>
-
-                                                                    <td >
-                                                                        <a class="btn btn-warning" href="{% url 'view_replace_notam' %}">
-                                                                            <span class="material-icons">
-                                                                                sync_alt
-                                                                            </span>
-                                                                        </a>
-                                                                    </td>
-
-                                                                    <td >
-
-                                                                        <a class="btn btn-danger" href="{% url 'view_cancel_notam' %}">
-                                                                            <span class="material-icons">
-                                                                                delete_forever
-                                                                            </span>
-                                                                        </a>
-                                                                    </td>
-                                                                </tr>
-                                                            </table>
-
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <div id="grupo_metars" style="height: 30px; overflow: auto;">
-                                                </div>
-                                            </ul>
-                                        </li>
-                                    </ul> -->
-                                    {% endblock addElement %}
-
-
-                                {% endif %}
-
-                                <!--NOTIFICACION METAR        -->                           
-                                <ul class="nav navbar-nav float-right" >
+                                    </div>
                                     
-                                    <li class="dropdown dropdown-user nav-item">
-                                        <a class="dropdown-toggle nav-link dropdown-user-link" hred="#"
-                                            data-toggle="dropdown">
-                                            <span class="avatar avatar-online" id="id_notificacion_metar" onclick="autofocus_metar()">
-                                                <span class="material-icons">
-                                                    wb_sunny
-                                                </span>
-                                                <!--
-                                                    <img src="{% static 'theme-assets/images/portrait/small/avatar-s-2.png' %}" alt="avatar">
-                                                -->
-                                            </span>
-                                        </a>
+                                    
+                                    <div class="col-6 ">
                                         
-                                        <ul  class="dropdown-menu dropdown-menu-right" style="background-color: #ffffff;">
-                                            
-                                            <li> <!--class="arrow_box_right"-->
-                                                <h4>
-                                                    &nbsp; &nbsp; 
-                                                    Metars
-                                                </h4> 
-                                            </li>
-                                            
-                                            <!-- BUSCAR METAR-->
-                                            <li class="arrow_box_right">
-                                                <div class="input-group search-box">
-                                                    <div class="position-relative has-icon-right full-width">
-                                                        <input class="form-control" id="aeropuerto_metar" type="text"
-                                                        placeholder="Buscar...">
-                                                        <div class="form-control-position" id="btn_aeropuerto_metar" onclick="busca_metar()">
-                                                            <span class="material-icons">
-                                                                search
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <!--
-                                                    <form>
-                                                    </form>
-                                                -->
-                                            </li>
-                                            <!-- BUSCAR METAR-->
-                                            
-                                            <div id="grupo_metars" style="height: 30px; overflow: auto;">
-                                                
+                                        
+                                        <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+                                        
+                                        <div id="v-buscador_notam">
+                                            <div class="search-box_cael">
+                                                <input @input="model_query = $event.target.value.toUpperCase()" v-model="model_query" class="search-input_cael" type="text" name="" placeholder="C1234/20, A1234/20, E) CLSD, QAALH " v-on:keyup.enter="buscando_db">
+                                                <a href="#" class="search-btn_cael" v-on:click="buscando_db">
+                                                    <i class="fas fa-search"></i>
+                                                </a>
+                                                <br>
                                             </div>
-                                        </ul>
-                                    </li>
-                                </ul>
-                                <!--NOTIFICACION METAR   --> 
-
-
-
-
-                                
-                                <!--NOTIFICACION NOTAM       -->                           
-                                <ul class="nav navbar-nav float-right">
-                                    <li class="dropdown dropdown-user nav-item">
-                                        <a class="dropdown-toggle nav-link dropdown-user-link" href="#"
-                                            data-toggle="dropdown">
-                                            <span class="avatar avatar-online" id="id_notificacion">
-                                                <span class="material-icons">
-                                                    notifications
-                                                </span>
-                                                <!--
-                                                    <img src="{% static 'theme-assets/images/portrait/small/avatar-s-2.png' %}" alt="avatar">
-                                                -->
-                                            </span>
-                                        </a>
-    
-                                        <ul  class="dropdown-menu dropdown-menu-right" style="background-color: #ffffff;">
-                                            <li class="arrow_box_right">
-                                                <h4>
-                                                    &nbsp; &nbsp; 
-                                                    Notam
-                                                </h4> 
-                                            </li>
                                             
-                                            <div id="grupo_notams" style="height: 300px; overflow: auto;">
-                                                
-                                            </div>
-                                        </ul>
-                                    </li>
-                                </ul>
-                                <!--NOTIFICACION NOTAM Y SPECI   --> 
+                                        </div>
 
 
-                                
-                                <!--EQUIPO DE USUARIOS-->
-                                <ul class="nav navbar-nav float-right" >
-                                    <!--BUSCAR-->
-                                    <li class="nav-item dropdown navbar-search" >
-                                        <a class="nav-link dropdown-toggle hide" data-toggle="dropdown" href="#">
-                                            <span class="material-icons md-24">
-                                                groups
-                                            </span>
-                                        </a>
-
-                                        <ul  class="dropdown-menu dropdown-menu-right" style="background-color: #ffffff;">
-                                            <li class="arrow_box_right">
-                                                <form>
-                                                    <div class="input-group search-box">
-                                                        <div class="position-relative has-icon-right full-width">
-                                                            <input class="form-control" id="busca_personas" type="text"
-                                                                placeholder="Buscar...">
-                                                            <div class="form-control-position">
-                                                                <span class="material-icons">
-                                                                    account_circle
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                            </li>
-                                            
-                                            <div id="grupo_trabajo" style="height: 350px; overflow: auto;">
-                                                    
-                                            </div>
-                                        </ul>
-                                    </li>
-                                    <!--BUSCAR-->
-
-                                </ul>
-                                <!--EQUIPO DE USUARIOS-->
-
-
-                                <!--MENU APPS 2
-                                    <ul class="nav navbar-nav float-right" >
-                                        <li class="nav-item dropdown navbar-search" >
-                                            
-                                            <a class="nav-link dropdown-toggle hide" data-toggle="dropdown" href="#">
-                                                <span class="material-icons white md-24">
-                                                    apps
-                                                </span>
-                                            </a>
-    
-                                            <ul class="dropdown-menu dropdown-menu-right" style="background-color: #ffffff;">
-                                                
-                                                <li class="arrow_box_right">
-                                                    <div class="container">
-                                                        <div class="row">
-                                                        <div class="col-sm-6 bg-success">
-                                                            <a class="dropdown-item" href="#">
-                                                                <span class="material-icons  md-24">
-                                                                    apps
-                                                                </span>
-                                                            </a>
-                                                        </div>
-                                                        <div class="col-sm-6 bg-warning">
-                                                            <a class="dropdown-item" href="#">
-                                                                <span class="material-icons  md-24">
-                                                                    apps
-                                                                </span>
-                                                            </a>
-                                                        </div>
-                                                        </div>
-                                                    </div>
-                                                </li>
-    
-                                                <div class="dropdown-divider"></div>
-    
-                                                <li >
-                                                    <div class="container">
-                                                        <div class="row">
-                                                        <div class="col-sm-6 bg-success">
-                                                            <a class="dropdown-item" href="#">
-                                                                <span class="material-icons  md-24">
-                                                                    apps
-                                                                </span>
-                                                            </a>
-                                                        </div>
-                                                        <div class="col-sm-6 bg-warning">
-                                                            <a class="dropdown-item" href="#">
-                                                                <span class="material-icons  md-24">
-                                                                    apps
-                                                                </span>
-                                                            </a>
-                                                        </div>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                            
-                                                <div class="dropdown-divider"></div>
-    
-                                                <li class="nav-item d-none d-md-block bg-success">
-                                                    <a class="nav-link" href="{% url 'view_tablero' %}">
-                                                        TABLERO
-                                                        <span class="material-icons">
-                                                            people_alt
+                                        <!--EQUIPO DE USUARIOS
+                                        -->
+                                        
+                                            <ul style="display: none;" class="nav navbar-nav float-right" >
+                                                <li class="nav-item dropdown navbar-search" >
+                                                    <a class="nav-link dropdown-toggle hide" data-toggle="dropdown" href="#">
+                                                        <span class="material-icons md-24">
+                                                            groups
                                                         </span>
                                                     </a>
+    
+                                                    <ul  class="dropdown-menu dropdown-menu-right" style="background-color: #ffffff;">
+                                                        <li class="arrow_box_right">
+                                                            <form>
+                                                                <div class="input-group search-box">
+                                                                    <div class="position-relative has-icon-right full-width">
+                                                                        <input class="form-control" id="busca_personas" type="text"
+                                                                            placeholder="Buscar...">
+                                                                        <div class="form-control-position">
+                                                                            <span class="material-icons">
+                                                                                account_circle
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+                                                        </li>
+                                                        
+                                                        <div id="grupo_trabajo" style="height: 350px; overflow: auto;">
+                                                                
+                                                        </div>
+                                                    </ul>
                                                 </li>
     
-                                            
                                             </ul>
-                                        </li>
-                                    </ul>
-                                -->
-                                
-                                <!-- MENU APPS 2-->
-                                
-                                
-                                <!--MENU APLICACIONES
-                                    <ul class="nav navbar-nav float-right" style="padding: 0px 10px;">
-                                        <button class="btn btn-info buttonapps" id="buttonapps">
-                                            <span class="material-icons white md-24">
-                                                apps
-                                            </span>
-                                            
-                                            <nav class="navapps" id="navapps">
-                                                <a href="#" class="refapps">
-                                                    <span class="material-icons white md-24" id="icons">apps</span>
-                                                </a>
-                                                
-                                                <a href="#" class="refapps">
-                                                    <span class="material-icons white md-24" id="icons">apps</span>
-                                                </a>
-                                                
-                                                <a href="#" class="refapps">
-                                                    <span class="material-icons white md-24" id="icons">apps</span>
-                                                </a>
-                                                <br>
-                                                <a href="#" class="refapps">
-                                                    <span class="material-icons white md-24" id="icons">apps</span>
-                                                </a>
-                                                
-                                                <a href="#" class="refapps">
-                                                    <span class="material-icons white md-24" id="icons">apps</span>
-                                                </a>
-        
-                                                <a href="#" class="refapps">
-                                                    <span class="material-icons white md-24" id="icons">apps</span>
-                                                </a>
-                                                <br>
-                                                <a href="#" class="refapps">
-                                                    <span class="material-icons white md-24" id="icons">apps</span>
-                                                </a>
-        
-                                                <a href="#" class="refapps">
-                                                    <span class="material-icons white md-24" id="icons">apps</span>
-                                                </a>
-                                            </nav>
-                                        </button>
-                                    </ul>
-                                
-                                -->
-                                <!--MENU APLICACIONES-->
-                                
-                                <!--CERRAR SESION-->
-                                <ul class="nav navbar-nav float-right" style="padding: 0px 10px;">
+                                        <!--EQUIPO DE USUARIOS-->
 
-                                    <li class="dropdown dropdown-user nav-item">
-                                        <a class="dropdown-toggle nav-link dropdown-user-link" href="#"
-                                            data-toggle="dropdown">
-                                            <span class="material-icons">
-                                                power_settings_new
-                                            </span>
-                                        </a>
 
+
+                                    </div>
+
+
+                                    <div class="col" style="margin-top: 1em;">
                                         
+                                        <div class="row">
+                                            {% if user.get_username in 'notaminternacional@aasana'  %}
+                                            {% block addElement %}
+                                            <ul class="nav navbar-nav float-right">
+                                                <li class="dropdown dropdown-user nav-item">
+                                                    <a class="dropdown-toggle nav-link dropdown-user-link" href="{% url 'view_new_notam' %}" >
+                                                        <span class="avatar avatar-online" id="id_notificacion_metar">
+                                                            <span class="material-icons">
+                                                                note_add
+                                                            </span>
+                                                        </span>
+                                                    </a>
+                                                    
+                                                </li>
+                                            </ul>
+                                            {% endblock addElement %}
+                                        {% endif %}
 
-                                        <div class="dropdown-menu dropdown-menu-right" >
-                                            <div class="arrow_box_right" >
-                                                <a class="dropdown-item" href="{% url 'logout' %}" >
-                                                    <i class="ft-power"></i> 
-                                                    Cerrar Upsilon
-                                                </a>
-                                            </div>
+
+                                            <ul class="nav navbar-nav float-right" >
+                                                
+                                                <li class="dropdown dropdown-user nav-item">
+                                                    <a class="dropdown-toggle nav-link dropdown-user-link" hred="#"
+                                                        data-toggle="dropdown">
+                                                        <span class="avatar avatar-online" id="id_notificacion_metar" onclick="autofocus_metar()">
+                                                            <span class="material-icons">
+                                                                wb_sunny
+                                                            </span>
+                                                        </span>
+                                                    </a>
+                                                    
+                                                    <ul  class="dropdown-menu dropdown-menu-right" style="background-color: #ffffff;">
+                                                        
+                                                        <li> <!--class="arrow_box_right"-->
+                                                            <h4>
+                                                                &nbsp; &nbsp; 
+                                                                Metars
+                                                            </h4> 
+                                                        </li>
+                                                        
+                                                        <!-- BUSCAR METAR-->
+                                                        <li class="arrow_box_right">
+                                                            <div class="input-group search-box">
+                                                                <div class="position-relative has-icon-right full-width">
+                                                                    <input class="form-control" id="aeropuerto_metar" type="text"
+                                                                    placeholder="Buscar...">
+                                                                    <div class="form-control-position" id="btn_aeropuerto_metar" onclick="busca_metar()">
+                                                                        <span class="material-icons">
+                                                                            search
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <!--
+                                                                <form>
+                                                                </form>
+                                                            -->
+                                                        </li>
+                                                        <!-- BUSCAR METAR-->
+                                                        
+                                                        <div id="grupo_metars" style="height: 30px; overflow: auto;">
+                                                            
+                                                        </div>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                            <!--NOTIFICACION METAR   --> 
+
+
+                                            <!--NOTIFICACION NOTAM       -->                           
+                                            <ul class="nav navbar-nav float-right">
+                                                <li class="dropdown dropdown-user nav-item">
+                                                    <a class="dropdown-toggle nav-link dropdown-user-link" href="#"
+                                                        data-toggle="dropdown">
+                                                        <span class="avatar avatar-online" id="id_notificacion">
+                                                            <span class="material-icons">
+                                                                notifications
+                                                            </span>
+                                                            <!--
+                                                                <img src="{% static 'theme-assets/images/portrait/small/avatar-s-2.png' %}" alt="avatar">
+                                                            -->
+                                                        </span>
+                                                    </a>
+
+                                                    <ul  class="dropdown-menu dropdown-menu-right" style="background-color: #ffffff;">
+                                                        <li class="arrow_box_right">
+                                                            <h4>
+                                                                &nbsp; &nbsp; 
+                                                                Notam
+                                                            </h4> 
+                                                        </li>
+                                                        
+                                                        <div id="grupo_notams" style="height: 300px; overflow: auto;">
+                                                            
+                                                        </div>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                            <!--NOTIFICACION NOTAM Y SPECI   --> 
+
+
+
+
+                                            <!--CERRAR SESION-->
+                                            <ul class="nav navbar-nav float-right" >
+
+                                                <li class="dropdown dropdown-user nav-item">
+                                                    <a class="dropdown-toggle nav-link dropdown-user-link" href="#"
+                                                        data-toggle="dropdown">
+                                                        <span class="material-icons">
+                                                            power_settings_new
+                                                        </span>
+                                                    </a>
+
+                                                    
+
+                                                    <div class="dropdown-menu dropdown-menu-right" >
+                                                        <div class="arrow_box_right" >
+                                                            <a class="dropdown-item" href="{% url 'logout' %}" >
+                                                                <i class="ft-power"></i> 
+                                                                Cerrar Upsilon
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+
                                         </div>
-                                    </li>
-                                </ul>
-                                <!--CERRAR SESION-->
-
-                                
 
 
-                            </div>
+                                        <!--MENU APPS 2
+                                            <ul class="nav navbar-nav float-right" >
+                                                <li class="nav-item dropdown navbar-search" >
+                                                    
+                                                    <a class="nav-link dropdown-toggle hide" data-toggle="dropdown" href="#">
+                                                        <span class="material-icons white md-24">
+                                                            apps
+                                                        </span>
+                                                    </a>
+
+                                                    <ul class="dropdown-menu dropdown-menu-right" style="background-color: #ffffff;">
+                                                        
+                                                        <li class="arrow_box_right">
+                                                            <div class="container">
+                                                                <div class="row">
+                                                                <div class="col-sm-6 bg-success">
+                                                                    <a class="dropdown-item" href="#">
+                                                                        <span class="material-icons  md-24">
+                                                                            apps
+                                                                        </span>
+                                                                    </a>
+                                                                </div>
+                                                                <div class="col-sm-6 bg-warning">
+                                                                    <a class="dropdown-item" href="#">
+                                                                        <span class="material-icons  md-24">
+                                                                            apps
+                                                                        </span>
+                                                                    </a>
+                                                                </div>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+
+                                                        <div class="dropdown-divider"></div>
+
+                                                        <li >
+                                                            <div class="container">
+                                                                <div class="row">
+                                                                <div class="col-sm-6 bg-success">
+                                                                    <a class="dropdown-item" href="#">
+                                                                        <span class="material-icons  md-24">
+                                                                            apps
+                                                                        </span>
+                                                                    </a>
+                                                                </div>
+                                                                <div class="col-sm-6 bg-warning">
+                                                                    <a class="dropdown-item" href="#">
+                                                                        <span class="material-icons  md-24">
+                                                                            apps
+                                                                        </span>
+                                                                    </a>
+                                                                </div>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    
+                                                        <div class="dropdown-divider"></div>
+
+                                                        <li class="nav-item d-none d-md-block bg-success">
+                                                            <a class="nav-link" href="{% url 'view_tablero' %}">
+                                                                TABLERO
+                                                                <span class="material-icons">
+                                                                    people_alt
+                                                                </span>
+                                                            </a>
+                                                        </li>
+
+                                                    
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        -->
+
+                                        <!-- MENU APPS 2-->
+
+
+                                        <!--MENU APLICACIONES
+                                            <ul class="nav navbar-nav float-right" style="padding: 0px 10px;">
+                                                <button class="btn btn-info buttonapps" id="buttonapps">
+                                                    <span class="material-icons white md-24">
+                                                        apps
+                                                    </span>
+                                                    
+                                                    <nav class="navapps" id="navapps">
+                                                        <a href="#" class="refapps">
+                                                            <span class="material-icons white md-24" id="icons">apps</span>
+                                                        </a>
+                                                        
+                                                        <a href="#" class="refapps">
+                                                            <span class="material-icons white md-24" id="icons">apps</span>
+                                                        </a>
+                                                        
+                                                        <a href="#" class="refapps">
+                                                            <span class="material-icons white md-24" id="icons">apps</span>
+                                                        </a>
+                                                        <br>
+                                                        <a href="#" class="refapps">
+                                                            <span class="material-icons white md-24" id="icons">apps</span>
+                                                        </a>
+                                                        
+                                                        <a href="#" class="refapps">
+                                                            <span class="material-icons white md-24" id="icons">apps</span>
+                                                        </a>
+
+                                                        <a href="#" class="refapps">
+                                                            <span class="material-icons white md-24" id="icons">apps</span>
+                                                        </a>
+                                                        <br>
+                                                        <a href="#" class="refapps">
+                                                            <span class="material-icons white md-24" id="icons">apps</span>
+                                                        </a>
+
+                                                        <a href="#" class="refapps">
+                                                            <span class="material-icons white md-24" id="icons">apps</span>
+                                                        </a>
+                                                    </nav>
+                                                </button>
+                                            </ul>
+
+                                        -->
+                                        <!--MENU APLICACIONES-->
+
+                                    </div>
+
+                                </div>
                         </div>
                     </div>
                 </nav>
@@ -617,7 +603,115 @@
     </script>
     <!-- END PAGE LEVEL JS-->
 
+    <script src="https://unpkg.com/vue-toasted"></script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.3/axios.min.js"></script>
+    
+    <script>
+        Vue.use(Toasted);
+        var componente = new Vue({
+            el: '#v-buscador_notam',
+            delimiters: ['[[', ']]'],
+            data: {
+                model_query:"",
+                mensaje:"",
+                sw:false
+            },
+            methods: {
+                buscando_db: function () {                    
+
+                    if (this.model_query.length == 0) {
+                        this.sw=false;
+                        this.mensaje="Campo vacio";
+                        this.showToast_message(this.mensaje);
+                    }else{
+                        this.mensaje="";
+                    }
+
+                    if (String(this.model_query).includes('Q') && !this.model_query.includes('/') ) {
+                        if (this.model_query.length == 5) {
+                            this.sw=true;
+                            this.mensaje="";
+                        }else{
+                            this.sw=false;
+                            this.mensaje="Código Q no válido";
+                            this.showToast_message(this.mensaje);
+
+                        }
+                    }
+
+                    if (this.model_query.includes('E)')) {
+                        if (this.model_query.length >= 4) {
+                            this.sw=true;
+                            this.mensaje="";
+                        }else{
+                            this.sw=false;
+                            this.mensaje="Cuerpo E) no válido";
+                            this.showToast_message(this.mensaje);
+
+                        }
+                    }
+
+                    if (this.model_query.includes('C') && this.model_query.includes('/')) {
+                        if (this.model_query.length == 8) {
+                            this.sw=true;
+                            this.mensaje="";
+                        }else{
+                            this.sw=false;
+                            this.mensaje="Notam Charlie no válido";
+                            this.showToast_message(this.mensaje);
+
+                        }
+                    }
+
+                    if (this.model_query.includes('A') && this.model_query.includes('/')) {
+                        if (this.model_query.length == 8) {
+                            this.sw=true;
+                            this.mensaje="";
+                        }else{
+                            this.sw=false;
+                            this.mensaje="Notam Alpha no válido";
+                            this.showToast_message(this.mensaje);
+
+                        }
+                    }
+
+                    if (this.sw) {
+                        const path = '{% url 'view_api_notam_search' %}';
+                        axios.get(path, 
+                        {
+                            params: {
+                                parametro: this.model_query,
+                            }
+                        }
+                        ).then((respuesta) => {
+                            
+                            this.resultado = respuesta.data;
+
+                        }).catch((error) => {
+                            console.log(error)
+                        });
+                    }else{
+                        this.mensaje="Inténtelo nuevamente.";
+                        this.showToast_message(this.mensaje);
+
+                    }
+
+
+
+
+                },
+                showToast_message: function ( mensaje ){
+                    Vue.toasted.show( mensaje,{
+                        duration:3000,
+                        icon:'dvr',
+                        type:"register",
+                        theme:'outline'
+                    });
+                }
+            }
+        });
+    </script>
 
     <!--JAVASCRIPT PARA CONTROL DE SESIONES-->
     <script>
