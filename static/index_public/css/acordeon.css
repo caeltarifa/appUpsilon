@@ -30,9 +30,10 @@
 }
 .acordeones .menu__acordeon .menu__acordeon__uno .contenido__menu,
 .acordeones .menu__acordeon .menu__acordeon__dos .contenido__menu{
-  margin: 0px 60px;
-  margin-top: 60px;
-  margin-bottom: 10px;
+  margin: 5% 5%;
+  margin-top: 5%;
+  margin-bottom: 5%;
+
 }
 /* ------------------------------ */
 /* Responsive */

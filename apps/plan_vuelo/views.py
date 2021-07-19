@@ -938,6 +938,12 @@ def view_ver_fpl_aprobado(request, id_plancompleto):
         #equipo_activo = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and activo=true and empresa_institucion_id=1 order by activo")
         equipo_activo = Trabajador.objects.raw("select ci, nombre, apellido, activo  from plan_vuelo_trabajador where activo='t' and ci in ( select trabajador_id from plan_vuelo_trabajador_cargo where cargo_id in ( select id_cargo  from plan_vuelo_cargo where cuenta_usuario_id in  (select id from auth_user where username like %(usuario)s) ) )", {'usuario':request.user.username})
         
+        equipó_activo = {
+            'ci': 87654 , 
+            'nombre':'assdfsa' , 
+            'apellido':'sdfsfs' , 
+            'activo':True 
+        }
         equipo_activo={ 'equipo_activo':equipo_activo,}
             
         context.update(equipo_activo)

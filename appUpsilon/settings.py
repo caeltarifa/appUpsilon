@@ -47,7 +47,8 @@ INSTALLED_APPS = [
     'apps.generacion_fpl',
     'apps.trabajadoresATS',
     'apps.aro_ais',
-    'chartkick'
+    'chartkick',
+    #'templatetags'
 ]
 
 MIDDLEWARE = [
@@ -74,6 +75,9 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            'libraries':{
+                'template_tags': 'appUpsilon.templatetags.template_tags',
+            }
         },
     },
 ]

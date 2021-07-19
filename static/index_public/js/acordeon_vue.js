@@ -33,7 +33,12 @@ app2 = new Vue({
       datos:[],
       variable:[],
       valores:[],
-      nombres2:[],par:[],impar:[]
+      nombres2:[],
+      par:[],
+      impar:[],
+
+      sw_parte1:false,
+      sw_parte2:false,
     }
   },
   methods:{
@@ -50,6 +55,10 @@ app2 = new Vue({
     listado(){
       const path = 'http://upsilon.aasana.ga/pibrealtime'
       axios.get(path).then((respuesta) => {
+
+        this.sw_parte1 = true;
+        this.sw_parte2 = true;
+
         this.nombres = respuesta.data
         this.variable = [...new Set(this.nombres.map(lugar => lugar.lugar))]
         /* console.log(this.variable) */

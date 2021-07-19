@@ -239,10 +239,22 @@
 <!-- /.modal -->
 
 <div style="margin-top:1%;"  >
+    
     <h1 align="center">
+        {{user.is_manager}} <br>
+        {{user.get_full_name}} <br>
+        {{user.get_short_name}} <br>
+        {{user.groups.all.0}} <br>
+        {{user.email}} <br>
+        {{user.last_login}} <br>
         {{user.get_username | upper}}
     </h1>
+
+    <h7 align="center">
+        Cuenta institucional para aerodromos
+    </h7>
     
+
     <div class="buttons">
         
         <div class="butFrame bounce" onClick="window.location='#'">

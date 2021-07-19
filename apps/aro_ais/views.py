@@ -20,6 +20,17 @@ from apps.aro_ais.models import Notam_trafico_alfa_cancel as Banco_alfa_cancel
 from apps.aro_ais.models import Notam_trafico_alfa_new as Banco_alfa_new
 
 
+
+##IMPORTANDO MODELO DEL BANCO DE DATOS AMHS 
+from apps.plan_vuelo.models import Notam_trafico_charly_cancel as Amhs_charly_cancel
+from apps.plan_vuelo.models import Notam_trafico_charly_repla as Amhs_charly_repla
+from apps.plan_vuelo.models import Notam_trafico_charly_new as Amhs_charly_new
+###########
+###########
+from apps.plan_vuelo.models import Notam_trafico_alfa_repla as Amhs_alfa_repla
+from apps.plan_vuelo.models import Notam_trafico_alfa_cancel as Amhs_alfa_cancel
+from apps.plan_vuelo.models import Notam_trafico_alfa_new as Amhs_alfa_new
+
 # Create your views here.
 
 
@@ -40,6 +51,10 @@ from apps.trabajadoresATS.models import TrabajadoresATS, CuentasATS
 import ast
 # Create your views here.
 
+###########################################################################
+##### APP CLASIFICACION DE USUARIOS
+###########################################################################
+
 def view_panel_aroaislp(request):
     if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='AROAISLP').exists():
         #equipo_coordinacion = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and empresa_institucion_id=1 order by activo")
@@ -53,10 +68,18 @@ def view_panel_notaminternacional(request):
     else:
         return redirect('login')
 
-def view_panel_serviciosaroais_aasana(request):
-    if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='INFORMACION_AERONAUTICA').exists():
+
+def view_ais_for_aed(request):
+    if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='AISNACIONAL').exists():
         equipo_coordinacion = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and empresa_institucion_id=1 order by activo")
-        return render(request, 'temp_plan_vuelo/temp_aro_ais/index_servicio_general_aroais.html' ,{'equipo_trabajo': equipo_coordinacion} )#,'metar':metar} )
+        return render(request, 'temp_plan_vuelo/temp_aro_ais/index_ais_for_aed.html' ,{'equipo_trabajo': equipo_coordinacion} )#,'metar':metar} )
+    else:
+        return redirect('login')
+
+
+def view_ais_for_person(request):
+    if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='AISNACIONAL').exists():
+        return render(request, 'temp_plan_vuelo/temp_aro_ais/index_ais_for_aed.html' ,{'equipo_trabajo': equipo_coordinacion} )#,'metar':metar} )
     else:
         return redirect('login')
 
@@ -64,14 +87,9 @@ def view_panel_serviciosaroais_aasana(request):
 def view_admin_ais(request):
     if request.user.is_authenticated:
         trabajadores= TrabajadoresATS.objects.using('aasana_bd').raw("select * from trabajadores limit 5 ")
-
         cuentas= CuentasATS.objects.using('aasana_bd').raw("select * from cuentas limit 5 ")
-
         respuesta= CuentasATS.objects.using('aasana_bd').raw("select id_cuenta, password, usuario from cuentas where id_cuenta=1 ")[0]
-        
         respuesta=respuesta.usuario + '----'+ respuesta.password
-
-
         return render(request, 'temp_plan_vuelo/aroais.html', {'trabajadores':trabajadores, 'cuentas':cuentas, 'respuesta':respuesta} )
     else:
         return redirect('login')
@@ -79,7 +97,9 @@ def view_admin_ais(request):
 
 
 
-
+###########################################################################
+##### APP CREADOR DE NOTAM N R C, SERIE ALPHA Y CHARLIE
+###########################################################################
 
 def view_new_notam(request):
     if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='AISNACIONAL').exists():
@@ -97,22 +117,9 @@ def view_new_notam(request):
     else:
         return redirect('login')
 
-def view_replace_notam(request):
-    if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='AISNACIONAL').exists():
-        letra_asunto = Letra_asunto.objects.all().order_by('id_letra')
-        #letra_asunto = [x.id_letra for x in letra_asunto]
-        return render(request, 'temp_plan_vuelo/temp_aro_ais/replace_notam.html', {'vec_letra': letra_asunto})
-    else:
-        return redirect('login')
-
-def view_cancel_notam(request):
-    if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='AISNACIONAL').exists():
-        letra_asunto = Letra_asunto.objects.all().order_by('id_letra')
-        #letra_asunto = [x.id_letra for x in letra_asunto]
-        return render(request, 'temp_plan_vuelo/temp_aro_ais/cancel_notam.html', {'vec_letra': letra_asunto})
-    else:
-        return redirect('login')
-
+###########################################################################
+##### APP MANUAL DE PARA LOS SERVICIOS DE INFORMACION AERONAUTICA DOC 8126
+###########################################################################
 def view_getAsunto(request):
     if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='AISNACIONAL').exists():
         letra = str(request.GET.dict()['letra'])
@@ -139,6 +146,10 @@ def view_codigos_abreviaturas(request):
         return render(request, 'temp_plan_vuelo/temp_aro_ais/diccionario_aeronautico.html', {'lista_letras':lista_letras} )
     else:
         return redirect('login')
+
+
+
+
 
 
 
@@ -183,7 +194,7 @@ def view_imprimir_pibrealtime(request):
 
 def view_todos_notams(request):
     if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='TODOS_SERVICIOS').exists():
-        lista_notams_recientes=Notam_trafico.objects.all().order_by('-ingresado')[:100]
+        lista_notams_recientes=Notam_trafico.objects.all().order_by('ingresado')[:100]
    
         #lista_notams_recientes=[serializar_notam(notamx) for notamx in lista_notams_recientes]
 
@@ -213,6 +224,11 @@ def serializar_notam(notamx):
         'mensaje': notamx.mensaje,
     }
 
+
+
+###########################################################################
+##### APP MUESTRA EL BANCO DE NOTAM CLASIFICADO EN CHARLIE Y ALPHA, DE LA FECHA DE HOY
+###########################################################################
 def view_banco_notam(request):
     if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='TODOS_SERVICIOS').exists():
         #lista_notams_recientes=Notam_trafico.objects.all().order_by('-ingresado')[:100]
@@ -330,48 +346,184 @@ def view_notam_modal_alfa(request, id_notam):
         return redirect('login')
 
 
+###########################################################################
+##### APP BUSCADOR DE NOTAMS SEGUN SERIE Y RANGO DE FECHAS
+###########################################################################
+
 def view_api_notam_search(request):
+    if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='TODOS_SERVICIOS').exists():
+        # buscar notams
+        get_inicio = str(request.GET.get('inicio'))
+        get_fin = str(request.GET.get('fin'))
+        get_tipo = str(request.GET.get('tipo'))
+            
+            
+        lista_notam_charly=[]
+        if 'charlie' in get_tipo:
+            lista_notam_charly = Banco_charly_new.objects.extra(select={'id_mensaje':'id_mensaje_c_n'}).filter(ingresado__range=[get_inicio, get_fin]).order_by('ingresado')
+            lista_notam_charly = [ serializar_notam_banco_charly(notam) for notam in lista_notam_charly]
+            
+            lista_notam_charly2 = Banco_charly_repla.objects.extra(select={'id_mensaje':'id_mensaje_c_r'}).filter(ingresado__range=[get_inicio, get_fin]).order_by('ingresado')
+            lista_notam_charly2 = [ serializar_notam_banco_charly(notam) for notam in lista_notam_charly2]
+            
+            lista_notam_charly3 = Banco_charly_cancel.objects.extra(select={'id_mensaje':'id_mensaje_c_c'}).filter(ingresado__range=[get_inicio, get_fin]).order_by('ingresado')
+            lista_notam_charly3 = [ serializar_notam_banco_charly(notam) for notam in lista_notam_charly3]
+            
+            lista_notam_charly += lista_notam_charly2 + lista_notam_charly3
+            return HttpResponse(json.dumps(lista_notam_charly), content_type='application/json')
+        
+        #-------------------------------------------------------------------------------------
+        lista_notam_alfa=[]
+        if 'alpha' in get_tipo:
+            lista_notam_alfa = Banco_alfa_new.objects.extra(select={'id_mensaje':'id_mensaje_a_n'}).filter(ingresado__range=[get_inicio, get_fin]).order_by('ingresado')
+            lista_notam_alfa = [ serializar_notam_banco_alfa(notam) for notam in lista_notam_alfa]
+            
+            lista_notam_alfa2 = Banco_alfa_repla.objects.extra(select={'id_mensaje':'id_mensaje_a_r'}).filter(ingresado__range=[get_inicio, get_fin]).order_by('ingresado')
+            lista_notam_alfa2 = [ serializar_notam_banco_alfa(notam) for notam in lista_notam_alfa2]
+            
+            lista_notam_alfa3 = Banco_alfa_cancel.objects.extra(select={'id_mensaje':'id_mensaje_a_c'}).filter(ingresado__range=[get_inicio, get_fin]).order_by('ingresado')
+            lista_notam_alfa3 = [ serializar_notam_banco_alfa(notam) for notam in lista_notam_alfa3]
+
+            lista_notam_alfa += lista_notam_alfa2 + lista_notam_alfa3
+            return HttpResponse(json.dumps(lista_notam_alfa), content_type='application/json')
+        return HttpResponse(json.dumps([]), content_type='application/json')
+    else:
+        return redirect('login')
+        
+
+
+###########################################################################
+##### BUSCADOR DE NOTAM
+###########################################################################
+
+def view_api_notam_search_string(request):
+    if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='TODOS_SERVICIOS').exists():
     # buscar notams
-    get_inicio = str(request.GET.get('inicio'))
-    get_fin = str(request.GET.get('fin'))
-    get_tipo = str(request.GET.get('tipo'))
-        
-        
-    lista_notam_charly=[]
-    if 'charlie' in get_tipo:
-        lista_notam_charly = Banco_charly_new.objects.extra(select={'id_mensaje':'id_mensaje_c_n'}).filter(ingresado__range=[get_inicio, get_fin]).order_by('ingresado')
-        lista_notam_charly = [ serializar_notam_banco_charly(notam) for notam in lista_notam_charly]
-        
-        lista_notam_charly2 = Banco_charly_repla.objects.extra(select={'id_mensaje':'id_mensaje_c_r'}).filter(ingresado__range=[get_inicio, get_fin]).order_by('ingresado')
-        lista_notam_charly2 = [ serializar_notam_banco_charly(notam) for notam in lista_notam_charly2]
-        
-        lista_notam_charly3 = Banco_charly_cancel.objects.extra(select={'id_mensaje':'id_mensaje_c_c'}).filter(ingresado__range=[get_inicio, get_fin]).order_by('ingresado')
-        lista_notam_charly3 = [ serializar_notam_banco_charly(notam) for notam in lista_notam_charly3]
-        
-        lista_notam_charly += lista_notam_charly2 + lista_notam_charly3
-        return HttpResponse(json.dumps(lista_notam_charly), content_type='application/json')
+        get_parametro = str(request.GET.get('parametro'))
+        get_tipo = str(request.GET.get('tipo'))
+
+        dic={
+            'lat' : '1658S',  
+            'long' : '06508W',
+            'radius'    : 5
+        }
+            
+        if "codigoq" in get_tipo:
+            sw=False
+            lista_notam_amhs = []
+            titulo="AMHS: CODIGO Q"
+            if Amhs_charly_cancel.objects.filter(resumen__icontains=get_parametro).exists():
+                lista_notam_amhs = Amhs_charly_cancel.objects.extra(select={'id_mensaje':'id_mensaje_c_c'}).filter(resumen__icontains=get_parametro).order_by('-ingresado')[:3]
+                lista_notam_amhs = [ serializar_notam_banco_amhs_general(notam, titulo) for notam in lista_notam_amhs]
+                sw = True
+
+            if not sw and Amhs_charly_repla.objects.filter(resumen__icontains=get_parametro).exists():
+                lista_notam_amhs = Amhs_charly_repla.objects.objects.extra(select={'id_mensaje':'id_mensaje_c_r'}).filter(resumen__icontains=get_parametro).order_by('-ingresado')[:3]
+                lista_notam_amhs = [ serializar_notam_banco_amhs_general(notam, titulo) for notam in lista_notam_amhs]
+                sw=True
+
+            if not sw and Amhs_charly_new.objects.filter(resumen__icontains=get_parametro).exists():
+                lista_notam_amhs = Amhs_charly_new.objects.extra(select={'id_mensaje':'id_mensaje_c_n'}).filter(resumen__icontains=get_parametro).order_by('-ingresado')[:3]
+                lista_notam_amhs = [ serializar_notam_banco_amhs_general(notam, titulo) for notam in lista_notam_amhs]
+                sw=True
+            
+            return render(request, 'temp_plan_vuelo/temp_aro_ais/modal_mensaje_query_string.html',{'notam_amhs':lista_notam_amhs, 'area':dic })
+            #return HttpResponse(json.dumps(lista_notam_amhs), content_type='application/json')
+            
+        if "cuerpomsj" in get_tipo:
+            sw=False
+            lista_notam_amhs = []
+            get_parametro = get_parametro.split('E) ')[0]
+            titulo="AMHS: CUERPO DE MENSAJE E)"
+            if Amhs_charly_cancel.objects.filter(mensaje__icontains=get_parametro).exists():
+                lista_notam_amhs = Amhs_charly_cancel.objects.extra(select={'id_mensaje':'id_mensaje_c_c'}).filter(mensaje__icontains=get_parametro).order_by('-ingresado')[:3]
+                lista_notam_amhs = [ serializar_notam_banco_amhs_general(notam, titulo) for notam in lista_notam_amhs]
+                sw = True
+
+            if not sw and Amhs_charly_repla.objects.filter(mensaje__icontains=get_parametro).exists():
+                lista_notam_amhs = Amhs_charly_repla.objects.extra(select={'id_mensaje':'id_mensaje_c_r'}).filter(mensaje__icontains=get_parametro).order_by('-ingresado')[:3]
+                lista_notam_amhs = [ serializar_notam_banco_amhs_general(notam, titulo) for notam in lista_notam_amhs]
+                sw=True
+
+            if not sw and Amhs_charly_new.objects.filter(mensaje__icontains=get_parametro).exists():
+                lista_notam_amhs = Amhs_charly_new.objects.extra(select={'id_mensaje':'id_mensaje_c_n'}).filter(mensaje__icontains=get_parametro).order_by('-ingresado')[:3]
+                lista_notam_amhs = [ serializar_notam_banco_amhs_general(notam, titulo) for notam in lista_notam_amhs]
+                sw=True
+            
+            return render(request, 'temp_plan_vuelo/temp_aro_ais/modal_mensaje_query_string.html',{'notam_amhs':lista_notam_amhs, 'area':dic})
+            #return HttpResponse(json.dumps(lista_notam_amhs), content_type='application/json')
+            
+
+        if "charlie" in get_tipo:
+            sw=False
+            notam_amhs=[{'titulo':'SIN RESULTADOS'}]
+            titulo="AMHS: NOTAM CHARLIE"
+            if Amhs_charly_cancel.objects.filter(idnotam__icontains=get_parametro).exists():
+                notam_amhs = Amhs_charly_cancel.objects.extra(select={'id_mensaje':'id_mensaje_c_c'}).filter(idnotam__icontains=get_parametro)[0]
+                notam_amhs = serializar_notam_banco_amhs_general(notam_amhs, titulo)
+                notam_amhs = [notam_amhs]
+                sw = True
+
+            if not sw and Amhs_charly_repla.objects.filter(idnotam__icontains=get_parametro).exists():
+                notam_amhs = Amhs_charly_repla.objects.extra(select={'id_mensaje':'id_mensaje_c_r'}).filter(idnotam__icontains=get_parametro)[0]
+                notam_amhs = serializar_notam_banco_amhs_general(notam_amhs, titulo)
+                notam_amhs = [notam_amhs]
+                sw=True
+
+            if not sw and Amhs_charly_new.objects.filter(idnotam__icontains=get_parametro).exists():
+                notam_amhs = Amhs_charly_new.objects.extra(select={'id_mensaje':'id_mensaje_c_n'}).filter(idnotam__icontains=get_parametro)[0]
+                notam_amhs = serializar_notam_banco_amhs_general(notam_amhs, titulo)
+                notam_amhs = [notam_amhs]
+                sw=True
+            return render(request, 'temp_plan_vuelo/temp_aro_ais/modal_mensaje_query_string.html',{'notam_amhs':notam_amhs, 'area':dic})
+            #return HttpResponse(json.dumps(notam_amhs), content_type='application/json')
+
+        if "alpha" in get_tipo:
+            sw=False
+            notam_amhs=[{'titulo':'SIN RESULTADOS'}]
+            titulo="AMHS: NOTAM CHARLIE"
+            if Amhs_alfa_cancel.objects.filter(idnotam__icontains=get_parametro).exists():
+                notam_amhs = Amhs_alfa_cancel.objects.extra(select={'id_mensaje':'id_mensaje_a_c'}).filter(idnotam__icontains=get_parametro)[0]
+                notam_amhs = serializar_notam_banco_amhs_general(notam_amhs, titulo)
+                notam_amhs = [notam_amhs]
+                sw = True
+
+            if not sw and Amhs_alfa_repla.objects.filter(idnotam__icontains=get_parametro).exists():
+                notam_amhs = Amhs_alfa_repla.objects.extra(select={'id_mensaje':'id_mensaje_a_r'}).filter(idnotam__icontains=get_parametro)[0]
+                notam_amhs = serializar_notam_banco_amhs_general(notam_amhs, titulo)
+                notam_amhs = [notam_amhs]
+                sw=True
+
+            if not sw and Amhs_alfa_new.objects.filter(idnotam__icontains=get_parametro).exists():
+                notam_amhs = Amhs_alfa_new.objects.extra(select={'id_mensaje':'id_mensaje_a_n'}).filter(idnotam__icontains=get_parametro)[0]
+                notam_amhs = serializar_notam_banco_amhs_general(notam_amhs, titulo)
+                notam_amhs = [notam_amhs]
+                sw=True
+            return render(request, 'temp_plan_vuelo/temp_aro_ais/modal_mensaje_query_string.html',{'notam_amhs':notam_amhs, 'area':dic})
+            #return HttpResponse(json.dumps(notam_amhs), content_type='application/json')
     
-    #-------------------------------------------------------------------------------------
-    lista_notam_alfa=[]
-    if 'alpha' in get_tipo:
-        lista_notam_alfa = Banco_alfa_new.objects.extra(select={'id_mensaje':'id_mensaje_a_n'}).filter(ingresado__range=[get_inicio, get_fin]).order_by('ingresado')
-        lista_notam_alfa = [ serializar_notam_banco_alfa(notam) for notam in lista_notam_alfa]
-        
-        lista_notam_alfa2 = Banco_alfa_repla.objects.extra(select={'id_mensaje':'id_mensaje_a_r'}).filter(ingresado__range=[get_inicio, get_fin]).order_by('ingresado')
-        lista_notam_alfa2 = [ serializar_notam_banco_alfa(notam) for notam in lista_notam_alfa2]
-        
-        lista_notam_alfa3 = Banco_alfa_cancel.objects.extra(select={'id_mensaje':'id_mensaje_a_c'}).filter(ingresado__range=[get_inicio, get_fin]).order_by('ingresado')
-        lista_notam_alfa3 = [ serializar_notam_banco_alfa(notam) for notam in lista_notam_alfa3]
+        return render(request, 'temp_plan_vuelo/temp_aro_ais/modal_mensaje_query_string.html',{'notam_amhs':[], 'area':dic})
+        #return HttpResponse(json.dumps([]), content_type='application/json')
+    else:
+        return redirect('login')
 
-        lista_notam_alfa += lista_notam_alfa2 + lista_notam_alfa3
-        return HttpResponse(json.dumps(lista_notam_alfa), content_type='application/json')
-    return HttpResponse(json.dumps([]), content_type='application/json')
-
-
-
+def serializar_notam_banco_amhs_general(notam, titulo):
+    return {
+        'titulo':titulo,
+        'id_mensaje': notam.id_mensaje,
+        'idnotam': notam.idnotam,
+        'resumen': notam.resumen,
+        'aplica_a': notam.aplica_a,
+        'valido_desde': notam.valido_desde,
+        'valido_hasta': notam.valido_hasta,
+        'mensaje': notam.mensaje,
+    }
 
 
 
+###########################################################################
+##### APP VERSIONADO DEL PIB
+###########################################################################
 
 def serializar_pibtrafico_pibextenso(pibloong):
     if str(pibloong.decodificado).strip().index("E)") >0:

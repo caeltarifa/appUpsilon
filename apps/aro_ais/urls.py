@@ -9,10 +9,10 @@ from apps.aro_ais.views import view_pib_tiemporeal2
 
 from apps.aro_ais.views import view_guardarregistro_pib
 from apps.aro_ais.views import view_imprimir_pibrealtime
-from apps.aro_ais.views import view_panel_serviciosaroais_aasana
+from apps.aro_ais.views import view_ais_for_aed
+
 from apps.aro_ais.views import view_new_notam
-from apps.aro_ais.views import view_replace_notam
-from apps.aro_ais.views import view_cancel_notam
+
 from apps.aro_ais.views import view_getAsunto,view_getEstadoAsunto
 from apps.aro_ais.views import view_codigos_abreviaturas
 from apps.aro_ais.views import view_get_abreviatura8400
@@ -47,6 +47,8 @@ from apps.aro_ais.views import view_get_aed_georef
 from apps.aro_ais.views import view_post_crear_notam
 
 from apps.aro_ais.views import view_api_notam_search
+from apps.aro_ais.views import view_api_notam_search_string
+
 
 urlpatterns = [
     path('',view_panel_aroaislp, name="view_panel_aroaislp"),
@@ -55,9 +57,9 @@ urlpatterns = [
     path('asunto8126',view_getAsunto, name="view_getAsunto"),
     path('estado_asunto8126',view_getEstadoAsunto, name="view_getEstadoAsunto"),
 
-    path('slcb/', view_panel_serviciosaroais_aasana, name="view_panel_aisslcb"),
-    path('slvr/', view_panel_serviciosaroais_aasana, name="view_panel_aisslvr"),
-    path('sltr/', view_panel_serviciosaroais_aasana, name="view_panel_aissltr"),
+    path('slcb/', view_ais_for_aed, name="view_panel_aisslcb"),
+    path('slvr/', view_ais_for_aed, name="view_panel_aisslvr"),
+    path('sltr/', view_ais_for_aed, name="view_panel_aissltr"),
     
     path('aroaisfpl/',view_admin_ais, name='view_admin_ais'),
     
@@ -72,8 +74,6 @@ urlpatterns = [
     path('guardarregistropib/', view_guardarregistro_pib, name="view_guardarregistro_pib"), #envia al frontend datos actualizados
     path('imprimirpib/', view_imprimir_pibrealtime, name="view_imprimir_pibrealtime"), #INTERFAZ PARA IMPRIMIR EL PIB
     path('newnotam/', view_new_notam, name="view_new_notam"), #SIMULADOR GENERADOR DE NOTAM
-    path('replacenotam/', view_replace_notam, name="view_replace_notam"), #SIMULADOR GENERADOR DE NOTAM
-    path('cancelnotam/', view_cancel_notam, name="view_cancel_notam"), #SIMULADOR GENERADOR DE NOTAM
     path('codigos_abreviaturas/', view_codigos_abreviaturas, name="view_codigos_abreviaturas"), #SIMULADOR GENERADOR DE NOTAM
 
 
@@ -108,8 +108,12 @@ urlpatterns = [
     ## API PARA GUARDAR NOTAM CREADO
     path('createnotam/', view_post_crear_notam, name="view_post_crear_notam"), #
     
-    
+    ## API PARA BUSCAR NOTA POR RANGO
     path('notamsearch/', view_api_notam_search, name="view_api_notam_search"), #
+    
+
+    ## API PARA BUSCAR NOTA POR CADENA
+    path('notamstring/', view_api_notam_search_string, name="view_api_notam_search_string"), #
     
 
     ##API PARA CONSULTAR AED GEOREFERENCIADOS

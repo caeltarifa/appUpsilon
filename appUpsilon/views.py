@@ -95,27 +95,27 @@ def view_pagina_principal(request):
     else:
         areas = [
             {'data': [
-                ['2021-06-24 00:00:00 UTC', 52],
-                ['2021-06-25 00:00:00 UTC', 57],
-                ['2021-06-26 00:00:00 UTC', 65],
-                ['2021-06-27 00:00:00 UTC', 75],
-                ['2021-06-28 00:00:00 UTC', 55],
-                ['2021-06-29 00:00:00 UTC', 45],
-                ['2021-06-30 00:00:00 UTC', 65],
-                ['2021-07-01 00:00:00 UTC', 85]
+                ['2021-07-06 00:00:00 UTC', 52],
+                ['2021-07-07 00:00:00 UTC', 57],
+                ['2021-07-08 00:00:00 UTC', 65],
+                ['2021-07-09 00:00:00 UTC', 75],
+                ['2021-07-10 00:00:00 UTC', 55],
+                ['2021-07-11 00:00:00 UTC', 45],
+                ['2021-07-12 00:00:00 UTC', 65],
+                ['2021-07-13 00:00:00 UTC', 85]
             ],
                 'name': 'Charlie'
             },
 
             {'data': [
-                ['2021-06-24 00:00:00 UTC', 42],
-                ['2021-06-25 00:00:00 UTC', 73],
-                ['2021-06-26 00:00:00 UTC', 55],
-                ['2021-06-27 00:00:00 UTC', 65],
-                ['2021-06-28 00:00:00 UTC', 35],
-                ['2021-06-29 00:00:00 UTC', 75],
-                ['2021-06-30 00:00:00 UTC', 55],
-                ['2021-07-01 00:00:00 UTC', 25]
+                ['2021-07-06 00:00:00 UTC', 42],
+                ['2021-07-07 00:00:00 UTC', 73],
+                ['2021-07-08 00:00:00 UTC', 55],
+                ['2021-07-09 00:00:00 UTC', 65],
+                ['2021-07-10 00:00:00 UTC', 35],
+                ['2021-07-11 00:00:00 UTC', 75],
+                ['2021-07-12 00:00:00 UTC', 55],
+                ['2021-07-13 00:00:00 UTC', 25]
             ],
                 'name': 'Alpha'
             }
@@ -644,7 +644,7 @@ def api_get_notam_aeropuerto(request):
         # get_abreviatura = str(request.GET.dict()['abreviatura'])
         airport = str(request.GET.get('airport')).upper()
         try:
-            if len(airport) <= 4 and Aeropuerto.objects.filter(icao=airport).exists():
+            if len(airport) <= 4 and ( Aeropuerto.objects.filter(icao=airport).exists() or 'SLLF' in airport) :
                 lista_notam_charly = Notam_trafico_charly_new.objects.raw("select * from (select id_mensaje_c_n, split_part(idnotam, '/', 1) as correl, idnotam, resumen, aplica_a, valido_desde, valido_hasta, mensaje, ingresado from plan_vuelo_notam_trafico_charly_new where aplica_a like %(icao)s limit 20) as T_A union select *  from  (select id_mensaje_c_r, split_part(idnotam, '/', 1) as correl, idnotam, resumen, aplica_a, valido_desde, valido_hasta, mensaje, ingresado from plan_vuelo_notam_trafico_charly_repla where aplica_a like %(icao)s limit 20) AS T_B union select *  from  (select id_mensaje_c_c, split_part(idnotam, '/', 1) as correl, idnotam, resumen, aplica_a, valido_desde, valido_hasta, mensaje, ingresado from plan_vuelo_notam_trafico_charly_cancel where aplica_a like %(icao)s limit 20) AS T_C order by ingresado desc limit 20", {'icao':'%'+airport} )
 
                 lista_notam_alfa = Notam_trafico_alfa_new.objects.raw("select * from (select id_mensaje_a_n, split_part(idnotam, '/', 1) as correl, idnotam, resumen, aplica_a, valido_desde, valido_hasta, mensaje, ingresado from plan_vuelo_notam_trafico_alfa_new where aplica_a like %(icao)s limit 20) as T_A union select *  from  (select id_mensaje_a_r, split_part(idnotam, '/', 1) as correl, idnotam, resumen, aplica_a, valido_desde, valido_hasta, mensaje, ingresado from plan_vuelo_notam_trafico_alfa_repla where aplica_a like %(icao)s limit 20) AS T_B union select *  from  (select id_mensaje_a_c, split_part(idnotam, '/', 1) as correl, idnotam, resumen, aplica_a, valido_desde, valido_hasta, mensaje, ingresado from plan_vuelo_notam_trafico_alfa_cancel where aplica_a like %(icao)s limit 20) AS T_C order by ingresado desc limit 20", {'icao':'%'+airport} )
@@ -676,3 +676,7 @@ def serializarNotam(notam):
         'mensaje' : notam.mensaje,
         'ingresado' : str(notam.ingresado),
     }
+
+
+
+
