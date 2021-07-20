@@ -333,7 +333,7 @@ class Notam_trafico_charly_repla(models.Model):
     def __str__(self):
         return '{}'.format(self.idnotam)
     class Meta:
-        ordering = ['idnotam']
+        ordering = ['idnotam', '-ingresado']
 class Notam_trafico_charly_cancel(models.Model):
     id_mensaje_c_c = models.CharField(max_length=8,primary_key=True)
     aftn1 = models.CharField(max_length=120)
@@ -356,7 +356,7 @@ class Notam_trafico_charly_cancel(models.Model):
     def __str__(self):
         return '{}'.format(self.idnotam)
     class Meta:
-        ordering = ['idnotam']
+        ordering = ['idnotam', '-ingresado']
 class Notam_trafico_charly_new(models.Model):
     id_mensaje_c_n = models.CharField(max_length=8,primary_key=True)
     aftn1 = models.CharField(max_length=120)
@@ -386,7 +386,7 @@ class Notam_trafico_charly_new(models.Model):
     def __str__(self):
         return '{}'.format(self.idnotam)
     class Meta:
-        ordering = ['idnotam']
+        ordering = ['idnotam', '-ingresado']
 #############
 #############
 class Notam_trafico_alfa_repla(models.Model):

@@ -908,7 +908,7 @@ def view_post_crear_notam(request):
         if request.method =="POST" and request.POST:
             post_tipo = str(request.POST.get('tipo'))
             var_file = request.FILES['formulario_oaci']
-            print("var CAEL >>>>>>>>>>>> ", var_file)
+            notam_destino = str(request.POST.get('notam_destino'))
             
             inf_constante = {
                 'post_amhs1' : str(request.POST.get('amhs1')),
@@ -949,11 +949,11 @@ def view_post_crear_notam(request):
                 if 'NOTAMN' in post_tipo:
                     guardar_nuevo_charly(id_charly, inf_constante, post_pib_publicar, var_file)
 
-                #if 'NOTAMR' in post_tipo:
-                #    guardar_repla_charly(id_mensaje, charly, inf_constante, post_pib_publicar)
+                if 'NOTAMR' in post_tipo:
+                    guardar_repla_charly(id_charly, notam_destino, inf_constante, post_pib_publicar, var_file)
 #
                 #if 'NOTAMC' in post_tipo:
-                #    guardar_cancel_charly(id_mensaje, charly, inf_constante)
+                #    guardar_cancel_charly(id_charly, notam_destino,, inf_constante)
 
             
             if id_alfa:
@@ -1010,19 +1010,24 @@ def guardar_nuevo_charly(id_charly, inf_constante, post_pib_publicar, var_file):
     banco_charly.form_oaci = var_file #inf_constante['formulario_oaci']
 
     banco_charly.save()
-'''
-def guardar_repla_charly(id_mensaje, charly, inf_constante, post_pib_publicar):
+
+def guardar_repla_charly(id_charly, notam_destino, inf_constante, post_pib_publicar, var_file):
     banco_charly=Banco_charly_repla()
 
-    banco_charly.id_mensaje_c_r = id_mensaje
+    banco_charly.id_mensaje_c_n = id_charly
     banco_charly.aftn1 = inf_constante['post_amhs1']
     banco_charly.aftn2 = inf_constante['post_amhs2']
-    banco_charly.idnotam = charly + ' NOTAMR'
+    banco_charly.idnotam = '(' +id_charly + ' NOTAMR ' + notam_destino
     banco_charly.resumen = inf_constante['post_resumen']
     banco_charly.aplica_a = inf_constante['post_aplica_a']
     banco_charly.valido_desde = inf_constante['post_valido_desde']
     banco_charly.valido_hasta = inf_constante['post_valido_hasta']
     banco_charly.mensaje = inf_constante['post_mensaje']
+
+    if 'EST' in inf_constante['post_estimado']:
+        banco_charly.est = True
+    if 'PERM' in inf_constante['post_permanente']:
+        banco_charly.perm = True
 
     banco_charly.es_pib = True
 
@@ -1030,9 +1035,13 @@ def guardar_repla_charly(id_mensaje, charly, inf_constante, post_pib_publicar):
     banco_charly.estado_asunto = inf_constante['post_estado_asunto']
 
     banco_charly.pib_publicar = post_pib_publicar
+    
+    banco_charly.antecedente = inf_constante['antecedente']
+    
+    banco_charly.form_oaci = var_file #inf_constante['formulario_oaci']
 
     banco_charly.save()
-'''
+
 
 #def guardar_cancel_charly(id_mensaje, alfa, inf_constante):
 #######
