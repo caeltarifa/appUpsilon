@@ -4,7 +4,10 @@ from django.utils import timezone
 from django.http import JsonResponse
 from django.http import HttpResponse
 import json
-from datetime import datetime
+
+from datetime import datetime, timedelta
+import numpy as np
+
 
 
 from apps.plan_vuelo.models import Pib_tiempo_real
@@ -94,40 +97,24 @@ def view_pagina_principal(request):
         return render(request, 'temp_plan_vuelo/prohibido.html')
     else:
         areas = [
-            {'data': [
-                ['2021-07-06 00:00:00 UTC', 52],
-                ['2021-07-07 00:00:00 UTC', 57],
-                ['2021-07-08 00:00:00 UTC', 65],
-                ['2021-07-09 00:00:00 UTC', 75],
-                ['2021-07-10 00:00:00 UTC', 55],
-                ['2021-07-11 00:00:00 UTC', 45],
-                ['2021-07-12 00:00:00 UTC', 65],
-                ['2021-07-13 00:00:00 UTC', 85]
-            ],
-                'name': 'Charlie'
+            {'data': estadisticas_charly_new(),
+                'name': 'Charlie N'
             },
 
-            {'data': [
-                ['2021-07-06 00:00:00 UTC', 42],
-                ['2021-07-07 00:00:00 UTC', 73],
-                ['2021-07-08 00:00:00 UTC', 55],
-                ['2021-07-09 00:00:00 UTC', 65],
-                ['2021-07-10 00:00:00 UTC', 35],
-                ['2021-07-11 00:00:00 UTC', 75],
-                ['2021-07-12 00:00:00 UTC', 55],
-                ['2021-07-13 00:00:00 UTC', 25]
-            ],
-                'name': 'Alpha'
+            {'data': estadisticas_alfa_new(),
+                'name': 'Alpha N'
             }
         ]
 
-        areas1 = {
-            "2013-02-10": 21,
-            "2013-02-11": 26,
-            "2013-02-12": 23,
-            "2013-02-13": 22,
-            "2013-02-14": 5, "2013-02-15": 3, "2013-02-16": 8, "2013-02-17": 6, "2013-02-18": 6, "2013-02-19": 12, "2013-02-20": 5, "2013-02-21": 5, "2013-02-22": 3, "2013-02-23": 1, "2013-02-24": 10, "2013-02-25": 1, "2013-02-26": 3, "2013-02-27": 2, "2013-02-28": 3, "2013-03-01": 2, "2013-03-02": 8}
+        areas1 = [
+            {'data': estadisticas_charly_repla(),
+                'name': 'Charlie RPLC'
+            },
 
+            {'data': estadisticas_alfa_repla(),
+                'name': 'Alpha RPLC'
+            }
+        ]
         areas2 = {
             "2013-02-10": 11,
             "2013-02-11": 6,
@@ -145,6 +132,295 @@ def view_pagina_principal(request):
         #fecha_hora = {'anio': 11, 'mes': 12, 'dia':13}
 
         return render(request, 'registration/index_login.html', locals())
+
+
+
+def estadisticas_charly_new():
+    lista_notam = Notam_trafico_charly_new.objects.filter(valido_desde__contains=' 21')
+    lista_final_new = []
+    cont_1 = 0
+    cont_2 = 0
+    cont_3 = 0
+    cont_4 = 0
+    cont_5 = 0
+    cont_6 = 0
+    cont_7 = 0
+    cont_8 = 0
+    cont_9 = 0
+    cont_10 = 0
+    cont_11 = 0
+    cont_12 = 0
+
+    fecha_1 = datetime.now()-timedelta(days=1)
+    fecha_2 = datetime.now()-timedelta(days=2)
+    fecha_3 = datetime.now()-timedelta(days=3)
+    fecha_4 = datetime.now()-timedelta(days=4)
+    fecha_5 = datetime.now()-timedelta(days=5)
+    fecha_6 = datetime.now()-timedelta(days=6)
+    fecha_7 = datetime.now()-timedelta(days=7)
+    fecha_8 = datetime.now()-timedelta(days=8)
+    fecha_9 = datetime.now()-timedelta(days=9)
+    fecha_10 = datetime.now()-timedelta(days=10)
+    fecha_11 = datetime.now()-timedelta(days=11)
+    fecha_12 = datetime.now()-timedelta(days=12)
+
+    for notam in lista_notam:
+        if notam.valido_desde:
+            date_str1 = notam.valido_desde.split(' ')[1].strip()
+            date_str1 = datetime.strptime(date_str1, '%y%m%d%H%M')
+            if notam.valido_hasta:
+                if 'PERM' in notam.valido_hasta:
+                    lista_final_new.append(notam)
+                else:
+                    date_str2 = notam.valido_hasta.split(' ')[1].strip()
+                    if date_str2:
+                        date_str2 = datetime.strptime(date_str2, '%y%m%d%H%M')
+                        if date_str1 < fecha_1 < date_str2:
+                            cont_1+=1
+                        if date_str1 < fecha_2 < date_str2:
+                            cont_2+=1
+                        if date_str1 < fecha_3 < date_str2:
+                            cont_3+=1
+                        if date_str1 < fecha_4 < date_str2:
+                            cont_4+=1
+                        if date_str1 < fecha_5 < date_str2:
+                            cont_5+=1
+                        if date_str1 < fecha_6 < date_str2:
+                            cont_6+=1
+                        if date_str1 < fecha_7 < date_str2:
+                            cont_7+=1
+                        if date_str1 < fecha_8 < date_str2:
+                            cont_8+=1
+                        if date_str1 < fecha_9 < date_str2:
+                            cont_9+=1
+                        if date_str1 < fecha_10 < date_str2:
+                            cont_10+=1
+                        if date_str1 < fecha_11 < date_str2:
+                            cont_11+=1
+                        if date_str1 < fecha_12 < date_str2:
+                            cont_12+=1
+
+    resultado1 = np.flip( np.array([ cont_1 , cont_2 , cont_3 , cont_4 , cont_5 , cont_6 , cont_7 , cont_8 , cont_9 , cont_10 , cont_11 , cont_12 ]))
+    resultado2 = np.flip( np.array([ fecha_1.strftime('%d-%m-%Y'), fecha_2.strftime('%d-%m-%Y'), fecha_3.strftime('%d-%m-%Y'), fecha_4.strftime('%d-%m-%Y'), fecha_5.strftime('%d-%m-%Y'), fecha_6.strftime('%d-%m-%Y'), fecha_7.strftime('%d-%m-%Y'), fecha_8.strftime('%d-%m-%Y'), fecha_9.strftime('%d-%m-%Y'), fecha_10.strftime('%d-%m-%Y'), fecha_11.strftime('%d-%m-%Y'), fecha_12.strftime('%d-%m-%Y') ]))
+
+    return np.stack((resultado2, resultado1), axis=1).tolist()
+
+def estadisticas_charly_repla():
+    lista_notam = Notam_trafico_charly_repla.objects.filter(valido_desde__contains=' 21')
+    lista_final_new = []
+    cont_1 = 0
+    cont_2 = 0
+    cont_3 = 0
+    cont_4 = 0
+    cont_5 = 0
+    cont_6 = 0
+    cont_7 = 0
+    cont_8 = 0
+    cont_9 = 0
+    cont_10 = 0
+    cont_11 = 0
+    cont_12 = 0
+
+    fecha_1 = datetime.now()-timedelta(days=1)
+    fecha_2 = datetime.now()-timedelta(days=2)
+    fecha_3 = datetime.now()-timedelta(days=3)
+    fecha_4 = datetime.now()-timedelta(days=4)
+    fecha_5 = datetime.now()-timedelta(days=5)
+    fecha_6 = datetime.now()-timedelta(days=6)
+    fecha_7 = datetime.now()-timedelta(days=7)
+    fecha_8 = datetime.now()-timedelta(days=8)
+    fecha_9 = datetime.now()-timedelta(days=9)
+    fecha_10 = datetime.now()-timedelta(days=10)
+    fecha_11 = datetime.now()-timedelta(days=11)
+    fecha_12 = datetime.now()-timedelta(days=12)
+
+    for notam in lista_notam:
+        if notam.valido_desde:
+            date_str1 = notam.valido_desde.split(' ')[1].strip()
+            date_str1 = datetime.strptime(date_str1, '%y%m%d%H%M')
+            if notam.valido_hasta:
+                if 'PERM' in notam.valido_hasta:
+                    lista_final_new.append(notam)
+                else:
+                    date_str2 = notam.valido_hasta.split(' ')[1].strip()
+                    if date_str2:
+                        date_str2 = datetime.strptime(date_str2, '%y%m%d%H%M')
+                        if date_str1 < fecha_1 < date_str2:
+                            cont_1+=1
+                        if date_str1 < fecha_2 < date_str2:
+                            cont_2+=1
+                        if date_str1 < fecha_3 < date_str2:
+                            cont_3+=1
+                        if date_str1 < fecha_4 < date_str2:
+                            cont_4+=1
+                        if date_str1 < fecha_5 < date_str2:
+                            cont_5+=1
+                        if date_str1 < fecha_6 < date_str2:
+                            cont_6+=1
+                        if date_str1 < fecha_7 < date_str2:
+                            cont_7+=1
+                        if date_str1 < fecha_8 < date_str2:
+                            cont_8+=1
+                        if date_str1 < fecha_9 < date_str2:
+                            cont_9+=1
+                        if date_str1 < fecha_10 < date_str2:
+                            cont_10+=1
+                        if date_str1 < fecha_11 < date_str2:
+                            cont_11+=1
+                        if date_str1 < fecha_12 < date_str2:
+                            cont_12+=1
+
+    resultado1 = np.flip( np.array([ cont_1 , cont_2 , cont_3 , cont_4 , cont_5 , cont_6 , cont_7 , cont_8 , cont_9 , cont_10 , cont_11 , cont_12 ]))
+    resultado2 = np.flip( np.array([ fecha_1.strftime('%d-%m-%Y'), fecha_2.strftime('%d-%m-%Y'), fecha_3.strftime('%d-%m-%Y'), fecha_4.strftime('%d-%m-%Y'), fecha_5.strftime('%d-%m-%Y'), fecha_6.strftime('%d-%m-%Y'), fecha_7.strftime('%d-%m-%Y'), fecha_8.strftime('%d-%m-%Y'), fecha_9.strftime('%d-%m-%Y'), fecha_10.strftime('%d-%m-%Y'), fecha_11.strftime('%d-%m-%Y'), fecha_12.strftime('%d-%m-%Y') ]))
+
+    return np.stack((resultado2, resultado1), axis=1).tolist()
+
+def estadisticas_alfa_new():
+    lista_notam = Notam_trafico_alfa_new.objects.filter(valido_desde__contains=' 21')
+    lista_final_new = []
+    cont_1 = 0
+    cont_2 = 0
+    cont_3 = 0
+    cont_4 = 0
+    cont_5 = 0
+    cont_6 = 0
+    cont_7 = 0
+    cont_8 = 0
+    cont_9 = 0
+    cont_10 = 0
+    cont_11 = 0
+    cont_12 = 0
+
+    fecha_1 = datetime.now()-timedelta(days=1)
+    fecha_2 = datetime.now()-timedelta(days=2)
+    fecha_3 = datetime.now()-timedelta(days=3)
+    fecha_4 = datetime.now()-timedelta(days=4)
+    fecha_5 = datetime.now()-timedelta(days=5)
+    fecha_6 = datetime.now()-timedelta(days=6)
+    fecha_7 = datetime.now()-timedelta(days=7)
+    fecha_8 = datetime.now()-timedelta(days=8)
+    fecha_9 = datetime.now()-timedelta(days=9)
+    fecha_10 = datetime.now()-timedelta(days=10)
+    fecha_11 = datetime.now()-timedelta(days=11)
+    fecha_12 = datetime.now()-timedelta(days=12)
+
+    for notam in lista_notam:
+        if notam.valido_desde:
+            date_str1 = notam.valido_desde.split(' ')[1].strip()
+            date_str1 = datetime.strptime(date_str1, '%y%m%d%H%M')
+            if notam.valido_hasta:
+                if 'PERM' in notam.valido_hasta:
+                    lista_final_new.append(notam)
+                else:
+                    date_str2 = notam.valido_hasta.split(' ')[1].strip()
+                    if date_str2:
+                        date_str2 = datetime.strptime(date_str2, '%y%m%d%H%M')
+                        if date_str1 < fecha_1 < date_str2:
+                            cont_1+=1
+                        if date_str1 < fecha_2 < date_str2:
+                            cont_2+=1
+                        if date_str1 < fecha_3 < date_str2:
+                            cont_3+=1
+                        if date_str1 < fecha_4 < date_str2:
+                            cont_4+=1
+                        if date_str1 < fecha_5 < date_str2:
+                            cont_5+=1
+                        if date_str1 < fecha_6 < date_str2:
+                            cont_6+=1
+                        if date_str1 < fecha_7 < date_str2:
+                            cont_7+=1
+                        if date_str1 < fecha_8 < date_str2:
+                            cont_8+=1
+                        if date_str1 < fecha_9 < date_str2:
+                            cont_9+=1
+                        if date_str1 < fecha_10 < date_str2:
+                            cont_10+=1
+                        if date_str1 < fecha_11 < date_str2:
+                            cont_11+=1
+                        if date_str1 < fecha_12 < date_str2:
+                            cont_12+=1
+
+    resultado1 = np.flip( np.array([ cont_1 , cont_2 , cont_3 , cont_4 , cont_5 , cont_6 , cont_7 , cont_8 , cont_9 , cont_10 , cont_11 , cont_12 ]))
+    resultado2 = np.flip( np.array([ fecha_1.strftime('%d-%m-%Y'), fecha_2.strftime('%d-%m-%Y'), fecha_3.strftime('%d-%m-%Y'), fecha_4.strftime('%d-%m-%Y'), fecha_5.strftime('%d-%m-%Y'), fecha_6.strftime('%d-%m-%Y'), fecha_7.strftime('%d-%m-%Y'), fecha_8.strftime('%d-%m-%Y'), fecha_9.strftime('%d-%m-%Y'), fecha_10.strftime('%d-%m-%Y'), fecha_11.strftime('%d-%m-%Y'), fecha_12.strftime('%d-%m-%Y') ]))
+
+    return np.stack((resultado2, resultado1), axis=1).tolist()
+
+def estadisticas_alfa_repla():
+    lista_notam = Notam_trafico_alfa_repla.objects.filter(valido_desde__contains=' 21')
+    lista_final_new = []
+    cont_1 = 0
+    cont_2 = 0
+    cont_3 = 0
+    cont_4 = 0
+    cont_5 = 0
+    cont_6 = 0
+    cont_7 = 0
+    cont_8 = 0
+    cont_9 = 0
+    cont_10 = 0
+    cont_11 = 0
+    cont_12 = 0
+
+    fecha_1 = datetime.now()-timedelta(days=1)
+    fecha_2 = datetime.now()-timedelta(days=2)
+    fecha_3 = datetime.now()-timedelta(days=3)
+    fecha_4 = datetime.now()-timedelta(days=4)
+    fecha_5 = datetime.now()-timedelta(days=5)
+    fecha_6 = datetime.now()-timedelta(days=6)
+    fecha_7 = datetime.now()-timedelta(days=7)
+    fecha_8 = datetime.now()-timedelta(days=8)
+    fecha_9 = datetime.now()-timedelta(days=9)
+    fecha_10 = datetime.now()-timedelta(days=10)
+    fecha_11 = datetime.now()-timedelta(days=11)
+    fecha_12 = datetime.now()-timedelta(days=12)
+
+    for notam in lista_notam:
+        if notam.valido_desde:
+            date_str1 = notam.valido_desde.split(' ')[1].strip()
+            date_str1 = datetime.strptime(date_str1, '%y%m%d%H%M')
+            if notam.valido_hasta:
+                if 'PERM' in notam.valido_hasta:
+                    lista_final_new.append(notam)
+                else:
+                    date_str2 = notam.valido_hasta.split(' ')[1].strip()
+                    if date_str2:
+                        date_str2 = datetime.strptime(date_str2, '%y%m%d%H%M')
+                        if date_str1 < fecha_1 < date_str2:
+                            cont_1+=1
+                        if date_str1 < fecha_2 < date_str2:
+                            cont_2+=1
+                        if date_str1 < fecha_3 < date_str2:
+                            cont_3+=1
+                        if date_str1 < fecha_4 < date_str2:
+                            cont_4+=1
+                        if date_str1 < fecha_5 < date_str2:
+                            cont_5+=1
+                        if date_str1 < fecha_6 < date_str2:
+                            cont_6+=1
+                        if date_str1 < fecha_7 < date_str2:
+                            cont_7+=1
+                        if date_str1 < fecha_8 < date_str2:
+                            cont_8+=1
+                        if date_str1 < fecha_9 < date_str2:
+                            cont_9+=1
+                        if date_str1 < fecha_10 < date_str2:
+                            cont_10+=1
+                        if date_str1 < fecha_11 < date_str2:
+                            cont_11+=1
+                        if date_str1 < fecha_12 < date_str2:
+                            cont_12+=1
+
+    resultado1 = np.flip( np.array([ cont_1 , cont_2 , cont_3 , cont_4 , cont_5 , cont_6 , cont_7 , cont_8 , cont_9 , cont_10 , cont_11 , cont_12 ]))
+    resultado2 = np.flip( np.array([ fecha_1.strftime('%d-%m-%Y'), fecha_2.strftime('%d-%m-%Y'), fecha_3.strftime('%d-%m-%Y'), fecha_4.strftime('%d-%m-%Y'), fecha_5.strftime('%d-%m-%Y'), fecha_6.strftime('%d-%m-%Y'), fecha_7.strftime('%d-%m-%Y'), fecha_8.strftime('%d-%m-%Y'), fecha_9.strftime('%d-%m-%Y'), fecha_10.strftime('%d-%m-%Y'), fecha_11.strftime('%d-%m-%Y'), fecha_12.strftime('%d-%m-%Y') ]))
+
+    return np.stack((resultado2, resultado1), axis=1).tolist()
+
+
+
+
+
+
+
 
 
 def view_panel_comunicaciones(request):
@@ -249,23 +525,22 @@ def aun_es_valido(cadena):
 
 
 def eliminar_notam_del_pib(correlativo, tipo):
-    Pib_tiempo_real.objects.filter(
-        id_notam_pib__startswith='(C'+correlativo).delete()
+    Pib_tiempo_real.objects.get(id_notam_pib__startswith='('+correlativo).delete()
     if 'NOTAMN' in tipo:
         Notam_trafico_charly_new.objects.filter(
-            idnotam__startswith='(C'+correlativo).update(es_pib=False)
+            idnotam__startswith='('+correlativo).update(es_pib=False)
     else:
         Notam_trafico_charly_repla.objects.filter(
-            idnotam__startswith='(C'+correlativo).update(vigente=False)
+            idnotam__startswith='('+correlativo).update(vigente=False)
     return False
 
 
 def view_pib_tiempo_real(request):
     # lista de pib en notams nuevos
-    lista_pib = Pib_tiempo_real.objects.raw(" select 	id_notam_pib,	correlativo,	desde, 	hasta, 	tabla_pib.est, 	tabla_pib.perm, 	espaniol_decodificado,	hora_actualizacion, 	aplica_a,     tnew.asunto     from (	select		ptr.id_notam_pib, 		bnc.id_mensaje_c_n as correlativo, 		bnc.valido_desde as desde, 		bnc.valido_hasta as hasta, 		bnc.est, 		bnc.perm, 		bnc.pib_publicar as espaniol_decodificado, 		ptr.hora_actualizacion 	from 		plan_vuelo_pib_tiempo_real as ptr 	inner join 		aro_ais_notam_trafico_charly_new as bnc 	on 		ptr.id_notam_pib like %(parentesis)s || bnc.id_mensaje_c_n || %(comodin)s and 		ptr.id_notam_pib not like %(notam)s 	order by ptr.hora_actualizacion desc	) as tabla_pib inner join aro_ais_notam_trafico_charly_new as tnew on 	tnew.idnotam like %(parentesis)s || tabla_pib.correlativo || %(comodin)s AND tnew.es_pib=true", { 'notam': '%NOTAMC%', 'parentesis': '(', 'comodin': '%'})
+    lista_pib = Pib_tiempo_real.objects.raw(" select 	id_notam_pib,	correlativo,	desde, 	hasta, 	tabla_pib.est, 	tabla_pib.perm, 	espaniol_decodificado,	hora_actualizacion, 	aplica_a,     tnew.asunto     from (	select		ptr.id_notam_pib, 		bnc.id_mensaje_c_n as correlativo, 		bnc.valido_desde as desde, 		bnc.valido_hasta as hasta, 		bnc.est, 		bnc.perm, 		bnc.pib_publicar as espaniol_decodificado, 		ptr.hora_actualizacion 	from 		plan_vuelo_pib_tiempo_real as ptr 	inner join 		aro_ais_notam_trafico_charly_new as bnc 	on 		ptr.id_notam_pib like %(parentesis)s || bnc.id_mensaje_c_n || %(comodin)s and 		ptr.id_notam_pib not like %(notam)s 	order by ptr.hora_actualizacion desc	) as tabla_pib inner join aro_ais_notam_trafico_charly_new as tnew on 	tnew.idnotam like %(parentesis)s || tabla_pib.correlativo || %(comodin)s AND tnew.es_pib=true order by hora_actualizacion desc", { 'notam': '%NOTAMC%', 'parentesis': '(', 'comodin': '%'})
     # lista de pib en notams replace
 
-    lista_pib2 = Pib_tiempo_real.objects.raw("SELECT   	id_notam_pib, 	correlativo, 	desde,  	hasta,  	tabla_pib.est,  	tabla_pib.perm,  	espaniol_decodificado, 	hora_actualizacion,  	aplica_a,     trepla.asunto       FROM  ( 	SELECT   		ptr.id_notam_pib,  		bnc.id_mensaje_c_r as correlativo,  		bnc.valido_desde as desde,  		bnc.valido_hasta as hasta,  		bnc.est,  		bnc.perm,  		bnc.pib_publicar as espaniol_decodificado,  		ptr.hora_actualizacion  	FROM plan_vuelo_pib_tiempo_real AS ptr 	INNER JOIN  		aro_ais_notam_trafico_charly_repla AS bnc 	ON  		ptr.id_notam_pib like %(parentesis)s || bnc.id_mensaje_c_r || %(comodin)s AND  		ptr.id_notam_pib not like %(notam)s 	ORDER BY  		ptr.hora_actualizacion desc  ) AS tabla_pib INNER JOIN  	aro_ais_notam_trafico_charly_repla AS trepla ON  	trepla.idnotam like %(parentesis)s || tabla_pib.correlativo || %(comodin)s  AND trepla.es_pib=true", { 'notam': '%NOTAMC%', 'parentesis': '(', 'comodin': '%'})
+    lista_pib2 = Pib_tiempo_real.objects.raw("SELECT   	id_notam_pib, 	correlativo, 	desde,  	hasta,  	tabla_pib.est,  	tabla_pib.perm,  	espaniol_decodificado, 	hora_actualizacion,  	aplica_a,     trepla.asunto       FROM  ( 	SELECT   		ptr.id_notam_pib,  		bnc.id_mensaje_c_r as correlativo,  		bnc.valido_desde as desde,  		bnc.valido_hasta as hasta,  		bnc.est,  		bnc.perm,  		bnc.pib_publicar as espaniol_decodificado,  		ptr.hora_actualizacion  	FROM plan_vuelo_pib_tiempo_real AS ptr 	INNER JOIN  		aro_ais_notam_trafico_charly_repla AS bnc 	ON  		ptr.id_notam_pib like %(parentesis)s || bnc.id_mensaje_c_r || %(comodin)s AND  		ptr.id_notam_pib not like %(notam)s 	ORDER BY  		ptr.hora_actualizacion desc  ) AS tabla_pib INNER JOIN  	aro_ais_notam_trafico_charly_repla AS trepla ON  	trepla.idnotam like %(parentesis)s || tabla_pib.correlativo || %(comodin)s  AND trepla.es_pib=true order by hora_actualizacion desc", { 'notam': '%NOTAMC%', 'parentesis': '(', 'comodin': '%'})
 
     if lista_pib[0].hora_actualizacion < lista_pib2[0].hora_actualizacion:
         lista_pib_ser = [{'hora_actualizado': str(
@@ -282,9 +557,9 @@ def view_pib_tiempo_real(request):
                 # busco eliminarlo
                 # elimino en la base: pib_tiempo_real
                 # cambio a no vigente en la tabla charly_new
-                if not x.est:
+                #if not x.est:
                     # si no es estimado, eliminacion sin piedad
-                    eliminar_notam_del_pib(x.correlativo, 'NOTAMN')
+                eliminar_notam_del_pib(x.correlativo, 'NOTAMN')
         else:
             lista_pib_ser.append(serializar_pib(x, 'NOTAMN'))
 
@@ -296,9 +571,9 @@ def view_pib_tiempo_real(request):
                 # busco eliminarlo
                 # elimino en la base: pib_tiempo_real
                 # cambio a no vigente en la tabla charly_new
-                if not x.est:
+                #if not x.est:
                     # si no es estimado, eliminacion sin piedad
-                    eliminar_notam_del_pib(x.correlativo, 'NOTAMR')
+                eliminar_notam_del_pib(x.correlativo, 'NOTAMR')
         else:
             lista_pib_ser.append(serializar_pib(x, 'NOTAMR'))
 

@@ -91,7 +91,7 @@
 
 <!-- IFIS SERVER NUKLEAR https://www.youtube.com/embed/BoGlBg8bDJA -->
 <div id="segundo" ></div>
-<section  class="acordeones">
+<section id="app2" class="acordeones">
   <div style="background-color: rgb(175, 229, 250);color: rgb(29, 103, 163);margin-bottom: 0%; ">
     <div >
       <div class="container" style="z-index: 999;">
@@ -107,9 +107,9 @@
 
           <tbody>
             <tr>
-              <td> INFORMACIÓN GENERAL <br> En tiempo real <div class="spinner-grow spinner-grow-sm"></div> </td>
+              <td> INFORMACIÓN GENERAL <br> En tiempo real <div class="spinner-grow spinner-grow-sm text-success"></div> </td>
               <td> Oficina NOTAM Internacional <br> A.A.S.A.N.A. <br> </td>
-              <td></td>
+              <td> [[last_updated]]</td>
               <td>FIR LA PAZ</td>
             </tr>
           </tbody>
@@ -121,15 +121,15 @@
 
   </div>
 
-  <div class="menu__acordeon" id="app2">
+  <div class="menu__acordeon"  >
     <div class="menu__acordeon__uno">
       <div class="contenido__menu">
         
+        [[listado.apply()]]
         <div v-if="!sw_parte1" class="spinner-grow text-info" style="width:15vh;height: 15vh;margin-left: 45%;margin-top: 30%;"></div>
 
-        [[listado]]
         <div class="accordion accordion-flush" id="accordion">
-          <div class="accordion-item" style="padding-top: 5px; background-color: rgb(175, 229, 250);"
+          <div class="accordion-item" style="padding-top: 5px;"
             v-for="imp of impar" v-for="nombre of nombres">
             <h2 class="accordion-header" :id="[imp.f]">
               <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
@@ -146,7 +146,7 @@
                     <h6><code>Nombre Lugar: [[imp.lugar]] </code></h6> 
                   -->
 
-                <div class="table-responsive">
+                <div class="table-responsive" style="height:30vh;">
                   <table class="table">
                     <thead>
                       <tr>
@@ -177,11 +177,11 @@
     <div class="menu__acordeon__dos">
       <div class="contenido__menu">
 
+        [[listado.apply()]]
         <div v-if="!sw_parte2" class="spinner-grow text-info" style="width:15vh;height: 15vh;margin-left: 45%;margin-top: 30%;"></div>
         
-        [[listado]]
         <div class="accordion accordion-flush" id="accordion2">
-          <div class="accordion-item" style="padding-top: 5px; background-color: rgb(175, 229, 250);" v-for="pa of par"
+          <div class="accordion-item" style="padding-top: 5px;" v-for="pa of par"
             v-for="nombre of nombres">
             <h2 class="accordion-header" :id="[pa.f]">
               <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
@@ -196,7 +196,7 @@
                   <h5>Historial del Lugar</h5>
                   <h6><code>Nombre Lugar: [[pa.lugar]] </code></h6> -->
 
-                <div class="table-responsive">
+                <div class="table-responsive" style="height:30vh;">
                   <table class="table">
                     <thead>
                       <tr>
@@ -209,7 +209,11 @@
                     <tbody  style="font-size:11px;">
                       <tr v-for="nombre of nombres" v-if="pa.lugar === nombre.lugar">
                         <th scope="row"> [[nombre.asunto]] </th>
-                        <td> [[nombre.desde]] [[nombre.espaniol_decodificado]] [[nombre.hasta]] </td>
+                        <td> 
+                          <!-- [[nombre.desde]]  -->
+                          [[nombre.espaniol_decodificado]] 
+                          <!-- [[nombre.hasta]]  -->
+                        </td>
                         <td>[[nombre.correlativo]]</td>
                       </tr>
                     </tbody>
@@ -311,21 +315,24 @@
     <ul>
       <li class="pane1">
         <h2>
-          NOTAM - Nacional e Internacional
+          <br>
+          NOTAMN - NTL e INTL
         </h2>
         <div id="area" style="height: 85%; width: 85%;margin-left: 3%;margin-top: 10%;">
           {% area_chart areas with id='areas' %}
         </div>
       </li>
+      <li class="pane2">
+        <h2>
+          <br>
+          NOTAMR - NTL e INTL
+        </h2>
+        <div id="area" style="height: 85%; width: 85%;margin-left: 3%;margin-top: 10%;">
+          {% area_chart areas1 with id='areas1' %}
+        </div>
+      </li>
+      
       <!-- 
-            <li class="pane2">
-                <h2>
-                    NOTAMR serie Charly Nacional
-                </h2>
-                <div id="area" style="height: 85%; width: 85%;margin-left: 3%;margin-top: 10%;">
-                    {% area_chart areas1 with id='areas1' %}
-                </div>
-            </li>
             <li class="pane3">
                 <h2>
                     NOTAMN serie Alfa Internacional

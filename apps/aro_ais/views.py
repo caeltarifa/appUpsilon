@@ -265,22 +265,38 @@ def serializar_notam_banco_charly(notam):
         archivo = notam.form_oaci.url
     else:
         archivo = ""
-    return {
-        'titulo':'NOTAM CHARLIE',
-        'id_mensaje': notam.id_mensaje,
-        'idnotam': notam.idnotam,
-        'resumen': notam.resumen,
-        'aplica_a': notam.aplica_a,
-        'valido_desde': notam.valido_desde,
-        'valido_hasta': notam.valido_hasta,
-        'mensaje': notam.mensaje,
-        'es_pib': notam.es_pib,
-        'asunto': notam.asunto,
-        'estado_asunto': notam.estado_asunto,
-        'pib_publicar': notam.pib_publicar,
-        'antecedente': notam.antecedente,
-        'form_oaci': archivo,
-    }
+    if 'NOTAMC' in notam.idnotam:
+        return {
+            'titulo':'NOTAM CHARLIE',
+            'id_mensaje': notam.id_mensaje,
+            'idnotam': notam.idnotam,
+            'resumen': notam.resumen,
+            'aplica_a': notam.aplica_a,
+            'valido_desde': notam.valido_desde,
+            'valido_hasta': notam.valido_hasta,
+            'mensaje': notam.mensaje,
+            'asunto': notam.asunto,
+            'estado_asunto': notam.estado_asunto,
+            'antecedente': notam.antecedente,
+            'form_oaci': archivo,
+        }
+    else:
+        return {
+            'titulo':'NOTAM CHARLIE',
+            'id_mensaje': notam.id_mensaje,
+            'idnotam': notam.idnotam,
+            'resumen': notam.resumen,
+            'aplica_a': notam.aplica_a,
+            'valido_desde': notam.valido_desde,
+            'valido_hasta': notam.valido_hasta,
+            'mensaje': notam.mensaje,
+            'es_pib': notam.es_pib,
+            'asunto': notam.asunto,
+            'estado_asunto': notam.estado_asunto,
+            'pib_publicar': notam.pib_publicar,
+            'antecedente': notam.antecedente,
+            'form_oaci': archivo,
+        }
 def serializar_notam_banco_alfa(notam):
     if notam.form_oaci:
         archivo = notam.form_oaci.url
@@ -926,6 +942,11 @@ def view_post_crear_notam(request):
                 #'formulario_oaci' : "var_file",
             }
 
+            if notam_destino:
+                charly_destino, alfa_destino = notam_destino.split('+')
+            else:
+                charly_destino, alfa_destino = '',''
+
             ############ CONTROL DE ID_MENSAJE           
             id_charly=""
             id_alfa=""
@@ -950,18 +971,18 @@ def view_post_crear_notam(request):
                     guardar_nuevo_charly(id_charly, inf_constante, post_pib_publicar, var_file)
 
                 if 'NOTAMR' in post_tipo:
-                    guardar_repla_charly(id_charly, notam_destino, inf_constante, post_pib_publicar, var_file)
+                    guardar_repla_charly(id_charly, charly_destino, inf_constante, post_pib_publicar, var_file)
 #
-                #if 'NOTAMC' in post_tipo:
-                #    guardar_cancel_charly(id_charly, notam_destino,, inf_constante)
+                if 'NOTAMC' in post_tipo:
+                    guardar_cancel_charly(id_charly, charly_destino, inf_constante, var_file)
 
             
             if id_alfa:
                 if 'NOTAMN' in post_tipo:
                     guardar_nuevo_alfa(id_alfa, inf_constante, var_file)
 
-                #if 'NOTAMR' in post_tipo:
-                #    guardar_repla_alfa(id_mensaje, alfa, inf_constante)
+                if 'NOTAMR' in post_tipo:
+                    guardar_repla_alfa(id_alfa, alfa_destino, inf_constante, var_file)
 #
                 #if 'NOTAMC' in post_tipo:
                 #    guardar_cancel_alfa(id_mensaje, alfa, inf_constante)
@@ -1014,7 +1035,7 @@ def guardar_nuevo_charly(id_charly, inf_constante, post_pib_publicar, var_file):
 def guardar_repla_charly(id_charly, notam_destino, inf_constante, post_pib_publicar, var_file):
     banco_charly=Banco_charly_repla()
 
-    banco_charly.id_mensaje_c_n = id_charly
+    banco_charly.id_mensaje_c_r = id_charly
     banco_charly.aftn1 = inf_constante['post_amhs1']
     banco_charly.aftn2 = inf_constante['post_amhs2']
     banco_charly.idnotam = '(' +id_charly + ' NOTAMR ' + notam_destino
@@ -1042,8 +1063,29 @@ def guardar_repla_charly(id_charly, notam_destino, inf_constante, post_pib_publi
 
     banco_charly.save()
 
+def guardar_cancel_charly(id_charly, notam_destino, inf_constante, var_file):
+    banco_charly=Banco_charly_cancel()
 
-#def guardar_cancel_charly(id_mensaje, alfa, inf_constante):
+    banco_charly.id_mensaje_c_c = id_charly
+    banco_charly.aftn1 = inf_constante['post_amhs1']
+    banco_charly.aftn2 = inf_constante['post_amhs2']
+    banco_charly.idnotam = '(' +id_charly + ' NOTAMR ' + notam_destino
+    banco_charly.resumen = inf_constante['post_resumen']
+    banco_charly.aplica_a = inf_constante['post_aplica_a']
+    banco_charly.valido_desde = inf_constante['post_valido_desde']
+    banco_charly.valido_hasta = inf_constante['post_valido_hasta']
+    banco_charly.mensaje = inf_constante['post_mensaje']
+
+    banco_charly.asunto = inf_constante['post_asunto']
+    banco_charly.estado_asunto = inf_constante['post_estado_asunto']
+
+    banco_charly.antecedente = inf_constante['antecedente']
+        
+    banco_charly.form_oaci = var_file #inf_constante['formulario_oaci']
+
+    banco_charly.save()
+
+#######################################
 #######
 def guardar_nuevo_alfa(id_alfa, inf_constante, var_file):
     banco_alfa=Banco_alfa_new()
@@ -1072,9 +1114,33 @@ def guardar_nuevo_alfa(id_alfa, inf_constante, var_file):
 
     banco_alfa.save()
 
-'''
-def guardar_repla_alfa(id_mensaje, alfa, inf_constante):
+def guardar_repla_alfa(id_alfa, notam_destino, inf_constante, var_file):
+    banco_alfa=Banco_alfa_new()
 
+    banco_alfa.id_mensaje_a_n = id_alfa
+    banco_alfa.aftn1 = inf_constante['post_amhs1']
+    banco_alfa.aftn2 = inf_constante['post_amhs2']
+    banco_alfa.idnotam = '('+id_alfa + ' NOTAMNR ' + notam_destino
+    banco_alfa.resumen = inf_constante['post_resumen']
+    banco_alfa.aplica_a = inf_constante['post_aplica_a']
+    banco_alfa.valido_desde = inf_constante['post_valido_desde']
+    banco_alfa.valido_hasta = inf_constante['post_valido_hasta']
+    banco_alfa.mensaje = inf_constante['post_mensaje']
+
+    if inf_constante['post_estimado']:
+        banco_alfa.est = True
+    if inf_constante['post_permanente']:
+        banco_alfa.perm = True
+
+    banco_alfa.asunto = inf_constante['post_asunto']
+    banco_alfa.estado_asunto = inf_constante['post_estado_asunto']
+
+    banco_alfa.antecedente = inf_constante['antecedente']
+
+    banco_alfa.form_oaci = var_file #inf_constante['formulario_oaci']
+
+    banco_alfa.save()
+'''
 def guardar_cancel_alfa(id_mensaje, alfa, inf_constante):
 '''
 

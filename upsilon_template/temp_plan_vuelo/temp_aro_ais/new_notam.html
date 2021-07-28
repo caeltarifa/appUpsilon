@@ -156,8 +156,8 @@
                                   <div id="accordion"  v-if="form.model_tiponotam">
                                     <br>
                                     <div class="input-group" v-if="form.model_tiponotam == 'NOTAMR' || form.model_tiponotam == 'NOTAMC' ">
-                                      <input v-model="form.model_destino_notam_charly" class="input form-control" placeholder="NOTAM charlie a cambiar" type="text" minlength="8" maxlength="8" />
-                                      <input v-model="form.model_destino_notam_alfa" class="input form-control" placeholder="NOTAM alpha a cambiar" type="text" minlength="8" maxlength="8" />
+                                      <input v-model="form.model_destino_notam_charly" @input="form.model_destino_notam_charly = $event.target.value.toUpperCase()" class="input form-control" placeholder="NOTAM charlie a cambiar" type="text" minlength="8" maxlength="8" />
+                                      <input v-model="form.model_destino_notam_alfa" @input="form.model_destino_notam_alfa = $event.target.value.toUpperCase()" class="input form-control" placeholder="NOTAM alpha a cambiar" type="text" minlength="8" maxlength="8" />
                                     </div>
 
                                     <br>
@@ -373,8 +373,8 @@
                                             <input class="input form-control" placeholder="Estado del asunto" type="text" v-model="form.pib_estado_asunto" />
                                           </div>
                                           <br>
-                                          <textarea disabled  id="pib_publicar" v-if="form.hasta_fecha" class="form-control" style="width: 100%;" rows="2"> DESDE [[form.desde_fecha]] HR [[form.desde_hora]] [[form.pib_asunto]] [[form.pib_estado_asunto]] HASTA [[form.hasta_fecha]] HR [[form.hasta_hora]]  [[ form.estimado[form.estimado.length -1] ]] ([[form.correlativo_charly]]) </textarea>
-                                          <textarea disabled  id="pib_publicar" v-else class="form-control" style="width: 100%;" rows="2"> DESDE [[form.desde_fecha]] HR [[form.desde_hora]] [[form.pib_asunto]] [[form.pib_estado_asunto]] ([[form.correlativo_charly]]) </textarea>
+                                          <textarea disabled  id="pib_publicar" v-if="form.hasta_fecha" class="form-control" style="width: 100%;" rows="4"> DESDE [[form.desde_fecha]] HR [[form.desde_hora]] [[form.pib_asunto]] [[form.pib_estado_asunto]] HASTA [[form.hasta_fecha]] HR [[form.hasta_hora]]  [[ form.estimado[form.estimado.length -1] ]] ([[form.correlativo_charly]]) </textarea>
+                                          <textarea disabled  id="pib_publicar" v-else class="form-control" style="width: 100%;" rows="4"> DESDE [[form.desde_fecha]] HR [[form.desde_hora]] [[form.pib_asunto]] [[form.pib_estado_asunto]] ([[form.correlativo_charly]]) </textarea>
 
   
                                         </div>
@@ -489,7 +489,7 @@
                                           <!-- <code id="copy-notam-charly" > -->
   <!-- [[form.model_prioridad]]  <br>
   [[form.fecha_deposito.substring(8,)]][[form.hora_deposito]] [[form.remitente]] <br> -->
-  ([[form.correlativo_charly]] NOTAMN <br>
+  ([[form.correlativo_charly]] [[form.model_tiponotam]] [[form.model_destino_notam_charly]] <br>
   Q) SLLF/Q[[form.model_asunto]][[form.model_estado_asunto]]/[[form.model_tipo]]/[[form.model_nbo]]/[[form.model_alcance]]/[[form.nivel_inf]]/[[form.nivel_sup]]/[[form.model_coordenadas.split(" ")[2] ]][[form.radio]] <br>
   A) [[form.lugar]] B) [[( form.desde_fecha.substring(2,) ).replace("-","").replace("-","") ]][[form.desde_hora]] C) [[form.hasta_fecha.substring(2,).replace("-","").replace("-","")]][[form.hasta_hora]] [[ form.estimado[form.estimado.length -1] ]] <br>
   <span v-if="form.casilla_d"> D) [[form.casilla_d]] <br> </span> 
@@ -514,7 +514,7 @@
   <!--                                           <code id="copy-notam-alfa" > -->
   <!-- [[form.model_prioridad]]   <br> -->
   <!-- [[form.fecha_deposito.substring(8,)]][[form.hora_deposito]] [[form.remitente]] <br> -->
-  ([[form.correlativo_alfa]] NOTAMN <br>
+  ([[form.correlativo_alfa]] [[form.model_tiponotam]] [[form.model_destino_notam_alfa]] <br>
   Q) SLLF/Q[[form.model_asunto]][[form.model_estado_asunto]]/[[form.model_tipo]]/[[form.model_nbo]]/[[form.model_alcance]]/[[form.nivel_inf]]/[[form.nivel_sup]]/[[form.model_coordenadas.split(" ")[2] ]][[form.radio]] <br>
   A) [[form.lugar]] B) [[form.desde_fecha.substring(2,).replace("-","").replace("-","")]][[form.desde_hora]] C) [[form.hasta_fecha.substring(2,).replace("-","").replace("-","")]][[form.hasta_hora]] [[ form.estimado[form.estimado.length -1] ]] <br>
   <span v-if="form.casilla_d"> D) [[form.casilla_d]] <br> </span>
@@ -548,24 +548,24 @@
                                   <div style="width: 100%;">
                                     <form class="form-group" id="data_srv_id" action="{% url 'view_post_crear_notam' %}" method="POST"  enctype="multipart/form-data">
                                       {% csrf_token %}
-                                       tipo  > <input  type="text" name="tipo" v-model="data_srv.tipo">   <br>
-                                       notam_header  > <input  type="text" name="notam_header" v-model="data_srv.notam_header">   <br>
-                                       notam_destino  > <input  type="text" name="notam_destino" v-model="data_srv.destino_notam">   <br>
-                                       amhs1  > <input  type="text" name="amhs1" v-model="data_srv.amhs1">   <br>
-                                       amhs2  > <input  type="text" name="amhs2" v-model="data_srv.amhs2">    <br>
-                                       resumen  > <input  type="text" name="resumen" v-model="data_srv.resumen">   <br>
-                                       aplica_a  > <input  type="text" name="aplica_a" v-model="data_srv.aplica_a">   <br>
-                                       valido_desde   > <input  type="text" name="valido_desde" v-model="data_srv.valido_desde">   <br>
-                                       valido_hasta   > <input  type="text" name="valido_hasta" v-model="data_srv.valido_hasta">   <br>
-                                       mensaje  > <input  type="text" name="mensaje" v-model="data_srv.mensaje">   <br>
-                                       asunto  > <input  type="text" name="asunto" v-model="data_srv.asunto">   <br>
-                                       estado_asunto  > <input  type="text" name="estado_asunto" v-model="data_srv.estado_asunto">   <br>
-                                       pib_pulicar  > <input  type="text" name="pib_publicar" v-model="data_srv.pib_publicar">   <br>
-                                       estimado  > <input  type="text" name="estimado" v-model="data_srv.estimado_srv">   <br>
-                                       permanente  > <input  type="text" name="permanente" v-model="data_srv.permanente_srv">   <br>
-                                       antecedente  > <input  type="text" name="antecedente" v-model="data_srv.antecedente_notam">   <br>
+                                       <!-- tipo  > --> <input style="display: none;"  type="text" name="tipo" v-model="data_srv.tipo">   <!-- <br> -->
+                                       <!-- notam_header  > --> <input style="display: none;"  type="text" name="notam_header" v-model="data_srv.notam_header">   <!-- <br> -->
+                                       <!-- notam_destino  > --> <input style="display: none;"  type="text" name="notam_destino" v-model="data_srv.destino_notam">   <!-- <br> -->
+                                       <!-- amhs1  > --> <input style="display: none;"  type="text" name="amhs1" v-model="data_srv.amhs1">   <!-- <br> -->
+                                       <!-- amhs2  > --> <input style="display: none;"  type="text" name="amhs2" v-model="data_srv.amhs2">    <!-- <br> -->
+                                       <!-- resumen  > --> <input style="display: none;"  type="text" name="resumen" v-model="data_srv.resumen">   <!-- <br> -->
+                                       <!-- aplica_a  > --> <input style="display: none;"  type="text" name="aplica_a" v-model="data_srv.aplica_a">   <!-- <br> -->
+                                       <!-- valido_desde   > --> <input style="display: none;"  type="text" name="valido_desde" v-model="data_srv.valido_desde">   <!-- <br> -->
+                                       <!-- valido_hasta   > --> <input style="display: none;"  type="text" name="valido_hasta" v-model="data_srv.valido_hasta">   <!-- <br> -->
+                                       <!-- mensaje  > --> <input style="display: none;"  type="text" name="mensaje" v-model="data_srv.mensaje">   <!-- <br> -->
+                                       <!-- asunto  > --> <input style="display: none;"  type="text" name="asunto" v-model="data_srv.asunto">   <!-- <br> -->
+                                       <!-- estado_asunto  > --> <input style="display: none;"  type="text" name="estado_asunto" v-model="data_srv.estado_asunto">   <!-- <br> -->
+                                       <!-- pib_pulicar  > --> <input style="display: none;"  type="text" name="pib_publicar" v-model="data_srv.pib_publicar">   <!-- <br> -->
+                                       <!-- estimado  > --> <input style="display: none;"  type="text" name="estimado" v-model="data_srv.estimado_srv">   <!-- <br> -->
+                                       <!-- permanente  > --> <input style="display: none;"  type="text" name="permanente" v-model="data_srv.permanente_srv">   <!-- <br> -->
+                                       <!-- antecedente  > --> <input style="display: none;"  type="text" name="antecedente" v-model="data_srv.antecedente_notam">   <!-- <br> -->
                                       
-                                      <input class="btn btn-outline-dark" type="file" name="formulario_oaci" id="id_formulario_oaci" required style="height: 50px; font-size: 15px;">
+                                      <input class="btn btn-outline-dark" type="file" name="formulario_oaci" id="id_formulario_oaci" required style="height: 30%; font-size: 15px; width: 80%;">
 
                                       <br>
                                       <!-- BUTTON PARA ENVIAR
@@ -576,12 +576,11 @@
                                       <input class="btn btn-info text-white copy-btn" type="submit" value="GUARDAR NOTAM" @click="guardar_notam()">
                                     </form>
                                   </div>
-                                  [[form]]
                                 </section>
                                 
                                 
-                                <div id="appFormularioOaci" style="position: fixed; top: 35%; right: 30px;">
-                                  <v-btn @click='generatePDF' style="background-color: rgb(83, 201, 255);height: 70px;">
+                                <div id="appFormularioOaci" style="position: fixed; top: 35%; right: 5px;" >
+                                  <v-btn @click='generatePDF' style="background-color: rgb(83, 201, 255);height: 120px; width: 100px;">
                                     <span class="material-icons" >
                                       post_add
                                     </span>

@@ -206,7 +206,7 @@ class Significado_8400(models.Model):
 
 class Historico_pib(models.Model):
     id_pib_historico = models.AutoField(primary_key=True)
-    lista_notam = models.CharField(max_length=20000)
+    lista_notam = models.CharField(max_length=100000)
     fecha_modificado = models.DateTimeField(
         default=datetime.now, blank=False, null=False)
 
@@ -333,7 +333,7 @@ class Notam_trafico_charly_repla(models.Model):
     def __str__(self):
         return '{}'.format(self.idnotam)
     class Meta:
-        ordering = ['idnotam', '-ingresado']
+        ordering = ['-ingresado']
 class Notam_trafico_charly_cancel(models.Model):
     id_mensaje_c_c = models.CharField(max_length=8,primary_key=True)
     aftn1 = models.CharField(max_length=120)
@@ -356,7 +356,7 @@ class Notam_trafico_charly_cancel(models.Model):
     def __str__(self):
         return '{}'.format(self.idnotam)
     class Meta:
-        ordering = ['idnotam', '-ingresado']
+        ordering = ['-ingresado']
 class Notam_trafico_charly_new(models.Model):
     id_mensaje_c_n = models.CharField(max_length=8,primary_key=True)
     aftn1 = models.CharField(max_length=120)
@@ -386,7 +386,7 @@ class Notam_trafico_charly_new(models.Model):
     def __str__(self):
         return '{}'.format(self.idnotam)
     class Meta:
-        ordering = ['idnotam', '-ingresado']
+        ordering = ['-ingresado']
 #############
 #############
 class Notam_trafico_alfa_repla(models.Model):
@@ -414,7 +414,7 @@ class Notam_trafico_alfa_repla(models.Model):
     def __str__(self):
         return '{}'.format(self.idnotam)
     class Meta:
-        ordering = ['idnotam']
+        ordering = ['-ingresado']
 class Notam_trafico_alfa_cancel(models.Model):
     id_mensaje_a_c = models.CharField(max_length=8,primary_key=True)
     aftn1 = models.CharField(max_length=120)
@@ -436,9 +436,10 @@ class Notam_trafico_alfa_cancel(models.Model):
     ingresado = models.DateTimeField(default=datetime.now, blank=True, null=True)
     def __str__(self):
         return '{}'.format(self.idnotam)
-class Notam_trafico_alfa_new(models.Model):
     class Meta:
-        ordering = ['idnotam']
+        ordering = ['-ingresado']
+
+class Notam_trafico_alfa_new(models.Model):
     id_mensaje_a_n = models.CharField(max_length=8,primary_key=True)
     aftn1 = models.CharField(max_length=120)
     aftn2 = models.CharField(max_length=15)
@@ -464,7 +465,7 @@ class Notam_trafico_alfa_new(models.Model):
     def __str__(self):
         return '{}'.format(self.idnotam)
     class Meta:
-        ordering = ['idnotam']
+        ordering = ['-ingresado']
 
 
 

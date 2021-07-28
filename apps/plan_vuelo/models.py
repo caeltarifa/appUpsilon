@@ -388,7 +388,7 @@ class Pib_tiempo_real(models.Model):
     id_notam_pib = models.CharField(max_length=25,primary_key=True)
     hora_actualizacion = models.DateTimeField(default=datetime.now, blank=True, null=True)
     def __str__(self):
-        return '{}/{}'.format(self.id_notam_pib, self.hora_actualizacion)
+        return '{}  ///  {}'.format(self.id_notam_pib, self.hora_actualizacion)
     class Meta:
         ordering=['-hora_actualizacion',]
 
