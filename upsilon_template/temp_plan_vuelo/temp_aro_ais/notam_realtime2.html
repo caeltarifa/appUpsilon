@@ -1,34 +1,23 @@
-{% extends 'temp_plan_vuelo/baseadmin.html' %} 
-{% load static %} 
+{% extends 'temp_plan_vuelo/baseadmin.html' %}
+{% load static %}
 
 {% block title %}
-<title>Upsilon | PIB</title>
+<title>Upsilon | PIB v.2</title>
 {% endblock title %}
 
 
 
 {% block extra_head %}
-    <link rel='stylesheet' href='https://harvesthq.github.io/chosen/chosen.css'>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <!-- <link rel="stylesheet" href="{% static 'theme-assets/css/aprobar_plan.css' %}"> -->
-    <link rel="stylesheet" href="{% static 'theme-assets/css/pib.css' %}">
+<link rel='stylesheet' href='https://harvesthq.github.io/chosen/chosen.css'>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'theme-assets/css/pib.css' %}">
 
+<!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous"> -->
 
-
-
-
-
-
-
-
-
-
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
-
-<link rel="stylesheet" href="{% static 'index_public/css/acordeon.css' %}">
+<link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css'>
 
 {% endblock extra_head %}
-    
+
 
 
 
@@ -47,183 +36,181 @@
     <div class="row justify-content-center">
         <div class="col-10" style="align-content: center;">
             <div class="card" style="box-shadow: 2px 2px 8px 0 black; min-height: 30%;  max-height: 100%; ">
-                
+
                 <!--CONTENIDO DE LA TABLA DE PLANES RECIENTES-->
-               
+
                 <div class="card-content collapse show" style="height: 75%; overflow-y: auto;">
 
                     <!--==========================
                     BOLETIN DE INFORMACION RAPIDA
                      ============================-->
-                    <section id="PIB" class="section-bg" >
-                        <div class="container-fluid">
+                     <div id="appFormularioOaci">
+                        <v-btn class="btn btn-outline-primary" @click='generatePDF' style="position: fixed;background-color: rgb(83, 201, 255);height: 50px; width: 50px; left:90%; right: 5px;">
+                            <span class="material-icons md-18">
+                                local_printshop
+                            </span>
+                        </v-btn>
+                    </div>
 
-                            <div class="section-header" >
-                                <br><br><br>
-                                <h2 class="section-title">PIB</h2>
-                                <a data-action="reload" >
-                                    <i class="ft-rotate-cw" id="update_fpl1"></i>
-                                </a>
-                                
-                                <span class="section-divider"></span>
-                                <p class="section-description">
-                                    Boletín de información previa al vuelo.
-                                </p>
+                    <section id="PIB" class="section-bg">
+                        <div class="container-fluid" id="app2">
+
+                            <div class="section-header" style="text-align:center;">
+                                <br>
+                                <table class="table table-bordered">
+                                    <tbody style="text-align:center;">
+                                        <tr>
+                                            <td style="width:25%;vertical-align:middle;font-size:12px;" rowspan="2">
+                                                <strong>BOLETIN DE INFORMACIÓN PREVIA AL VUELO</strong> <br> <br>
+                                                INFORMACION GENERAL
+                                            </td>
+                                            <td style="width:50%;vertical-align:middle;"> <strong>ESTADO PLURINACIONAL
+                                                    DE BOLIVIA <br> Administración de Aeropuertos y Servicios Auxiliares a la Navegación Aérea</strong> </td>
+                                            <td style="width:13%;vertical-align:middle;font-size:12px;"> <strong>Fecha y
+                                                    Hora<br>de Expedición</strong> </td>
+                                            <td style="width:12%;vertical-align:middle;font-size:12px;" rowspan="3">
+                                                <strong> Ruta o Área <br> cubierta</strong>
+                                                <br> <br>
+                                                FIR LA PAZ
+                                                <br> <br>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+
+                                            <td style="width:50%;">
+                                                <img src="https://www.aasana.bo/files/logoa.jpg"
+                                                    style="width:180px; height:65px;">
+                                                <br>
+                                                <br>
+                                                <h2 class="section-title">PIB </h2>
+
+                                                <span class="section-divider"></span>
+                                                <p class="section-description">
+                                                    SERVICIO DE INFORMACION AERONÁUTICA
+                                                </p>
+                                            </td>
+                                            <td style="width:13%;vertical-align:middle;font-size:12px;">[[last_updated]]
+                                            </td>
+                                        </tr>
+
+
+                                    </tbody>
+                                </table>
+
+
 
                             </div>
-                            <div class="container">          
-                                    <table class="table table-bordered" >
-                                      <tbody style="text-align:center;">
-                                        <tr>
-                                            <td style="width:25%;vertical-align:middle;font-size:12px;" rowspan="2"> <strong>BOLETIN DE INFORMACIÓN PREVIA AL VUELO</strong>  <br> <br> INFORMACION GENERAL  </td>
-                                            <td style="width:50%;vertical-align:middle;"> <strong>ESTADO PLURINACIONAL DE BOLIVIA <br> AEROPUERTO INTERNACIONAL DE EL ALTO </strong> </td>
-                                            <td style="width:13%;vertical-align:middle;font-size:12px;"> <strong>Fecha y Hora<br>de Expedición</strong> </td>
-                                            <td style="width:12%;vertical-align:middle;font-size:12px;" rowspan="3"> 
-                                                <strong> Ruta o Área <br> cubierta</strong> 
-                                                <br> <br> 
-                                                FIR LA PAZ 
-                                                <br> <br> 
-                                                <a class="btn btn-outline-primary" target="_blank" href="{% url 'view_imprimir_pibrealtime' %}">
-                                                    <span class="material-icons md-18">
-                                                        local_printshop
-                                                    </span>
-                                                </a>
+                            <div class="container">
 
-                                            </td>
-                                        </tr>
-                                  
-                                        <tr>
-                                          
-                                          <td style="width:50%;"> <img src="https://www.aasana.bo/files/logoa.jpg" style="width:180px; height:65px;"> </td>
-                                          <td style="width:13%;vertical-align:middle;font-size:12px;">04/05/2020</td>
-                                        </tr>
-                                         
-                                        <tr>
-                                            <td style="width:25%;"></td>
-                                            <td style="width:50%;"> 
-
-                                            </td>
-                                            <td style="width:13%;">0000 UTC</td>
-                                         
-                                        </tr>
-                                      </tbody>
-                                    </table>
-                                </div>
+                            </div>
 
                             <section id="segundo" class="acordeones">
-                                <div style="height: 8%; background-color: rgb(175, 229, 250);color: rgb(29, 103, 163);margin-bottom: 0%; ">
-                                    <div >
-                                    <h2 style="margin-left:35%;">PIB EN TIEMPO REAL</h2>
-                                    <div class="container">
-                                        <table  style="text-align: center;">
-                                            <thead>
-                                                <tr>
-                                                <th class="border border-info">BOLETIN DE INFORMACIÓN PREVIA AL VUELO</th>
-                                                <th class="border border-info">SERVICIO DE INFORMACIÓN AERONÁUTICA</th>
-                                                <th class="border border-info">Fecha y Hora de Publicación</th>
-                                                </tr>
-                                            </thead>
-                                
-                                            <tbody>
-                                                <tr>
-                                                <td class="border border-info">INFORMACIÓN GENERAL</td>
-                                                <td class="border border-info">AASANA</td>
-                                                <td class="border border-info">s</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    </div>
-                            
-                            
-                            
-                                </div>
-                                
-                                <div class="menu__acordeon" id="app2">
-                                <div class="menu__acordeon__uno">
-                                    <div class="contenido__menu">      
-                                    [[listado]]
-                                    <div class="accordion accordion-flush" id="accordion">
-                                        <div class="accordion-item" style="padding-top: 5px; background-color: rgb(175, 229, 250);" v-for="imp of impar" v-for="nombre of nombres">
-                                        <h2 class="accordion-header" :id="[imp.f]">
-                                            <button  class="accordion-button collapsed" type="button" data-bs-toggle="collapse" :data-bs-target="[imp.h2]" aria-expanded="false" :aria-controls="[imp.h]" @click="mensaje">
-                                            Aeropuerto [[imp.lugar]]
-                                            </button>
-                                        </h2>
-                                        <div :id="[imp.h]" class="accordion-collapse collapse" :aria-labelledby="[imp.f]" data-bs-parent="#accordion">
-                                            <div class="accordion-body">
-                                            <!-- 
-                                                <h4><code>Aeropuerto de</code></h4>
-                                                <h5>Historial del Lugar</h5>
-                                                <h6><code>Nombre Lugar: [[imp.lugar]] </code></h6> 
-                                            -->
-                            
-                                            <div class="table-responsive">
-                                                <table class="table">
-                                                <thead>
-                                                    <tr>
-                                                    <th scope="col">Instalación</th>
-                                                    <th scope="col">Información</th>
-                                                    <th scope="col">Referencia</th>
-                                                    </tr>
-                                                </thead>
-                            
-                                                <tbody>
-                                                    <tr v-for="nombre of nombres" v-if="imp.lugar === nombre.lugar">
-                                                    <th scope="row"> [[nombre.asunto]] </th>
-                                                    <td> [[nombre.desde]] [[nombre.espaniol_decodificado]] [[nombre.hasta]] </td>
-                                                    <td>[[nombre.correlativo]]</td>
-                                                    </tr>
-                                                </tbody>
-                                                </table>
-                                            </div>
+
+
+                                <div class="menu__acordeon">
+                                    <div class="menu__acordeon__uno">
+                                        <div class="contenido__menu">
+                                            [[listado.call()]]
+
+                                            <div class="accordion" id="accordion">
+                                                <div class="accordion-item"
+                                                    style="padding-top: 5px; "
+                                                    v-for="imp of impar" v-for="nombre of nombres">
+                                                    <h4 class="accordion-header" :id="[imp.f]">
+                                                        <button class="accordion-button collapsed" type="button"
+                                                            data-bs-toggle="collapse" :data-bs-target="[imp.h2]"
+                                                            aria-expanded="true" :aria-controls="[imp.h]"
+                                                            @click="mensaje">
+                                                            Aeropuerto [[imp.lugar]]
+                                                        </button>
+                                                    </h4>
+                                                    <div :id="[imp.h]" class="accordion-collapse collapse show"
+                                                        :aria-labelledby="[imp.f]">
+                                                        <div class="accordion-body">
+                                                            <!-- 
+                                                                <h4><code>Aeropuerto de</code></h4>
+                                                                <h5>Historial del Lugar</h5>
+                                                                <h6><code>Nombre Lugar: [[imp.lugar]] </code></h6> 
+                                                            -->
+
+                                                            <div class="table-responsive">
+                                                                <table class="table">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th scope="col" style="width: 30%;">Instalación</th>
+                                                                            <th scope="col" style="width: 65%;">Información</th>
+                                                                            <th scope="col" style="width: 5%;">Referencia</th>
+                                                                        </tr>
+                                                                    </thead>
+
+                                                                    <tbody>
+                                                                        <tr v-for="nombre of nombres"
+                                                                            v-if="imp.lugar === nombre.lugar">
+                                                                            <th scope="row"> [[nombre.asunto]] </th>
+                                                                            <td> [[nombre.desde]]
+                                                                                [[nombre.espaniol_decodificado]]
+                                                                                [[nombre.hasta]] </td>
+                                                                            <td>[[nombre.correlativo]]</td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                        </div>
                                     </div>
-                                    </div>
-                                </div>
-                                <div class="menu__acordeon__dos">
-                                    <div class="contenido__menu">
-                                    [[listado]]
-                                    <div class="accordion accordion-flush" id="accordion2">
-                                        <div class="accordion-item" style="padding-top: 5px; background-color: rgb(175, 229, 250);" v-for="pa of par" v-for="nombre of nombres">
-                                        <h2 class="accordion-header" :id="[pa.f]">
-                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" :data-bs-target="[pa.h2]" aria-expanded="false" :aria-controls="[pa.h]" @click="mensaje">
-                                            Aeropuerto [[pa.lugar]]
-                                            </button>
-                                        </h2>
-                                        <div :id="[pa.h]" class="accordion-collapse collapse" :aria-labelledby="[pa.f]" data-bs-parent="#accordion2">
-                                            <div class="accordion-body">
-                                            <!-- <h4><code>Aeropuerto de </code></h4>
+                                    <div class="menu__acordeon__dos">
+                                        <div class="contenido__menu">
+                                            <div class="accordion accordion-flush" id="accordion2">
+                                                <div class="accordion-item"
+                                                    style="padding-top: 5px; "
+                                                    v-for="pa of par" v-for="nombre of nombres">
+                                                    <h4 class="accordion-header" :id="[pa.f]">
+                                                        <button class="accordion-button collapsed" type="button"
+                                                            data-bs-toggle="collapse" :data-bs-target="[pa.h2]"
+                                                            aria-expanded="false" :aria-controls="[pa.h]"
+                                                            @click="mensaje">
+                                                            Aeropuerto [[pa.lugar]]
+                                                        </button>
+                                                    </h4>
+                                                    <div :id="[pa.h]" class="accordion-collapse collapse show"
+                                                        :aria-labelledby="[pa.f]">
+                                                        <div class="accordion-body">
+                                                            <!-- <h4><code>Aeropuerto de </code></h4>
                                             <h5>Historial del Lugar</h5>
                                             <h6><code>Nombre Lugar: [[pa.lugar]] </code></h6> -->
-                            
-                                            <div class="table-responsive">
-                                                <table class="table">
-                                                <thead>
-                                                    <tr>
-                                                    <th scope="col">Asunto</th>
-                                                    <th scope="col">Estado</th>
-                                                    <th scope="col">Referencia</th>
-                                                    </tr>
-                                                </thead>
-                            
-                                                <tbody>
-                                                    <tr v-for="nombre of nombres" v-if="pa.lugar === nombre.lugar">
-                                                    <th scope="row"> [[nombre.asunto]] </th>
-                                                    <td> [[nombre.desde]] [[nombre.espaniol_decodificado]] [[nombre.hasta]] </td>
-                                                    <td>[[nombre.correlativo]]</td>
-                                                    </tr>
-                                                </tbody>
-                                                </table>
-                                            </div>
+
+                                                            <div class="table-responsive">
+                                                                <table class="table">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th scope="col" style="width: 30%;" >Asunto</th>
+                                                                            <th scope="col" style="width: 65%;" >Estado</th>
+                                                                            <th scope="col" style="width: 5%;" >Referencia</th>
+                                                                        </tr>
+                                                                    </thead>
+
+                                                                    <tbody>
+                                                                        <tr v-for="nombre of nombres"
+                                                                            v-if="pa.lugar === nombre.lugar">
+                                                                            <th scope="row"> [[nombre.asunto]] </th>
+                                                                            <td> [[nombre.desde]]
+                                                                                [[nombre.espaniol_decodificado]]
+                                                                                [[nombre.hasta]] </td>
+                                                                            <td>[[nombre.correlativo]]</td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                        </div>
                                     </div>
-                                    </div>
-                                </div>
                                 </div>
                             </section>
 
@@ -243,16 +230,47 @@
 
 
 
-{% endblock content %} 
+{% endblock content %}
+
+
 
 
 {% block extrajs %}
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.min.js" integrity="sha384-j0CNLUeiqtyaRmlzUHCPZ+Gy5fQu0dQ6eZ/xAww941Ai1SxSY+0EQqNXNE6DZiVc" crossorigin="anonymous"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.3/axios.min.js"></script>
+<script src='https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.2.4/jspdf.plugin.autotable.min.js'></script>
 
-    <script src="{% static 'index_public/js/acordeon_vue.js' %}"></script>
+
+<!-- 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.min.js"
+    integrity="sha384-j0CNLUeiqtyaRmlzUHCPZ+Gy5fQu0dQ6eZ/xAww941Ai1SxSY+0EQqNXNE6DZiVc"
+    crossorigin="anonymous"></script> -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.3/axios.min.js"></script>
+
+
+
+
+
+
+
+<script src="{% static 'index_public/js/acordeon_vue.js' %}"></script>
+
+<script src="{% static 'pib_acordeon/acordeon_print_pib.js' %}"></script>
+
+
+<script>
+    // jsPDF docs are found here:
+    // http://raw.githack.com/MrRio/jsPDF/master/docs/
+    //current = new Date();
+
+   
+</script>
+
+
 
 {% endblock extrajs %}
 

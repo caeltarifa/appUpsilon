@@ -95,20 +95,18 @@
   <div style="background-color: rgb(175, 229, 250);color: rgb(29, 103, 163);margin-bottom: 0%; ">
     <div >
       <div class="container" style="z-index: 999;">
-        <table class="table-hover"  style="text-align: center; " cellpadding="20">
+        <table class="table-hover"  style="text-align: center; " cellpadding="15">
           <thead>
             <tr>
-              <th style="padding-bottom: 0;"  style="background: #d3fafb;" > <br>PIB <br> BOLETIN DE INFORMACIÓN PREVIA AL VUELO </th>
-              <th style="padding-bottom: 0;" > <br> SERVICIO DE INFORMACIÓN AERONÁUTICA</th>
-              <th style="padding-bottom: 0;" > <br> Fecha y Hora de Publicación</th>
-              <th style="padding-bottom: 0;" > <br> Área Cubierta</th>
+              <th style="padding-bottom: 0;"  style="background: #d3fafb;" > <br><br> BOLETIN DE INFORMACIÓN PREVIA AL VUELO </th>
+              <th style="padding-bottom: 0;" > <br> <br> Fecha y Hora de Actualización</th>
+              <th style="padding-bottom: 0;" > <br> <br> Área Cubierta</th>
             </tr>
           </thead>
 
           <tbody>
             <tr>
-              <td> INFORMACIÓN GENERAL <br> En tiempo real <div class="spinner-grow spinner-grow-sm text-success"></div> </td>
-              <td> Oficina NOTAM Internacional <br> A.A.S.A.N.A. <br> </td>
+              <td> En tiempo real <div class="spinner-grow spinner-grow-sm text-success"></div> </td>
               <td> [[last_updated]]</td>
               <td>FIR LA PAZ</td>
             </tr>
@@ -177,7 +175,7 @@
     <div class="menu__acordeon__dos">
       <div class="contenido__menu">
 
-        [[listado.apply()]]
+        <!-- [[listado.apply()]] -->
         <div v-if="!sw_parte2" class="spinner-grow text-info" style="width:15vh;height: 15vh;margin-left: 45%;margin-top: 30%;"></div>
         
         <div class="accordion accordion-flush" id="accordion2">
@@ -316,8 +314,11 @@
       <li class="pane1">
         <h2>
           <br>
-          NOTAMN - NTL e INTL
+          NOTAMN VIGENTES - NTL e INTL
+          <!-- <br><pre style="font-size: 8;">Origen de datos: AMHS System</pre> -->
         </h2>
+        
+        
         <div id="area" style="height: 85%; width: 85%;margin-left: 3%;margin-top: 10%;">
           {% area_chart areas with id='areas' %}
         </div>
@@ -325,8 +326,11 @@
       <li class="pane2">
         <h2>
           <br>
-          NOTAMR - NTL e INTL
+          NOTAMR VIGENTES - NTL e INTL
         </h2>
+        
+        <!-- <br><pre style="font-size: 8;">Origen de datos: AMHS System</pre> -->
+        
         <div id="area" style="height: 85%; width: 85%;margin-left: 3%;margin-top: 10%;">
           {% area_chart areas1 with id='areas1' %}
         </div>

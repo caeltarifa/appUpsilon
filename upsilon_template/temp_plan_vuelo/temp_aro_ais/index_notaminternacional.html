@@ -249,6 +249,30 @@
 
 <div>
 
+    
+    <div class="row">
+        <div class="col">
+            <h3>Actividad reciente</h3>
+            <table class="table-responsive table-hover"  style="text-align: center; " cellpadding="20">
+                <thead>
+                    <tr>
+                        <th>
+                            Charlie
+                        </th>
+                        <th>Alpha </th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Notam </td>
+                        <td>Notam </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
     <div class="buttons">
         <div class="butFrame bounce">
             <a href="{% url 'view_todos_notams' %}">
@@ -295,11 +319,37 @@
         <div class="butFrame bounce">
             <a href="{% url 'view_codigos_abreviaturas' %}">
                 <img src="http://www.neodigital.com.au/thumbnailsmall/Button6.jpg" />
-                <div class="butHeading">PIB VERSIONADO</div>
+                <div class="butHeading">HISTORIAL PIB</div>
             </a>
         </div>
     </div>
 
+
+    <div class="buttons">
+        <div class="butFrame bounce">
+            <a href="{% url 'view_pib_tiemporeal2' %}">
+                <img src="http://www.neodigital.com.au/thumbnailsmall/Button6.jpg" />
+                <div class="butHeading">MAPA AIS/AIM </div>
+            </a>
+        </div>
+    </div>
+
+
+    <div class="buttons">
+        <div class="butFrame bounce">
+            <a href="{% url 'view_pib_tiemporeal2' %}">
+                <img src="http://www.neodigital.com.au/thumbnailsmall/Button6.jpg" />
+                <div class="butHeading">RQN NOTAM NTL e INTL</div>
+            </a>
+        </div>
+
+        <div class="butFrame bounce">
+            <a href="{% url 'view_codigos_abreviaturas' %}">
+                <img src="http://www.neodigital.com.au/thumbnailsmall/Button6.jpg" />
+                <div class="butHeading">RASTREADOR NOTAM</div>
+            </a>
+        </div>
+    </div>
 
     <div class="buttons">
 

@@ -373,8 +373,8 @@
                                             <input class="input form-control" placeholder="Estado del asunto" type="text" v-model="form.pib_estado_asunto" />
                                           </div>
                                           <br>
-                                          <textarea disabled  id="pib_publicar" v-if="form.hasta_fecha" class="form-control" style="width: 100%;" rows="4"> DESDE [[form.desde_fecha]] HR [[form.desde_hora]] [[form.pib_asunto]] [[form.pib_estado_asunto]] HASTA [[form.hasta_fecha]] HR [[form.hasta_hora]]  [[ form.estimado[form.estimado.length -1] ]] ([[form.correlativo_charly]]) </textarea>
-                                          <textarea disabled  id="pib_publicar" v-else class="form-control" style="width: 100%;" rows="4"> DESDE [[form.desde_fecha]] HR [[form.desde_hora]] [[form.pib_asunto]] [[form.pib_estado_asunto]] ([[form.correlativo_charly]]) </textarea>
+                                          <textarea disabled  id="pib_publicar" v-if="form.hasta_fecha" class="form-control" style="width: 100%;" rows="4"> DESDE [[form.desde_fecha]] HR [[form.desde_hora]] [[form.pib_asunto]] [[form.pib_estado_asunto]] HASTA [[form.hasta_fecha]] HR [[form.hasta_hora]]  [[ form.estimado[form.estimado.length -1] ]] <!-- ([[form.correlativo_charly]]) --> </textarea>
+                                          <textarea disabled  id="pib_publicar" v-else class="form-control" style="width: 100%;" rows="4"> DESDE [[form.desde_fecha]] HR [[form.desde_hora]] [[form.pib_asunto]] [[form.pib_estado_asunto]] <!-- ([[form.correlativo_charly]]) --> </textarea>
 
   
                                         </div>
@@ -580,7 +580,7 @@
                                 
                                 
                                 <div id="appFormularioOaci" style="position: fixed; top: 35%; right: 5px;" >
-                                  <v-btn @click='generatePDF' style="background-color: rgb(83, 201, 255);height: 120px; width: 100px;">
+                                  <v-btn @click='generatePDF()' style="background-color: rgb(83, 201, 255);height: 120px; width: 100px;">
                                     <span class="material-icons" >
                                       post_add
                                     </span>
