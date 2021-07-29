@@ -63,7 +63,7 @@ app2 = new Vue({
         this.sw_parte2 = true;
 
         var fecha = String(respuesta.data[0].hora_actualizado).split(' ');
-        this.last_updated = fecha[0].split('-')[2] + " " + (fecha[1].substr(0, 5)).replace(':','');
+        this.last_updated = fecha[0].split('-').reverse().join('-') + " " + (fecha[1].substr(0, 5)).replace(':','');
 
 
         this.nombres = respuesta.data
