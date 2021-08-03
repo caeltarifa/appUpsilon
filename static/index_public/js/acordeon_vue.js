@@ -10,7 +10,7 @@
   },
   computed:{
     listado(){
-      const path = 'http://upsilon.aasana.ga/pibrealtime'
+      const path = 'https://upsilon.aasana.bo/pibrealtime'
       axios.get(path).then((respuesta) => {
         this.nombres = respuesta.data
         this.variable = [...new Set(this.nombres.map(lugar => lugar.lugar))]
@@ -44,7 +44,7 @@ app2 = new Vue({
   },
   methods:{
     mensaje(){
-      const path = 'http://upsilon.aasana.ga/pibrealtime'
+      const path = 'https://upsilon.aasana.bo/pibrealtime'
       axios.get(path).then((respuesta) => {
         this.nombres2 = respuesta.data
       }).catch((error) => {
@@ -53,7 +53,7 @@ app2 = new Vue({
     },
 
     listado(){
-      const path = 'http://upsilon.aasana.ga/pibrealtime'
+      const path = 'https://upsilon.aasana.bo/pibrealtime'
       axios.get(path).then((respuesta) => {
 
         this.par=[];
@@ -87,9 +87,6 @@ app2 = new Vue({
       });
 
     },
-    hola(){
-      alert("hola mundo");
-    }
     
     
   },

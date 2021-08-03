@@ -44,8 +44,9 @@
                     <!--==========================
                     BOLETIN DE INFORMACION RAPIDA
                      ============================-->
-                     <div id="appFormularioOaci">
-                        <v-btn class="btn btn-outline-primary" @click='generatePDF' style="position: fixed;background-color: rgb(83, 201, 255);height: 50px; width: 50px; left:90%; right: 5px;">
+                    <div id="appFormularioOaci">
+                        <v-btn class="btn btn-outline-primary" @click='generatePDF'
+                            style="position: fixed;background-color: rgb(83, 201, 255);height: 50px; width: 50px; left:90%; right: 5px;">
                             <span class="material-icons md-18">
                                 local_printshop
                             </span>
@@ -64,11 +65,25 @@
                                                 <strong>BOLETIN DE INFORMACIÓN PREVIA AL VUELO</strong> <br> <br>
                                                 INFORMACION GENERAL
                                             </td>
-                                            <td style="width:50%;vertical-align:middle;"> <strong>ESTADO PLURINACIONAL
-                                                    DE BOLIVIA <br> Administración de Aeropuertos y Servicios Auxiliares a la Navegación Aérea</strong> 
+                                            <td style="width:50%;vertical-align:middle;">
+                                                <strong>
+                                                    ESTADO PLURINACIONAL DE BOLIVIA <br>
+                                                    Administración de Aeropuertos y Servicios Auxiliares a la Navegación
+                                                    Aérea</strong>
+
+                                                <br>
+
+                                                <img src="https://www.aasana.bo/files/logoa.jpg"
+                                                    style="width:180px; height:65px;">
+
+                                                <span class="section-divider"></span>
+                                                <p class="section-description">
+                                                    SERVICIO DE INFORMACIÓN AERONÁUTICA
+                                                </p>
                                             </td>
-                                            <td style="width:13%;vertical-align:middle;font-size:12px;"> <strong>Fecha y
-                                                    Hora<br>de Actualización</strong> 
+                                            <td style="width:13%;vertical-align:middle;font-size:12px;" rowspan="2">
+                                                <strong>Fecha y
+                                                    Hora<br>de Expedición</strong> <br> [[last_updated]]
                                             </td>
                                             <td style="width:12%;vertical-align:middle;font-size:12px;" rowspan="2">
                                                 <strong> Ruta o Área <br> cubierta</strong>
@@ -79,17 +94,9 @@
 
                                         <tr>
 
-                                            <td style="width:50%;">
-                                                <img src="https://www.aasana.bo/files/logoa.jpg"
-                                                    style="width:180px; height:65px;">
+                                           
 
-                                                <span class="section-divider"></span>
-                                                <p class="section-description">
-                                                    SERVICIO DE INFORMACIÓN AERONÁUTICA
-                                                </p>
-                                            </td>
-
-                                            <td style="width:13%;vertical-align:middle;font-size:12px;">[[last_updated]]</td>
+                                            <!-- <td style="width:13%;vertical-align:middle;font-size:12px;">[[last_updated]]</td> -->
                                         </tr>
 
 
@@ -109,25 +116,30 @@
                                 <div class="menu__acordeon">
                                     <div class="menu__acordeon__uno">
                                         <div class="contenido__menu">
-                                            [[listado.call()]]
+
+                                            <div class="table-responsive">
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col" style="width: 20%;">Lugar</th>
+                                                            <th scope="col" style="width: 20%;">Instalación</th>
+                                                            <th scope="col" style="width: 55%;">Información</th>
+                                                            <th scope="col" style="width: 5%;">Referencia</th>
+                                                        </tr>
+                                                    </thead>
+                                                </table>
+                                            </div>
 
                                             <div class="accordion" id="accordion">
-                                                <div class="accordion-item"
-                                                    style="padding-top: 5px; "
+                                                <div class="accordion-item" style="padding-top: 5px; "
                                                     v-for="imp of impar" v-for="nombre of nombres">
                                                     <h4 class="accordion-header" :id="[imp.f]">
                                                         <!-- <button class="accordion-button collapsed" type="button"
                                                             data-bs-toggle="collapse" :data-bs-target="[imp.h2]"
                                                             aria-expanded="true" :aria-controls="[imp.h]"
                                                             @click="mensaje" style="width: 350px;">
-                                                            Aeropuerto [[imp.lugar]]
-                                                        </button> -->
-                                                        <button class="accordion-button collapsed" type="button"
-                                                            data-bs-toggle="collapse" :data-bs-target="[imp.h2]"
-                                                            aria-expanded="true" :aria-controls="[imp.h]"
-                                                            style="width: 350px;">
                                                             Aeropuerto [[imp.lugar]] &nbsp; &nbsp;
-                                                        </button>
+                                                        </button> -->
                                                     </h4>
                                                     <div :id="[imp.h]" class="accordion-collapse collapse show"
                                                         :aria-labelledby="[imp.f]">
@@ -140,24 +152,17 @@
 
                                                             <div class="table-responsive">
                                                                 <table class="table">
-                                                                    <thead>
-                                                                        <tr>
-                                                                            <th scope="col" style="width: 20%;">Lugar</th>
-                                                                            <th scope="col" style="width: 20%;">Instalación</th>
-                                                                            <th scope="col" style="width: 55%;">Información</th>
-                                                                            <th scope="col" style="width: 5%;">Referencia</th>
-                                                                        </tr>
-                                                                    </thead>
-
                                                                     <tbody>
                                                                         <tr v-for="nombre of nombres"
                                                                             v-if="imp.lugar === nombre.lugar">
-                                                                            <td> [[imp.lugar]] </td>
-                                                                            <td scope="row"> [[nombre.asunto]] </td>
-                                                                            <td> [[nombre.desde]]
+                                                                            <td style="width: 20%;"> [[imp.lugar]] </td>
+                                                                            <td scope="row" style="width: 20%;">
+                                                                                [[nombre.asunto]] </td>
+                                                                            <td style="width: 55%;"> 
                                                                                 [[nombre.espaniol_decodificado]]
-                                                                                [[nombre.hasta]] </td>
-                                                                            <td>[[nombre.correlativo]]</td>
+                                                                            </td>
+                                                                            <td style="width: 5%;">
+                                                                                [[nombre.correlativo]]</td>
                                                                         </tr>
                                                                     </tbody>
                                                                 </table>
@@ -172,24 +177,18 @@
                                     <div class="menu__acordeon__dos">
                                         <div class="contenido__menu">
                                             <div class="accordion accordion-flush" id="accordion2">
-                                                <div class="accordion-item"
-                                                    style="padding-top: 5px; "
-                                                    v-for="pa of par" v-for="nombre of nombres">
-                                                    <h4 class="accordion-header" :id="[pa.f]">
-                                                        <!-- <button class="accordion-button collapsed" type="button" -->
-                                                        <!--     data-bs-toggle="collapse" :data-bs-target="[pa.h2]" -->
-                                                        <!--     aria-expanded="false" :aria-controls="[pa.h]" -->
-                                                        <!--     @click="mensaje"  -->
-                                                        <!--     style="width: 350px;"> -->
-                                                        <!--     Aeropuerto [[pa.lugar]] -->
-                                                        <!-- </button> -->
-                                                        <button class="accordion-button collapsed" type="button"
-                                                            data-bs-toggle="collapse" :data-bs-target="[pa.h2]"
-                                                            aria-expanded="false" :aria-controls="[pa.h]"
-                                                            style="width: 350px;">
-                                                            Aeropuerto [[pa.lugar]] &nbsp; &nbsp;
-                                                        </button>
-                                                    </h4>
+                                                <div class="accordion-item" style="padding-top: 5px; " v-for="pa of par"
+                                                    v-for="nombre of nombres">
+                                                    <!-- <h4 class="accordion-header" :id="[pa.f]"> -->
+                                                    <!-- <button class="accordion-button collapsed" type="button" -->
+                                                    <!--     data-bs-toggle="collapse" :data-bs-target="[pa.h2]" -->
+                                                    <!--     aria-expanded="false" :aria-controls="[pa.h]" -->
+                                                    <!--     @click="mensaje"  -->
+                                                    <!--     style="width: 350px;"> -->
+                                                    <!--     Aeropuerto [[pa.lugar]] &nbsp; &nbsp; -->
+                                                    <!-- </button> -->
+                                                    <!-- </h4> -->
+
                                                     <div :id="[pa.h]" class="accordion-collapse collapse show"
                                                         :aria-labelledby="[pa.f]">
                                                         <div class="accordion-body">
@@ -199,22 +198,17 @@
 
                                                             <div class="table-responsive">
                                                                 <table class="table">
-                                                                    <thead>
-                                                                        <tr>
-                                                                            <th scope="col" style="width: 30%;" >Asunto</th>
-                                                                            <th scope="col" style="width: 65%;" >Información</th>
-                                                                            <th scope="col" style="width: 5%;" >Referencia</th>
-                                                                        </tr>
-                                                                    </thead>
-
                                                                     <tbody>
                                                                         <tr v-for="nombre of nombres"
                                                                             v-if="pa.lugar === nombre.lugar">
-                                                                            <th scope="row"> [[nombre.asunto]] </th>
-                                                                            <td> [[nombre.desde]]
+                                                                            <td style="width: 20%;">[[pa.lugar]]</td>
+                                                                            <td scope="row" style="width: 20%;">
+                                                                                [[nombre.asunto]] </td>
+                                                                            <td style="width: 55%;"> 
                                                                                 [[nombre.espaniol_decodificado]]
-                                                                                [[nombre.hasta]] </td>
-                                                                            <td>[[nombre.correlativo]]</td>
+                                                                            </td>
+                                                                            <td style="width: 5%;">
+                                                                                [[nombre.correlativo]]</td>
                                                                         </tr>
                                                                     </tbody>
                                                                 </table>
@@ -251,11 +245,18 @@
 
 {% block extrajs %}
 
+<script>
+    $(
+        function () {
+            setInterval(() => {
+                app2.listado.apply();
+            }, 20000);
+        }
+    );
+</script>
 
 <script src='https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js'></script>
 <script src='https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js'></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js'></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.2.4/jspdf.plugin.autotable.min.js'></script>
 
 
 <!-- 
@@ -274,15 +275,6 @@
 <script src="{% static 'index_public/js/acordeon_vue.js' %}"></script>
 
 <script src="{% static 'pib_acordeon/acordeon_print_pib.js' %}"></script>
-
-
-<script>
-    // jsPDF docs are found here:
-    // http://raw.githack.com/MrRio/jsPDF/master/docs/
-    //current = new Date();
-
-   
-</script>
 
 
 

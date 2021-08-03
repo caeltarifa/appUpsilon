@@ -535,47 +535,51 @@ def eliminar_notam_del_pib(correlativo, tipo):
     return False
 
 
+
+from itertools import chain
+from operator import attrgetter
 def view_pib_tiempo_real(request):
     # lista de pib en notams nuevos
-    lista_pib = Pib_tiempo_real.objects.raw(" select 	id_notam_pib,	correlativo,	desde, 	hasta, 	tabla_pib.est, 	tabla_pib.perm, 	espaniol_decodificado,	hora_actualizacion, 	aplica_a,     tnew.asunto     from (	select		ptr.id_notam_pib, 		bnc.id_mensaje_c_n as correlativo, 		bnc.valido_desde as desde, 		bnc.valido_hasta as hasta, 		bnc.est, 		bnc.perm, 		bnc.pib_publicar as espaniol_decodificado, 		ptr.hora_actualizacion 	from 		plan_vuelo_pib_tiempo_real as ptr 	inner join 		aro_ais_notam_trafico_charly_new as bnc 	on 		ptr.id_notam_pib like %(parentesis)s || bnc.id_mensaje_c_n || %(comodin)s and 		ptr.id_notam_pib not like %(notam)s 	order by ptr.hora_actualizacion desc	) as tabla_pib inner join aro_ais_notam_trafico_charly_new as tnew on 	tnew.idnotam like %(parentesis)s || tabla_pib.correlativo || %(comodin)s AND tnew.es_pib=true order by hora_actualizacion desc", { 'notam': '%NOTAMC%', 'parentesis': '(', 'comodin': '%'})
+    lista_pib = Pib_tiempo_real.objects.raw(" select 	id_notam_pib,	correlativo,	desde, 	hasta, 	tabla_pib.est, 	tabla_pib.perm, 	espaniol_decodificado,	hora_actualizacion, 	aplica_a,     tnew.asunto     from (	select  ptr.id_notam_pib, 		bnc.id_mensaje_c_n as correlativo, 		bnc.valido_desde as desde, 		bnc.valido_hasta as hasta, 		bnc.est, 		bnc.perm, 		bnc.pib_publicar as espaniol_decodificado, 		ptr.hora_actualizacion 	from 		plan_vuelo_pib_tiempo_real as ptr 	inner join 		aro_ais_notam_trafico_charly_new as bnc 	on 		ptr.id_notam_pib like %(parentesis)s || bnc.id_mensaje_c_n || %(comodin)s and 		ptr.id_notam_pib not like %(notam)s 	order by ptr.hora_actualizacion desc	) as tabla_pib inner join aro_ais_notam_trafico_charly_new as tnew on 	tnew.idnotam like %(parentesis)s || tabla_pib.correlativo || %(comodin)s AND tnew.es_pib=true order by hora_actualizacion desc", { 'notam': '%NOTAMC%', 'parentesis': '(', 'comodin': '%'})
     # lista de pib en notams replace
-
     lista_pib2 = Pib_tiempo_real.objects.raw("SELECT   	id_notam_pib, 	correlativo, 	desde,  	hasta,  	tabla_pib.est,  	tabla_pib.perm,  	espaniol_decodificado, 	hora_actualizacion,  	aplica_a,     trepla.asunto       FROM  ( 	SELECT   		ptr.id_notam_pib,  		bnc.id_mensaje_c_r as correlativo,  		bnc.valido_desde as desde,  		bnc.valido_hasta as hasta,  		bnc.est,  		bnc.perm,  		bnc.pib_publicar as espaniol_decodificado,  		ptr.hora_actualizacion  	FROM plan_vuelo_pib_tiempo_real AS ptr 	INNER JOIN  		aro_ais_notam_trafico_charly_repla AS bnc 	ON  		ptr.id_notam_pib like %(parentesis)s || bnc.id_mensaje_c_r || %(comodin)s AND  		ptr.id_notam_pib not like %(notam)s 	ORDER BY  		ptr.hora_actualizacion desc  ) AS tabla_pib INNER JOIN  	aro_ais_notam_trafico_charly_repla AS trepla ON  	trepla.idnotam like %(parentesis)s || tabla_pib.correlativo || %(comodin)s  AND trepla.es_pib=true order by hora_actualizacion desc", { 'notam': '%NOTAMC%', 'parentesis': '(', 'comodin': '%'})
 
-    if lista_pib[0].hora_actualizacion < lista_pib2[0].hora_actualizacion:
-        lista_pib_ser = [{'hora_actualizado': str(
-            lista_pib2[0].hora_actualizacion)}]
+    hora_actualizado = ""
+    sw=True
+    lista_pib_ser = [{ 'hora_actualizado': str(datetime.now()) }]
+
+    if len(lista_pib) > 0  and len(lista_pib2) > 0:
+        lista_fusion=sorted(chain(lista_pib, lista_pib2), key=attrgetter('hora_actualizacion'), reverse=True)
+        lista_pib_ser = [{ 'hora_actualizado': str(lista_fusion[0].hora_actualizacion) }]
+
     else:
-        lista_pib_ser = [{'hora_actualizado': str(
-            lista_pib[0].hora_actualizacion)}]
+        if len(lista_pib) > 0:
+            lista_fusion=sorted(chain(lista_pib), key=attrgetter('hora_actualizacion'), reverse=True)
+            lista_pib_ser = [{ 'hora_actualizado': str(lista_fusion[0].hora_actualizacion) }]
 
-    for x in lista_pib:
-        if not x.perm:
-            if aun_es_valido(x.hasta):
-                lista_pib_ser.append(serializar_pib(x, 'NOTAMN'))
-            else:
-                # busco eliminarlo
-                # elimino en la base: pib_tiempo_real
-                # cambio a no vigente en la tabla charly_new
-                #if not x.est:
-                    # si no es estimado, eliminacion sin piedad
-                eliminar_notam_del_pib(x.correlativo, 'NOTAMN')
-        else:
-            lista_pib_ser.append(serializar_pib(x, 'NOTAMN'))
 
-    for x in lista_pib2:
-        if not x.perm:
-            if aun_es_valido(x.hasta):
-                lista_pib_ser.append(serializar_pib(x, 'NOTAMR'))
+        if len(lista_pib2) > 0:
+            lista_fusion=sorted(chain(lista_pib2), key=attrgetter('hora_actualizacion'), reverse=True)
+            lista_pib_ser = [{ 'hora_actualizado': str(lista_fusion[0].hora_actualizacion) }]
+        
+
+    if len(lista_fusion)>0:
+
+        for x in lista_fusion:
+            if not x.perm:
+                if aun_es_valido(x.hasta):
+                    lista_pib_ser.append(serializar_pib(x, sw))
+                else:
+                    # busco eliminarlo
+                    # elimino en la base: pib_tiempo_real
+                    # cambio a no vigente en la tabla charly_new
+                    #if not x.est:
+                        # si no es estimado, eliminacion sin piedad
+                    eliminar_notam_del_pib(x.correlativo, sw)
             else:
-                # busco eliminarlo
-                # elimino en la base: pib_tiempo_real
-                # cambio a no vigente en la tabla charly_new
-                #if not x.est:
-                    # si no es estimado, eliminacion sin piedad
-                eliminar_notam_del_pib(x.correlativo, 'NOTAMR')
-        else:
-            lista_pib_ser.append(serializar_pib(x, 'NOTAMR'))
+                lista_pib_ser.append(serializar_pib(x, sw))
+            sw=False
+
 
     return HttpResponse(json.dumps(lista_pib_ser), content_type='application/json')
     # return JsonResponse({'respuesta':"ningun resultado"}, status=200)

@@ -226,8 +226,8 @@
                                         <div class="card-body">
                                           
                                           <div class="input-group">
-                                            <input class="input form-control" placeholder="C0001/21" type="text" v-model="form.correlativo_charly" v-on:keyup.enter="buscar_correlativo_charly" />
-                                            <input class="input form-control" placeholder="A0001/21" type="text" v-model="form.correlativo_alfa" v-on:keyup.enter="buscar_correlativo_alfa" />
+                                            <input class="input form-control" placeholder="C0001/21" type="text" v-model="form.correlativo_charly" v-on:keyup.enter="buscar_correlativo_charly" maxlength="8" />
+                                            <input class="input form-control" placeholder="A0001/21" type="text" v-model="form.correlativo_alfa" v-on:keyup.enter="buscar_correlativo_alfa" maxlength="8" />
                                           </div>
 
                                           <div class="input-group" >
@@ -279,7 +279,6 @@
                                           <div class="form-row">
                                               <input class="input form-control col-md-2" placeholder="Inferior" type="text" v-model="form.nivel_inf" />
                                               <input class="input form-control col-md-2" placeholder="superior" type="text" v-model="form.nivel_sup" />
-                                              <input class="input form-control col-md-2" placeholder="Radio" type="text" v-model="form.radio" />
                                             
                                               <select class="form-control col-md-1" style="width: 10px;border: 3px solid rgb(167, 231, 71);"  v-model="form.model_coordenadas" @change="actualizar_casilla_a($event)">
                                                 <option disabled> Seleccione un lugar</option>
@@ -288,7 +287,11 @@
                                                 {% endfor %}
                                               </select>
                                               <input class="input form-control col-md-5"  placeholder="Coordenada" type="text" v-model="form.model_coordenadas">
+                                              
+                                              <input class="input form-control col-md-2" placeholder="Radio" type="text" v-model="form.radio" />
                                           </div>
+                                          
+
 
                                         </div>
                                       </div>
@@ -309,11 +312,11 @@
                                             
                                             &nbsp;&nbsp;B) &nbsp;&nbsp;
                                             <input class="input form-control" type="date" v-model="form.desde_fecha"/>
-                                            <input class="input form-control" placeholder="0000" type="text" v-model="form.desde_hora" />
+                                            <input class="input form-control" placeholder="0000" type="text" v-model="form.desde_hora" maxlength="4" />
 
                                             &nbsp;&nbsp;C) &nbsp;&nbsp;
                                             <input v-if="form.model_tiponotam != 'NOTAMC' " class="input form-control" type="date" v-model="form.hasta_fecha"/>
-                                            <input v-if="form.model_tiponotam != 'NOTAMC' " class="input form-control" placeholder="0000" type="text" v-model="form.hasta_hora" />
+                                            <input v-if="form.model_tiponotam != 'NOTAMC' " class="input form-control" placeholder="0000" type="text" v-model="form.hasta_hora" maxlength="4"/>
 
                                             <div class="field">
                                               <div class="control" v-if="form.model_tiponotam != 'NOTAMC' " >
@@ -373,8 +376,8 @@
                                             <input class="input form-control" placeholder="Estado del asunto" type="text" v-model="form.pib_estado_asunto" />
                                           </div>
                                           <br>
-                                          <textarea disabled  id="pib_publicar" v-if="form.hasta_fecha" class="form-control" style="width: 100%;" rows="4"> DESDE [[form.desde_fecha]] HR [[form.desde_hora]] [[form.pib_asunto]] [[form.pib_estado_asunto]] HASTA [[form.hasta_fecha]] HR [[form.hasta_hora]]  [[ form.estimado[form.estimado.length -1] ]] <!-- ([[form.correlativo_charly]]) --> </textarea>
-                                          <textarea disabled  id="pib_publicar" v-else class="form-control" style="width: 100%;" rows="4"> DESDE [[form.desde_fecha]] HR [[form.desde_hora]] [[form.pib_asunto]] [[form.pib_estado_asunto]] <!-- ([[form.correlativo_charly]]) --> </textarea>
+                                          <textarea disabled  id="pib_publicar" v-if="form.hasta_fecha" class="form-control" style="width: 100%;" rows="4"> DESDE [[form.desde_fecha.split('-').reverse().join('/')]] HR [[form.desde_hora]] [[form.pib_estado_asunto]] HASTA [[form.hasta_fecha.split('-').reverse().join('/')]] HR [[form.hasta_hora]]  [[ form.estimado[form.estimado.length -1] ]] </textarea> <!-- ([[form.correlativo_charly]]) --> 
+                                          <textarea disabled  id="pib_publicar" v-else class="form-control" style="width: 100%;" rows="4"> DESDE [[form.desde_fecha.split('-').reverse().join('/')]] HR [[form.desde_hora]] [[form.pib_estado_asunto]] </textarea>  <!-- ([[form.correlativo_charly]]) -->
 
   
                                         </div>
@@ -491,7 +494,7 @@
   [[form.fecha_deposito.substring(8,)]][[form.hora_deposito]] [[form.remitente]] <br> -->
   ([[form.correlativo_charly]] [[form.model_tiponotam]] [[form.model_destino_notam_charly]] <br>
   Q) SLLF/Q[[form.model_asunto]][[form.model_estado_asunto]]/[[form.model_tipo]]/[[form.model_nbo]]/[[form.model_alcance]]/[[form.nivel_inf]]/[[form.nivel_sup]]/[[form.model_coordenadas.split(" ")[2] ]][[form.radio]] <br>
-  A) [[form.lugar]] B) [[( form.desde_fecha.substring(2,) ).replace("-","").replace("-","") ]][[form.desde_hora]] C) [[form.hasta_fecha.substring(2,).replace("-","").replace("-","")]][[form.hasta_hora]] [[ form.estimado[form.estimado.length -1] ]] <br>
+  A) [[form.lugar]] B) [[( form.desde_fecha.substring(2,) ).replace("-","").replace("-","") ]][[form.desde_hora]] C) [[form.hasta_fecha.substring(2,).replace("-","").replace("-","")]][[form.hasta_hora]] [[ form.estimado[form.estimado.length -1] ]]  [[ form.permanente[form.permanente.length -1] ]]  <br>
   <span v-if="form.casilla_d"> D) [[form.casilla_d]] <br> </span> 
   E) [[form.cuerpo1]] [[form.cuerpo2]]
   <span v-if="form.limite_inferior"><br> F) [[form.limite_inferior]]  </span>

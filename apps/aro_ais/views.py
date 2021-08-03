@@ -108,6 +108,10 @@ def view_new_notam(request):
         lista_georeferencias = Aeropuerto.objects.raw( "(select aeropuerto, icao, fuente, geo_arp AS georef   from plan_vuelo_aeropuerto  inner join (VALUES ('ARP')) AS t (fuente)  on geo_arp not like %(nil)s and aeropuerto <> 39)  union  (select aeropuerto, icao, fuente, geo_vor AS georef  from plan_vuelo_aeropuerto  inner join (VALUES ('VOR')) AS t (fuente)  on geo_vor not like %(nil)s)   union  (select aeropuerto, icao, fuente, geo_ils AS georef  from plan_vuelo_aeropuerto  inner join (VALUES ('ILS')) AS t (fuente)  on geo_ils not like %(nil)s)   union  (select aeropuerto, icao, fuente, geo_ils_gp_dme AS georef  from plan_vuelo_aeropuerto  inner join (VALUES ('ILS_GP_DME')) AS t (fuente)  on geo_ils_gp_dme not like %(nil)s)  union  (select aeropuerto, icao, fuente, geo_l AS georef  from plan_vuelo_aeropuerto  inner join (VALUES ('L')) AS t (fuente)  on geo_l not like %(nil)s)   union  (select aeropuerto, icao, fuente, geo_gpe_dme AS georef  from plan_vuelo_aeropuerto  inner join (VALUES ('GPE_DME')) AS t (fuente)  on geo_gpe_dme not like %(nil)s)   union  (select aeropuerto, icao, fuente, geo_marcador AS georef  from plan_vuelo_aeropuerto  inner join (VALUES ('MM')) AS t (fuente)  on geo_marcador not like %(nil)s)   union  (select aeropuerto, icao, fuente, geo_ndb AS georef  from plan_vuelo_aeropuerto  inner join (VALUES ('NDB')) AS t (fuente)  on geo_ndb not like %(nil)s)   union  (select aeropuerto, icao, iata AS fuente, geo_arp AS georef  from plan_vuelo_aeropuerto  where iata like 'SLLF')  order by icao asc, fuente asc" , { 'nil' : "NIL"} )
 
         for geo in lista_georeferencias:
+            if 'SLLF' in geo.fuente:
+                aux=geo.fuente
+                geo.fuente = geo.icao
+                geo.icao = aux
             part1 = str(geo.georef.split('S')[0])[0:4]
             part2 = str(geo.georef.split('S')[1])[0:5]
 
@@ -474,20 +478,20 @@ def view_api_notam_search_string(request):
             sw=False
             notam_amhs=[{'titulo':'SIN RESULTADOS'}]
             titulo="AMHS: NOTAM CHARLIE"
-            if Amhs_charly_cancel.objects.filter(idnotam__icontains=get_parametro).exists():
-                notam_amhs = Amhs_charly_cancel.objects.extra(select={'id_mensaje':'id_mensaje_c_c'}).filter(idnotam__icontains=get_parametro)[0]
+            if Amhs_charly_cancel.objects.filter(idnotam__startswith='('+get_parametro).exists():
+                notam_amhs = Amhs_charly_cancel.objects.extra(select={'id_mensaje':'id_mensaje_c_c'}).filter(idnotam__startswith='('+get_parametro)[0]
                 notam_amhs = serializar_notam_banco_amhs_general(notam_amhs, titulo)
                 notam_amhs = [notam_amhs]
                 sw = True
 
-            if not sw and Amhs_charly_repla.objects.filter(idnotam__icontains=get_parametro).exists():
-                notam_amhs = Amhs_charly_repla.objects.extra(select={'id_mensaje':'id_mensaje_c_r'}).filter(idnotam__icontains=get_parametro)[0]
+            if not sw and Amhs_charly_repla.objects.filter(idnotam__startswith='('+get_parametro).exists():
+                notam_amhs = Amhs_charly_repla.objects.extra(select={'id_mensaje':'id_mensaje_c_r'}).filter(idnotam__startswith='('+get_parametro)[0]
                 notam_amhs = serializar_notam_banco_amhs_general(notam_amhs, titulo)
                 notam_amhs = [notam_amhs]
                 sw=True
 
-            if not sw and Amhs_charly_new.objects.filter(idnotam__icontains=get_parametro).exists():
-                notam_amhs = Amhs_charly_new.objects.extra(select={'id_mensaje':'id_mensaje_c_n'}).filter(idnotam__icontains=get_parametro)[0]
+            if not sw and Amhs_charly_new.objects.filter(idnotam__startswith='('+get_parametro).exists():
+                notam_amhs = Amhs_charly_new.objects.extra(select={'id_mensaje':'id_mensaje_c_n'}).filter(idnotam__startswith='('+get_parametro)[0]
                 notam_amhs = serializar_notam_banco_amhs_general(notam_amhs, titulo)
                 notam_amhs = [notam_amhs]
                 sw=True

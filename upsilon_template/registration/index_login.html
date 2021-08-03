@@ -76,7 +76,10 @@
       </div>
     </div>
     <div class="banner__info">
-      <h1>Sistema de Información Aeronautica.</h1>
+      <h1>Sistema de Información Aeronautica
+        <br>
+        NOTAM / PIB
+      </h1>
       <!--
           <button class="btn__ingresar">Iniciar Sesión</button>
         -->
@@ -106,7 +109,7 @@
 
           <tbody>
             <tr>
-              <td> En tiempo real <div class="spinner-grow spinner-grow-sm text-success"></div> </td>
+              <td> En tiempo real <div class="spinner-grow spinner-grow-md text-success"></div> </td>
               <td> [[last_updated]]</td>
               <td>FIR LA PAZ</td>
             </tr>
@@ -123,7 +126,7 @@
     <div class="menu__acordeon__uno">
       <div class="contenido__menu">
         
-        [[listado.apply()]]
+        
         <div v-if="!sw_parte1" class="spinner-grow text-info" style="width:15vh;height: 15vh;margin-left: 45%;margin-top: 30%;"></div>
 
         <div class="accordion accordion-flush" id="accordion">
@@ -158,10 +161,20 @@
                       <tr v-for="nombre of nombres" v-if="imp.lugar === nombre.lugar">
                         <th scope="row"> [[nombre.asunto]] </th>
                         <td>
-                          <!-- [[nombre.desde]] --> [[nombre.espaniol_decodificado]]
+                          <!-- [[nombre.desde]] --> 
+                          [[nombre.espaniol_decodificado]]
                           <!-- [[nombre.hasta]] -->
                         </td>
-                        <td>[[nombre.correlativo]]</td>
+                        <td>
+                          [[nombre.correlativo]]
+                          <br>
+                          <div v-if="nombre.tipo"> 
+                            <span style="color: rgb(16, 233, 113);">Nuevo</span>
+                            <div class="spinner-grow spinner-grow-sm text-success" role="status">
+                              <span class="sr-only">Loading...</span>
+                            </div>
+                          </div>
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -212,7 +225,16 @@
                           [[nombre.espaniol_decodificado]] 
                           <!-- [[nombre.hasta]]  -->
                         </td>
-                        <td>[[nombre.correlativo]]</td>
+                        <td>
+                          [[nombre.correlativo]]
+                          <br>
+                          <div v-if="nombre.tipo"> 
+                            <span style="color: rgb(16, 233, 113);">Nuevo</span>
+                            <div class="spinner-grow spinner-grow-sm text-success" role="status">
+                              <span class="sr-only">Loading...</span>
+                            </div>
+                          </div>
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -394,7 +416,15 @@
 <script src="{% static 'index_public/js/sidebar.js' %}"></script>
 
 
-
+<script>
+  $(
+    function(){
+      setInterval(() => {
+        app2.listado.apply();
+      }, 20000);
+    }
+  );
+</script>
 
 <script>
   var componente = new Vue({
