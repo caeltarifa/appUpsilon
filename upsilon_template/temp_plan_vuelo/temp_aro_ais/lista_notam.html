@@ -109,7 +109,19 @@
         <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
             
             <li class=" nav-item">
-                <a href="#_notam_charly">
+                <a href="#_notam_charly_new">
+                    <i class="ft-pie-chart"></i>
+                </a>
+            </li>
+
+            <li class=" nav-item">
+                <a href="#_notam_charly_repla">
+                    <i class="ft-pie-chart"></i>
+                </a>
+            </li>
+
+            <li class=" nav-item">
+                <a href="#_notam_charly_cancel">
                     <i class="ft-pie-chart"></i>
                 </a>
             </li>
@@ -147,14 +159,14 @@
 <br>
 
 
-<!--NOTAMS charly -->
-<div id="_notam_charly"></div><br><br><br><br>
+<!--NOTAMS charly new-->
+<div id="_notam_charly_new"></div><br><br><br><br>
 <section>
     <div class="row justify-content-center">
         <div class="col-10" style="align-content: center;">
             <div class="card" style="box-shadow: 2px 2px 8px 0 black; min-height: 30%;  max-height: 100%;">
                 <div class="card-header">
-                    <h4 class="card-title">BANCO NOTAM CHARLY</h4>
+                    <h4 class="card-title">BANCO AMHS NOTAM CHARLY NEW</h4>
                     <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
                     <div class="heading-elements">
                         <ul class="list-inline mb-0">
@@ -209,7 +221,7 @@
                             
                             <tbody style="text-align: center;" id="tabla_notam">
 
-                                {% for notam in lista_notam_charly %}
+                                {% for notam in charly_recientes_new %}
                                     <tr >
                                         <td style="vertical-align: middle;">
                                             {{notam.aftn1}}
@@ -248,8 +260,217 @@
         </div>
     </div>
 </section>
-<!--NOTAMS charly -->
+<!--NOTAMS charly new-->
 
+
+
+<!--NOTAMS charly repla-->
+<div id="_notam_charly_repla"></div><br><br><br><br>
+<section>
+    <div class="row justify-content-center">
+        <div class="col-10" style="align-content: center;">
+            <div class="card" style="box-shadow: 2px 2px 8px 0 black; min-height: 30%;  max-height: 100%;">
+                <div class="card-header">
+                    <h4 class="card-title">BANCO AMHS NOTAM CHARLY REPLACE</h4>
+                    <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+                            <li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
+                            <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                            <li><a data-action="close"><i class="ft-x"></i></a></li>
+                        </ul>
+                    </div>
+                    <br>
+
+                </div>
+                <div class="card-content collapse show" style="height: 75%; overflow-y: auto;">
+                    
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            
+                            <thead style="text-align: center;" >
+                                <tr >
+                                    <td>
+                                        <input type="text" class="form-control " placeholder="Prioridad" id="busca_notam4" onkeyup="buscar_notam_tabla('busca_notam4',0,'tabla_notam')" style="width:110px" maxlength="4" >
+                                    </td>
+    
+                                    <td>
+                                        <input type="text" class="form-control"  placeholder="Notam" id="busca_fir4" onkeyup="buscar_notam_tabla('busca_fir4',1,'tabla_notam')" style="width:110px" maxlength="8">
+                                    </td>
+                                    
+                                    <td>
+                                        <input type="text" class="form-control"  placeholder="Lugar" id="busca_lugar4" onkeyup="buscar_notam_tabla('busca_lugar4',2,'tabla_notam')" style="width:110px" maxlength="4" >
+                                    </td>
+                                    
+                                    <td>
+                                    </td>
+
+                                    <td></td>
+                                    
+                                </tr>
+                                <tr>
+                                    <th style="width:65px; overflow:auto;">
+                                        Prioridad
+                                    </th>
+
+                                    <th style="width:55px;overflow:auto;" >NOTAM</th>
+                                    
+                                    <th style="width:55px;overflow:auto;">Lugar</th>
+                                    
+                                    <th style="width:55px; max-width: auto;">Valido desde</th>
+                                    
+                                    <th style="width:155px;">Valido hasta</th>
+                                </tr>
+                            </thead>
+                            
+                            <tbody style="text-align: center;" id="tabla_notam">
+
+                                {% for notam in charly_recientes_repla %}
+                                    <tr >
+                                        <td style="vertical-align: middle;">
+                                            {{notam.aftn1}}
+                                        </td>
+
+                                        <td style="vertical-align: middle;">
+                                            <a class=" btn-outline-light" onclick="abrir_modal( '{% url 'view_notam_modal' id_notam_mensaje=notam.id_mensaje%}')">
+                                                {{notam.idnotam}}<br>
+                                            </a>
+                                        </td>
+                                        
+                                        <td style="vertical-align: middle;">
+                                            {{notam.aplica_a}}
+                                        </td>
+
+                                        <td style="vertical-align: middle;">
+                                            {{notam.valido_desde}}
+                                        </td>
+                                        
+                                        <td style="vertical-align: middle;">
+                                            {{notam.valido_hasta}}
+                                        </td>
+
+                                    </tr>
+                                {% endfor %}
+                                    
+                            
+                            </tbody>
+                        </table>
+                    </div> 
+                    
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--NOTAMS charly repla -->
+
+
+
+<!--NOTAMS charly cancel-->
+<div id="_notam_charly_cancel"></div><br><br><br><br>
+<section>
+    <div class="row justify-content-center">
+        <div class="col-10" style="align-content: center;">
+            <div class="card" style="box-shadow: 2px 2px 8px 0 black; min-height: 30%;  max-height: 100%;">
+                <div class="card-header">
+                    <h4 class="card-title">TRAFICO AMHS NOTAM CHARLY CANCEL</h4>
+                    <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+                            <li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
+                            <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                            <li><a data-action="close"><i class="ft-x"></i></a></li>
+                        </ul>
+                    </div>
+                    <br>
+
+                </div>
+                <div class="card-content collapse show" style="height: 75%; overflow-y: auto;">
+                    
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            
+                            <thead style="text-align: center;" >
+                                <tr >
+                                    <td>
+                                        <input type="text" class="form-control " placeholder="Prioridad" id="busca_notam4" onkeyup="buscar_notam_tabla('busca_notam4',0,'tabla_notam')" style="width:110px" maxlength="4" >
+                                    </td>
+    
+                                    <td>
+                                        <input type="text" class="form-control"  placeholder="Notam" id="busca_fir4" onkeyup="buscar_notam_tabla('busca_fir4',1,'tabla_notam')" style="width:110px" maxlength="8">
+                                    </td>
+                                    
+                                    <td>
+                                        <input type="text" class="form-control"  placeholder="Lugar" id="busca_lugar4" onkeyup="buscar_notam_tabla('busca_lugar4',2,'tabla_notam')" style="width:110px" maxlength="4" >
+                                    </td>
+                                    
+                                    <td>
+                                    </td>
+
+                                    <td></td>
+                                    
+                                </tr>
+                                <tr>
+                                    <th style="width:65px; overflow:auto;">
+                                        Prioridad
+                                    </th>
+
+                                    <th style="width:55px;overflow:auto;" >NOTAM</th>
+                                    
+                                    <th style="width:55px;overflow:auto;">Lugar</th>
+                                    
+                                    <th style="width:55px; max-width: auto;">Valido desde</th>
+                                    
+                                    <th style="width:155px;">Valido hasta</th>
+                                </tr>
+                            </thead>
+                            
+                            <tbody style="text-align: center;" id="tabla_notam">
+
+                                {% for notam in charly_recientes_cancel %}
+                                    <tr >
+                                        <td style="vertical-align: middle;">
+                                            {{notam.aftn1}}
+                                        </td>
+
+                                        <td style="vertical-align: middle;">
+                                            <a class=" btn-outline-light" onclick="abrir_modal( '{% url 'view_notam_modal' id_notam_mensaje=notam.id_mensaje%}')">
+                                                {{notam.idnotam}}<br>
+                                            </a>
+                                        </td>
+                                        
+                                        <td style="vertical-align: middle;">
+                                            {{notam.aplica_a}}
+                                        </td>
+
+                                        <td style="vertical-align: middle;">
+                                            {{notam.valido_desde}}
+                                        </td>
+                                        
+                                        <td style="vertical-align: middle;">
+                                            {{notam.valido_hasta}}
+                                        </td>
+
+                                    </tr>
+                                {% endfor %}
+                                    
+                            
+                            </tbody>
+                        </table>
+                    </div> 
+                    
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--NOTAMS charly cancel-->
 
 
 <!--NOTAMS alfa -->
@@ -259,7 +480,7 @@
         <div class="col-10" style="align-content: center;">
             <div class="card" style="box-shadow: 2px 2px 8px 0 black; min-height: 30%;  max-height: 100%;">
                 <div class="card-header">
-                    <h4 class="card-title">BANCO NOTAM ALFA</h4>
+                    <h4 class="card-title">BANCO AMHS NOTAM ALFA</h4>
                     <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
                     <div class="heading-elements">
                         <ul class="list-inline mb-0">

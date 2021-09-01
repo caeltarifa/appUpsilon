@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     {% block title %}
@@ -21,8 +21,8 @@
     <meta content="" name="description">
 
     <!-- Favicons -->
-    <link href="{% static 'theme-assets/login/img/favicon.png' %}" rel="icon">
-    <link href="{% static 'theme-assets/login/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+    <link href="{% static 'theme-assets/login/img/upsilon_ico.png' %}" rel="icon">
+    <link href="{% static 'theme-assets/login/img/upsilon_ico.png' %}" rel="apple-touch-icon">
 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,700|Open+Sans:300,300i,400,400i,700,700i"
@@ -53,14 +53,27 @@
     <!-- =============LIB FOR TABLE PIB RESPONSIVE==============-->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"
+  integrity="sha384-SR1sx49pcuLnqZUnnPwx6FCym0wLsk5JZuNx2bPPENzswTNFaQU1RDvt3wT4gWFG" crossorigin="anonymous"></script>
+
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script> -->
+    <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script> -->
     <!--======================================================= -->
     
     <!-- =============== CALLING AL PIB =======================-->
     <!--<link href="{% static 'theme-assets/css/pib.css' %}" rel="stylesheet"> -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P1JQZHSG3Y"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-P1JQZHSG3Y');
+    </script>
 
 
     {% block extra_head %}
@@ -90,12 +103,13 @@
               <li class="nav__item"><a href="#segundo" class="nav__link">PIB ÁREA</a></li>
               <li class="nav__item"><a href="#tercero" class="nav__link">MAPA NOTAM</a></li>
               <li class="nav__item"><a href="#cuarto" class="nav__link">NOTAMETER</a></li>
+              <li class="nav__item"><a href="#quinto" class="nav__link">RQN NOTAM</a></li>
               <li class="nav__item"><a href="#contacto" class="nav__link">IFIS NUKLEAR</a></li>
-              <li class="nav__item"><a href="#" class="nav__logo" data-pushbar-target="pushbar-app"><i class='bx bxs-category'></i></a></li>
+              <!-- <li class="nav__item"><a href="#" class="nav__logo" data-pushbar-target="pushbar-app"><i class='bx bxs-category'></i></a></li> -->
             </ul>
           </div>
     
-          <img src="{% static 'index_public/img/footer/LOGO_AASANA.png' %}" class="logo__aasana">
+          <img src="{% static 'index_public/img/footer/LOGO_AASANA_.png' %}" class="logo__aasana">
           
           <div class="nav__toggle" id="nav-toggle">
             <i class="bx bx-menu"></i>
@@ -117,7 +131,7 @@
               <img src="{% static 'index_public/img/sidebar/5.png' %}">
               <div class="textos">
                 <p class="nombre-item">appEzpin</p>
-                <p>Mensajeria Aeronautica</p>
+                <p>Mensajeria Aeronáutica</p>
               </div>
             </div>
           </a>
@@ -221,11 +235,13 @@
     <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
 
 
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.15/vue.js'></script>
+    <!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.15/vue.js'></script> -->
+
+
     {% block extra_js %}
     {% endblock extra_js %}
 
-
+<!-- 
     <script>
         // min and max radius, radius threshold and percentage of filled circles
         var radMin = 5,
@@ -418,7 +434,7 @@
 
         init();
     </script>
-
+ -->
 </body>
 
 </html>

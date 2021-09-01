@@ -24,6 +24,9 @@
   }
 }); */
 
+
+
+
 app2 = new Vue({
   el: '#app2',
   delimiters: ['[[', ']]'],
@@ -44,7 +47,7 @@ app2 = new Vue({
   },
   methods:{
     mensaje(){
-      const path = 'https://upsilon.aasana.bo/pibrealtime'
+      const path = 'http://upsilon.aasana.ga/pibrealtime'
       axios.get(path).then((respuesta) => {
         this.nombres2 = respuesta.data
       }).catch((error) => {
@@ -53,7 +56,7 @@ app2 = new Vue({
     },
 
     listado(){
-      const path = 'https://upsilon.aasana.bo/pibrealtime'
+      const path = 'http://upsilon.aasana.ga/pibrealtime'
       axios.get(path).then((respuesta) => {
 
         this.par=[];

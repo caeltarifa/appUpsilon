@@ -84,9 +84,27 @@ def view_pagina_principal(request):
             if request.user.username in 'aroaislp@aasana':
                 return redirect('view_panel_aroaislp')
 
+
+
+
+
+
         if request.user.groups.filter(name='AISNACIONAL').exists():
-            if request.user.username in 'notaminternacional@aasana':
+            if request.user.username in 'nof@aasana':
                 return redirect('view_panel_notaminternacional')
+            
+        if request.user.username in 'SLLPZPZX@AASANA':
+            return redirect('view_panel_aroaislp')
+        
+        if request.user.username in 'SLVRZPZX@AASANA':
+            return redirect('view_panel_aroaislp')
+        
+        if request.user.username in 'SLCBZPZX@AASANA':
+            return redirect('view_panel_aroaislp')
+
+
+
+
 
         if request.user.groups.filter(name='INFORMACION_AERONAUTICA').exists():
             if request.user.username in 'aroaiscbba@aasana':
@@ -548,6 +566,8 @@ def view_pib_tiempo_real(request):
     sw=True
     lista_pib_ser = [{ 'hora_actualizado': str(datetime.now()) }]
 
+    lista_fusion=[]
+
     if len(lista_pib) > 0  and len(lista_pib2) > 0:
         lista_fusion=sorted(chain(lista_pib, lista_pib2), key=attrgetter('hora_actualizacion'), reverse=True)
         lista_pib_ser = [{ 'hora_actualizado': str(lista_fusion[0].hora_actualizacion) }]
@@ -640,6 +660,78 @@ def es_replace(cadena):
     if 'NOTAMR' in cadena:
         return True
     return False
+
+
+
+################################################################################################
+################################################################################################
+################################ API's PARA CONSULTA DE BANCO NOTAM ############################
+################################################################################################
+################################################################################################
+def api_search_data_notam(request):
+    if request.method == "GET":
+        # get_abreviatura = str(request.GET.dict()['abreviatura'])
+        cadena_notam = str(request.GET.get('rqn_notam')).upper()
+        
+        if cadena_notam:
+            coleccion = []
+            try:
+                lista_notam = cadena_notam.split(' ')
+                lugar = lista_notam[1]
+                lista_notam = lista_notam[2:]
+
+                for notam in lista_notam:
+                    if 'A' in notam:
+                        #buscar en notam alfa
+                        resultado = None
+                        if Notam_trafico_alfa_new.objects.filter(idnotam__startswith='('+notam).exists():
+                            resultado = Notam_trafico_alfa_new.objects.extra(select={'id_mensaje':'id_mensaje_a_n'}).filter(idnotam__startswith='('+notam).first()
+
+                        if Notam_trafico_alfa_repla.objects.filter(idnotam__startswith='('+notam).exists():
+                            resultado = Notam_trafico_alfa_repla.objects.extra(select={'id_mensaje':'id_mensaje_a_r'}).filter(idnotam__startswith='('+notam).first()
+
+                        if Notam_trafico_alfa_cancel.objects.filter(idnotam__startswith='('+notam).exists():
+                            resultado = Notam_trafico_alfa_cancel.objects.extra(select={'id_mensaje':'id_mensaje_a_c'}).filter(idnotam__startswith='('+notam).first()
+
+                        if not resultado is None:
+                            coleccion.append(serializar_notam_alfa(resultado))
+                        else:
+                            coleccion.append({'response':resultado+' '+ 'not found'})
+
+                    if 'C' in notam:
+                        #buscar en notam charlie
+                        resultado = None
+                        if Notam_trafico_charly_new.objects.filter(idnotam__startswith='('+notam).exists():
+                            resultado = Notam_trafico_charly_new.objects.extra(select={'id_mensaje':'id_mensaje_c_n'}).filter(idnotam__startswith='('+notam).first()
+
+                        if Notam_trafico_charly_repla.objects.filter(idnotam__startswith='('+notam).exists():
+                            resultado = Notam_trafico_charly_repla.objects.extra(select={'id_mensaje':'id_mensaje_c_r'}).filter(idnotam__startswith='('+notam).first()
+
+                        if Notam_trafico_charly_cancel.objects.filter(idnotam__startswith='('+notam).exists():
+                            resultado = Notam_trafico_charly_cancel.objects.extra(select={'id_mensaje':'id_mensaje_c_c'}).filter(idnotam__startswith='('+notam).first()
+
+                        if not resultado is None:
+                            coleccion.append(serializar_notam(resultado))
+                        else:
+                            coleccion.append({'response':resultado+' '+ 'not found'})
+
+                    devolucion = {
+                        'request_rqn': coleccion,
+                    }
+
+                return HttpResponse(json.dumps(devolucion), content_type='application/json')
+            except:
+                return HttpResponse(json.dumps([{'RQN NOT VALID': cadena_notam}]), content_type='application/json')
+            
+        return HttpResponse(json.dumps([{'RQN NOT EMPTY': cadena_notam}]), content_type='application/json')
+    else:
+        return HttpResponse(json.dumps([{'msj': "GET method no valid"}]), content_type='application/json')
+
+
+
+
+
+
 
 ################################################################################################
 ################################################################################################

@@ -49,6 +49,9 @@ from apps.aro_ais.views import view_post_crear_notam
 from apps.aro_ais.views import view_api_notam_search
 from apps.aro_ais.views import view_api_notam_search_string
 
+##recuperar datos del servidor de NOTAM pasado
+from apps.aro_ais.views import view_api_redirect_notam
+
 
 urlpatterns = [
     path('',view_panel_aroaislp, name="view_panel_aroaislp"),
@@ -118,5 +121,9 @@ urlpatterns = [
 
     ##API PARA CONSULTAR AED GEOREFERENCIADOS
     path('georefaed/', view_get_aed_georef, name="view_get_aed_georef"), #
+    
+    
+    
+    path('recuperar_notam/', view_api_redirect_notam, name="view_api_redirect_notam"), #
     
 ]

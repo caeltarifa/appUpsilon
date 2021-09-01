@@ -154,18 +154,14 @@
                                   </div>
 
                                   <div id="accordion"  v-if="form.model_tiponotam">
-                                    <br>
-                                    <div class="input-group" v-if="form.model_tiponotam == 'NOTAMR' || form.model_tiponotam == 'NOTAMC' ">
-                                      <input v-model="form.model_destino_notam_charly" @input="form.model_destino_notam_charly = $event.target.value.toUpperCase()" class="input form-control" placeholder="NOTAM charlie a cambiar" type="text" minlength="8" maxlength="8" />
-                                      <input v-model="form.model_destino_notam_alfa" @input="form.model_destino_notam_alfa = $event.target.value.toUpperCase()" class="input form-control" placeholder="NOTAM alpha a cambiar" type="text" minlength="8" maxlength="8" />
-                                    </div>
+                                    
 
                                     <br>
                                     <div class="card" >
                                       <div style="padding: 0px;" class="card-header" id="headingZero">
                                         <h5 class="mb-0">
                                           <button class="btn btn-link" data-toggle="collapse" data-target="#collapseZero" aria-expanded="true" aria-controls="collapseZero" style="width: 100%; background-color: rgb(229, 242, 252);">
-                                            Antecedente del NOTAM
+                                            Antecedente NOTAM
                                           </button>
                                         </h5>
                                       </div>
@@ -174,7 +170,7 @@
                                         <div class="card-body">
                                           
                                           <div class="input-group">
-                                            <textarea v-model="form.model_antecedente_notam" id="id_antecedente_notam" class="form-control" style="width: 100%;" rows="2"  placeholder="Antecedente NOTAM"> </textarea>
+                                            <textarea v-model="form.model_antecedente_notam" @input="form.model_antecedente_notam = $event.target.value.toUpperCase()" id="id_antecedente_notam" class="form-control" style="width: 100%;" rows="2"  placeholder="Antecedente NOTAM"> </textarea>
                                           </div>
 
                                         </div>
@@ -188,7 +184,7 @@
                                       <div style="padding: 0px;" class="card-header" id="headingOne">
                                         <h5 class="mb-0">
                                           <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="width: 100%; background-color: rgb(229, 242, 252);">
-                                            Encabezado del mensaje
+                                            DTG
                                           </button>
                                         </h5>
                                       </div>
@@ -206,7 +202,7 @@
 
                                             <input class="input form-control" placeholder="Fecha deposito" type="date" v-model="form.fecha_deposito" />
                                             <input class="input form-control" placeholder="HR DEPOSITO" type="text" v-model="form.hora_deposito"/>
-                                            <input class="input form-control" placeholder="REMITENTE" type="text" v-model="form.remitente" />
+                                            <input class="input form-control" placeholder="REMITENTE" type="text" v-model="form.remitente" @input="form.remitente = $event.target.value.toUpperCase()" maxlength="8" />
 
                                           </div>
 
@@ -218,16 +214,21 @@
                                       <div style="padding: 0px;"  class="card-header" id="headingTwo">
                                         <h5 class="mb-0">
                                           <button style="width: 100%; background-color: rgb(229, 242, 252);" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" style="width: 100%; height: 100%;">
-                                            Correlativo y Casilla Q
+                                            Casilla Q
                                           </button>
                                         </h5>
                                       </div>
                                       <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordion">
                                         <div class="card-body">
-                                          
+
                                           <div class="input-group">
-                                            <input class="input form-control" placeholder="C0001/21" type="text" v-model="form.correlativo_charly" v-on:keyup.enter="buscar_correlativo_charly" maxlength="8" />
-                                            <input class="input form-control" placeholder="A0001/21" type="text" v-model="form.correlativo_alfa" v-on:keyup.enter="buscar_correlativo_alfa" maxlength="8" />
+                                            <input class="input form-control" placeholder="C0001/21" type="text" v-model="form.correlativo_charly" v-on:keyup.enter="buscar_correlativo_charly" maxlength="8" @input="form.correlativo_charly = $event.target.value.toUpperCase()" />
+                                            >>><input v-if="form.model_tiponotam == 'NOTAMR' || form.model_tiponotam == 'NOTAMC' " v-model="form.model_destino_notam_charly" @input="form.model_destino_notam_charly = $event.target.value.toUpperCase()" class="input form-control" placeholder="NOTAM charlie a cambiar" type="text" minlength="8" maxlength="8" v-on:keyup.enter="buscar_notam_pasado_charly" />
+                                          </div>
+
+                                          <div class="input-group" >
+                                            <input class="input form-control" placeholder="A0001/21" type="text" v-model="form.correlativo_alfa" @input="form.correlativo_alfa = $event.target.value.toUpperCase()" v-on:keyup.enter="buscar_correlativo_alfa" maxlength="8"/>
+                                            >>><input v-if="form.model_tiponotam == 'NOTAMR' || form.model_tiponotam == 'NOTAMC' " v-model="form.model_destino_notam_alfa" @input="form.model_destino_notam_alfa = $event.target.value.toUpperCase()" class="input form-control" placeholder="NOTAM alpha a cambiar" type="text" minlength="8" maxlength="8" />
                                           </div>
 
                                           <div class="input-group" >
@@ -254,7 +255,8 @@
                                                   [[obj.descripcion_estado]]
                                                 </option>
                                               </select>
-                                          </div>
+                                            </div>
+
 
                                           <div class="input-group"> 
                                             <select class="form-control" v-model="form.model_tipo">
@@ -276,19 +278,19 @@
                                             </select>
                                           </div>
     
-                                          <div class="form-row">
-                                              <input class="input form-control col-md-2" placeholder="Inferior" type="text" v-model="form.nivel_inf" />
-                                              <input class="input form-control col-md-2" placeholder="superior" type="text" v-model="form.nivel_sup" />
+                                          <div class="input-group">
+                                              <input class="input form-control col-sm-2" placeholder="Inferior" type="text" v-model="form.nivel_inf" maxlength="3" @keypress="isNumber($event)" />
+                                              <input class="input form-control col-sm-2" placeholder="superior" type="text" v-model="form.nivel_sup" maxlength="3" @keypress="isNumber($event)" />
                                             
-                                              <select class="form-control col-md-1" style="width: 10px;border: 3px solid rgb(167, 231, 71);"  v-model="form.model_coordenadas" @change="actualizar_casilla_a($event)">
-                                                <option disabled> Seleccione un lugar</option>
+                                              <select class="form-control col-md-2" style="width: 10px;border: 3px solid rgb(167, 231, 71);"  v-model="form.model_coordenadas" @change="actualizar_casilla_a($event)">
+                                                <option disabled> Lugar</option>
                                                 {% for geo in lista_georeferencias %}
                                                   <option value="{{geo.icao}} {{geo.fuente}} {{geo.georef}}">{{geo.icao}} {{geo.fuente}} {{geo.georef}}</option>
                                                 {% endfor %}
                                               </select>
-                                              <input class="input form-control col-md-5"  placeholder="Coordenada" type="text" v-model="form.model_coordenadas">
+                                              <input class="input form-control col-md-4"  placeholder="Coordenada" type="text" v-model="form.model_coordenadas">
                                               
-                                              <input class="input form-control col-md-2" placeholder="Radio" type="text" v-model="form.radio" />
+                                              <input class="input form-control col-sm-2" placeholder="Radio" type="text" v-model="form.radio"  maxlength="3"  @keypress="isNumber($event)"/>
                                           </div>
                                           
 
@@ -312,11 +314,11 @@
                                             
                                             &nbsp;&nbsp;B) &nbsp;&nbsp;
                                             <input class="input form-control" type="date" v-model="form.desde_fecha"/>
-                                            <input class="input form-control" placeholder="0000" type="text" v-model="form.desde_hora" maxlength="4" />
+                                            <input class="input form-control" placeholder="0000" type="text" v-model="form.desde_hora" maxlength="4" @keypress="isNumber($event)" />
 
                                             &nbsp;&nbsp;C) &nbsp;&nbsp;
                                             <input v-if="form.model_tiponotam != 'NOTAMC' " class="input form-control" type="date" v-model="form.hasta_fecha"/>
-                                            <input v-if="form.model_tiponotam != 'NOTAMC' " class="input form-control" placeholder="0000" type="text" v-model="form.hasta_hora" maxlength="4"/>
+                                            <input v-if="form.model_tiponotam != 'NOTAMC' " class="input form-control" placeholder="0000" type="text" v-model="form.hasta_hora" maxlength="4" @keypress="isNumber($event)"/>
 
                                             <div class="field">
                                               <div class="control" v-if="form.model_tiponotam != 'NOTAMC' " >
@@ -337,21 +339,27 @@
 
                                           <div class="input-group">
                                             &nbsp;&nbsp;D) &nbsp;&nbsp;
-                                            <input class="input form-control" placeholder="Intervalo" type="text" v-model="form.casilla_d" />
+                                            <input class="input form-control" placeholder="Intervalo" type="text" v-model="form.casilla_d" @input="form.casilla_d = $event.target.value.toUpperCase()" />
                                           </div>
+
+                                          <br>
 
                                           <div class="input-group">
                                             &nbsp;&nbsp;E) &nbsp;&nbsp;&nbsp;
-                                            <input class="input form-control" placeholder="Cuerpo" type="text" v-model="form.cuerpo1" />
-                                            <input class="input form-control" placeholder="Cuerpo" type="text" v-model="form.cuerpo2" />
+                                            <input  class="input form-control" placeholder="Asunto" type="text" v-model="form.cuerpo1" @input="form.cuerpo1 = $event.target.value.toUpperCase()" />
                                           </div>
+                                          <div class="input-group">
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <textarea class="form-control" style="width: 80%;" rows="2" placeholder="Cuerpo" type="text" v-model="form.cuerpo2" @input="form.cuerpo2 = $event.target.value.toUpperCase()" ></textarea>
+                                          </div>
+                                          <br>
 
                                           <div class="input-group">
                                             &nbsp;&nbsp;F) &nbsp;&nbsp;&nbsp;
-                                            <input class="input form-control" placeholder="Limite inf" type="text" v-model="form.limite_inferior" />
+                                            <input class="input form-control" placeholder="Limite inf" type="text" v-model="form.limite_inferior" @input="form.limite_inferior = $event.target.value.toUpperCase()" />
                                                                                         
                                             &nbsp;&nbsp;G) &nbsp;&nbsp;
-                                            <input class="input form-control" placeholder="Limite sup" type="text" v-model="form.limite_superior" />
+                                            <input class="input form-control" placeholder="Limite sup" type="text" v-model="form.limite_superior" @input="form.limite_superior = $event.target.value.toUpperCase()" />
                                           </div>
 
                                         </div>
@@ -370,11 +378,14 @@
                                          
                                           <div class="input-group">
                                             &nbsp;&nbsp;Instalación &nbsp;&nbsp;
-                                            <input class="input form-control" placeholder="Asunto" type="text" v-model="form.pib_asunto" />
-                                                                                        
-                                            &nbsp;&nbsp;Estado&nbsp;&nbsp;
-                                            <input class="input form-control" placeholder="Estado del asunto" type="text" v-model="form.pib_estado_asunto" />
+                                            <input class="input form-control" placeholder="Asunto" type="text" v-model="form.pib_asunto" @input="form.pib_asunto = $event.target.value.toUpperCase()" />
                                           </div>
+
+                                          <div class="input-group">
+                                            &nbsp;&nbsp;Estado&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <input class="input form-control" placeholder="Estado del asunto" type="text" v-model="form.pib_estado_asunto" @input="form.pib_estado_asunto = $event.target.value.toUpperCase()" />
+                                          </div>
+
                                           <br>
                                           <textarea disabled  id="pib_publicar" v-if="form.hasta_fecha" class="form-control" style="width: 100%;" rows="4"> DESDE [[form.desde_fecha.split('-').reverse().join('/')]] HR [[form.desde_hora]] [[form.pib_estado_asunto]] HASTA [[form.hasta_fecha.split('-').reverse().join('/')]] HR [[form.hasta_hora]]  [[ form.estimado[form.estimado.length -1] ]] </textarea> <!-- ([[form.correlativo_charly]]) --> 
                                           <textarea disabled  id="pib_publicar" v-else class="form-control" style="width: 100%;" rows="4"> DESDE [[form.desde_fecha.split('-').reverse().join('/')]] HR [[form.desde_hora]] [[form.pib_estado_asunto]] </textarea>  <!-- ([[form.correlativo_charly]]) -->
@@ -583,10 +594,14 @@
                                 
                                 
                                 <div id="appFormularioOaci" style="position: fixed; top: 35%; right: 5px;" >
-                                  <v-btn @click='generatePDF()' style="background-color: rgb(83, 201, 255);height: 120px; width: 100px;">
-                                    <span class="material-icons" >
-                                      post_add
-                                    </span>
+                                  <v-btn @click='generatePDF()' style="background-color: rgb(83, 201, 255);height: 120px; width: 120px;">
+                                        <span class="material-icons" >
+                                          post_add
+                                        </span>
+
+                                        <span style="font-size: 9;">
+                                          FORM AIS 001
+                                        </span>
                                   </v-btn>
                                 </div>
 
@@ -826,8 +841,6 @@
           //titulo_letra
         },
       }
-        
-        
     }
   );  */
 </script>
@@ -920,7 +933,6 @@
           nivel_inf:'000',
           nivel_sup:'999',
 
-
           model_coordenadas:"Seleccione un lugar",
           coordenadas:["SLLP SLLF 1630S06811W","SLLP VOR 1630S06811W", "SLPS ARP 1858S05749W", "SLCB VOR 1725S06610W","SLAP ARP 1144S06824W"],
           radio:'005',
@@ -935,8 +947,8 @@
           estimado:[""],
           permanente:[""],
           casilla_d: "",
-          cuerpo1: " ",
-          cuerpo2: " ",
+          cuerpo1: "",
+          cuerpo2: "",
           limite_inferior: "",
           limite_superior: "",
 
@@ -977,6 +989,7 @@
               this.showSubmitFeedback = false;
           }, 3000);
       },
+      //-----------------------------------------------------------------------------------
       buscar_correlativo_charly: function() {
         (async() => {
               //alert("INTENTANDO EN LA bd")
@@ -994,6 +1007,72 @@
           }
         );
       },
+      //-----------------------------------------------------------------------------------
+
+
+
+      
+      /////////////////////////////////////////////////////////////////////////////////////////
+      buscar_notam_pasado_charly: function() {
+        if (this.form.model_destino_notam_charly.length >0){
+          (async() => {
+                await this.get_data_notam_antiguo_charly()
+          })();
+
+        }else{
+          alert("Introduzca NOTAM a buscar.")
+        }
+      },
+      get_data_notam_antiguo_charly: async function(){
+
+        this.form.model_destino_notam_charly = this.form.model_destino_notam_charly.toUpperCase();
+
+        if (this.form.correlativo_charly.length == 0) {
+           this.buscar_correlativo_charly.apply() 
+        }
+
+        const url = '{% url 'view_api_redirect_notam' %}'+"?codigo_notam="+this.form.model_destino_notam_charly;
+        
+        await axios.get(url).then(response => {
+          //this.form.???=response.data;
+          //alert(response.data.model_tiponotam);
+          //this.form.model_tiponotam = response.data.model_tiponotam;
+          this.form.model_titulo_asunto = response.data.model_titulo_asunto;
+          
+          this.form.asunto = [ {'descripcion_asunto': "", 'fraseologia_asunto':'','id_asunto':response.data.model_asunto} ] ;
+          this.form.model_asunto = response.data.model_asunto;
+
+          this.form.estado_asunto = [ { 'descripcion_estado':'', 'fraseologia_estado': '', 'id_estado_asunto':response.data.model_estado_asunto } ] ;
+          this.form.model_estado_asunto = response.data.model_estado_asunto;
+
+          this.form.model_tipo = response.data.model_tipo;
+          this.form.model_nbo = response.data.model_nbo;
+          this.form.model_alcance = response.data.model_alcance;
+          this.form.nivel_inf = response.data.nivel_inf;
+          this.form.nivel_sup = response.data.nivel_sup;
+          this.form.model_coordenadas = response.data.model_coordenadas;
+          this.form.radio = response.data.radio;
+          this.form.lugar = response.data.lugar;
+          this.form.desde_fecha = response.data.desde_fecha;
+          this.form.desde_hora = response.data.desde_hora;
+          this.form.hasta_fecha = response.data.hasta_fecha;
+          this.form.hasta_hora = response.data.hasta_hora;
+          this.form.estimado = response.data.estimado;
+          this.form.permanente = response.data.permanente;
+          this.form.pib_asunto = response.data.pib_asunto;
+          this.form.pib_estado_asunto = response.data.pib_estado_asunto;
+          this.form.casilla_d = response.data.casilla_d;
+          this.form.cuerpo2 = response.data.cuerpo2;
+        }
+        ).catch(
+          function (error) { 
+            console.log(error); 
+          }
+        );
+      },
+      /////////////////////////////////////////////////////////////////////////////////////////
+
+
       buscar_correlativo_alfa: function() {
         (async() => {
               //alert("INTENTANDO EN LA bd")
@@ -1083,6 +1162,23 @@
         });
         //FIN CREAR MAPA
       },
+
+      
+
+      // ************* VALIDAR FORMULARIO ************* //
+      isNumber: function(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) {
+          evt.preventDefault();;
+        } else {
+          return true;
+        }
+      },
+      // ************* VALIDAR FORMULARIO ************* //
+
+      
+
       //FUNCIONES PARA CREAR MAPA
 
       //LAT': '1725S', 'LONG': '06610W'

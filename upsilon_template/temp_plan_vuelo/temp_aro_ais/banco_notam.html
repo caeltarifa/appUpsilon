@@ -1,5 +1,6 @@
 {% extends 'temp_plan_vuelo/baseadmin.html' %} 
 {% load static %} 
+{% load template_tags %}
 
 {% block title %}
 <title>Upsilon | Banco </title>
@@ -193,50 +194,47 @@
                                     
                                 </tr>
                                 <tr>
-                                    <th style="width:65px; overflow:auto;">
-                                        Prioridad
+                                    <th style="width:10%; overflow:auto;">
+                                        NOTAM
                                     </th>
 
-                                    <th style="width:55px;overflow:auto;" >NOTAM</th>
+                                    <th style="width:20%;overflow:auto;" >Número</th>
                                     
-                                    <th style="width:55px;overflow:auto;">Resumen</th>
+                                    <th style="width:10%;overflow:auto;">Q</th>
                                     
-                                    <th style="width:55px; max-width: auto;">Lugar</th>
+                                    <th style="width:15%; max-width: auto;">Lugar</th>
                                     
-                                    <th style="width:155px;">Valido</th>
+                                    <th style="width:20%;">Valido</th>
 
-                                    <th style="width:auto;">Mensaje</th>
                                 </tr>
                             </thead>
                             
-                            <tbody style="text-align: center;" id="tabla_notam">
+                            <tbody  id="tabla_notam">
                                 {% for notam in lista_notam_charly %}
                                     <tr >
-                                        <td style="vertical-align: middle;">
+                                        <td style="text-align: center;">
                                             <button class="btn btn-outline-info" onclick="abrir_modal( '{% url  'view_notam_modal_charly' id_notam=notam.id_mensaje %}')">ver notam </button>
                                         </td>
 
-                                        <td style="vertical-align: middle;">
+                                        <td style="vertical-align: left;">
                                             {{notam.idnotam}}
                                         </td>
 
-                                        <td style="vertical-align: middle;">
-                                            {{notam.resumen}}
+                                        <td style="vertical-align: left;">
+                                            {% with notam.resumen|split:"/" as resumen %}
+                                                {{resumen.1 | upper}}
+                                            {% endwith %}
                                         </td>
                                         
-                                        <td style="vertical-align: middle;">
+                                        <td style="text-align: center;">
                                             {{notam.aplica_a}}
                                         </td>
 
-                                        <td style="vertical-align: middle;">
+                                        <td style="text-align: center;">
                                             {{notam.valido_desde}}
                                             {{notam.valido_hasta}}
                                         </td>
                                         
-                                        <td style="vertical-align: middle;">
-                                            {{notam.mensaje}}
-                                        </td>
-
                                     </tr>
                                 {% endfor %}
                                     
@@ -302,50 +300,47 @@
                                     
                                 </tr>
                                 <tr>
-                                    <th style="width:65px; overflow:auto;">
-                                        Prioridad
+                                    <th style="width:10%; overflow:auto;">
+                                        NOTAM
                                     </th>
 
-                                    <th style="width:55px;overflow:auto;" >NOTAM</th>
+                                    <th style="width:20%;overflow:auto;" >Número</th>
                                     
-                                    <th style="width:55px;overflow:auto;">Resumen</th>
+                                    <th style="width:10%;overflow:auto;">Q</th>
                                     
-                                    <th style="width:55px; max-width: auto;">Lugar</th>
+                                    <th style="width:15%; max-width: auto;">Lugar</th>
                                     
-                                    <th style="width:155px;">Valido</th>
+                                    <th style="width:20%;">Valido</th>
 
-                                    <th style="width:auto;">Mensaje</th>
                                 </tr>
                             </thead>
                             
-                            <tbody style="text-align: center;" id="tabla_notam">
+                            <tbody  id="tabla_notam">
                                 {% for notam in lista_notam_alfa %}
                                     <tr >
-                                        <td style="vertical-align: middle;">
+                                        <td style="text-align: center;">
                                             <button class="btn btn-outline-info" onclick="abrir_modal( '{% url  'view_notam_modal_alfa' id_notam=notam.id_mensaje %}')">ver notam </button>
                                         </td>
 
-                                        <td style="vertical-align: middle;">
+                                        <td style="text-align: left;">
                                             {{notam.idnotam}}
                                         </td>
 
-                                        <td style="vertical-align: middle;">
-                                            {{notam.resumen}}
+                                        <td style="text-align: left;">
+                                            {% with notam.resumen|split:"/" as resumen %}
+                                                {{resumen.1 | upper}}
+                                            {% endwith %}
                                         </td>
                                         
-                                        <td style="vertical-align: middle;">
+                                        <td style="text-align: center;">
                                             {{notam.aplica_a}}
                                         </td>
 
-                                        <td style="vertical-align: middle;">
+                                        <td style="text-align: center;">
                                             {{notam.valido_desde}}
                                             {{notam.valido_hasta}}
                                         </td>
-                                        
-                                        <td style="vertical-align: middle;">
-                                            {{notam.mensaje}}
-                                        </td>
-
+                                  
                                     </tr>
                                 {% endfor %}
                                     
@@ -461,8 +456,6 @@
                                         
                                         <th style="width:550px; max-width: auto;">Validez</th>
                                         
-                                        <th style="width:155px;">Mensaje</th>
-                                        
                                     </tr>
                                 </thead>
                                 
@@ -474,7 +467,7 @@
 
 
                                         <td>
-                                            [[notam.resumen]]
+                                            [[notam.resumen ]]
                                         </td>
 
                                         <td>
@@ -486,13 +479,6 @@
                                             [[notam.valido_hasta]]
                                         </td>
 
-                                        <td>
-                                            [[notam.mensaje]]
-
-                                            [[notam.id_mensaje]]
-
-                                        </td>
-                                        
                                         <td style="vertical-align: middle;">
                                             <button class="btn btn-outline-info" v-on:click="abrir_modal( notam.id_mensaje , model_tiponotam )" >ver notam </button>
                                         </td>

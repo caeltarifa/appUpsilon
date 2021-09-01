@@ -16,6 +16,11 @@
 
 <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css'>
 
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+
 {% endblock extra_head %}
 
 
@@ -158,11 +163,17 @@
                                                                             <td style="width: 20%;"> [[imp.lugar]] </td>
                                                                             <td scope="row" style="width: 20%;">
                                                                                 [[nombre.asunto]] </td>
-                                                                            <td style="width: 55%;"> 
+                                                                            <td style="width: 50%;"> 
                                                                                 [[nombre.espaniol_decodificado]]
                                                                             </td>
-                                                                            <td style="width: 5%;">
-                                                                                [[nombre.correlativo]]</td>
+                                                                            <td style="width: 10%;">
+                                                                                [[nombre.correlativo]]
+                                                                                <br>
+                                                                                <div v-if="nombre.tipo"> 
+                                                                                    <span style="color: rgb(16, 233, 113);">Enmienda</span>
+                                                                                    <div class="spinner-grow spinner-grow-sm text-success"></div>
+                                                                                </div>
+                                                                            </td>
                                                                         </tr>
                                                                     </tbody>
                                                                 </table>
@@ -204,11 +215,17 @@
                                                                             <td style="width: 20%;">[[pa.lugar]]</td>
                                                                             <td scope="row" style="width: 20%;">
                                                                                 [[nombre.asunto]] </td>
-                                                                            <td style="width: 55%;"> 
+                                                                            <td style="width: 50%;"> 
                                                                                 [[nombre.espaniol_decodificado]]
                                                                             </td>
-                                                                            <td style="width: 5%;">
-                                                                                [[nombre.correlativo]]</td>
+                                                                            <td style="width: 10%;">
+                                                                                [[nombre.correlativo]]
+                                                                                <br>
+                                                                                <div v-if="nombre.tipo"> 
+                                                                                    <span style="color: rgb(16, 233, 113);">Enmienda</span>
+                                                                                    <div class="spinner-grow spinner-grow-sm text-success"></div>
+                                                                                </div>
+                                                                            </td>
                                                                         </tr>
                                                                     </tbody>
                                                                 </table>

@@ -33,6 +33,8 @@ from .views import view_panel_comunicaciones, view_admin_comunicaciones
 from .views import view_pib_tiempo_real
 from .views import api_get_notam_aeropuerto
 
+from .views import api_search_data_notam
+
 # paginas de la aplicacion "plan_vuelo"
 #from apps.plan_vuelo.views import post_detail
 
@@ -56,6 +58,9 @@ urlpatterns = [
     # PIB EN TIEMPO REAL
     path('pibrealtime/', view_pib_tiempo_real, name='view_pib_tiempo_real'),
     path('icao_notam/', api_get_notam_aeropuerto, name='api_get_notam_aeropuerto'),
+
+
+    path('rqn_notam/', api_search_data_notam, name='api_search_data_notam'),
     
 
 ]

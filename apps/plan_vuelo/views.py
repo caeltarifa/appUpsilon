@@ -16,6 +16,16 @@ from googletrans import Translator
 #from apps.plan_vuelo.forms import Vuelo_Aprobado_form, PostForm
 from apps.plan_vuelo.models import Flp_trafico, EntrePuntos_flp,Ruta_flp, Trabajador, Ruta_guardada, Flp_aprobado, Punto_satelital, Notam_trafico, Aeropuerto
 
+##IMPORTANDO MODELO DEL BANCO DE DATOS AMHS 
+from apps.plan_vuelo.models import Notam_trafico_charly_cancel as Amhs_charly_cancel
+from apps.plan_vuelo.models import Notam_trafico_charly_repla as Amhs_charly_repla
+from apps.plan_vuelo.models import Notam_trafico_charly_new as Amhs_charly_new
+###########
+###########
+from apps.plan_vuelo.models import Notam_trafico_alfa_repla as Amhs_alfa_repla
+from apps.plan_vuelo.models import Notam_trafico_alfa_cancel as Amhs_alfa_cancel
+from apps.plan_vuelo.models import Notam_trafico_alfa_new as Amhs_alfa_new
+
 from apps.aro_ais.pynotam import notam
 
 from apps.aro_ais.models import Pib_trafico, Pib_extenso
@@ -605,19 +615,41 @@ from ast import literal_eval
 def view_notam_modal(request, id_notam_mensaje):
     if request.user.is_authenticated and request.user.is_active: #and request.user.groups.filter(name='CONTROLADORESLP').exists():        
         #plan_completo = Flp_trafico.objects.filter(id_mensaje=id_plancompleto)[0]
-        if Notam_trafico.objects.filter(id_mensaje=str(id_notam_mensaje)).exists():
-            #notam_completo = Notam_trafico.objects.filter(id_mensaje=str(id_notam_mensaje))[0]
-            notam_completo = Notam_trafico.objects.raw("select * from (select notam_extenso_id, area from aro_ais_pib_trafico inner join aro_ais_pib_extenso on ref_notam_amhs_id = notam_extenso_id) as hola inner join plan_vuelo_notam_trafico  on id_mensaje = notam_extenso_id where id_mensaje like %(id_mensaje)s;", {'id_mensaje':id_notam_mensaje})[0]
-            #notam_extenso_id     area  id_mensaje  aftn1   aftn2   idnotam     resumen     aplica_a    valido_desde    valido_hasta    mensaje     nuevo   ingresado
-            notam_traducido = Notam_trafico.objects.get(id_mensaje=notam_completo.id_mensaje)
+        notam_completo = Amhs_charly_new
+        
+        if Amhs_charly_new.objects.filter(id_mensaje_c_n=str(id_notam_mensaje)).exists():
             
-            n = notam.Notam.from_str(componer_msj(notam_traducido))
-            decodificado = n.decoded()
+            notam_completo = Amhs_charly_new.objects.extra(select={'id_mensaje':'id_mensaje_c_n'}).get(id_mensaje_c_n=id_notam_mensaje)
+            
+            #n = notam.Notam.from_str(componer_msj(notam_completo))
+            #decodificado = n.decoded().split('E)')[1]
 
             #translator = Translator()
             #decodificado = translator.translate( decodificado, dest='es').text
-        else:
-            notam_completo = Notam_trafico
+
+        
+        if Amhs_charly_repla.objects.filter(id_mensaje_c_r=str(id_notam_mensaje)).exists():
+            
+            notam_completo = Amhs_charly_repla.objects.extra(select={'id_mensaje':'id_mensaje_c_r'}).get(id_mensaje_c_r=id_notam_mensaje)
+            
+            #n = notam.Notam.from_str(componer_msj(notam_completo))
+            #decodificado = n.decoded().split('E)')[1]
+
+            #translator = Translator()
+            #decodificado = translator.translate( decodificado, dest='es').text
+
+
+        if Amhs_charly_cancel.objects.filter(id_mensaje_c_c=str(id_notam_mensaje)).exists():
+            
+            notam_completo = Amhs_charly_cancel.objects.extra(select={'id_mensaje':'id_mensaje_c_c'}).get(id_mensaje_c_c=id_notam_mensaje)
+            
+            #n = notam.Notam.from_str(componer_msj(notam_completo))
+            #decodificado = n.decoded().split('E)')[1]
+
+            #translator = Translator()
+            #decodificado = translator.translate( decodificado, dest='es').text
+
+        
 
         try:
             if len(str(notam_completo.area)) > 0:
@@ -635,12 +667,12 @@ def view_notam_modal(request, id_notam_mensaje):
                 'long' : '06610W',
                 'radius' : 0
             }
-        return render(request, 'temp_plan_vuelo/modal_mensaje_completo.html', {'data': serializar_notam_completo(notam_completo), 'area':dic }  ) #retorno el modal y el contexto
+        return render(request, 'temp_plan_vuelo/modal_mensaje_completo.html', {'data': serializar_notam_completo(notam_completo, 'decodificado'), 'area':dic }  ) #retorno el modal y el contexto
     else:
         return redirect('accounts/login/')
     
 
-def serializar_notam_completo(notam):
+def serializar_notam_completo(notam, decodificado):
     return {
         'titulo': 'NOTAM',
         'id_mensaje' : notam.id_mensaje[0:7] + " " + notam.id_mensaje[7:13],
@@ -652,6 +684,7 @@ def serializar_notam_completo(notam):
         'valido_desde' : notam.valido_desde,
         'valido_hasta' : notam.valido_hasta,
         'mensaje' : notam.mensaje,
+        'decodificado':decodificado
     }
 
 def serializarArea(area):

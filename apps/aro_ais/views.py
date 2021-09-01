@@ -56,7 +56,7 @@ import ast
 ###########################################################################
 
 def view_panel_aroaislp(request):
-    if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='AROAISLP').exists():
+    if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='AISNACIONAL').exists():
         #equipo_coordinacion = Trabajador.objects.raw("select ci, nombre, apellido, activo from plan_vuelo_trabajador where ci in (select ci from plan_vuelo_trabajador_cargo where cargo_id=1 and ci=trabajador_id) and empresa_institucion_id=1 order by activo")
         return render(request, 'temp_plan_vuelo/temp_aro_ais/index_aroais.html')# ,{'equipo_trabajo': equipo_coordinacion} )#,'metar':metar} )
     else:
@@ -198,20 +198,37 @@ def view_imprimir_pibrealtime(request):
 
 def view_todos_notams(request):
     if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='TODOS_SERVICIOS').exists():
-        lista_notams_recientes=Notam_trafico.objects.all().order_by('ingresado')[:100]
-   
+        lista_notams_recientes=Notam_trafico.objects.all().order_by('-ingresado')[:100]
+
+        
+        charly_recientes_new = Amhs_charly_new.objects.extra(select={'id_mensaje':'id_mensaje_c_n'}).all().order_by('-ingresado')[:50]
+        charly_recientes_new = [ serializar_notam(notam) for notam in charly_recientes_new]
+        charly_recientes_repla = Amhs_charly_repla.objects.extra(select={'id_mensaje':'id_mensaje_c_r'}).all().order_by('-ingresado')[:50]
+        charly_recientes_repla = [ serializar_notam(notam) for notam in charly_recientes_repla]
+        charly_recientes_cancel = Amhs_charly_cancel.objects.extra(select={'id_mensaje':'id_mensaje_c_c'}).all().order_by('-ingresado')[:50]
+        charly_recientes_cancel = [ serializar_notam(notam) for notam in charly_recientes_cancel]
+        
+        
+        alfa_recientes_new = Amhs_alfa_new.objects.extra(select={'id_mensaje':'id_mensaje_a_n'}).all().order_by('-ingresado')[:50]
+        alfa_recientes_new = [serializar_notam(notam) for notam in alfa_recientes_new]
+        alfa_recientes_repla = Amhs_alfa_repla.objects.extra(select={'id_mensaje':'id_mensaje_a_r'}).all().order_by('-ingresado')[:50]
+        alfa_recientes_repla = [serializar_notam(notam) for notam in alfa_recientes_repla]
+        alfa_recientes_cancel = Amhs_alfa_cancel.objects.extra(select={'id_mensaje':'id_mensaje_a_c'}).all().order_by('-ingresado')[:50]
+        alfa_recientes_cancel = [serializar_notam(notam) for notam in alfa_recientes_cancel]
         #lista_notams_recientes=[serializar_notam(notamx) for notamx in lista_notams_recientes]
+
+        
 
         lista_notam_charly = []
         lista_notam_alfa = []
         
-        for notam in lista_notams_recientes:
-            if '(C' in notam.idnotam:
-                lista_notam_charly.append(serializar_notam(notam))
-            else:
-                lista_notam_alfa.append(serializar_notam(notam))
-        
-        return render(request, 'temp_plan_vuelo/temp_aro_ais/lista_notam.html' ,{'lista_notam_charly':lista_notam_charly, 'lista_notam_alfa':lista_notam_alfa} )
+        #for notam in lista_notams_recientes:
+        #    if '(C' in notam.idnotam:
+        #        lista_notam_charly.append(serializar_notam(notam))
+        #    else:
+        #        lista_notam_alfa.append(serializar_notam(notam))
+        #return render(request, 'temp_plan_vuelo/temp_aro_ais/lista_notam.html' ,{'lista_notam_charly':lista_notam_charly, 'lista_notam_alfa':lista_notam_alfa} )
+        return render(request, 'temp_plan_vuelo/temp_aro_ais/lista_notam.html' ,{'charly_recientes_new': charly_recientes_new, 'charly_recientes_repla':charly_recientes_repla,'charly_recientes_cancel':charly_recientes_cancel,'alfa_recientes_new': alfa_recientes_new, 'alfa_recientes_repla':alfa_recientes_repla,'alfa_recientes_cancel':alfa_recientes_cancel} )
     else:
         return redirect('login')
 
@@ -233,32 +250,57 @@ def serializar_notam(notamx):
 ###########################################################################
 ##### APP MUESTRA EL BANCO DE NOTAM CLASIFICADO EN CHARLIE Y ALPHA, DE LA FECHA DE HOY
 ###########################################################################
+from itertools import chain
+from operator import attrgetter
 def view_banco_notam(request):
     if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='TODOS_SERVICIOS').exists():
         #lista_notams_recientes=Notam_trafico.objects.all().order_by('-ingresado')[:100]
 
 
-        lista_notam_charly = Banco_charly_new.objects.extra(select={'id_mensaje':'id_mensaje_c_n'}).filter(ingresado__year=datetime.date.today().year, ingresado__month=datetime.date.today().month, ingresado__day=datetime.date.today().day).order_by('ingresado')
-        lista_notam_charly = [ serializar_notam_banco_charly(notam) for notam in lista_notam_charly]
+        #lista_notam_charly = Banco_charly_new.objects.extra(select={'id_mensaje':'id_mensaje_c_n'}).filter(ingresado__year=datetime.date.today().year, ingresado__month=datetime.date.today().month, ingresado__day=datetime.date.today().day).order_by('ingresado')
+        lista_notam_charly = Banco_charly_new.objects.extra(select={'id_mensaje':'id_mensaje_c_n'}).all().exclude(id_mensaje_c_n__contains='/20').exclude(id_mensaje_c_n__contains='/19').exclude(id_mensaje_c_n__contains='/18').order_by('-id_mensaje_c_n')[:25]
+            #lista_notam_charly = [ serializar_notam_banco_charly(notam) for notam in lista_notam_charly]
         
-        lista_notam_charly2 = Banco_charly_repla.objects.extra(select={'id_mensaje':'id_mensaje_c_r'}).filter(ingresado__year=datetime.date.today().year, ingresado__month=datetime.date.today().month, ingresado__day=datetime.date.today().day).order_by('ingresado')
-        lista_notam_charly2 = [ serializar_notam_banco_charly(notam) for notam in lista_notam_charly2]
+        #lista_notam_charly2 = Banco_charly_repla.objects.extra(select={'id_mensaje':'id_mensaje_c_r'}).filter(ingresado__year=datetime.date.today().year, ingresado__month=datetime.date.today().month, ingresado__day=datetime.date.today().day).order_by('ingresado')
+        lista_notam_charly2 = Banco_charly_repla.objects.extra(select={'id_mensaje':'id_mensaje_c_r'}).all().exclude(id_mensaje_c_r__contains='/20').exclude(id_mensaje_c_r__contains='/19').exclude(id_mensaje_c_r__contains='/18').order_by('-id_mensaje_c_r')[:25]
+            #lista_notam_charly2 = [ serializar_notam_banco_charly(notam) for notam in lista_notam_charly2]
         
-        lista_notam_charly3 = Banco_charly_cancel.objects.extra(select={'id_mensaje':'id_mensaje_c_c'}).filter(ingresado__year=datetime.date.today().year, ingresado__month=datetime.date.today().month, ingresado__day=datetime.date.today().day).order_by('ingresado')
-        lista_notam_charly3 = [ serializar_notam_banco_charly(notam) for notam in lista_notam_charly3]
+        #lista_notam_charly3 = Banco_charly_cancel.objects.extra(select={'id_mensaje':'id_mensaje_c_c'}).filter(ingresado__year=datetime.date.today().year, ingresado__month=datetime.date.today().month, ingresado__day=datetime.date.today().day).order_by('ingresado')
+        lista_notam_charly3 = Banco_charly_cancel.objects.extra(select={'id_mensaje':'id_mensaje_c_c'}).all().exclude(id_mensaje_c_c__contains='/20').exclude(id_mensaje_c_c__contains='/19').exclude( id_mensaje_c_c__contains='/18').order_by('-id_mensaje_c_c')[:25]
+            #lista_notam_charly3 = [ serializar_notam_banco_charly(notam) for notam in lista_notam_charly3]
         
-        lista_notam_charly += lista_notam_charly2 + lista_notam_charly3
-        #-------------------------------------------------------------------------------------
-        lista_notam_alfa = Banco_alfa_new.objects.extra(select={'id_mensaje':'id_mensaje_a_n'}).filter(ingresado__year=datetime.date.today().year, ingresado__month=datetime.date.today().month, ingresado__day=datetime.date.today().day).order_by('ingresado')
-        lista_notam_alfa = [ serializar_notam_banco_alfa(notam) for notam in lista_notam_alfa]
-        
-        lista_notam_alfa2 = Banco_alfa_repla.objects.extra(select={'id_mensaje':'id_mensaje_a_r'}).filter(ingresado__year=datetime.date.today().year, ingresado__month=datetime.date.today().month, ingresado__day=datetime.date.today().day).order_by('ingresado')
-        lista_notam_alfa2 = [ serializar_notam_banco_alfa(notam) for notam in lista_notam_alfa2]
-        
-        lista_notam_alfa3 = Banco_alfa_cancel.objects.extra(select={'id_mensaje':'id_mensaje_a_c'}).filter(ingresado__year=datetime.date.today().year, ingresado__month=datetime.date.today().month, ingresado__day=datetime.date.today().day).order_by('ingresado')
-        lista_notam_alfa3 = [ serializar_notam_banco_alfa(notam) for notam in lista_notam_alfa3]
 
-        lista_notam_alfa += lista_notam_alfa2 + lista_notam_alfa3
+        #lista_notam_charly = chain(lista_notam_charly, lista_notam_charly2, lista_notam_charly3)
+        lista_notam_charly = sorted(chain(lista_notam_charly, lista_notam_charly2, lista_notam_charly3), key=attrgetter('id_mensaje'), reverse=True)
+        
+        lista_notam_charly = [ serializar_notam_banco_charly(notam)  for notam in lista_notam_charly]
+        for notam in lista_notam_charly:
+            if not ('/21' in notam['idnotam']):
+                lista_notam_charly.remove(notam)
+
+        
+
+        #lista_notam_charly += lista_notam_charly2 + lista_notam_charly3
+        #-------------------------------------------------------------------------------------
+        lista_notam_alfa = Banco_alfa_new.objects.extra(select={'id_mensaje':'id_mensaje_a_n'}).exclude(id_mensaje_a_n__contains='/20').exclude(id_mensaje_a_n__contains='/19').exclude(id_mensaje_a_n__contains='/18').filter(ingresado__year=datetime.date.today().year, ingresado__month=datetime.date.today().month, ingresado__day=datetime.date.today().day).order_by('-id_mensaje_a_n')
+        #lista_notam_alfa = Banco_alfa_new.objects.extra(select={'id_mensaje':'id_mensaje_a_n'}).all().order_by('ingresado')[:25]
+            #lista_notam_alfa = [ serializar_notam_banco_alfa(notam) for notam in lista_notam_alfa]
+        
+        lista_notam_alfa2 = Banco_alfa_repla.objects.extra(select={'id_mensaje':'id_mensaje_a_r'}).exclude(id_mensaje_a_r__contains='/20').exclude(id_mensaje_a_r__contains='/19').exclude(id_mensaje_a_r__contains='/18').filter(ingresado__year=datetime.date.today().year, ingresado__month=datetime.date.today().month, ingresado__day=datetime.date.today().day).order_by('-id_mensaje_a_r')
+        #lista_notam_alfa2 = Banco_alfa_repla.objects.extra(select={'id_mensaje':'id_mensaje_a_r'}).all().order_by('ingresado')[:25]
+            #lista_notam_alfa2 = [ serializar_notam_banco_alfa(notam) for notam in lista_notam_alfa2]
+        
+        lista_notam_alfa3 = Banco_alfa_cancel.objects.extra(select={'id_mensaje':'id_mensaje_a_c'}).exclude(id_mensaje_a_c__contains='/20').exclude(id_mensaje_a_c__contains='/19').exclude(id_mensaje_a_c__contains='/18').filter(ingresado__year=datetime.date.today().year, ingresado__month=datetime.date.today().month, ingresado__day=datetime.date.today().day).order_by('-id_mensaje_a_c')
+        #lista_notam_alfa3 = Banco_alfa_cancel.objects.extra(select={'id_mensaje':'id_mensaje_a_c'}).all().order_by('ingresado')[:25]
+            #lista_notam_alfa3 = [ serializar_notam_banco_alfa(notam) for notam in lista_notam_alfa3]
+
+        lista_notam_alfa = sorted(chain(lista_notam_alfa, lista_notam_alfa2, lista_notam_alfa3), key=attrgetter('id_mensaje'), reverse=True)
+        lista_notam_alfa = [ serializar_notam_banco_alfa(notam) for notam in lista_notam_alfa]
+        for notam in lista_notam_alfa:
+            if not ('/21' in notam['idnotam']):
+                lista_notam_alfa.remove(notam)
+
+        #lista_notam_alfa += lista_notam_alfa2 + lista_notam_alfa3
 
         return render(request, 'temp_plan_vuelo/temp_aro_ais/banco_notam.html',{'lista_notam_charly':lista_notam_charly, 'lista_notam_alfa':lista_notam_alfa} )
     else:
@@ -269,22 +311,7 @@ def serializar_notam_banco_charly(notam):
         archivo = notam.form_oaci.url
     else:
         archivo = ""
-    if 'NOTAMC' in notam.idnotam:
-        return {
-            'titulo':'NOTAM CHARLIE',
-            'id_mensaje': notam.id_mensaje,
-            'idnotam': notam.idnotam,
-            'resumen': notam.resumen,
-            'aplica_a': notam.aplica_a,
-            'valido_desde': notam.valido_desde,
-            'valido_hasta': notam.valido_hasta,
-            'mensaje': notam.mensaje,
-            'asunto': notam.asunto,
-            'estado_asunto': notam.estado_asunto,
-            'antecedente': notam.antecedente,
-            'form_oaci': archivo,
-        }
-    else:
+    try:
         return {
             'titulo':'NOTAM CHARLIE',
             'id_mensaje': notam.id_mensaje,
@@ -301,6 +328,23 @@ def serializar_notam_banco_charly(notam):
             'antecedente': notam.antecedente,
             'form_oaci': archivo,
         }
+    except:
+        return {
+            'titulo':'NOTAM CHARLIE',
+            'id_mensaje': notam.id_mensaje,
+            'idnotam': notam.idnotam,
+            'resumen': notam.resumen,
+            'aplica_a': notam.aplica_a,
+            'valido_desde': notam.valido_desde,
+            'valido_hasta': notam.valido_hasta,
+            'mensaje': notam.mensaje,
+            'asunto': notam.asunto,
+            'estado_asunto': notam.estado_asunto,
+            'antecedente': notam.antecedente,
+            'form_oaci': archivo,
+        }
+    
+
 def serializar_notam_banco_alfa(notam):
     if notam.form_oaci:
         archivo = notam.form_oaci.url
@@ -329,9 +373,9 @@ def view_notam_modal_charly(request, id_notam):
         if Banco_charly_new.objects.filter(id_mensaje_c_n=id_notam).exists():
             dato_notam = Banco_charly_new.objects.extra(select={'id_mensaje':'id_mensaje_c_n'}).get(id_mensaje_c_n=id_notam)
         if Banco_charly_repla.objects.filter(id_mensaje_c_r=id_notam).exists():
-            dato_notam = Banco_charly_repla.objects.extra(select={'id_mensaje':'id_mensaje_c_r'}).get(id_mensaje_c_n=id_notam)
+            dato_notam = Banco_charly_repla.objects.extra(select={'id_mensaje':'id_mensaje_c_r'}).get(id_mensaje_c_r=id_notam)
         if Banco_charly_cancel.objects.filter(id_mensaje_c_c=id_notam).exists():
-            dato_notam = Banco_charly_cancel.objects.extra(select={'id_mensaje':'id_mensaje_c_c'}).get(id_mensaje_c_n=id_notam)
+            dato_notam = Banco_charly_cancel.objects.extra(select={'id_mensaje':'id_mensaje_c_c'}).get(id_mensaje_c_c=id_notam)
 
         dic={
                     'lat' : '1658S',  
@@ -380,31 +424,52 @@ def view_api_notam_search(request):
             
         lista_notam_charly=[]
         if 'charlie' in get_tipo:
-            lista_notam_charly = Banco_charly_new.objects.extra(select={'id_mensaje':'id_mensaje_c_n'}).filter(ingresado__range=[get_inicio, get_fin]).order_by('ingresado')
+            if get_inicio in get_fin:
+                anio, mes, dia = get_inicio.split('-')
+
+                lista_notam_charly = Banco_charly_new.objects.extra(select={'id_mensaje':'id_mensaje_c_n'}).filter(ingresado__year = anio ).order_by('ingresado')
+                lista_notam_charly2 = Banco_charly_repla.objects.extra(select={'id_mensaje':'id_mensaje_c_r'}).filter(ingresado__month = mes ).order_by('ingresado')
+                lista_notam_charly3 = Banco_charly_cancel.objects.extra(select={'id_mensaje':'id_mensaje_c_c'}).filter(ingresado__day = dia ).order_by('ingresado')
+            else:
+                lista_notam_charly = Banco_charly_new.objects.extra(select={'id_mensaje':'id_mensaje_c_n'}).filter(ingresado__range=[get_inicio, get_fin]).order_by('ingresado')
+                    #lista_notam_charly = [ serializar_notam_banco_charly(notam) for notam in lista_notam_charly]
+                lista_notam_charly2 = Banco_charly_repla.objects.extra(select={'id_mensaje':'id_mensaje_c_r'}).filter(ingresado__range=[get_inicio, get_fin]).order_by('ingresado')
+                    #lista_notam_charly2 = [ serializar_notam_banco_charly(notam) for notam in lista_notam_charly2]
+                lista_notam_charly3 = Banco_charly_cancel.objects.extra(select={'id_mensaje':'id_mensaje_c_c'}).filter(ingresado__range=[get_inicio, get_fin]).order_by('ingresado')
+                    #lista_notam_charly3 = [ serializar_notam_banco_charly(notam) for notam in lista_notam_charly3]
+            
+            lista_notam_charly = sorted(chain(lista_notam_charly, lista_notam_charly2, lista_notam_charly3), key=attrgetter('ingresado'), reverse=True)
             lista_notam_charly = [ serializar_notam_banco_charly(notam) for notam in lista_notam_charly]
-            
-            lista_notam_charly2 = Banco_charly_repla.objects.extra(select={'id_mensaje':'id_mensaje_c_r'}).filter(ingresado__range=[get_inicio, get_fin]).order_by('ingresado')
-            lista_notam_charly2 = [ serializar_notam_banco_charly(notam) for notam in lista_notam_charly2]
-            
-            lista_notam_charly3 = Banco_charly_cancel.objects.extra(select={'id_mensaje':'id_mensaje_c_c'}).filter(ingresado__range=[get_inicio, get_fin]).order_by('ingresado')
-            lista_notam_charly3 = [ serializar_notam_banco_charly(notam) for notam in lista_notam_charly3]
-            
-            lista_notam_charly += lista_notam_charly2 + lista_notam_charly3
+
+
             return HttpResponse(json.dumps(lista_notam_charly), content_type='application/json')
         
         #-------------------------------------------------------------------------------------
         lista_notam_alfa=[]
         if 'alpha' in get_tipo:
-            lista_notam_alfa = Banco_alfa_new.objects.extra(select={'id_mensaje':'id_mensaje_a_n'}).filter(ingresado__range=[get_inicio, get_fin]).order_by('ingresado')
-            lista_notam_alfa = [ serializar_notam_banco_alfa(notam) for notam in lista_notam_alfa]
-            
-            lista_notam_alfa2 = Banco_alfa_repla.objects.extra(select={'id_mensaje':'id_mensaje_a_r'}).filter(ingresado__range=[get_inicio, get_fin]).order_by('ingresado')
-            lista_notam_alfa2 = [ serializar_notam_banco_alfa(notam) for notam in lista_notam_alfa2]
-            
-            lista_notam_alfa3 = Banco_alfa_cancel.objects.extra(select={'id_mensaje':'id_mensaje_a_c'}).filter(ingresado__range=[get_inicio, get_fin]).order_by('ingresado')
-            lista_notam_alfa3 = [ serializar_notam_banco_alfa(notam) for notam in lista_notam_alfa3]
+            if get_inicio in get_fin:
 
-            lista_notam_alfa += lista_notam_alfa2 + lista_notam_alfa3
+                anio, mes, dia = get_inicio.split('-')
+
+                lista_notam_alfa = Banco_alfa_new.objects.extra(select={'id_mensaje':'id_mensaje_a_n'}).filter(ingresado__year = anio ).order_by('ingresado')
+                lista_notam_alfa2 = Banco_alfa_repla.objects.extra(select={'id_mensaje':'id_mensaje_a_r'}).filter(ingresado__month = mes ).order_by('ingresado')
+                lista_notam_alfa3 = Banco_alfa_cancel.objects.extra(select={'id_mensaje':'id_mensaje_a_c'}).filter(ingresado__day = dia ).order_by('ingresado')
+
+            else:
+                lista_notam_alfa = Banco_alfa_new.objects.extra(select={'id_mensaje':'id_mensaje_a_n'}).filter(ingresado__range=[get_inicio, get_fin]).order_by('ingresado')
+                    #lista_notam_alfa = [ serializar_notam_banco_alfa(notam) for notam in lista_notam_alfa]
+                
+                lista_notam_alfa2 = Banco_alfa_repla.objects.extra(select={'id_mensaje':'id_mensaje_a_r'}).filter(ingresado__range=[get_inicio, get_fin]).order_by('ingresado')
+                    #lista_notam_alfa2 = [ serializar_notam_banco_alfa(notam) for notam in lista_notam_alfa2]
+                
+                lista_notam_alfa3 = Banco_alfa_cancel.objects.extra(select={'id_mensaje':'id_mensaje_a_c'}).filter(ingresado__range=[get_inicio, get_fin]).order_by('ingresado')
+                    #lista_notam_alfa3 = [ serializar_notam_banco_alfa(notam) for notam in lista_notam_alfa3]
+
+            lista_notam_alfa = sorted(chain(lista_notam_alfa, lista_notam_alfa2, lista_notam_alfa3), key=attrgetter('ingresado'), reverse=True)
+            lista_notam_alfa = [ serializar_notam_banco_alfa(notam) for notam in lista_notam_alfa]
+
+
+            #lista_notam_alfa += lista_notam_alfa2 + lista_notam_alfa3
             return HttpResponse(json.dumps(lista_notam_alfa), content_type='application/json')
         return HttpResponse(json.dumps([]), content_type='application/json')
     else:
@@ -1211,3 +1276,89 @@ def serializar_georef( geo ):
     }
 
 # AIM ################################################################################################################
+
+
+
+
+
+########################### API PARA RECUPERAR DATOS DE NOTAM PASADO Y PASAR AL FORMYULARIO NOTAM ####################################3
+def view_api_redirect_notam(request):
+    if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='TODOS_SERVICIOS').exists():
+        # buscar notams
+        get_codigo_notam = str(request.GET.get('codigo_notam')).upper()
+        
+        if "C" in get_codigo_notam:
+            if Banco_charly_new.objects.filter(id_mensaje_c_n=get_codigo_notam).exists():
+                notam_recuperado = Banco_charly_new.objects.get(id_mensaje_c_n=get_codigo_notam)
+                return HttpResponse(json.dumps(segmentar_notam_charly(notam_recuperado)), content_type='application/json')
+            else:
+                if Banco_charly_repla.objects.filter(id_mensaje_c_r=get_codigo_notam).exists():
+                    notam_recuperado = Banco_charly_repla.objects.get(id_mensaje_c_r=get_codigo_notam)
+                    return HttpResponse(json.dumps(segmentar_notam_charly(notam_recuperado)), content_type='application/json')
+                else:
+                    if Banco_charly_cancel.objects.filter(id_mensaje_c_c=get_codigo_notam).exists():
+                        notam_recuperado = Banco_charly_cancel.objects.get(id_mensaje_c_c=get_codigo_notam)
+                        return HttpResponse(json.dumps(segmentar_notam_charly(notam_recuperado)), content_type='application/json')
+        ####-------------------####-------------------####-------------------####-------------------####-------------------
+        if "A" in get_codigo_notam:
+            if Banco_alfa_new.objects.filter(id_mensaje_a_n=get_codigo_notam).exists():
+                notam_recuperado = Banco_alfa_new.objects.get(id_mensaje_a_n=get_codigo_notam)
+                return HttpResponse(json.dumps(segmentar_notam_alfa(notam_recuperado)), content_type='application/json')
+            else:
+                if Banco_alfa_repla.objects.filter(id_mensaje_a_r=get_codigo_notam).exists():
+                    notam_recuperado = Banco_alfa_repla.objects.get(id_mensaje_a_r=get_codigo_notam)
+                    return HttpResponse(json.dumps(segmentar_notam_alfa(notam_recuperado)), content_type='application/json')
+                else:
+                    if Banco_alfa_cancel.objects.filter(id_mensaje_a_c=get_codigo_notam).exists():
+                        notam_recuperado = Banco_alfa_cancel.objects.filter(id_mensaje_a_c=get_codigo_notam)
+                        return HttpResponse(json.dumps(segmentar_notam_alfa(notam_recuperado)), content_type='application/json')
+        return HttpResponse(json.dumps({'error':"no encontrado"}), content_type='application/json')
+    else:
+        return redirect('login')
+        
+
+
+def segmentar_notam_charly(notam):
+    #########################################################################################################
+    fir, codigo_q, tipo, nbo, alcance, niv_inf, niv_sup, coordenadas = notam.resumen.split(' ')[1].split('/')
+    coordenadas, radio = coordenadas[:-3], coordenadas[-3:]
+    #########################################################################################################
+    recuperado = {
+        'model_tiponotam' : notam.idnotam.split(' ')[1],
+        'model_titulo_asunto' : codigo_q[1],
+        'model_asunto' : codigo_q[1:3],
+        'model_estado_asunto' : codigo_q[3:5],
+        'model_tipo' : tipo,
+        'model_nbo' : nbo,
+        'model_alcance' : alcance,
+        'nivel_inf' : niv_inf,
+        'nivel_sup' : niv_sup,
+        'model_coordenadas' : coordenadas,
+        'radio' : radio,
+        'lugar' : notam.aplica_a.split(' ')[1],
+        'desde_fecha' : '20'+notam.valido_desde.split(" ")[1][0:6][0:2] +'-'+ notam.valido_desde.split(" ")[1][0:6][2:4] +'-'+  notam.valido_desde.split(" ")[1][0:6][4:6] ,
+        'desde_hora' : notam.valido_desde.split(" ")[1][6:],
+        'hasta_fecha' : '20'+notam.valido_hasta.split(" ")[1][0:6][0:2] +'-'+ notam.valido_hasta.split(" ")[1][0:6][2:4] +'-'+ notam.valido_hasta.split(" ")[1][0:6][4:6] ,
+        'hasta_hora' : notam.valido_hasta.split(" ")[1][6:],
+        'estimado' : notam.est,
+        'permanente' : notam.perm,
+        'pib_asunto': notam.asunto,
+        'pib_estado_asunto': notam.estado_asunto,
+        
+    }
+    if len(notam.mensaje.split("D) ")) > 2:
+        casilla_d , casilla_e = notam.mensaje.split("D) ")[1].split("E) ")
+    else:
+        casilla_d = ""
+        casilla_e = notam.mensaje.split("E) ")[1]
+    
+    cuerpo2 = casilla_e
+    recuperado['casilla_d'] =casilla_d
+    recuperado['cuerpo2'] = cuerpo2
+    return recuperado
+
+def segmentar_notam_alfa(notam):
+    return {
+     'a':'a'   
+    }
+########################### API PARA RECUPERAR DATOS DE NOTAM PASADO Y PASAR AL FORMYULARIO NOTAM ####################################3

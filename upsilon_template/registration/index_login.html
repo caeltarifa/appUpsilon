@@ -20,8 +20,8 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pushbar.js@1.0.0/src/pushbar.min.css">
 <link rel="stylesheet" href="{% static 'index_public/css/banner.css' %}">
 
-<link rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
-<link rel="stylesheet" href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css" />
+<!-- <link rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css" /> -->
+<!-- <link rel="stylesheet" href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css" /> -->
 <link rel="stylesheet" href="{% static 'index_public/css/tiempo.css' %}">
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pushbar.js@1.0.0/src/pushbar.min.css">
@@ -33,7 +33,10 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet"
   integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
 <link rel="stylesheet" href="{% static 'index_public/css/acordeon.css' %}">
+
 <link rel="stylesheet" href="{% static 'index_public/css/grafico.css' %}">
+
+<link rel="stylesheet" href="{% static 'index_public/css/banco_notam.css' %}">
 
 <!--Agregando data visualization-->
 
@@ -44,6 +47,10 @@
 <!--  Agregando el slider  touch -->
 <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
 <link rel="stylesheet" href="{% static 'notametro/estilos.css' %}">
+
+
+
+
 
 {% endblock extra_head %}
 
@@ -93,24 +100,27 @@
 </section>
 
 <!-- IFIS SERVER NUKLEAR https://www.youtube.com/embed/BoGlBg8bDJA -->
-<div id="segundo" ></div>
+<div id="segundo"></div>
 <section id="app2" class="acordeones">
   <div style="background-color: rgb(175, 229, 250);color: rgb(29, 103, 163);margin-bottom: 0%; ">
-    <div >
+    <div>
       <div class="container" style="z-index: 999;">
-        <table class="table-hover"  style="text-align: center; " cellpadding="15">
+        <table class="table-hover" style="text-align: center; " cellpadding="15">
           <thead>
             <tr>
-              <th style="padding-bottom: 0;"  style="background: #d3fafb;" > <br><br> BOLETIN DE INFORMACIÓN PREVIA AL VUELO </th>
-              <th style="padding-bottom: 0;" > <br> <br> Fecha y Hora de Actualización</th>
-              <th style="padding-bottom: 0;" > <br> <br> Área Cubierta</th>
+              <th style="padding-bottom: 0;" style="background: #d3fafb;"> <br><br> BOLETIN DE INFORMACIÓN PREVIA AL
+                VUELO </th>
+              <th style="padding-bottom: 0;"> <br> <br> Fecha y Hora de Actualización</th>
+              <th style="padding-bottom: 0;"> <br> <br> Área Cubierta</th>
             </tr>
           </thead>
 
           <tbody>
             <tr>
-              <td> En tiempo real <div class="spinner-grow spinner-grow-md text-success"></div> </td>
-              <td> [[last_updated]]</td>
+              <td> P I B
+              </td>
+              <td> [[last_updated]] <div class="spinner-grow spinner-grow-sm text-success"></div>
+              </td>
               <td>FIR LA PAZ</td>
             </tr>
           </tbody>
@@ -122,16 +132,16 @@
 
   </div>
 
-  <div class="menu__acordeon"  >
+  <div class="menu__acordeon">
     <div class="menu__acordeon__uno">
       <div class="contenido__menu">
-        
-        
-        <div v-if="!sw_parte1" class="spinner-grow text-info" style="width:15vh;height: 15vh;margin-left: 45%;margin-top: 30%;"></div>
+
+
+        <div v-if="!sw_parte1" class="spinner-grow text-info"
+          style="width:15vh;height: 15vh;margin-left: 45%;margin-top: 30%;"></div>
 
         <div class="accordion accordion-flush" id="accordion">
-          <div class="accordion-item" style="padding-top: 5px;"
-            v-for="imp of impar" v-for="nombre of nombres">
+          <div class="accordion-item" style="padding-top: 5px;" v-for="imp of impar" v-for="nombre of nombres">
             <h2 class="accordion-header" :id="[imp.f]">
               <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                 :data-bs-target="[imp.h2]" aria-expanded="false" :aria-controls="[imp.h]" @click="mensaje">
@@ -157,19 +167,19 @@
                       </tr>
                     </thead>
 
-                    <tbody  style="font-size:11px;">
+                    <tbody style="font-size:11px;">
                       <tr v-for="nombre of nombres" v-if="imp.lugar === nombre.lugar">
                         <th scope="row"> [[nombre.asunto]] </th>
                         <td>
-                          <!-- [[nombre.desde]] --> 
+                          <!-- [[nombre.desde]] -->
                           [[nombre.espaniol_decodificado]]
                           <!-- [[nombre.hasta]] -->
                         </td>
                         <td>
                           [[nombre.correlativo]]
                           <br>
-                          <div v-if="nombre.tipo"> 
-                            <span style="color: rgb(16, 233, 113);">Nuevo</span>
+                          <div v-if="nombre.tipo">
+                            <span style="color: rgb(16, 233, 113);">Enmienda</span>
                             <div class="spinner-grow spinner-grow-sm text-success" role="status">
                               <span class="sr-only">Loading...</span>
                             </div>
@@ -189,11 +199,11 @@
       <div class="contenido__menu">
 
         <!-- [[listado.apply()]] -->
-        <div v-if="!sw_parte2" class="spinner-grow text-info" style="width:15vh;height: 15vh;margin-left: 45%;margin-top: 30%;"></div>
-        
+        <div v-if="!sw_parte2" class="spinner-grow text-info"
+          style="width:15vh;height: 15vh;margin-left: 45%;margin-top: 30%;"></div>
+
         <div class="accordion accordion-flush" id="accordion2">
-          <div class="accordion-item" style="padding-top: 5px;" v-for="pa of par"
-            v-for="nombre of nombres">
+          <div class="accordion-item" style="padding-top: 5px;" v-for="pa of par" v-for="nombre of nombres">
             <h2 class="accordion-header" :id="[pa.f]">
               <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                 :data-bs-target="[pa.h2]" aria-expanded="false" :aria-controls="[pa.h]" @click="mensaje">
@@ -217,19 +227,19 @@
                       </tr>
                     </thead>
 
-                    <tbody  style="font-size:11px;">
+                    <tbody style="font-size:11px;">
                       <tr v-for="nombre of nombres" v-if="pa.lugar === nombre.lugar">
                         <th scope="row"> [[nombre.asunto]] </th>
-                        <td> 
+                        <td>
                           <!-- [[nombre.desde]]  -->
-                          [[nombre.espaniol_decodificado]] 
+                          [[nombre.espaniol_decodificado]]
                           <!-- [[nombre.hasta]]  -->
                         </td>
                         <td>
                           [[nombre.correlativo]]
                           <br>
-                          <div v-if="nombre.tipo"> 
-                            <span style="color: rgb(16, 233, 113);">Nuevo</span>
+                          <div v-if="nombre.tipo">
+                            <span style="color: rgb(16, 233, 113);">Enmienda</span>
                             <div class="spinner-grow spinner-grow-sm text-success" role="status">
                               <span class="sr-only">Loading...</span>
                             </div>
@@ -260,7 +270,7 @@
       <div>
         <div style="height: 50px;">
           <br>
-          <h5 style="text-align: center;">NOTAMAP</h5> 
+          <h5 style="text-align: center;">NOTAMAP</h5>
         </div>
         <ul class="nav nav-tabs" role="tablist">
           <li class="nav-item">
@@ -339,8 +349,8 @@
           NOTAMN VIGENTES - NTL e INTL
           <!-- <br><pre style="font-size: 8;">Origen de datos: AMHS System</pre> -->
         </h2>
-        
-        
+
+
         <div id="area" style="height: 85%; width: 85%;margin-left: 3%;margin-top: 10%;">
           {% area_chart areas with id='areas' %}
         </div>
@@ -350,14 +360,14 @@
           <br>
           NOTAMR VIGENTES - NTL e INTL
         </h2>
-        
+
         <!-- <br><pre style="font-size: 8;">Origen de datos: AMHS System</pre> -->
-        
+
         <div id="area" style="height: 85%; width: 85%;margin-left: 3%;margin-top: 10%;">
           {% area_chart areas1 with id='areas1' %}
         </div>
       </li>
-      
+
       <!-- 
             <li class="pane3">
                 <h2>
@@ -385,6 +395,73 @@
 
 
 
+<section id="quinto">
+  <div id="app_rqn">
+    <div id="container__cael">
+      <svg id="svg-icon_cael" viewBox="0 0 20 20" onclick="searchExpand()">
+        <path id="path__cael" fill="none" d="M19.129,18.164l-4.518-4.52c1.152-1.373,1.852-3.143,1.852-5.077c0-4.361-3.535-7.896-7.896-7.896
+                  c-4.361,0-7.896,3.535-7.896,7.896s3.535,7.896,7.896,7.896c1.934,0,3.705-0.698,5.078-1.853l4.52,4.519
+                  c0.266,0.268,0.699,0.268,0.965,0C19.396,18.863,19.396,18.431,19.129,18.164z M8.567,15.028c-3.568,0-6.461-2.893-6.461-6.461
+                  s2.893-6.461,6.461-6.461c3.568,0,6.46,2.893,6.46,6.461S12.135,15.028,8.567,15.028z"></path>
+      </svg>
+
+      <input type="text" id="search__cael" placeholder="RQN SLLF A1234/21 A0123/21 A01451/21"
+        v-model="request.query_notam" @input="request.query_notam = $event.target.value.toUpperCase()"
+        v-on:keyup.enter="activar_rqn">
+      <!-- <textarea name="" id="search" placeholder="Search" cols="30" rows="10"></textarea> -->
+
+
+    </div>
+
+
+    <!-- Button trigger modal -->
+    <button id="button_launch" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong"
+      style="display: none;">
+      Launch
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">RQN NOTAM AMHS SLLF</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div v-for="notam of request.array_list">
+              [[notam.aftn1]]
+              <br>
+              [[notam.aftn2]]
+              <br>
+              [[notam.idnotam]]
+              <br>
+              [[notam.resumen]]
+              <br>
+              [[notam.aplica_a]]
+              <br>
+              [[notam.valido_desde]]
+              <br>
+              [[notam.valido_hasta]]
+              <br>
+              [[notam.mensaje]]
+              <br>
+              <br>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
 
 
 {% endblock content %}
@@ -402,10 +479,15 @@
 <script src="{% static 'index_public/js/particles.js' %}"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.3/axios.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script> -->
+
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.16/vue.min.js"></script>
-<script src="https://unpkg.com/babel-polyfill@latest/dist/polyfill.min.js"></script>
-<script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js"></script>
+
+
+<!-- <script src="https://unpkg.com/babel-polyfill@latest/dist/polyfill.min.js"></script> -->
+<!-- <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js"></script> -->
 
 <script src="{% static 'index_public/js/mapa.js' %}"></script>
 
@@ -415,16 +497,14 @@
 <script src="https://cdn.jsdelivr.net/npm/pushbar.js@1.0.0/src/pushbar.min.js"></script>
 <script src="{% static 'index_public/js/sidebar.js' %}"></script>
 
-
 <script>
-  $(
-    function(){
-      setInterval(() => {
-        app2.listado.apply();
-      }, 20000);
-    }
-  );
+  function searchExpand() {
+    const element = document.getElementById("container__cael");
+    element.classList.toggle("active");
+  }
 </script>
+
+
 
 <script>
   var componente = new Vue({
@@ -479,16 +559,71 @@
 <script src="{% static 'index_public/js/map_color.js' %}"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.3/axios.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"
-  integrity="sha384-SR1sx49pcuLnqZUnnPwx6FCym0wLsk5JZuNx2bPPENzswTNFaQU1RDvt3wT4gWFG" crossorigin="anonymous"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script> -->
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"
+  integrity="sha384-SR1sx49pcuLnqZUnnPwx6FCym0wLsk5JZuNx2bPPENzswTNFaQU1RDvt3wT4gWFG" crossorigin="anonymous"></script> -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.min.js"
   integrity="sha384-j0CNLUeiqtyaRmlzUHCPZ+Gy5fQu0dQ6eZ/xAww941Ai1SxSY+0EQqNXNE6DZiVc" crossorigin="anonymous"></script>
 <script src="{% static 'index_public/js/acordeon_vue.js' %}"></script>
 
 <!-- SLIDER IN HAMMER JS AND JQUERY -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<!-- <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script> -->
 <script src="{% static 'notametro/script.js' %}"></script>
 
+
+<script>
+  app_rqnnotam = new Vue({
+    el: "#app_rqn",
+    delimiters: ['[[', ']]'],
+    data: {
+      request: {
+        query_notam: "",
+        array_list: ['nada']
+      },
+    },
+
+    //created(){},
+    methods: {
+      activar_rqn() {
+        //alert("entrando a buscar rqn " + this.request.query_notam);
+        /*
+        ACTIVAR UNA FUNCION PIDIENDO LISTA DE ASUNTOS
+        */
+
+
+        (async () => {
+          //alert("INTENTANDO EN LA bd")
+          await this.search_rqn_notam(this.request.query_notam)
+        })();
+      },
+      search_rqn_notam: async function (parametro) {
+        parametro = parametro.toUpperCase();
+        const url = 'http://upsilon.aasana.ga/rqn_notam/' + "?rqn_notam=" + parametro;
+
+        await axios.get(url).then(response => {
+          this.request.array_list = response.data.request_rqn;
+          $('#button_launch').click();
+        }
+        ).catch(
+          function (error) {
+            console.log(error);
+          }
+        );
+      },
+
+
+    },
+
+  });
+
+  $(function () {
+    setInterval(() => {
+      app2.listado.apply();
+    }, 20000);
+  }
+  );
+</script>
 
 {% endblock extra_js %}

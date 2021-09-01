@@ -239,11 +239,88 @@
 <!-- /.modal -->
 
 <div style="margin-top:1%;"  >
-    <h1 align="center">
-        {{user.get_username | upper}}
-    </h1>
-    
+
+
     <div class="buttons">
+        <div class="butFrame bounce">
+            <a href="{% url 'view_todos_notams' %}">
+                <img src="http://www.neodigital.com.au/thumbnailsmall/Button6.jpg" />
+                <div class="butHeading">TRAFICO NOTAM AMHS</div>
+            </a>
+        </div>
+
+        <div class="butFrame bounce">
+            <a href="{% url 'view_banco_notam' %}">
+                <img src="http://www.neodigital.com.au/thumbnailsmall/Button6.jpg" />
+                <div class="butHeading">BANCO NOTAM</div>
+            </a>
+        </div>
+
+    </div>
+
+
+    <div class="buttons">
+        <div class="butFrame bounce">
+            <a href="{% url 'view_codigos_abreviaturas' %}">
+                <img src="http://www.neodigital.com.au/thumbnailsmall/Button6.jpg" />
+                <div class="butHeading">HISTORIAL PIB</div>
+            </a>
+        </div>
+
+       
+
+        <div class="butFrame bounce">
+            <a href="{% url 'view_codigos_abreviaturas' %}">
+                <img src="http://www.neodigital.com.au/thumbnailsmall/Button6.jpg" />
+                <div class="butHeading">CODIGOS Y ABREVIATURAS</div>
+            </a>
+        </div>
+    </div>
+
+
+    <div class="buttons">
+        <div class="butFrame bounce">
+            <a href="{% url 'view_pib_tiemporeal2' %}">
+                <img src="http://www.neodigital.com.au/thumbnailsmall/Button6.jpg" />
+                <div class="butHeading">PIB TIEMPO REAL v.2</div>
+            </a>
+        </div>
+
+        
+    </div>
+
+
+   
+
+    <div class="buttons">
+        <div class="butFrame bounce">
+            <a href="{% url 'view_pib_tiemporeal2' %}">
+                <img src="http://www.neodigital.com.au/thumbnailsmall/Button6.jpg" />
+                <div class="butHeading">RQN NOTAM NTL e INTL</div>
+            </a>
+        </div>
+
+        <div class="butFrame bounce">
+            <a href="{% url 'view_codigos_abreviaturas' %}">
+                <img src="http://www.neodigital.com.au/thumbnailsmall/Button6.jpg" />
+                <div class="butHeading">RASTREADOR NOTAM</div>
+            </a>
+        </div>
+    </div>
+
+
+    <div class="buttons">
+        <div class="butFrame bounce">
+            <a href="{% url 'view_pib_tiemporeal2' %}">
+                <img src="http://www.neodigital.com.au/thumbnailsmall/Button6.jpg" />
+                <div class="butHeading">MAPA AIS/AIM </div>
+            </a>
+        </div>
+    </div>
+
+
+
+   <!--  <div class="buttons">
         
         <div class="butFrame bounce">
             <a href="{% url 'view_pib_automatizado' %}">
@@ -289,7 +366,7 @@
             </a>
         </div>
     
-        <div class="butFrame bounce"> <!--onClick="window.location='#'"-->
+        <div class="butFrame bounce"> 
             <a href="{% url 'view_carta_navegacional' %}">
                 <img src="http://www.neodigital.com.au/thumbnailsmall/Button6.jpg" />
                 <div class="butHeading">CARTA NAVEGACIONAL</div>
@@ -309,7 +386,7 @@
         </div>
     
     </div>
-
+ -->
 
 
 </div>
