@@ -90,7 +90,7 @@ def view_pagina_principal(request):
 
 
         if request.user.groups.filter(name='AISNACIONAL').exists():
-            if request.user.username in 'nof@aasana':
+            if request.user.username in 'SLLPYNYX@AASANA':
                 return redirect('view_panel_notaminternacional')
             
         if request.user.username in 'SLLPZPZX@AASANA':
@@ -543,7 +543,7 @@ def aun_es_valido(cadena):
 
 
 def eliminar_notam_del_pib(correlativo, tipo):
-    Pib_tiempo_real.objects.get(id_notam_pib__startswith='('+correlativo).delete()
+    Pib_tiempo_real.objects.filter(id_notam_pib__startswith='('+correlativo).delete()
     if 'NOTAMN' in tipo:
         Notam_trafico_charly_new.objects.filter(
             idnotam__startswith='('+correlativo).update(es_pib=False)
@@ -595,7 +595,7 @@ def view_pib_tiempo_real(request):
                     # cambio a no vigente en la tabla charly_new
                     #if not x.est:
                         # si no es estimado, eliminacion sin piedad
-                    eliminar_notam_del_pib(x.correlativo, sw)
+                    eliminar_notam_del_pib(x.correlativo, x.id_notam_pib.split(' ')[1])
             else:
                 lista_pib_ser.append(serializar_pib(x, sw))
             sw=False

@@ -121,6 +121,25 @@ def view_new_notam(request):
     else:
         return redirect('login')
 
+def view_new_notam_2(request):
+    if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='AISNACIONAL').exists():
+        lista_letras = Letra_asunto.objects.all().order_by('id_letra')
+
+        lista_georeferencias = Aeropuerto.objects.raw( "(select aeropuerto, icao, fuente, geo_arp AS georef   from plan_vuelo_aeropuerto  inner join (VALUES ('ARP')) AS t (fuente)  on geo_arp not like %(nil)s and aeropuerto <> 39)  union  (select aeropuerto, icao, fuente, geo_vor AS georef  from plan_vuelo_aeropuerto  inner join (VALUES ('VOR')) AS t (fuente)  on geo_vor not like %(nil)s)   union  (select aeropuerto, icao, fuente, geo_ils AS georef  from plan_vuelo_aeropuerto  inner join (VALUES ('ILS')) AS t (fuente)  on geo_ils not like %(nil)s)   union  (select aeropuerto, icao, fuente, geo_ils_gp_dme AS georef  from plan_vuelo_aeropuerto  inner join (VALUES ('ILS_GP_DME')) AS t (fuente)  on geo_ils_gp_dme not like %(nil)s)  union  (select aeropuerto, icao, fuente, geo_l AS georef  from plan_vuelo_aeropuerto  inner join (VALUES ('L')) AS t (fuente)  on geo_l not like %(nil)s)   union  (select aeropuerto, icao, fuente, geo_gpe_dme AS georef  from plan_vuelo_aeropuerto  inner join (VALUES ('GPE_DME')) AS t (fuente)  on geo_gpe_dme not like %(nil)s)   union  (select aeropuerto, icao, fuente, geo_marcador AS georef  from plan_vuelo_aeropuerto  inner join (VALUES ('MM')) AS t (fuente)  on geo_marcador not like %(nil)s)   union  (select aeropuerto, icao, fuente, geo_ndb AS georef  from plan_vuelo_aeropuerto  inner join (VALUES ('NDB')) AS t (fuente)  on geo_ndb not like %(nil)s)   union  (select aeropuerto, icao, iata AS fuente, geo_arp AS georef  from plan_vuelo_aeropuerto  where iata like 'SLLF')  order by icao asc, fuente asc" , { 'nil' : "NIL"} )
+
+        for geo in lista_georeferencias:
+            if 'SLLF' in geo.fuente:
+                aux=geo.fuente
+                geo.fuente = geo.icao
+                geo.icao = aux
+            part1 = str(geo.georef.split('S')[0])[0:4]
+            part2 = str(geo.georef.split('S')[1])[0:5]
+
+            geo.georef = part1 + 'S' + part2 + 'W'
+
+        return render(request, 'temp_plan_vuelo/temp_aro_ais/new_notam_2.html', {'lista_georeferencias': lista_georeferencias, 'lista_letras': lista_letras})
+    else:
+        return redirect('login')
 ###########################################################################
 ##### APP MANUAL DE PARA LOS SERVICIOS DE INFORMACION AERONAUTICA DOC 8126
 ###########################################################################
@@ -1003,6 +1022,10 @@ def view_post_crear_notam(request):
                 'post_valido_desde' : str(request.POST.get('valido_desde')),
                 'post_valido_hasta' : str(request.POST.get('valido_hasta')),
                 'post_mensaje' : str(request.POST.get('mensaje')),
+
+                'post_mensaje_charly' : str(request.POST.get('mensaje_charly')),
+                'post_mensaje_alfa' : str(request.POST.get('mensaje_alfa')),
+
                 'post_asunto' : str(request.POST.get('asunto')),
                 'post_estado_asunto' : str(request.POST.get('estado_asunto')),
                 'post_estimado' : str(request.POST.get('estimado')),
@@ -1053,8 +1076,8 @@ def view_post_crear_notam(request):
                 if 'NOTAMR' in post_tipo:
                     guardar_repla_alfa(id_alfa, alfa_destino, inf_constante, var_file)
 #
-                #if 'NOTAMC' in post_tipo:
-                #    guardar_cancel_alfa(id_mensaje, alfa, inf_constante)
+                if 'NOTAMC' in post_tipo:
+                    guardar_cancel_alfa(id_alfa, alfa_destino, inf_constante, var_file)
             
             
             ############ CONTROL DE ID_NOTAM           
@@ -1081,7 +1104,7 @@ def guardar_nuevo_charly(id_charly, inf_constante, post_pib_publicar, var_file):
     banco_charly.aplica_a = inf_constante['post_aplica_a']
     banco_charly.valido_desde = inf_constante['post_valido_desde']
     banco_charly.valido_hasta = inf_constante['post_valido_hasta']
-    banco_charly.mensaje = inf_constante['post_mensaje']
+    banco_charly.mensaje = inf_constante['post_mensaje_charly']
 
     if 'EST' in inf_constante['post_estimado']:
         banco_charly.est = True
@@ -1112,7 +1135,7 @@ def guardar_repla_charly(id_charly, notam_destino, inf_constante, post_pib_publi
     banco_charly.aplica_a = inf_constante['post_aplica_a']
     banco_charly.valido_desde = inf_constante['post_valido_desde']
     banco_charly.valido_hasta = inf_constante['post_valido_hasta']
-    banco_charly.mensaje = inf_constante['post_mensaje']
+    banco_charly.mensaje = inf_constante['post_mensaje_charly']
 
     if 'EST' in inf_constante['post_estimado']:
         banco_charly.est = True
@@ -1138,12 +1161,12 @@ def guardar_cancel_charly(id_charly, notam_destino, inf_constante, var_file):
     banco_charly.id_mensaje_c_c = id_charly
     banco_charly.aftn1 = inf_constante['post_amhs1']
     banco_charly.aftn2 = inf_constante['post_amhs2']
-    banco_charly.idnotam = '(' +id_charly + ' NOTAMR ' + notam_destino
+    banco_charly.idnotam = '(' +id_charly + ' NOTAMC ' + notam_destino
     banco_charly.resumen = inf_constante['post_resumen']
     banco_charly.aplica_a = inf_constante['post_aplica_a']
     banco_charly.valido_desde = inf_constante['post_valido_desde']
     banco_charly.valido_hasta = inf_constante['post_valido_hasta']
-    banco_charly.mensaje = inf_constante['post_mensaje']
+    banco_charly.mensaje = inf_constante['post_mensaje_charly']
 
     banco_charly.asunto = inf_constante['post_asunto']
     banco_charly.estado_asunto = inf_constante['post_estado_asunto']
@@ -1167,7 +1190,7 @@ def guardar_nuevo_alfa(id_alfa, inf_constante, var_file):
     banco_alfa.aplica_a = inf_constante['post_aplica_a']
     banco_alfa.valido_desde = inf_constante['post_valido_desde']
     banco_alfa.valido_hasta = inf_constante['post_valido_hasta']
-    banco_alfa.mensaje = inf_constante['post_mensaje']
+    banco_alfa.mensaje = inf_constante['post_mensaje_alfa']
 
     if inf_constante['post_estimado']:
         banco_alfa.est = True
@@ -1184,17 +1207,17 @@ def guardar_nuevo_alfa(id_alfa, inf_constante, var_file):
     banco_alfa.save()
 
 def guardar_repla_alfa(id_alfa, notam_destino, inf_constante, var_file):
-    banco_alfa=Banco_alfa_new()
+    banco_alfa=Banco_alfa_repla()
 
-    banco_alfa.id_mensaje_a_n = id_alfa
+    banco_alfa.id_mensaje_a_r = id_alfa
     banco_alfa.aftn1 = inf_constante['post_amhs1']
     banco_alfa.aftn2 = inf_constante['post_amhs2']
-    banco_alfa.idnotam = '('+id_alfa + ' NOTAMNR ' + notam_destino
+    banco_alfa.idnotam = '('+id_alfa + ' NOTAMR ' + notam_destino
     banco_alfa.resumen = inf_constante['post_resumen']
     banco_alfa.aplica_a = inf_constante['post_aplica_a']
     banco_alfa.valido_desde = inf_constante['post_valido_desde']
     banco_alfa.valido_hasta = inf_constante['post_valido_hasta']
-    banco_alfa.mensaje = inf_constante['post_mensaje']
+    banco_alfa.mensaje = inf_constante['post_mensaje_alfa']
 
     if inf_constante['post_estimado']:
         banco_alfa.est = True
@@ -1209,9 +1232,30 @@ def guardar_repla_alfa(id_alfa, notam_destino, inf_constante, var_file):
     banco_alfa.form_oaci = var_file #inf_constante['formulario_oaci']
 
     banco_alfa.save()
-'''
-def guardar_cancel_alfa(id_mensaje, alfa, inf_constante):
-'''
+
+def guardar_cancel_alfa(id_alfa, notam_destino, inf_constante, var_file):
+    banco_alfa=Banco_alfa_cancel()
+
+    banco_alfa.id_mensaje_a_c = id_alfa
+    banco_alfa.aftn1 = inf_constante['post_amhs1']
+    banco_alfa.aftn2 = inf_constante['post_amhs2']
+    banco_alfa.idnotam = '('+id_alfa + ' NOTAMNC ' + notam_destino
+    banco_alfa.resumen = inf_constante['post_resumen']
+    banco_alfa.aplica_a = inf_constante['post_aplica_a']
+    banco_alfa.valido_desde = inf_constante['post_valido_desde']
+    banco_alfa.valido_hasta = inf_constante['post_valido_hasta']
+    banco_alfa.mensaje = inf_constante['post_mensaje_alfa']
+
+    banco_alfa.asunto = inf_constante['post_asunto']
+    banco_alfa.estado_asunto = inf_constante['post_estado_asunto']
+
+    banco_alfa.antecedente = inf_constante['antecedente']
+
+    banco_alfa.form_oaci = var_file #inf_constante['formulario_oaci']
+
+    banco_alfa.save()
+
+
 
 def view_get_correlativo_charly(request):
     if request.user.is_authenticated and request.user.is_active and request.user.groups.filter(name='AISNACIONAL').exists():
@@ -1238,7 +1282,16 @@ def view_get_correlativo_alfa(request):
             get_anio = str(datetime.datetime.now().year)[2:]
             lista_correlativos = Banco_alfa_new.objects.raw("select *  from ( 	select id_mensaje_a_n,substring( id_mensaje_a_n, 2, 4) as idnotam 	from aro_ais_notam_trafico_alfa_new 	where id_mensaje_a_n like %(anio)s 	union  	select id_mensaje_a_r,substring( id_mensaje_a_r, 2, 4) as idnotam 	from aro_ais_notam_trafico_alfa_repla 	where id_mensaje_a_r like %(anio)s 	union  	select id_mensaje_a_c,substring( id_mensaje_a_c, 2, 4)  as idnotam 	from aro_ais_notam_trafico_alfa_cancel 	where id_mensaje_a_c like %(anio)s ) as t_correlativo order by  idnotam desc limit 1" , { 'anio' : "%/"+get_anio} )
             if len(lista_correlativos) > 0:
-                correlativo = "A" + str(int(lista_correlativos[0].idnotam)+1) + "/" + get_anio
+                if len(str(int(lista_correlativos[0].idnotam)+1))==4:
+                    correlativo = "A" + str(int(lista_correlativos[0].idnotam)+1) + "/" + get_anio
+                if len(str(int(lista_correlativos[0].idnotam)+1))==3:
+                    correlativo = "A0" + str(int(lista_correlativos[0].idnotam)+1) + "/" + get_anio
+                if len(str(int(lista_correlativos[0].idnotam)+1))==2:
+                    correlativo = "A00" + str(int(lista_correlativos[0].idnotam)+1) + "/" + get_anio
+                if len(str(int(lista_correlativos[0].idnotam)+1))==1:
+                    correlativo = "A000" + str(int(lista_correlativos[0].idnotam)+1) + "/" + get_anio
+                
+                
             else:
                 correlativo = 'A0001/' + get_anio
 

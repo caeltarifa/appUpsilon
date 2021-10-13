@@ -11,7 +11,7 @@ from apps.aro_ais.views import view_guardarregistro_pib
 from apps.aro_ais.views import view_imprimir_pibrealtime
 from apps.aro_ais.views import view_ais_for_aed
 
-from apps.aro_ais.views import view_new_notam
+from apps.aro_ais.views import view_new_notam, view_new_notam_2
 
 from apps.aro_ais.views import view_getAsunto,view_getEstadoAsunto
 from apps.aro_ais.views import view_codigos_abreviaturas
@@ -77,6 +77,9 @@ urlpatterns = [
     path('guardarregistropib/', view_guardarregistro_pib, name="view_guardarregistro_pib"), #envia al frontend datos actualizados
     path('imprimirpib/', view_imprimir_pibrealtime, name="view_imprimir_pibrealtime"), #INTERFAZ PARA IMPRIMIR EL PIB
     path('newnotam/', view_new_notam, name="view_new_notam"), #SIMULADOR GENERADOR DE NOTAM
+
+    path('newnotam2/', view_new_notam_2, name="view_new_notam_2"), #SIMULADOR GENERADOR DE NOTAM
+
     path('codigos_abreviaturas/', view_codigos_abreviaturas, name="view_codigos_abreviaturas"), #SIMULADOR GENERADOR DE NOTAM
 
 
