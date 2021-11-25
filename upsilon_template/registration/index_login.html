@@ -10,7 +10,7 @@
 
 
 
-{% block extra_head %}q
+{% block extra_head %}
 
 <link rel="stylesheet" href="{% static 'index_public/css/preloader.css' %} ">
 
@@ -145,7 +145,7 @@
             <h2 class="accordion-header" :id="[imp.f]">
               <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                 :data-bs-target="[imp.h2]" aria-expanded="false" :aria-controls="[imp.h]" @click="mensaje">
-                Aeropuerto [[imp.lugar]]
+                <strong>[[imp.lugar]]</strong> - [[imp.nombre]] 
               </button>
             </h2>
             <div :id="[imp.h]" class="accordion-collapse collapse" :aria-labelledby="[imp.f]"
@@ -207,7 +207,7 @@
             <h2 class="accordion-header" :id="[pa.f]">
               <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                 :data-bs-target="[pa.h2]" aria-expanded="false" :aria-controls="[pa.h]" @click="mensaje">
-                Aeropuerto [[pa.lugar]]
+                <strong>[[pa.lugar]]</strong> - [[pa.nombre]]
               </button>
             </h2>
             <div :id="[pa.h]" class="accordion-collapse collapse" :aria-labelledby="[pa.f]"

@@ -407,9 +407,12 @@ class Aeropuerto(models.Model):
     geo_ils = models.CharField(max_length=25, blank=True, null=True, default='NIL')
     geo_ils_gp_dme = models.CharField(max_length=25, blank=True, null=True, default='NIL')
     geo_l = models.CharField(max_length=25, blank=True, null=True, default='NIL')
-    geo_gpe_dme = models.CharField(max_length=25, blank=True, null=True, default='NIL')
-    geo_marcador = models.CharField(max_length=25, blank=True, null=True, default='NIL')
+    geo_mm = models.CharField(max_length=25, blank=True, null=True, default='NIL')
     geo_ndb = models.CharField(max_length=25, blank=True, null=True, default='NIL')
+    ils_llz = models.CharField(max_length=25, blank=True, null=True, default='NIL')
+    ils_loc = models.CharField(max_length=25, blank=True, null=True, default='NIL')
+    dvor_dme = models.CharField(max_length=25, blank=True, null=True, default='NIL')
+
 
     def __str__(self):
         return '{}'.format(self.icao)

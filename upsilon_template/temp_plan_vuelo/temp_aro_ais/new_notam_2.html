@@ -115,11 +115,11 @@
                                 <span class="material-icons">
                                   post_add
                                 </span>
-                                NUEVO NOTAM
+                                Generación guiada de NOTAM
                               </h2>
                               <span class="section-divider"></span>
                               <p class="section-description">
-                                  Generacion guiada de notam
+                                  <!-- Subtitulo -- Generacion guiada de notam -->
                               </p>
                               
                               
@@ -127,466 +127,430 @@
                                 
                                 <section id="appNewnotam" class="section">
 
-                                  <div class="row justify-content-center input-group" >
-                                    <!--
-                                      RADIO BUTTON SELECT TIPO DE NOTAM 
-                                    -->
+                                  <!--OFICIALES NOTAM -->
+                                  <!-- <div class="row justify-content-center input-group" >
                                     <div class="subscription-container">
-                                      
-                                      <input type="radio" name="radio" id="option1" value="NOTAMN" v-model="form.model_tiponotam" checked="checked">
-                                      <label for="option1" class="subscription__button">
-                                          <h6 class="subscription__title">NOTAMN</h6>
-                                      </label>
-                                    
-                                      <input type="radio" name="radio" id="option2" value="NOTAMR" v-model="form.model_tiponotam">
-                                      <label for="option2" class="subscription__button">
-                                          <h6 class="subscription__title">NOTAMR</h6>
-                                      </label>
-                                      
-                                      <input type="radio" name="radio" id="option3" value="NOTAMC" v-model="form.model_tiponotam">
-                                      <label for="option3" class="subscription__button">
-                                          <h6 class="subscription__title">NOTAMC</h6>
-                                      </label>
+                                        <input type="radio" name="radio_user" id="option111" value="ANA" v-model="form.oficial_notam" checked="checked">
+                                        <label for="option111" class="subscription__button" style="width: 100px;">
+                                          <span class="material-icons">
+                                            person
+                                          </span>
+                                            <h6 class="subscription__title">ANA</h6>
+                                        </label>
+                                        
+                                        <input type="radio" name="radio_user" id="option222" value="MARCO" v-model="form.oficial_notam">
+                                        <label for="option222" class="subscription__button" style="width: 100px;">
+                                          <span class="material-icons">
+                                            person
+                                          </span>
+                                            <h6 class="subscription__title">MARCO</h6>
+                                        </label>
+                                        
+                                        <input type="radio" name="radio_user" id="option333" value="ALEJANDRA" v-model="form.oficial_notam">
+                                        <label for="option333" class="subscription__button" style="width: 100px;">
+                                          <span class="material-icons">
+                                            person
+                                          </span>
+                                            <h6 class="subscription__title">ALEJANDRA</h6>
+                                        </label>
+                                        
+                                        <input type="radio" name="radio_user" id="option444" value="EDGAR" v-model="form.oficial_notam">
+                                        <label for="option444" class="subscription__button" style="width: 100px;">
+                                          <span class="material-icons">
+                                            person
+                                          </span>
+                                            <h6 class="subscription__title">EDGAR</h6>
+                                        </label>
                                     </div>
-                                      <!--
-                                      RADIO BUTTON SELECT TIPO DE NOTAM 
-                                    -->
+                                    </div>
+                                  </div> -->
+                                  <!-- OFICIALES NOTAM  -->
+
+                                <br>
+                                <br>
+
+                                <div class="row justify-content-center input-group" >
+                                    <!--RADIO BUTTON SELECT TIPO DE NOTAM -->
+                                    <div class="subscription-container">
+                                        
+                                        <input type="radio" name="radio" id="option1" value="NOTAMN" v-model="form.model_tiponotam" checked="checked">
+                                        <label for="option1" class="subscription__button">
+                                            <h6 class="subscription__title">NOTAMN</h6>
+                                        </label>
+                                        
+                                        <input type="radio" name="radio" id="option2" value="NOTAMR" v-model="form.model_tiponotam">
+                                        <label for="option2" class="subscription__button">
+                                            <h6 class="subscription__title">NOTAMR</h6>
+                                        </label>
+                                        
+                                        <input type="radio" name="radio" id="option3" value="NOTAMC" v-model="form.model_tiponotam">
+                                        <label for="option3" class="subscription__button">
+                                            <h6 class="subscription__title">NOTAMC</h6>
+                                        </label>
+                                    </div>
+                                    <!--RADIO BUTTON SELECT TIPO DE NOTAM -->
+                                </div>
+
+                                
+
+                                <div class="row justify-content-center input-group" v-if="form.model_tiponotam" >
+                                    <!--RADIO BUTTON SELECT SERIE DE NOTAM-->
+                                    <div class="subscription-container">
+                                        <input type="radio" name="t_radio2" id="option1x" value="CHARLIE" v-model="form.model_tiposerie">
+                                        <label for="option1x" class="subscription__button">
+                                            <h6 class="subscription__title">CHARLIE</h6>
+                                        </label>
+
+                                        <input type="radio" name="t_radio2" id="option2x" value="ALPHA" v-model="form.model_tiposerie">
+                                        <label for="option2x" class="subscription__button">
+                                            <h6 class="subscription__title">ALPHA</h6>
+                                        </label>
+
+                                        <input type="radio" name="t_radio2" id="option3x" value="CHARLIE&ALPHA" v-model="form.model_tiposerie">
+                                        <label for="option3x" class="subscription__button">
+                                            <h6 class="subscription__title">CHARLIE & ALPHA</h6>
+                                        </label>
+                                    </div>
+                                    <!--RADIO BUTTON SELECT SERIE DE NOTAM-->
+                                </div>
+                                <br>
+                                <br>
+
+                                
+
+                                <div id="accordion"  v-if="form.model_tiposerie">
+                                  <div class="input-group" >
+                                    <input @keyup="validar_id_charly_destino($event)" id="id_charly_destino" v-model="form.model_destino_notam_charly" @input="form.model_destino_notam_charly = $event.target.value.toUpperCase()" class="input form-control" placeholder="Buscar NOTAM " type="text" minlength="8" maxlength="8" v-on:keyup.enter="buscar_notam_pasado_charly" />
                                   </div>
-
-                                  <div id="accordion"  v-if="form.model_tiponotam">
-                                    
-
+  
                                     <br>
                                     <div class="card" >
-                                      <div style="padding: 0px;" class="card-header" id="headingZero">
+                                        <div style="padding: 0px;" class="card-header" id="headingZero">
                                         <h5 class="mb-0">
-                                          <button class="btn btn-link" data-toggle="collapse" data-target="#collapseZero" aria-expanded="true" aria-controls="collapseZero" style="width: 100%; background-color: rgb(229, 242, 252);">
+                                            <button class="btn btn-link" data-toggle="collapse" data-target="#collapseZero" aria-expanded="true" aria-controls="collapseZero" style="width: 100%; background-color: rgb(229, 242, 252);">
                                             Antecedente NOTAM
-                                          </button>
+                                            </button>
                                         </h5>
-                                      </div>
-                                  
-                                      <div id="collapseZero" class="collapse show" aria-labelledby="headingZero" data-parent="#accordion">
+                                        </div>
+                                    
+                                        <div id="collapseZero" class="collapse show" aria-labelledby="headingZero" data-parent="#accordion">
                                         <div class="card-body">
-                                          
-                                          <div class="input-group">
+                                            
+                                            <div class="input-group">
                                             <textarea @keyup="validar_antecedente($event)" v-model="form.model_antecedente_notam" @input="form.model_antecedente_notam = $event.target.value.toUpperCase()" id="id_antecedente_notam" class="form-control" style="width: 100%;" rows="2"  placeholder="Antecedente NOTAM"> </textarea>
-                                          </div>
+                                            </div>
 
                                         </div>
-                                      </div>
+                                        </div>
                                     </div>
 
-
-
-                                    <br>
                                     <div class="card" >
-                                      <div style="padding: 0px;" class="card-header" id="headingOne">
+                                        <div style="padding: 0px;" class="card-header" id="headingOne">
                                         <h5 class="mb-0">
-                                          <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="width: 100%; background-color: rgb(229, 242, 252);">
+                                            <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="width: 100%; background-color: rgb(229, 242, 252);">
                                             DTG
-                                          </button>
+                                            </button>
                                         </h5>
-                                      </div>
-                                  
-                                      <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                                        </div>
+                                    
+                                        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
                                         <div class="card-body">
-                                          
-                                          <div class="input-group">
+                                            
+                                            <div class="input-group">
                                             
                                             <select class="form-control" v-model="form.model_prioridad">
-                                              <option v-for="prioridad in form.prioridad" :value="prioridad" >
-                                                  [[prioridad]]
-                                              </option>
+                                                <option v-for="prioridad in form.prioridad" :value="prioridad" >
+                                                    [[prioridad]]
+                                                </option>
                                             </select>
 
                                             <input class="input form-control" placeholder="Fecha deposito" type="date" v-model="form.fecha_deposito" />
                                             <input class="input form-control" placeholder="HR DEPOSITO" type="text" v-model="form.hora_deposito"/>
                                             <input class="input form-control" placeholder="REMITENTE" type="text" v-model="form.remitente" @input="form.remitente = $event.target.value.toUpperCase()" maxlength="8" />
 
-                                          </div>
+                                            </div>
 
                                         </div>
-                                      </div>
+                                        </div>
                                     </div>
-       
+
                                     <div class="card">
-                                      <div style="padding: 0px;"  class="card-header" id="headingTwo">
+                                        <div style="padding: 0px;"  class="card-header" id="headingTwo">
                                         <h5 class="mb-0">
-                                          <button style="width: 100%; background-color: rgb(229, 242, 252);" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" style="width: 100%; height: 100%;">
+                                            <button style="width: 100%; background-color: rgb(229, 242, 252);" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" style="width: 100%; height: 100%;">
                                             Casilla Q
-                                          </button>
+                                            </button>
                                         </h5>
-                                      </div>
-                                      <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordion">
+                                        </div>
+                                        <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordion">
                                         <div class="card-body">
 
-                                          <div class="input-group">
+                                            <div class="input-group" v-if="form.model_tiposerie == 'CHARLIE' || form.model_tiposerie == 'CHARLIE&ALPHA' ">
                                             <input @keyup="validar_id_charly_origen($event)" id="id_charly_origen" class="input form-control" placeholder="C0001/21" type="text" v-model="form.correlativo_charly" v-on:keyup.enter="buscar_correlativo_charly" maxlength="8" @input="form.correlativo_charly = $event.target.value.toUpperCase()" />
                                             >>><input @keyup="validar_id_charly_destino($event)" id="id_charly_destino" v-if="form.model_tiponotam == 'NOTAMR' || form.model_tiponotam == 'NOTAMC' " v-model="form.model_destino_notam_charly" @input="form.model_destino_notam_charly = $event.target.value.toUpperCase()" class="input form-control" placeholder="NOTAM charlie a cambiar" type="text" minlength="8" maxlength="8" v-on:keyup.enter="buscar_notam_pasado_charly" />
-                                          </div>
+                                            </div>
 
-                                          <div class="input-group" >
+                                            <div class="input-group" v-if="form.model_tiposerie == 'ALPHA' || form.model_tiposerie == 'CHARLIE&ALPHA' ">
                                             <input @keypress="validar_id_alfa_origen($event)" id="id_alfa_origen" class="input form-control" placeholder="A0001/21" type="text" v-model="form.correlativo_alfa" @input="form.correlativo_alfa = $event.target.value.toUpperCase()" v-on:keyup.enter="buscar_correlativo_alfa" maxlength="8"/>
                                             >>><input @keypress="validar_id_alfa_destino($event)" id="id_alfa_destino" v-if="form.model_tiponotam == 'NOTAMR' || form.model_tiponotam == 'NOTAMC' " v-model="form.model_destino_notam_alfa" @input="form.model_destino_notam_alfa = $event.target.value.toUpperCase()" class="input form-control" placeholder="NOTAM alpha a cambiar" type="text" minlength="8" maxlength="8" />
-                                          </div>
+                                            </div>
 
-                                          <div class="input-group" >
-                                              <select id="id_select_titulo_asunto" class="form-control" v-model="form.model_titulo_asunto" v-on:change="buscar_lista_asuntos($event)">
+                                            <div class="input-group" >
+                                                <select id="id_select_titulo_asunto" class="form-control" v-model="form.model_titulo_asunto" v-on:change="buscar_lista_asuntos($event)">
                                                 <option disabled> Titulo del asunto</option>
                                                 {% for letra in lista_letras %}
-                                                  <option value="{{letra.id_letra}}"> {{letra.id_letra}} {{letra.titulo_letra}}</option>
+                                                    <option value="{{letra.id_letra}}"> {{letra.id_letra}} {{letra.titulo_letra}}</option>
                                                 {% endfor %}
-                                              </select>
+                                                </select>
 
-                                              <select id="id_select_asunto" class="form-control" v-model="form.model_asunto" v-on:change="buscar_lista_estado_asuntos($event)">
+                                                <select id="id_select_asunto" class="form-control" v-model="form.model_asunto" v-on:change="buscar_lista_estado_asuntos($event)">
                                                 <option disabled> Asunto</option>
                                                 <option v-for="obj in form.asunto" :value="obj.id_asunto">
                                                     [[obj.id_asunto]]
                                                     [[obj.descripcion_asunto]]
                                                 </option>
-                                              </select>
+                                                </select>
 
 
-                                              <select id="id_select_estado_asunto" class="form-control" v-model="form.model_estado_asunto"  v-on:change="asignar_estado_asunto_pib($event)">
+                                                <select id="id_select_estado_asunto" class="form-control" v-model="form.model_estado_asunto"  v-on:change="asignar_estado_asunto_pib($event)">
                                                 <option disabled> Estado de asunto</option>
                                                 <option v-for="obj in form.estado_asunto" :value="obj.id_estado_asunto">
-                                                  [[obj.id_estado_asunto]]
-                                                  [[obj.descripcion_estado]]
+                                                    [[obj.id_estado_asunto]]
+                                                    [[obj.descripcion_estado]]
                                                 </option>
-                                              </select>
+                                                </select>
                                             </div>
 
 
-                                          <div class="input-group"> 
+                                            <div class="input-group"> 
                                             <select class="form-control" v-model="form.model_tipo">
-                                              <option v-for="tipo in form.tipo" :value="tipo">
-                                                  [[tipo]]
-                                              </option>
+                                                <option v-for="tipo in form.tipo" :value="tipo">
+                                                    [[tipo]]
+                                                </option>
                                             </select>
 
                                             <select class="form-control" v-model="form.model_nbo">
-                                              <option v-for="nbo in form.nbo" :value="nbo" >
-                                                  [[nbo]]
-                                              </option>
+                                                <option v-for="nbo in form.nbo" :value="nbo" >
+                                                    [[nbo]]
+                                                </option>
                                             </select>
 
                                             <select class="form-control" v-model="form.model_alcance">
-                                              <option v-for="alcance in form.alcance" :value="alcance" >
-                                                  [[alcance]]
-                                              </option>
+                                                <option v-for="alcance in form.alcance" :value="alcance" >
+                                                    [[alcance]]
+                                                </option>
                                             </select>
-                                          </div>
-    
-                                          <div class="input-group">
-                                              <input id="id_nivel_inf" class="input form-control col-sm-2" placeholder="Inferior" type="text" v-model="form.nivel_inf" maxlength="3" @keyup="isNumber($event)" />
-                                              <input id="id_nivel_sup" class="input form-control col-sm-2" placeholder="superior" type="text" v-model="form.nivel_sup" maxlength="3" @keyup="isNumber($event)" />
+                                            </div>
+
+                                            <div class="input-group">
+                                                <input id="id_nivel_inf" class="input form-control col-sm-2" placeholder="Inferior" type="text" v-model="form.nivel_inf" maxlength="3" @keyup="isNumber($event)" />
+                                                <input id="id_nivel_sup" class="input form-control col-sm-2" placeholder="superior" type="text" v-model="form.nivel_sup" maxlength="3" @keyup="isNumber($event)" />
                                             
-                                              <select id="id_select_lugar" class="form-control col-md-2" style="width: 10px;border: 3px solid rgb(167, 231, 71);"  v-model="form.model_coordenadas" @change="actualizar_casilla_a($event)">
+                                                <select id="id_select_lugar" class="form-control col-md-2" style="width: 10px;border: 3px solid rgb(167, 231, 71);"  v-model="form.model_coordenadas" @change="actualizar_casilla_a($event)">
                                                 <option disabled> Lugar</option>
                                                 {% for geo in lista_georeferencias %}
-                                                  <option value="{{geo.icao}} {{geo.fuente}} {{geo.georef}}">{{geo.icao}} {{geo.fuente}} {{geo.georef}}</option>
+                                                    <option value="{{geo.icao}} {{geo.fuente}} {{geo.georef}}">{{geo.icao}} {{geo.fuente}} {{geo.georef}}</option>
                                                 {% endfor %}
-                                              </select>
-                                              <input class="input form-control col-md-4"  placeholder="Coordenada" type="text" v-model="form.model_coordenadas">
-                                              
-                                              <input id="id_radio" class="input form-control col-sm-2" placeholder="Radio" type="text" v-model="form.radio"  maxlength="3"  @keyup="isNumber($event)"/>
-                                          </div>
-                                          
+                                                </select>
+                                                <input class="input form-control col-md-4"  placeholder="Coordenada" type="text" v-model="form.model_coordenadas">
+                                                
+                                                <input id="id_radio" class="input form-control col-sm-2" placeholder="Radio" type="text" v-model="form.radio"  maxlength="3"  @keyup="isNumber($event)"/>
+                                            </div>
+                                            
 
 
                                         </div>
-                                      </div>
+                                        </div>
                                     </div>
-    
+
                                     <div class="card">
-                                      <div style="padding: 0px;"  class="card-header" id="headingThree">
-                                          <button style="width: 100%; background-color: rgb(229, 242, 252);" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree" style="width: 100%; height: 100%;">
+                                        <div style="padding: 0px;"  class="card-header" id="headingThree">
+                                            <button style="width: 100%; background-color: rgb(229, 242, 252);" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree" style="width: 100%; height: 100%;">
                                             Casillas A B C D E F G
-                                          </button>
-                                      </div>
-                                      <div id="collapseThree" class="collapse show" aria-labelledby="headingThree" data-parent="#accordion">
+                                            </button>
+                                        </div>
+                                        <div id="collapseThree" class="collapse show" aria-labelledby="headingThree" data-parent="#accordion">
                                         <div class="card-body">
 
-                                          <div class="input-group">
+                                            <div class="input-group">
                                             &nbsp;&nbsp;A) &nbsp;&nbsp;
                                             <input id="id_lugar" class="input form-control" placeholder="Lugar" type="text" v-model="form.lugar" />
                                             
                                             &nbsp;&nbsp;B) &nbsp;&nbsp;
-                                            <input class="input form-control" type="date" v-model="form.desde_fecha"/>
+                                            <input id="id_fecha_desde" class="input form-control" type="date" v-model="form.desde_fecha"/>
                                             <input id="id_hora_desde" class="input form-control" placeholder="0000" type="text" v-model="form.desde_hora" maxlength="4" @keyup="isNumber($event)" />
 
                                             &nbsp;&nbsp;C) &nbsp;&nbsp;
-                                            <input v-if="form.model_tiponotam != 'NOTAMC' " class="input form-control" type="date" v-model="form.hasta_fecha"/>
+                                            <input id="id_fecha_hasta" v-if="form.model_tiponotam != 'NOTAMC' " class="input form-control" type="date" v-model="form.hasta_fecha"/>
                                             <input id="id_hora_hasta" v-if="form.model_tiponotam != 'NOTAMC' " class="input form-control" placeholder="0000" type="text" v-model="form.hasta_hora" maxlength="4" @keyup="isNumber($event)"/>
 
-                                            <div class="field">
-                                              <div class="control" v-if="form.model_tiponotam != 'NOTAMC' " >
-                                                  <label>
+                                            <div class="field"  v-if="form.model_tiponotam != 'NOTAMC' ">
+                                                <div class="control" v-if="form.model_tiponotam != 'NOTAMC' " >
+                                                    <label>
                                                     &nbsp;
                                                     <input type="checkbox" value="EST" v-model="form.estimado"  />
                                                     EST&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                  </label>
-                                                  <br>
-                                                  <label>
+                                                    </label>
+                                                    <br>
+                                                    <label>
                                                     <input @change="borrar_casilla_c()" type="checkbox" value="PERM" v-model="form.permanente"  />
                                                     PERM
-                                                  </label>
-                                              </div>
+                                                    </label>
+                                                </div>
                                             </div>
-  
-                                          </div>
 
-                                          <div class="input-group">
+                                            </div>
+
+                                            <br>
+
+                                            <div class="input-group">
                                             &nbsp;&nbsp;D) &nbsp;&nbsp;
                                             <input class="input form-control" placeholder="Intervalo" type="text" v-model="form.casilla_d" @input="form.casilla_d = $event.target.value.toUpperCase()" />
-                                          </div>
+                                            </div>
 
-                                          <br>
+                                            <br>
 
-                                          <div class="input-group">
+                                            <div class="input-group">
                                             &nbsp;&nbsp;E) &nbsp;&nbsp;&nbsp;
-                                          </div>
+                                            </div>
 
-                                          <div class="input-group" v-if="form.correlativo_charly">
+                                            <div class="input-group" v-if="form.correlativo_charly">
                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                            <textarea class="form-control" style="width: 80%;" rows="2" placeholder="Cuerpo Charlie" type="text" v-model="form.cuerpo_charly" @input="form.cuerpo_charly = $event.target.value.toUpperCase()" ></textarea>
-                                          </div>
+                                            <textarea id="id_cuerpo_charly" class="form-control" style="width: 80%;" rows="2" placeholder="Cuerpo Charlie" type="text" v-model="form.cuerpo_charly" @input="form.cuerpo_charly = $event.target.value.toUpperCase()" ></textarea>
+                                            </div>
 
-                                          <br>
+                                            <br>
 
-                                          <div class="input-group" v-if="form.correlativo_alfa">
+                                            <div class="input-group" v-if="form.correlativo_alfa">
                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                            <textarea class="form-control" style="width: 80%;" rows="2" placeholder="Cuerpo Alpha" type="text" v-model="form.cuerpo_alfa" @input="form.cuerpo_alfa = $event.target.value.toUpperCase()" ></textarea>
-                                          </div>
-                                          <br>
+                                            <textarea id="id_cuerpo_alfa" class="form-control" style="width: 80%;" rows="2" placeholder="Cuerpo Alpha" type="text" v-model="form.cuerpo_alfa" @input="form.cuerpo_alfa = $event.target.value.toUpperCase()" ></textarea>
+                                            </div>
+                                            <br>
 
-                                          <div class="input-group">
+                                            <div class="input-group">
                                             &nbsp;&nbsp;F) &nbsp;&nbsp;&nbsp;
                                             <input class="input form-control" placeholder="Limite inf" type="text" v-model="form.limite_inferior" @input="form.limite_inferior = $event.target.value.toUpperCase()" />
                                                                                         
                                             &nbsp;&nbsp;G) &nbsp;&nbsp;
                                             <input class="input form-control" placeholder="Limite sup" type="text" v-model="form.limite_superior" @input="form.limite_superior = $event.target.value.toUpperCase()" />
-                                          </div>
+                                            </div>
 
                                         </div>
-                                      </div>
+                                        </div>
                                     </div>
 
                                     <div class="card" v-if="form.correlativo_charly">
-                                      <div style="padding: 0px;"  class="card-header" id="headingFour">
-                                          <button style="width: 100%; background-color: rgb(229, 242, 252);" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseThree" style="width: 100%; height: 100%;">
-                                             Boletin PIB
-                                          </button>
-                                      </div>
-                                      <div id="collapseFour" class="collapse show" aria-labelledby="headingThree" data-parent="#accordion">
-                                        <div class="card-body">
-  
-                                         
-                                          <div class="input-group">
-                                            &nbsp;&nbsp;Instalación &nbsp;&nbsp;
-                                            <input class="input form-control" placeholder="Asunto" type="text" v-model="form.pib_asunto" @input="form.pib_asunto = $event.target.value.toUpperCase()" />
-                                          </div>
-
-                                          <div class="input-group">
-                                            &nbsp;&nbsp;Estado&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                            <input class="input form-control" placeholder="Estado del asunto" type="text" v-model="form.pib_estado_asunto" @input="form.pib_estado_asunto = $event.target.value.toUpperCase()" />
-                                          </div>
-
-                                          <br>
-                                          <textarea disabled  id="pib_publicar" v-if="form.hasta_fecha" class="form-control" style="width: 100%;" rows="4"> DESDE [[form.desde_fecha.split('-').reverse().join('/')]] HR [[form.desde_hora]] [[form.pib_estado_asunto]] HASTA [[form.hasta_fecha.split('-').reverse().join('/')]] HR [[form.hasta_hora]]  [[ form.estimado[form.estimado.length -1] ]] </textarea> <!-- ([[form.correlativo_charly]]) --> 
-                                          <textarea disabled  id="pib_publicar" v-else class="form-control" style="width: 100%;" rows="4"> DESDE [[form.desde_fecha.split('-').reverse().join('/')]] HR [[form.desde_hora]] [[form.pib_estado_asunto]] </textarea>  <!-- ([[form.correlativo_charly]]) -->
-
-  
+                                        <div style="padding: 0px;"  class="card-header" id="headingFour">
+                                            <button style="width: 100%; background-color: rgb(229, 242, 252);" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseThree" style="width: 100%; height: 100%;">
+                                                Boletin PIB
+                                            </button>
                                         </div>
-                                      </div>
-                                    </div>
+                                        <div id="collapseFour" class="collapse show" aria-labelledby="headingThree" data-parent="#accordion">
+                                        <div class="card-body">
 
-                                  </div>
+                                            
+                                            <div class="input-group">
+                                            &nbsp;&nbsp;Instalación &nbsp;&nbsp;
+                                            <input id="id_pib_asunto" class="input form-control" placeholder="Instalación" type="text" v-model="form.pib_asunto" @input="form.pib_asunto = $event.target.value.toUpperCase()" />
+                                            </div>
 
-                                  <!--
-                                    <h1 class="title is-1" v-text="form.formName"></h1>
-                                    <div class="columns">
-                                      <div class="column">
-                                        <form>
-                                            <div class="field">
-                                              <label class="label">fromname Name</label>
-                                              <div class="control">
-                                                  <input class="input" type="text" v-model="form.formName" />
-                                              </div>
+                                            <div class="input-group">
+                                            &nbsp;&nbsp;Estado&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <input id="id_pib_estado_asunto" class="input form-control" placeholder="Estado del asunto" type="text" v-model="form.pib_estado_asunto" @input="form.pib_estado_asunto = $event.target.value.toUpperCase()" />
                                             </div>
-  
-                                            <div class="field">
-                                                <label class="label">Name</label>
-                                                <div class="control">
-                                                    <input class="input" type="text" v-model="form.userName" />
-                                                </div>
-                                            </div>
-                            
-                                            <div class="field">
-                                                <label class="label">Favorite Color</label>
-                                                <div class="control">
-                                                    <div class="select">
-                                                        <select class="form-control" v-model="form.favoriteColor">
-                                                            <option v-for="color in form.arrayColors" :value="color">
-                                                                [[color]]
-                                                            </option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                            
-                                            <div class="field">
-                                                <label class="label">Favorite Hamburger Place</label>
-                                                <div class="control">
-                                                    <label>
-                                                        <input type="radio" name="hamburgerPlace" value="whataburger" v-model="form.favoriteHamburger" />
-                                                        Whataburger
-                                                    </label>
-                                                    <br>
-                                                    <label>
-                                                        <input type="radio" name="hamburgerPlace" value="pterrys" v-model="form.favoriteHamburger" />
-                                                        P.Terry's
-                                                    </label>
-                                                    <br>
-                                                    <label>
-                                                        <input type="radio" name="hamburgerPlace" value="hopdoddy" v-model="form.favoriteHamburger" />
-                                                        Hopdoddy
-                                                    </label>
-                                                </div>
-                                            </div>
-                            
-                                            <div class="field">
-                                                <label class="label">Favorite Hangout</label>
-                                                <div class="control">
-                                                    <label>
-                                                        <input type="checkbox" value="barton-springs" v-model="form.favoriteHangout" />
-                                                        Barton Springs
-                                                    </label>
-                                                    <br>
-                                                    <label>
-                                                        <input type="checkbox" value="zilker-park" v-model="form.favoriteHangout" />
-                                                        Zilker Park
-                                                    </label>
-                                                    <br>
-                                                    <label>
-                                                        <input type="checkbox" value="sixth-street" v-model="form.favoriteHangout" />
-                                                        Sixth Street
-                                                    </label>
-                                                </div>
-                                            </div>
-                            
-                                            <div class="field">
-                                                <label class="label">How many hours a week do you work?</label>
-                                                <div class="control">
-                                                    <h4 class="title is-4">
-                                                        [[form.workHours]] / 80
-                                                    </h4>
-                                                    <input type="range" min="0" max="80" v-model="form.workHours" />
-                                                </div>
-                                            </div>
-                            
-                                            <input class="button is-primary margin-bottom" type="submit" @click.prevent="fakeSubmit" />
-                            
-                                        </form>
-                            
-                                        <transition name="fade" mode="out-in">
-                                            <article class="message is-primary" v-show="showSubmitFeedback">
-                                                <div class="message-header">
-                                                    <p>Fake Send Status:</p>
-                                                </div>
-                                                <div class="message-body">
-                                                    Successfully Submitted!
-                                                </div>
-                                            </article>
-                                        </transition>
-                                      </div>
-                                    </div>
-                                  -->
 
-                                  <div class="container">
-                                      <div class="row justify-content-center" v-if="form.correlativo_charly">
-                                        <p style="text-align: left;min-height: 100px; width:65%; background-color: rgb(222, 248, 240);"  id="copy-notam-charly">
-                                          <!-- <code id="copy-notam-charly" > -->
-  <!-- [[form.model_prioridad]]  <br>
-  [[form.fecha_deposito.substring(8,)]][[form.hora_deposito]] [[form.remitente]] <br> -->
-  ([[form.correlativo_charly]] [[form.model_tiponotam]] [[form.model_destino_notam_charly]] <br>
-  Q) SLLF/Q[[form.model_asunto]][[form.model_estado_asunto]]/[[form.model_tipo]]/[[form.model_nbo]]/[[form.model_alcance]]/[[form.nivel_inf]]/[[form.nivel_sup]]/[[form.model_coordenadas.split(" ")[2] ]][[form.radio]] <br>
-  A) [[form.lugar]] B) [[( form.desde_fecha.substring(2,) ).replace("-","").replace("-","") ]][[form.desde_hora]] C) [[form.hasta_fecha.substring(2,).replace("-","").replace("-","")]][[form.hasta_hora]] [[ form.estimado[form.estimado.length -1] ]]  [[ form.permanente[form.permanente.length -1] ]]  <br>
-  <span v-if="form.casilla_d"> D) [[form.casilla_d]] <br> </span> 
-  E) [[form.cuerpo_charly]]
-  <span v-if="form.limite_inferior"><br> F) [[form.limite_inferior]]  </span>
-  <span v-if="form.limite_superior"><br> G) [[form.limite_superior]]  </span>)
-                                          <br>
-                                          <!-- </code> -->
-                                        </p>
-                                        <span class="btn btn-info text-white text-justify" style=" height: 100px;" @click="copy_clipboard('copy-notam-charly')">
-                                            AMHS
                                             <br>
-                                            CHARLIE
-                                        </span>
-                                      </div>
-  
-                                      &nbsp;
-                                      &nbsp;
+                                            <textarea disabled  id="pib_publicar" v-if="form.hasta_fecha" class="form-control" style="width: 100%;" rows="4"> DESDE [[form.desde_fecha.split('-').reverse().join('/')]] HR [[form.desde_hora]] [[form.pib_estado_asunto]] HASTA [[form.hasta_fecha.split('-').reverse().join('/')]] HR [[form.hasta_hora]]  [[ form.estimado[form.estimado.length -1] ]] </textarea> <!-- ([[form.correlativo_charly]]) --> 
+                                            <textarea disabled  id="pib_publicar" v-else class="form-control" style="width: 100%;" rows="4"> DESDE [[form.desde_fecha.split('-').reverse().join('/')]] HR [[form.desde_hora]] [[form.pib_estado_asunto]] </textarea>  <!-- ([[form.correlativo_charly]]) -->
 
-                                      <div class="row justify-content-center" v-if="form.correlativo_alfa" style="min-height: 100px; min-width: 70%;">
-                                        <p style="text-align: left;min-height: 100px; width:65%; background-color: rgb(222, 248, 240);" id="copy-notam-alfa">
-  <!--                                           <code id="copy-notam-alfa" > -->
-  <!-- [[form.model_prioridad]]   <br> -->
-  <!-- [[form.fecha_deposito.substring(8,)]][[form.hora_deposito]] [[form.remitente]] <br> -->
-  ([[form.correlativo_alfa]] [[form.model_tiponotam]] [[form.model_destino_notam_alfa]] <br>
-  Q) SLLF/Q[[form.model_asunto]][[form.model_estado_asunto]]/[[form.model_tipo]]/[[form.model_nbo]]/[[form.model_alcance]]/[[form.nivel_inf]]/[[form.nivel_sup]]/[[form.model_coordenadas.split(" ")[2] ]][[form.radio]] <br>
-  A) [[form.lugar]] B) [[form.desde_fecha.substring(2,).replace("-","").replace("-","")]][[form.desde_hora]] C) [[form.hasta_fecha.substring(2,).replace("-","").replace("-","")]][[form.hasta_hora]] [[ form.estimado[form.estimado.length -1] ]] <br>
-  <span v-if="form.casilla_d"> D) [[form.casilla_d]] <br> </span>
-  E) [[form.cuerpo_alfa]]
-  <span v-if="form.limite_inferior"> <br> F) [[form.limite_inferior]] </span>
-  <span v-if="form.limite_superior"> <br> G) [[form.limite_superior]] </span>)
-                                            <!-- </code> -->
-                                            <br>
-                                        </p>
-                                        <span class="btn btn-info text-white text-justify" style=" height: 100px;" @click="copy_clipboard('copy-notam-alfa')">
-                                        AMHS 
+
+                                        </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="container">
+                                    <div class="row justify-content-center" v-if="form.correlativo_charly">
+                                    <p style="text-align: left;min-height: 100px; width:65%; background-color: rgb(222, 248, 240);"  id="copy-notam-charly">
+                                        <!-- <code id="copy-notam-charly" > -->
+<!-- [[form.model_prioridad]]  <br>
+[[form.fecha_deposito.substring(8,)]][[form.hora_deposito]] [[form.remitente]] <br> -->
+([[form.correlativo_charly]] [[form.model_tiponotam]] [[form.model_destino_notam_charly]] <br>
+Q) SLLF/Q[[form.model_asunto]][[form.model_estado_asunto]]/[[form.model_tipo]]/[[form.model_nbo]]/[[form.model_alcance]]/[[form.nivel_inf]]/[[form.nivel_sup]]/[[form.model_coordenadas.split(" ")[2] ]][[form.radio]] <br>
+A) [[form.lugar]] B) [[( form.desde_fecha.substring(2,) ).replace("-","").replace("-","") ]][[form.desde_hora]] C) [[form.hasta_fecha.substring(2,).replace("-","").replace("-","")]][[form.hasta_hora]] [[ form.estimado[form.estimado.length -1] ]]  [[ form.permanente[form.permanente.length -1] ]]  <br>
+<span v-if="form.casilla_d"> D) [[form.casilla_d]] <br> </span> 
+E) [[form.cuerpo_charly]]
+<span v-if="form.limite_inferior"><br> F) [[form.limite_inferior]]  </span>
+<span v-if="form.limite_superior"><br> G) [[form.limite_superior]]  </span>)
                                         <br>
-                                        ALPHA&nbsp;&nbsp;
-                                        </span>
-                                      </div>
+                                        <!-- </code> -->
+                                    </p>
+                                    <span class="btn btn-info text-white text-justify" style=" height: 100px;" @click="copy_clipboard('copy-notam-charly')">
+                                        AMHS
+                                        <br>
+                                        CHARLIE
+                                    </span>
+                                    </div>
+
+                                    &nbsp;
+                                    &nbsp;
+
+                                    <div class="row justify-content-center" v-if="form.correlativo_alfa" style="min-height: 100px; min-width: 70%;">
+                                    <p style="text-align: left;min-height: 100px; width:65%; background-color: rgb(222, 248, 240);" id="copy-notam-alfa">
+<!--                                           <code id="copy-notam-alfa" > -->
+<!-- [[form.model_prioridad]]   <br> -->
+<!-- [[form.fecha_deposito.substring(8,)]][[form.hora_deposito]] [[form.remitente]] <br> -->
+([[form.correlativo_alfa]] [[form.model_tiponotam]] [[form.model_destino_notam_alfa]] <br>
+Q) SLLF/Q[[form.model_asunto]][[form.model_estado_asunto]]/[[form.model_tipo]]/[[form.model_nbo]]/[[form.model_alcance]]/[[form.nivel_inf]]/[[form.nivel_sup]]/[[form.model_coordenadas.split(" ")[2] ]][[form.radio]] <br>
+A) [[form.lugar]] B) [[form.desde_fecha.substring(2,).replace("-","").replace("-","")]][[form.desde_hora]] C) [[form.hasta_fecha.substring(2,).replace("-","").replace("-","")]][[form.hasta_hora]] [[ form.estimado[form.estimado.length -1] ]]   [[ form.permanente[form.permanente.length -1] ]] <br>
+<span v-if="form.casilla_d"> D) [[form.casilla_d]] <br> </span>
+E) [[form.cuerpo_alfa]]
+<span v-if="form.limite_inferior"> <br> F) [[form.limite_inferior]] </span>
+<span v-if="form.limite_superior"> <br> G) [[form.limite_superior]] </span>)
+                                        <!-- </code> -->
+                                        <br>
+                                    </p>
+                                    <span class="btn btn-info text-white text-justify" style=" height: 100px;" @click="copy_clipboard('copy-notam-alfa')">
+                                    AMHS 
+                                    <br>
+                                    ALPHA&nbsp;&nbsp;
+                                    </span>
+                                    </div>
 
 
-                                      <br>
-                                      <br>
-                                      
-                                      <div class="row justify-content-center">
-                                        <!--mita 2-->
-                                        <div id='map' v-bind:style="[form.model_coordenadas != 'Seleccione un lugar'?{ 'height':'300px' }:{'height':'0%'}]"></div>
-                                      </div>
+                                    <br>
+                                    <br>
+                                    
+                                    <div class="row justify-content-center">
+                                    <!--mita 2-->
+                                    <div id='map' v-bind:style="[form.model_coordenadas != 'Seleccione un lugar'?{ 'height':'300px' }:{'height':'0%'}]"></div>
+                                    </div>
 
 
-                                  </div>
+                                </div>
 
                               
 
                                   <div style="width: 100%;">
                                     <form class="form-group" id="data_srv_id" action="{% url 'view_post_crear_notam' %}" method="POST"  enctype="multipart/form-data">
                                       {% csrf_token %}
-                                       <!-- tipo  > -->  <input style="display:none;" type="text" name="tipo" v-model="data_srv.tipo"><!--    <br>  -->
-                                       <!-- notam_header  > -->  <input style="display:none;" type="text" name="notam_header" v-model="data_srv.notam_header"><!--    <br>  -->
-                                       <!-- notam_destino  > -->  <input style="display:none;" type="text" name="notam_destino" v-model="data_srv.destino_notam"><!--    <br>  -->
-                                       <!-- amhs1  > -->  <input style="display:none;" type="text" name="amhs1" v-model="data_srv.amhs1"><!--    <br>  -->
-                                       <!-- amhs2  > -->  <input style="display:none;" type="text" name="amhs2" v-model="data_srv.amhs2"><!--     <br>  -->
-                                       <!-- resumen  > -->  <input style="display:none;" type="text" name="resumen" v-model="data_srv.resumen"><!--    <br>  -->
-                                       <!-- aplica_a  > -->  <input style="display:none;" type="text" name="aplica_a" v-model="data_srv.aplica_a"><!--    <br>  -->
-                                       <!-- valido_desde   > --> <input style="display:none;" type="text" name="valido_desde" v-model="data_srv.valido_desde"><!--    <br>  -->
-                                       <!-- valido_hasta   > --> <input style="display:none;" type="text" name="valido_hasta" v-model="data_srv.valido_hasta"><!--    <br>  -->
-                                       <!-- mensaje  > -->  <input style="display:none;" type="text" name="mensaje" v-model="data_srv.mensaje"><!--    <br>  -->
-                                       <!-- mensaje_charly  > -->  <input style="display:none;" type="text" name="mensaje_charly" v-model="data_srv.mensaje_charly"><!--    <br>  -->
-                                       <!-- mensaje_alfa  > -->  <input style="display:none;" type="text" name="mensaje_alfa" v-model="data_srv.mensaje_alfa"><!--    <br>  -->
-                                       <!-- asunto  > -->  <input style="display:none;" type="text" name="asunto" v-model="data_srv.asunto"><!--    <br>  -->
-                                       <!-- estado_asunto  > -->  <input style="display:none;" type="text" name="estado_asunto" v-model="data_srv.estado_asunto"><!--    <br>  -->
-                                       <!-- pib_pulicar  > -->  <input style="display:none;" type="text" name="pib_publicar" v-model="data_srv.pib_publicar"><!--    <br>  -->
-                                       <!-- estimado  > -->  <input style="display:none;" type="text" name="estimado" v-model="data_srv.estimado_srv"><!--    <br>  -->
-                                       <!-- permanente  > -->  <input style="display:none;" type="text" name="permanente" v-model="data_srv.permanente_srv"><!--    <br>  -->
-                                       <!-- antecedente  > -->  <input style="display:none;" type="text" name="antecedente" v-model="data_srv.antecedente_notam"><!--    <br>  -->
+                                        tipo  >   <input type="text" name="tipo" v-model="data_srv.tipo">    <br>
+                                        notam_header  >   <input type="text" name="notam_header" v-model="data_srv.notam_header">    <br>
+                                        notam_destino  >   <input type="text" name="notam_destino" v-model="data_srv.destino_notam">    <br>
+                                        amhs1  >   <input type="text" name="amhs1" v-model="data_srv.amhs1">    <br>
+                                        amhs2  >   <input type="text" name="amhs2" v-model="data_srv.amhs2">     <br>
+                                        resumen  >   <input type="text" name="resumen" v-model="data_srv.resumen">    <br>
+                                        aplica_a  >   <input type="text" name="aplica_a" v-model="data_srv.aplica_a">    <br>
+                                        valido_desde   >  <input type="text" name="valido_desde" v-model="data_srv.valido_desde">    <br>
+                                        valido_hasta   >  <input type="text" name="valido_hasta" v-model="data_srv.valido_hasta">    <br>
+                                        mensaje_charly  >   <input type="text" name="mensaje_charly" v-model="data_srv.mensaje_charly">    <br>
+                                        mensaje_alfa  >   <input type="text" name="mensaje_alfa" v-model="data_srv.mensaje_alfa">    <br>
+                                        asunto  >   <input type="text" name="asunto" v-model="data_srv.asunto">    <br>
+                                        estado_asunto  >   <input type="text" name="estado_asunto" v-model="data_srv.estado_asunto">    <br>
+                                        pib_pulicar  >   <input type="text" name="pib_publicar" v-model="data_srv.pib_publicar">    <br>
+                                        estimado  >   <input type="text" name="estimado" v-model="data_srv.estimado_srv">    <br>
+                                        permanente  >   <input type="text" name="permanente" v-model="data_srv.permanente_srv">    <br>
+                                        antecedente  >   <input type="text" name="antecedente" v-model="data_srv.antecedente_notam">    <br>
                                       
                                       <input class="btn btn-outline-dark" type="file" name="formulario_oaci" id="id_formulario_oaci" required style="height: 30%; font-size: 15px; width: 80%;">
 
@@ -599,6 +563,7 @@
                                       <input class="btn btn-info text-white copy-btn" type="submit" value="GUARDAR NOTAM" @click="guardar_notam()">
                                     </form>
                                   </div>
+
                                 </section>
                                 
                                 
@@ -772,90 +737,7 @@
       }
     }
   });
-/*
-  new Vue({
-      el: '#app2',
-      delimiters: ['[[', ']]'],
-      data: {
-        // -------------- 8400 -----------------
-        titulo_letra: "Titulo de la letra",
-        acronimo_letra: "",
-        buscarCadena8126: '',
-        
-        respuesta:'',
-        
-        columns_asunto: ['Asunto', 'Descripción','Fraseología'],
-        columns_estado: ['Estado de asunto', 'Descripción','Fraseología'],
-        
-        asuntos: [],
-        estados_asunto: [],
-        // -------------- 8400 -----------------
-        
-      },
-      computed: {
-        filtro_asunto_inicial: function () {
-          var self = this;
-          self.buscarCadena8126=self.buscarCadena8126.toUpperCase();
-          variable=self.asuntos.filter(function (user) {
-            return user.id_asunto.indexOf(self.buscarCadena8126) !== -1;
-          })
-          if(variable.length>0){
-            return variable 
-          }
-        },
-        filtro_estado_asunto_inicial: function () {
-          var self = this;
-          self.buscarCadena8126=self.buscarCadena8126.toUpperCase();
-          variable=self.estados_asunto.filter(function (user) {
-            return user.id_estado_asunto.indexOf(self.buscarCadena8126) !== -1;
-          })
-          if(variable.length>0){
-            return variable 
-          }
-        },
-      },
-      methods: {
-        filtro_estado_asunto: function () {
-          //SE ACTIVA CUANDO SE PRESIONA LA TECLA ENTER
-          var self = this;
-          variable=self.asuntos.filter(function (user) {
-            return user.id_asunto.indexOf(self.buscarCadena8126) !== -1;
-          })
-          if(variable.length>0){
-            return variable 
-          }else{
-            if(this.buscarCadena8126.length > 0 && this.buscarCadena8126.length < 3){
-              this.buscando_8126(this.buscarCadena8126)
-            }
-          }
-        },
 
-        buscando_8126: function (parametro) {
-          (async() => {
-            //alert("INTENTANDO EN LA bd")
-
-            await this.getResponse8126(parametro)
-            
-            if(this.asuntos.length >0 || this.estados_asunto.length >0 ){
-              this.respuesta='';
-              this.buscarCadena8126="";
-            }else{
-              this.respuesta="No se encontraron resultados.";
-            }
-          })();
-        },
-
-        getResponse8126: async function(parametro){
-          parametro = parametro.toUpperCase();
-          const url = '{% url 'view_get_codigo8126' %}' + "?string8126="+parametro
-          await axios.get(url).then(response => {this.titulo_letra=response.data.titulo_letra; this.acronimo_letra=response.data.acronimo_letra ; this.asuntos = (response.data.asuntos); this.estados_asunto = (response.data.estados_asuntos)}).catch(function (error) { console.log(error); });
-          console.log(this.asuntos)
-          console.log(this.estados_asunto)
-          //titulo_letra
-        },
-      }
-    }
-  );  */
 </script>
 
 <script src="https://unpkg.com/vue-toasted"></script>
@@ -876,17 +758,8 @@
     delimiters: ['[[', ']]'],
     data: {
         form: {
-          //formName: "Tell Us About Yourself",
-          //userName: "",
-          //favoriteColor: "Red",
-          //favoriteHamburger: "",
-          //favoriteHangout: [],
-          //workHours: 0,
-          //arrayColors: [
-          //  'Red', 
-          //  'Blue', 
-          //  'Green'
-          //],
+
+          oficial_notam:'',
 
           model_destino_notam_charly:"",
           model_destino_notam_alfa:"",
@@ -901,6 +774,9 @@
           
           model_tiponotam:'',
           tiponotam: ['NOTAMN','NOTAMR','NOTAMC'],
+
+          model_tiposerie:'',
+          tiponotam: ['CHARLIE','ALPHA','CHARLIE&ALPHA'],
 
 
           model_titulo_asunto:"Titulo del asunto",
@@ -1065,6 +941,9 @@
                     text: "Transfiriendo datos... ",
                     timer: 3000,
                   });
+                  (async() => {
+                        await app_vue.get_data_notam_antiguo_charly_amhs()
+                  })();
                 }
               }
             );
@@ -1077,10 +956,6 @@
             timer: 1500,
           });
         }
-      },
-
-      saluda: function(){
-        alert("hola mundo")
       },
 
       get_data_notam_antiguo_charly: async function(){
@@ -1131,6 +1006,65 @@
         );
       },
       /////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+      get_data_notam_antiguo_charly_amhs: async function() {
+            this.form.model_destino_notam_charly = this.form.model_destino_notam_charly.toUpperCase();
+
+            if (this.form.correlativo_charly.length == 0) {
+                this.buscar_correlativo_charly.apply()
+            }
+
+            const url = '{% url 'view_api_redirect_notam_amhs' %}' + "?codigo_notam=" + this.form.model_destino_notam_charly;
+
+            await axios.get(url).then(response => {
+                //this.form.???=response.data;
+                //this.form.model_tiponotam = response.data.model_tiponotam;
+                this.form.model_titulo_asunto = response.data.model_titulo_asunto;
+
+                this.form.asunto = [{
+                    'descripcion_asunto': "",
+                    'fraseologia_asunto': '',
+                    'id_asunto': response.data.model_asunto
+                }];
+                this.form.model_asunto = response.data.model_asunto;
+
+                this.form.estado_asunto = [{
+                    'descripcion_estado': '',
+                    'fraseologia_estado': '',
+                    'id_estado_asunto': response.data.model_estado_asunto
+                }];
+                this.form.model_estado_asunto = response.data.model_estado_asunto;
+
+                this.form.model_tipo = response.data.model_tipo;
+                this.form.model_nbo = response.data.model_nbo;
+                this.form.model_alcance = response.data.model_alcance;
+                this.form.nivel_inf = response.data.nivel_inf;
+                this.form.nivel_sup = response.data.nivel_sup;
+                this.form.model_coordenadas = response.data.model_coordenadas;
+                this.form.radio = response.data.radio;
+                this.form.lugar = response.data.lugar;
+                this.form.desde_fecha = response.data.desde_fecha;
+                this.form.desde_hora = response.data.desde_hora;
+                this.form.hasta_fecha = response.data.hasta_fecha;
+                this.form.hasta_hora = response.data.hasta_hora;
+                this.form.estimado = response.data.estimado;
+                this.form.permanente = response.data.permanente;
+                this.form.pib_asunto = response.data.pib_asunto;
+                this.form.pib_estado_asunto = response.data.pib_estado_asunto;
+                this.form.casilla_d = response.data.casilla_d;
+                this.form.cuerpo_charly = response.data.cuerpo2;
+                this.form.limite_inferior = response.data.casilla_f;
+                this.form.limite_superior = response.data.casilla_g;
+            }).catch(
+                function(error) {
+                    console.log(error);
+                }
+            );
+        },
+            /////////////////////////////////////////////////////////////////////////////////////////
+
 
 
       buscar_correlativo_alfa: function() {
@@ -1231,6 +1165,11 @@
         if (this.form.permanente.length==2) {
           this.form.hasta_hora="";
           this.form.hasta_fecha="";
+          document.querySelector('#id_fecha_hasta').disabled=true;
+          document.querySelector('#id_hora_hasta').disabled=true;
+        }else{
+          document.querySelector('#id_fecha_hasta').disabled=false;
+          document.querySelector('#id_hora_hasta').disabled=false;
         }
       },
       // ************************************** //
@@ -1241,8 +1180,10 @@
         var charCode = (evt.which) ? evt.which : evt.keyCode;
         if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) {
           evt.preventDefault();
+          // SI ES LETRA -> HACEMOS ALGO
         } else {
           id='#'+String(evt.target.id);
+          
 
           switch (String(evt.target.id)) {
             case 'id_nivel_inf':
@@ -1544,7 +1485,7 @@
         vector_descripcion_fraseologia =this.buscar_descripcion_estado_asunto(cod_estado).split('/');
 
         this.form.pib_estado_asunto= vector_descripcion_fraseologia[0];
-        this.form.cuerpo_charly= vector_descripcion_fraseologia[1]+ " "+ vector_descripcion_fraseologia[1];
+        this.form.cuerpo_charly= this.buscar_descripcion_dentro_asunto(this.form.model_asunto).split('/')[1]+ " "+ vector_descripcion_fraseologia[1];
       },
       buscar_descripcion_estado_asunto(cod_estado){
 
@@ -1604,7 +1545,6 @@
         if (this.form.limite_inferior) {
           this.data_srv.mensaje_charly = this.data_srv.mensaje_charly +"F) "+this.form.limite_inferior +"G) "+this.form.limite_superior;
           this.data_srv.mensaje_alfa = this.data_srv.mensaje_alfa +"F) "+this.form.limite_inferior +"G) "+this.form.limite_superior;
-          swalfa
         }
         if (!sw) {
           this.data_srv.mensaje_charly="E) "+this.form.cuerpo_charly;
@@ -1646,8 +1586,153 @@
         }
         return amhs_alfa;
 
-      }
-    },
+      },
+
+
+      validar_antecedente_x: function() {
+          // ************* VALIDAR ANTECEDENTE 
+          sw_antecedente = false;
+  
+          if (app_vue.form.model_antecedente_notam.length > 15 || app_vue.form.model_antecedente_notam == "NIL") {
+              sw_antecedente = true;
+              document.querySelector('#id_antecedente_notam').style.borderColor = "";
+          } else {
+              document.querySelector('#id_antecedente_notam').style.borderColor = "red";
+              document.querySelector('#id_antecedente_notam').scrollIntoView({
+                  block: "center",
+                  behavior: "smooth"
+              });
+              sw_srv_to_send = false;
+          }
+  
+          return sw_antecedente;
+      },
+  
+      validar_notam_charlie_origen_x: function() {
+          sw_vacio_charly_origen = false;
+          sw_formato_charly = false;
+          if (app_vue.form.correlativo_charly.length > 0) {
+              // ************* VALIDAR CHARLY ORIGEN
+              if (valid_charly_format.test(app_vue.form.correlativo_charly)) {
+                  sw_formato_charly = true;
+                  document.querySelector('#id_charly_origen').style.borderColor = "";
+              } else {
+                  document.querySelector('#id_charly_origen').style.borderColor = "red";
+                  document.querySelector('#id_charly_origen').scrollIntoView({
+                      block: "center",
+                      behavior: "smooth"
+                  });
+              }
+          } else {
+              sw_vacio_charly_origen = true;
+          }
+  
+          if (!sw_vacio_charly_origen && sw_formato_charly) {
+              return true
+          } else {
+              return false
+          }
+      },
+      validar_notam_alpha_origen_x: function() {
+          sw_vacio_alfa_origen = false;
+          sw_formato_alfa = false;
+          if (app_vue.form.correlativo_alfa.length > 0) {
+              // ************* VALIDAR ALFA ORIGEN
+              if (valid_alfa_format.test(app_vue.form.correlativo_alfa)) {
+                  sw_formato_alfa = true;
+                  document.querySelector('#id_alfa_origen').style.borderColor = "";
+              } else {
+                  document.querySelector('#id_alfa_origen').style.borderColor = "red";
+                  document.querySelector('#id_alfa_origen').scrollIntoView({
+                      block: "center",
+                      behavior: "smooth"
+                  });
+              }
+          } else {
+              sw_vacio_alfa_origen = true;
+          }
+  
+          if (!sw_vacio_alfa_origen && sw_formato_alfa) {
+              return true
+          } else {
+              return false
+          }
+      },
+  
+      
+      validar_notam_charlie_destino_x: function() {
+          sw_vacio_charly_destino = false;
+          sw_formato_charly_destino = false;
+          if (app_vue.form.model_destino_notam_charly.length > 0) {
+              sw_vacio_charly_destino = true;
+              // ************* VALIDAR ALFA DESTINO
+              if (valid_charly_format.test(app_vue.form.model_destino_notam_charly)) {
+                  sw_formato_charly_destino = true;
+                  document.querySelector('#id_charly_destino').style.borderColor = "";
+              } else {
+                  document.querySelector('#id_charly_destino').style.borderColor = "red";
+                  document.querySelector('#id_charly_destino').scrollIntoView({
+                      block: "center",
+                      behavior: "smooth"
+                  });
+              }
+          } else {
+              sw_vacio_charly_destino = true;
+              document.querySelector('#id_charly_destino').style.borderColor = "red";
+              document.querySelector('#id_charly_destino').scrollIntoView({
+                  block: "center",
+                  behavior: "smooth"
+              });
+          }
+  
+          if (sw_vacio_charly_destino && sw_formato_charly_destino) {
+              return true
+          } else {
+              return false
+          }
+      },
+      validar_notam_alpha_destino_x: function() {
+          sw_vacio_alfa_destino = false;
+          sw_formato_alfa = false;
+          if (app_vue.form.correlativo_alfa.length > 0) {
+            sw_vacio_alfa_destino = true;
+              // ************* VALIDAR ALFA ORIGEN
+              if (valid_alfa_format.test(app_vue.form.correlativo_alfa)) {
+                  sw_formato_alfa = true;
+                  document.querySelector('#id_alfa_destino').style.borderColor = "";
+              } else {
+                  document.querySelector('#id_alfa_destino').style.borderColor = "red";
+                  document.querySelector('#id_alfa_destino').scrollIntoView({
+                      block: "center",
+                      behavior: "smooth"
+                  });
+              }
+          } else {
+              sw_vacio_alfa_origen = true;
+              document.querySelector('#id_alfa_destino').style.borderColor = "red";
+              document.querySelector('#id_alfa_destino').scrollIntoView({
+                  block: "center",
+                  behavior: "smooth"
+              });
+          }
+  
+          if (!sw_vacio_alfa_origen && sw_formato_alfa) {
+              return true
+          } else {
+              return false
+          }
+      },
+
+      
+    },  
+    
+    
+
+
+    // VALIDANDO DATOS PARA EL ENVIO DE DATOS 
+
+
+
   
   }); 
 
@@ -1655,6 +1740,12 @@
         return (meters / 0.075 / Math.cos(latitude * Math.PI / 180));
       }
 </script>
+
+
+
+
+
+
 
 <script>
     const form = document.querySelector('#data_srv_id')
@@ -1665,225 +1756,64 @@
       // ********** INICIO DE LA VALIDACION 
       sw_srv_to_send=true;
 
-      // ************* VALIDAR ANTECEDENTE 
-      sw_antecedente=false;
 
-      if (app_vue.form.model_antecedente_notam.length>15 || app_vue.form.model_antecedente_notam=="NIL" ) {
-        sw_antecedente=true;
-        document.querySelector('#id_antecedente_notam').style.borderColor="";
-      }else{
-        document.querySelector('#id_antecedente_notam').style.borderColor="red";
-        document.querySelector('#id_antecedente_notam').scrollIntoView({block:"center",behavior:"smooth"});
-        sw_srv_to_send=false;
-      }
+      switch (app_vue.form.model_tiponotam) {
+        case 'NOTAMN':
+            switch (app_vue.form.model_tiposerie) {
+              case 'CHARLIE':
+                app_vue.validar_notam_charlie_origen_x();
+                break;
+                
+              case 'ALPHA':
+                app_vue.validar_notam_alpha_origen_x();
+                break;
+            
+              default:
+                app_vue.validar_notam_charlie_origen_x();
+                app_vue.validar_notam_alpha_origen_x();
+                break;
+            }  
 
-      // ************* VALIDAR CHARLY ORIGEN Y ALFA ORIGEN DISTINTO DE VACIO 
-      sw_vacio_charly_origen=false;
-      sw_vacio_alfa_origen=false;
-      
-      sw_formato_charly=false;
-      sw_formato_alfa=false;
-
-      if (app_vue.form.correlativo_charly.length>0 ) {
-        // ************* VALIDAR CHARLY ORIGEN
-        if (valid_charly_format.test(app_vue.form.correlativo_charly) ) {
-          sw_formato_charly=true;
-          document.querySelector('#id_charly_origen').style.borderColor="";
-        }else{
-          document.querySelector('#id_charly_origen').style.borderColor="red";
-          document.querySelector('#id_charly_origen').scrollIntoView({block:"center",behavior:"smooth"});
-          sw_srv_to_send=false;
-        }
-      }else{sw_vacio_charly_origen=true;}
-
-      if( app_vue.form.correlativo_alfa.length > 0){
+          break;
         
-        // ************* VALIDAR ALFA ORIGEN
-        if (valid_alfa_format.test(app_vue.form.correlativo_alfa) ) {
-          sw_formato_alfa=true;
-          document.querySelector('#id_alfa_origen').style.borderColor="";
-        }else{
-          document.querySelector('#id_alfa_origen').style.borderColor="red";
-          document.querySelector('#id_alfa_origen').scrollIntoView({block:"center",behavior:"smooth"});
-          sw_srv_to_send=false;
-        }
-        
-      }else{sw_vacio_alfa_origen=true;}     
-      
-      // ************* VALIDAR CHARLY ORIGEN Y ALFA ORIGEN DISTINTO DE VACIO       
-      if (sw_vacio_charly_origen && sw_vacio_alfa_origen) {
-        if (sw_antecedente) {
-          document.querySelector('#id_charly_origen').style.borderColor="red";
-          document.querySelector('#id_charly_origen').scrollIntoView({block:"center",behavior:"smooth"});
-          
-          document.querySelector('#id_alfa_origen').style.borderColor="red";
-          document.querySelector('#id_alfa_origen').scrollIntoView({block:"center",behavior:"smooth"});
-          sw_srv_to_send=false;
-          alert("Debe existir correlativo NOTAM")
-        }
-      }
-
-
-
-
-
-      // ************* SI ES NOTAMC O NOTAMR >> VALIDAR NTOAM DESTINO
-      sw_vacio_charly_destino=true;
-      sw_vacio_alfa_destino=true;
-      
-      sw_formato_charly_destino=false;
-      sw_formato_alfa_destino=false;
-      
-      if(app_vue.form.model_tiponotam=="NOTAMC" || app_vue.form.model_tiponotam=="NOTAMR"){
-
-        if (app_vue.form.model_destino_notam_charly.length>0 ) {
-          sw_vacio_charly_destino=false;
-          // ************* VALIDAR CHARLY DESTINO
-          if (valid_charly_format.test(app_vue.form.model_destino_notam_charly) ) {
-            sw_formato_charly_destino=true;
-            document.querySelector('#id_charly_destino').style.borderColor="";
-          }else{
-            document.querySelector('#id_charly_destino').style.borderColor="red";
-            document.querySelector('#id_charly_destino').scrollIntoView({block:"center",behavior:"smooth"});
-            sw_srv_to_send=false;
-          }
-        }
-
-        if (app_vue.form.model_destino_notam_alfa.length>0 ) {
-          sw_vacio_alfa_destino=false;
-
-          // ************* VALIDAR ALFA DESTINO
-          if (valid_alfa_format.test(app_vue.form.model_destino_notam_charly) ) {
-            sw_formato_alfa_destino=true;
-            document.querySelector('#id_alfa_destino').style.borderColor="";
-          }else{
-            document.querySelector('#id_alfa_destino').style.borderColor="red";
-            document.querySelector('#id_alfa_destino').scrollIntoView({block:"center",behavior:"smooth"});
-            sw_srv_to_send=false;
-          }
-        }
-
-      // ************* VALIDAR CHARLY ORIGEN Y ALFA ORIGEN DISTINTO DE VACIO       
-
-          if(!sw_vacio_charly_origen){
-            if(sw_vacio_charly_destino){
-              document.querySelector('#id_charly_destino').style.borderColor="red";
-              document.querySelector('#id_charly_destino').scrollIntoView({block:"center",behavior:"smooth"});
-              sw_srv_to_send=false;
-            }else{
-              document.querySelector('#id_charly_destino').style.borderColor="";
-            }
-          }
-
-          if(!sw_vacio_alfa_origen){
-            if(sw_vacio_alfa_destino){
-              document.querySelector('#id_alfa_destino').style.borderColor="red";
-              document.querySelector('#id_alfa_destino').scrollIntoView({block:"center",behavior:"smooth"});
-              sw_srv_to_send=false;
-            }else{
-              document.querySelector('#id_alfa_destino').style.borderColor="";
-            }
-          }
-
-          if (sw_vacio_charly_destino && sw_vacio_alfa_destino) {
-              document.querySelector('#id_charly_destino').style.borderColor="red";
-              document.querySelector('#id_charly_destino').scrollIntoView({block:"center",behavior:"smooth"});
+        case 'NOTAMR':
+          switch (app_vue.form.model_tiposerie) {
+            case 'CHARLIE':
+              app_vue.validar_notam_charlie_origen_x();
+              app_vue.validar_notam_charlie_
+              break;
               
-              document.querySelector('#id_alfa_destino').style.borderColor="red";
-              document.querySelector('#id_alfa_destino').scrollIntoView({block:"center",behavior:"smooth"});
-              sw_srv_to_send=false;
+            case 'ALPHA':
+            console.log(app_vue.validar_antecedente_x() )
+            
+            break;
+          
+            default:
+            console.log(app_vue.validar_antecedente_x() )
+              break;
           }
 
-          if( (sw_vacio_alfa_origen && sw_vacio_alfa_destino) && (sw_vacio_charly_origen && sw_vacio_charly_destino) ){
-            document.querySelector('#id_charly_origen').style.borderColor="red";
-            document.querySelector('#id_charly_origen').scrollIntoView({block:"center",behavior:"smooth"});
+        break;
+      
+        default:
+          switch (app_vue.form.model_tiposerie) {
+            case 'CHARLIE':
+            console.log(app_vue.validar_antecedente_x() )
+              
+              break;
+              
+            case 'ALPHA':
+            console.log(app_vue.validar_antecedente_x() )
             
-            document.querySelector('#id_alfa_origen').style.borderColor="red";
-            document.querySelector('#id_alfa_origen').scrollIntoView({block:"center",behavior:"smooth"});
-
-
-            document.querySelector('#id_charly_destino').style.borderColor="red";
-            document.querySelector('#id_charly_destino').scrollIntoView({block:"center",behavior:"smooth"});
-            
-            document.querySelector('#id_alfa_destino').style.borderColor="red";
-            document.querySelector('#id_alfa_destino').scrollIntoView({block:"center",behavior:"smooth"});
-
-            sw_srv_to_send=false;
-          }else{
-            if( (sw_vacio_alfa_origen && sw_vacio_alfa_destino) || (sw_vacio_charly_origen && sw_vacio_charly_destino) ){
-              document.querySelector('#id_alfa_destino').style.borderColor="";
-              document.querySelector('#id_charly_destino').style.borderColor="";
-              document.querySelector('#id_alfa_origen').style.borderColor="";
-              document.querySelector('#id_charly_origen').style.borderColor="";
-              sw_srv_to_send=true;
-            }
+            break;
+          
+            default:
+            console.log(app_vue.validar_antecedente_x() )
+              break;
           }
-
+          break;
       }
 
-      // ************* VALIDAR CODIGO Q
-
-      if(app_vue.form.model_titulo_asunto=="Titulo del asunto"){
-        sw_srv_to_send=false;
-        document.querySelector('#id_select_titulo_asunto').style.borderColor="red";
-        document.querySelector('#id_select_titulo_asunto').scrollIntoView({block:"center",behavior:"smooth"});
-      }else{
-        document.querySelector('#id_select_titulo_asunto').style.borderColor="";
-      }
-      
-      if(app_vue.form.model_asunto=='Asunto'){
-        sw_srv_to_send=false;
-        document.querySelector('#id_select_asunto').style.borderColor="red";
-        document.querySelector('#id_select_asunto').scrollIntoView({block:"center",behavior:"smooth"});
-      }else{
-        document.querySelector('#id_select_asunto').style.borderColor="";
-      }
-
-      if(app_vue.form.model_estado_asunto=="Estado de asunto"){
-        sw_srv_to_send=false;
-        document.querySelector('#id_select_estado_asunto').style.borderColor="red";
-        document.querySelector('#id_select_estado_asunto').scrollIntoView({block:"center",behavior:"smooth"});
-      }else{
-        document.querySelector('#id_select_estado_asunto').style.borderColor="";
-      }
-      
-      
-      // ************* VALIDAR LUGAR
-      // ************* VALIDAR A) 
-      if(app_vue.form.lugar==""){
-        sw_srv_to_send=false;
-        document.querySelector('#id_select_lugar').style.borderColor="red";
-        document.querySelector('#id_select_lugar').scrollIntoView({block:"center",behavior:"smooth"});
-
-        document.querySelector('#id_lugar').style.borderColor="red";
-        document.querySelector('#id_lugar').scrollIntoView({block:"center",behavior:"smooth"});
-      }else{
-        document.querySelector('#id_select_lugar').style.borderColor="";
-        document.querySelector('#id_lugar').style.borderColor="";
-      }
-
-      // ************* VALIDAR B) 
-      if(!valid_time_24.test(app_vue.form.desde_hora)){
-        document.querySelector('#id_hora_desde').style.borderColor="red";
-        document.querySelector('#id_hora_desde').scrollIntoView({block:"center",behavior:"smooth"});
-        sw_srv_to_send=false;
-      }else{
-        document.querySelector('#id_hora_desde').style.borderColor="";
-      }
-
-      // ************* VALIDAR C)
-      if(!valid_time_24.test(app_vue.form.hasta_hora)){
-        document.querySelector('#id_hora_hasta').style.borderColor="red";
-        document.querySelector('#id_hora_hasta').scrollIntoView({block:"center",behavior:"smooth"});
-        sw_srv_to_send=false;
-      }else{
-        document.querySelector('#id_hora_hasta').style.borderColor="";
-      }
-
-
-      // ************* VALIDAR SI CHARLY ORIGEN ES DISTINTO DE VACIO => INSTALACION Y ESTADO DEE SER DISTINOTO DE VACIO
-
-      // ************* VALIDAR CHARLY O ALFA DEBE ESTAR LLENO
 
       if(sw_srv_to_send){
         swal('¿ Guardar en banco NOTAM ?' , {
@@ -1902,137 +1832,6 @@
     }
   )
 </script>
-
-
-
-<script>
-  /*
-  mapboxgl.accessToken = 'pk.eyJ1IjoiY2FlbHQiLCJhIjoiY2tmNGx4MDY3MDBnNTJ5cDh2aHhjOTQyciJ9.juIQGQyyJdwT0cIfnbFA3Q';
-  latitude='1724S'
-  latitude= latitude.substr(0,2) + " " + latitude.substr(2, latitude.length)
-  longitude='06611W'
-  longitude= longitude.substr(0,3) + " " + longitude.substr(3, longitude.length)
-
-  //alert(latitude, longitude)
-  radius=parseInt('5')
-  if (radius ==0 || radius==999) {
-      radius=0;
-  }else{
-      radius=1852*radius;
-  }
-  var vector_posicion = parse_gps(longitude +" "+latitude)
-
-  longitude=vector_posicion[1]
-  latitude=vector_posicion[0]
-
-  
-  var map = new mapboxgl.Map({
-    container: 'map',
-    //style: 'mapbox://styles/mapbox/streets-v11',
-    style: 'mapbox://styles/caelt/ckgljytdo02dj19pnnzqpr7sc',
-    center: [longitude, latitude],
-    zoom: 10,
-    minZoom: 7,
-    maxZoom: 15,
-  });
-
-  map.on('load', function() {
-    map.addSource("source_circle_500", {
-      "type": "geojson",
-      "data": {
-        "type": "FeatureCollection",
-        "features": [{
-          "type": "Feature",
-          "geometry": {
-            "type": "Point",
-            "coordinates": [longitude, latitude]
-          }
-        }]
-      }
-    });
-
-    map.addLayer({
-      "id": "circle500",
-      "type": "circle",
-      "source": "source_circle_500",
-      "paint": {
-        "circle-radius": {
-            stops: [
-              [0, 0],
-              [20, metersToPixelsAtMaxZoom(radius,latitude)]
-            ],
-            base: 2
-        },
-        "circle-color": "#FA8258",
-        "circle-opacity": 0.2
-      }
-    });
-  });
-
-  function metersToPixelsAtMaxZoom (meters, latitude){
-    return (meters / 0.075 / Math.cos(latitude * Math.PI / 180))
-  }
-
-  //LAT': '1725S', 'LONG': '06610W'
-  function parse_gps( input ) {
-
-    if( input.indexOf( 'N' ) == -1 && input.indexOf( 'S' ) == -1 &&
-        input.indexOf( 'W' ) == -1 && input.indexOf( 'E' ) == -1 ) {
-        return input.split(',');
-    }
-
-    var parts = input.split(/[°'"]+/).join(' ').split(/[^\w\S]+/);
-
-    var directions = [];
-    var coords = [];
-    var dd = 0;
-    var pow = 0;
-
-    for( i in parts ) {
-    
-        // we end on a direction
-        if( isNaN( parts[i] ) ) {
-        
-            var _float = parseFloat( parts[i] );
-        
-            var direction = parts[i];
-        
-            if( !isNaN(_float ) ) {
-                dd += ( _float / Math.pow( 60, pow++ ) );
-                direction = parts[i].replace( _float, '' );
-            }
-          
-            direction = direction[0];
-          
-            if( direction == 'S' || direction == 'W' )
-                dd *= -1;
-          
-            directions[ directions.length ] = direction;
-          
-            coords[ coords.length ] = dd;
-            dd = pow = 0;
-          
-        } else {
-        
-            dd += ( parseFloat(parts[i]) / Math.pow( 60, pow++ ) );
-        
-        }
-      
-    }
-
-    if( directions[0] == 'W' || directions[0] == 'E' ) {
-        var tmp = coords[0];
-        coords[0] = coords[1];
-        coords[1] = tmp;
-    }
-
-    return coords;
-  }
-  
-*/
-</script>
-
-
 
 
 
@@ -2193,11 +1992,11 @@
         this.datos_formulario.permanente = app_vue.form.permanente[app_vue.form.permanente.length -1];
 
         this.datos_formulario.horario = app_vue.form.casilla_d;
-        this.datos_formulario.texto_notam = app_vue.form.cuerpo_charly+" \n\n E) "+app_vue.form.cuerpo_alfa;
+        this.datos_formulario.texto_notam = app_vue.form.cuerpo_charly; //+" \n\n E) "+app_vue.form.cuerpo_alfa;
         this.datos_formulario.limite_inferior_casilla = app_vue.form.limite_inferior;
         this.datos_formulario.limite_superior_casilla = app_vue.form.limite_superior;
 
-        this.datos_formulario.firma = 'ESPECIALISTA AIS';
+        this.datos_formulario.firma = app_vue.form.oficial_notam;
         
         this.datos_formulario.dato_charly_amhs = app_vue.obtener_codigo_charly_amhs()
         this.datos_formulario.dato_alfa_amhs = app_vue.obtener_codigo_alfa_amhs()
@@ -2396,8 +2195,8 @@
               },
 
               { principal: { content: ' ' }, 
-                uno: { content: "  (Serie y número/año) ", styles: { halign: 'left', valign: 'middle', cellPadding: 0 ,fontSize:8} }, 
-                tres:  { content: " (Serie y número/año del NOTAM cancelado) ", styles: { halign: 'left', valign: 'middle', cellPadding: 0,fontSize:8 } }
+                uno: { content: "  (Serie y número/año) ", styles: { halign: 'left', valign: 'middle', cellPadding: 0 ,fontSize:8, cellPadding: 0.03} }, 
+                tres:  { content: " (Serie y número/año del NOTAM cancelado) ", styles: { halign: 'left', valign: 'middle', cellPadding: 0.03, fontSize:8 } }
               },
             ],
             margin: { left: 0.5, top: 1.25, bottom: 0, }
@@ -2490,23 +2289,23 @@
             body: [
               //FILA 1: TITULOS DE LAS CASILLAS
               {
-                cell1: { content: " ", styles: { fillColor: color_celda, halign: 'center', valign: 'middle' } },
+                cell1: { content: " ", styles: { fillColor: color_celda, halign: 'center', valign: 'middle', fontSize:8.5 } },
                 //FIR
-                cell2: { content: "FIR", colSpan: 5, styles: { fillColor: color_celda, halign: 'center', valign: 'middle' } },
+                cell2: { content: "FIR", colSpan: 5, styles: { fillColor: color_celda, halign: 'center', valign: 'middle', fontSize:8.5 } },
                 //codigo NOTAM
-                cell7: { content: "Código NOTAM", colSpan: 6, styles: { fillColor: color_celda, halign: 'center', valign: 'middle' } },
+                cell7: { content: "Código NOTAM", colSpan: 6, styles: { fillColor: color_celda, halign: 'center', valign: 'middle', fontSize:8.5 } },
                 //TRANSITO
-                cell13: { content: "Tránsito", colSpan: 3, styles: { fillColor: color_celda, halign: 'center', valign: 'middle' } },
+                cell13: { content: "Tránsito", colSpan: 3, styles: { fillColor: color_celda, halign: 'center', valign: 'middle', fontSize:8.5 } },
                 //OBJETIVO
-                cell16: { content: "Objetivo", colSpan: 4, styles: { fillColor: color_celda, halign: 'center', valign: 'middle' } },
+                cell16: { content: "Objetivo", colSpan: 4, styles: { fillColor: color_celda, halign: 'center', valign: 'middle', fontSize:8.5 } },
                 //ALCANCE
-                cell20: { content: "Alcance", colSpan: 3, styles: { fillColor: color_celda, halign: 'center', valign: 'middle' } },
+                cell20: { content: "Alcance", colSpan: 3, styles: { fillColor: color_celda, halign: 'center', valign: 'middle' , fontSize:8.5 } },
                 //LIMITE INFERIOR
-                cell23: { content: "Límite inferior", colSpan: 4, styles: { fillColor: color_celda, halign: 'center', valign: 'middle' } },
+                cell23: { content: "Límite inferior", colSpan: 4, styles: { fillColor: color_celda, halign: 'center', valign: 'middle', fontSize:8.5 } },
                 //LIMITE SUPERIOR
-                cell27: { content: "Limite superior", colSpan: 4, styles: { fillColor: color_celda, halign: 'center', valign: 'middle' } },
+                cell27: { content: "Limite superior", colSpan: 4, styles: { fillColor: color_celda, halign: 'center', valign: 'middle', fontSize:8.5 } },
                 //COORDENADAS RADIO
-                cell31: { content: "Coordenadas, Radio", colSpan: 15, styles: { fillColor: color_celda, halign: 'center', valign: 'middle' } },
+                cell31: { content: "Coordenadas, Radio", colSpan: 15, styles: { fillColor: color_celda, halign: 'center', valign: 'middle', fontSize:8.5 } },
 
                 cell46: "<<=/",
               },

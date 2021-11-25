@@ -51,7 +51,11 @@ from apps.aro_ais.views import view_api_notam_search_string
 
 ##recuperar datos del servidor de NOTAM pasado
 from apps.aro_ais.views import view_api_redirect_notam
+from apps.aro_ais.views import view_api_redirect_notam_amhs
 
+
+from apps.aro_ais.views import view_mapa_notam_search
+from apps.aro_ais.views import view_estadistica_notam
 
 urlpatterns = [
     path('',view_panel_aroaislp, name="view_panel_aroaislp"),
@@ -128,5 +132,13 @@ urlpatterns = [
     
     
     path('recuperar_notam/', view_api_redirect_notam, name="view_api_redirect_notam"), #
+    
+    path('recuperar_notam_amhs/', view_api_redirect_notam_amhs, name="view_api_redirect_notam_amhs"), #
+    
+    path('mapanotam/', view_mapa_notam_search, name="view_mapa_notam_search"), #
+    path('estadisticanotam/', view_estadistica_notam, name="view_estadistica_notam"), #
+    
+
+    
     
 ]

@@ -35,6 +35,7 @@ app2 = new Vue({
       nombres:[],
       datos:[],
       variable:[],
+      variable2:[],
       valores:[],
       nombres2:[],
       par:[],
@@ -71,13 +72,14 @@ app2 = new Vue({
 
         this.nombres = respuesta.data
         this.variable = [...new Set(this.nombres.map(lugar => lugar.lugar))]
+        this.variable2 = [...new Set(this.nombres.map(nombre => nombre.nombre  ))]
         /* console.log(this.variable) */
 
         for(i=1;i<this.variable.length;i++){
           if(i%2==0){
-            this.par.push({lugar:this.variable[i],f:'f-'+i, h:'h-'+i, h2:'#h-'+i});
+            this.par.push({nombre: this.variable2[i],lugar:this.variable[i],f:'f-'+i, h:'h-'+i, h2:'#h-'+i});
           }else{
-            this.impar.push({lugar:this.variable[i],f:'f-'+i, h:'h-'+i, h2:'#h-'+i});
+            this.impar.push({nombre: this.variable2[i],lugar:this.variable[i],f:'f-'+i, h:'h-'+i, h2:'#h-'+i});
           }
         }
         //console.log(this.valores);

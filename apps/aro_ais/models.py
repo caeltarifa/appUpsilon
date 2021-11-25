@@ -201,7 +201,7 @@ class Significado_8400(models.Model):
     significado_pib = models.CharField(max_length=400, blank=False, null=False)
 
     def __str__(self):
-        return '{}/{}'.format(self.id_significado, self.abreviatura, self.significado_completo, self.significado_pib)
+        return '{}/{}'.format( self.significado_completo,self.significado_pib )
 
 
 class Historico_pib(models.Model):
@@ -372,10 +372,10 @@ class Notam_trafico_charly_new(models.Model):
     perm = models.BooleanField(default=False)
     est = models.BooleanField(default=False)
 
-    asunto = models.CharField(max_length=100)
-    estado_asunto = models.CharField(max_length=500)
+    asunto = models.CharField(max_length=200)
+    estado_asunto = models.CharField(max_length=1000)
 
-    pib_publicar = models.CharField(max_length=1000)
+    pib_publicar = models.CharField(max_length=1500)
 
     antecedente = models.CharField(max_length=2000, default='')
 
@@ -453,7 +453,7 @@ class Notam_trafico_alfa_new(models.Model):
     perm = models.BooleanField(default=False)
     est = models.BooleanField(default=False)
 
-    asunto = models.CharField(max_length=100)
+    asunto = models.CharField(max_length=200)
     estado_asunto = models.CharField(max_length=1000)
 
     antecedente = models.CharField(max_length=2000, default='')

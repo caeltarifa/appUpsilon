@@ -23,6 +23,7 @@ from apps.plan_vuelo.models import Notam_trafico_alfa_cancel
 
 
 
+
 from django.contrib.auth.models import Group
 
 # from apps.plan_vuelo.forms import Vuelo_Aprobado_form, PostForm
@@ -517,6 +518,7 @@ def serializar_pib(pib, tipo):
 
     return {
         'tipo': tipo,
+        'nombre':pib.nombre,
         'lugar': pib.aplica_a[2:].strip(),
         'correlativo': "(" + pib.correlativo + ")",
         'desde': desde,
@@ -558,9 +560,9 @@ from itertools import chain
 from operator import attrgetter
 def view_pib_tiempo_real(request):
     # lista de pib en notams nuevos
-    lista_pib = Pib_tiempo_real.objects.raw(" select 	id_notam_pib,	correlativo,	desde, 	hasta, 	tabla_pib.est, 	tabla_pib.perm, 	espaniol_decodificado,	hora_actualizacion, 	aplica_a,     tnew.asunto     from (	select  ptr.id_notam_pib, 		bnc.id_mensaje_c_n as correlativo, 		bnc.valido_desde as desde, 		bnc.valido_hasta as hasta, 		bnc.est, 		bnc.perm, 		bnc.pib_publicar as espaniol_decodificado, 		ptr.hora_actualizacion 	from 		plan_vuelo_pib_tiempo_real as ptr 	inner join 		aro_ais_notam_trafico_charly_new as bnc 	on 		ptr.id_notam_pib like %(parentesis)s || bnc.id_mensaje_c_n || %(comodin)s and 		ptr.id_notam_pib not like %(notam)s 	order by ptr.hora_actualizacion desc	) as tabla_pib inner join aro_ais_notam_trafico_charly_new as tnew on 	tnew.idnotam like %(parentesis)s || tabla_pib.correlativo || %(comodin)s AND tnew.es_pib=true order by hora_actualizacion desc", { 'notam': '%NOTAMC%', 'parentesis': '(', 'comodin': '%'})
+    lista_pib = Pib_tiempo_real.objects.raw(" select airport.nombre,	id_notam_pib,	correlativo,	desde, 	hasta, 	tabla_pib.est, 	tabla_pib.perm, 	espaniol_decodificado,	hora_actualizacion, 	aplica_a,     tnew.asunto     from (	select  ptr.id_notam_pib, 		bnc.id_mensaje_c_n as correlativo, 		bnc.valido_desde as desde, 		bnc.valido_hasta as hasta, 		bnc.est, 		bnc.perm, 		bnc.pib_publicar as espaniol_decodificado, 		ptr.hora_actualizacion 	from 		plan_vuelo_pib_tiempo_real as ptr 	inner join 		aro_ais_notam_trafico_charly_new as bnc 	on 		ptr.id_notam_pib like %(parentesis)s || bnc.id_mensaje_c_n || %(comodin)s and 		ptr.id_notam_pib not like %(notam)s 	order by ptr.hora_actualizacion desc	) as tabla_pib inner join aro_ais_notam_trafico_charly_new as tnew on 	tnew.idnotam like %(parentesis)s || tabla_pib.correlativo || %(comodin)s AND tnew.es_pib=true inner join plan_vuelo_aeropuerto as airport on %(nombre_lugar)s || airport.icao like aplica_a order by hora_actualizacion desc", { 'notam': '%NOTAMC%', 'parentesis': '(', 'comodin': '%', 'nombre_lugar' : 'A) '})
     # lista de pib en notams replace
-    lista_pib2 = Pib_tiempo_real.objects.raw("SELECT   	id_notam_pib, 	correlativo, 	desde,  	hasta,  	tabla_pib.est,  	tabla_pib.perm,  	espaniol_decodificado, 	hora_actualizacion,  	aplica_a,     trepla.asunto       FROM  ( 	SELECT   		ptr.id_notam_pib,  		bnc.id_mensaje_c_r as correlativo,  		bnc.valido_desde as desde,  		bnc.valido_hasta as hasta,  		bnc.est,  		bnc.perm,  		bnc.pib_publicar as espaniol_decodificado,  		ptr.hora_actualizacion  	FROM plan_vuelo_pib_tiempo_real AS ptr 	INNER JOIN  		aro_ais_notam_trafico_charly_repla AS bnc 	ON  		ptr.id_notam_pib like %(parentesis)s || bnc.id_mensaje_c_r || %(comodin)s AND  		ptr.id_notam_pib not like %(notam)s 	ORDER BY  		ptr.hora_actualizacion desc  ) AS tabla_pib INNER JOIN  	aro_ais_notam_trafico_charly_repla AS trepla ON  	trepla.idnotam like %(parentesis)s || tabla_pib.correlativo || %(comodin)s  AND trepla.es_pib=true order by hora_actualizacion desc", { 'notam': '%NOTAMC%', 'parentesis': '(', 'comodin': '%'})
+    lista_pib2 = Pib_tiempo_real.objects.raw("SELECT  airport.nombre, 	id_notam_pib, 	correlativo, 	desde,  	hasta,  	tabla_pib.est,  	tabla_pib.perm,  	espaniol_decodificado, 	hora_actualizacion,  	aplica_a,     trepla.asunto       FROM  ( 	SELECT   		ptr.id_notam_pib,  		bnc.id_mensaje_c_r as correlativo,  		bnc.valido_desde as desde,  		bnc.valido_hasta as hasta,  		bnc.est,  		bnc.perm,  		bnc.pib_publicar as espaniol_decodificado,  		ptr.hora_actualizacion  	FROM plan_vuelo_pib_tiempo_real AS ptr 	INNER JOIN  		aro_ais_notam_trafico_charly_repla AS bnc 	ON  		ptr.id_notam_pib like %(parentesis)s || bnc.id_mensaje_c_r || %(comodin)s AND  		ptr.id_notam_pib not like %(notam)s 	ORDER BY  		ptr.hora_actualizacion desc  ) AS tabla_pib INNER JOIN  	aro_ais_notam_trafico_charly_repla AS trepla ON  	trepla.idnotam like %(parentesis)s || tabla_pib.correlativo || %(comodin)s  AND trepla.es_pib=true  inner join plan_vuelo_aeropuerto as airport on %(nombre_lugar)s || airport.icao like aplica_a  order by hora_actualizacion desc", { 'notam': '%NOTAMC%', 'parentesis': '(', 'comodin': '%', 'nombre_lugar' : 'A) '})
 
     hora_actualizado = ""
     sw=True
@@ -1047,7 +1049,5 @@ def serializarNotam(notam):
         'mensaje' : notam.mensaje,
         'ingresado' : str(notam.ingresado),
     }
-
-
 
 

@@ -75,3 +75,11 @@ urlpatterns += [
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+#CHANGIN THE DJANGO ADMINISTRATION
+
+admin.site.site_header = "IFIS NUKLEAR - AASANA"
+admin.site.site_title = "IFIS NUKLEAR AASANA"
+admin.site.index_title = "Sitio de administración de datos"
+

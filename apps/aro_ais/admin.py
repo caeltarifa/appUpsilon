@@ -34,9 +34,9 @@ from apps.plan_vuelo.models import Notam_trafico_resumen
 from apps.plan_vuelo.models import Pib_tiempo_real
 
 
-admin.site.register(Pib_trafico)
-admin.site.register(Pib_extenso)
-admin.site.register(Pib_registro_documento)
+#admin.site.register(Pib_trafico)
+#admin.site.register(Pib_extenso)
+#admin.site.register(Pib_registro_documento)
 admin.site.register(Letra_asunto)
 admin.site.register(Asunto)
 admin.site.register(Estado_asunto)
@@ -49,7 +49,7 @@ admin.site.register(Direccion_amhs)
 
 
 ## BANCO DE DATOS NOTAM MECANICO
-admin.site.register(Banco_notam_charly)
+#admin.site.register(Banco_notam_charly)
 
 admin.site.register( Banco_charly_repla)
 admin.site.register( Banco_charly_cancel)

@@ -160,7 +160,7 @@
                                                                     <tbody>
                                                                         <tr v-for="nombre of nombres"
                                                                             v-if="imp.lugar === nombre.lugar">
-                                                                            <td style="width: 20%;"> [[imp.lugar]] </td>
+                                                                            <td style="width: 20%;"> <strong>[[imp.lugar]]</strong> <br> [[imp.nombre]] </td>
                                                                             <td scope="row" style="width: 20%;">
                                                                                 [[nombre.asunto]] </td>
                                                                             <td style="width: 50%;"> 
@@ -212,7 +212,7 @@
                                                                     <tbody>
                                                                         <tr v-for="nombre of nombres"
                                                                             v-if="pa.lugar === nombre.lugar">
-                                                                            <td style="width: 20%;">[[pa.lugar]]</td>
+                                                                            <td style="width: 20%;"> <strong>[[pa.lugar]]</strong> <br> [[pa.nombre]]</td>
                                                                             <td scope="row" style="width: 20%;">
                                                                                 [[nombre.asunto]] </td>
                                                                             <td style="width: 50%;"> 

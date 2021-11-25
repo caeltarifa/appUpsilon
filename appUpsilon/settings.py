@@ -33,6 +33,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['212.115.109.148','upsilon.aasana.ga', 'upsilon.aasana.bo']
 
+GEOIP_PATH=os.path.join(BASE_DIR, 'geoip2')
 
 # Application definition
 
@@ -48,7 +49,7 @@ INSTALLED_APPS = [
     'apps.trabajadoresATS',
     'apps.aro_ais',
     'chartkick',
-    #'templatetags'
+    'django_extensions'
 ]
 
 MIDDLEWARE = [

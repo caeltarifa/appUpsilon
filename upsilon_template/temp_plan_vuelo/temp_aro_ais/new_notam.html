@@ -115,11 +115,11 @@
                                 <span class="material-icons">
                                   post_add
                                 </span>
-                                NUEVO NOTAM
+                                Generación guiada de NOTAM
                               </h2>
                               <span class="section-divider"></span>
                               <p class="section-description">
-                                  Generacion guiada de notam
+                                  <!-- Subtitulo -- Generacion guiada de notam -->
                               </p>
                               
                               
@@ -313,14 +313,14 @@
                                             <input id="id_lugar" class="input form-control" placeholder="Lugar" type="text" v-model="form.lugar" />
                                             
                                             &nbsp;&nbsp;B) &nbsp;&nbsp;
-                                            <input class="input form-control" type="date" v-model="form.desde_fecha"/>
+                                            <input id="id_fecha_desde" class="input form-control" type="date" v-model="form.desde_fecha"/>
                                             <input id="id_hora_desde" class="input form-control" placeholder="0000" type="text" v-model="form.desde_hora" maxlength="4" @keyup="isNumber($event)" />
 
                                             &nbsp;&nbsp;C) &nbsp;&nbsp;
-                                            <input v-if="form.model_tiponotam != 'NOTAMC' " class="input form-control" type="date" v-model="form.hasta_fecha"/>
+                                            <input id="id_fecha_hasta" v-if="form.model_tiponotam != 'NOTAMC' " class="input form-control" type="date" v-model="form.hasta_fecha"/>
                                             <input id="id_hora_hasta" v-if="form.model_tiponotam != 'NOTAMC' " class="input form-control" placeholder="0000" type="text" v-model="form.hasta_hora" maxlength="4" @keyup="isNumber($event)"/>
 
-                                            <div class="field">
+                                            <div class="field"  v-if="form.model_tiponotam != 'NOTAMC' ">
                                               <div class="control" v-if="form.model_tiponotam != 'NOTAMC' " >
                                                   <label>
                                                     &nbsp;
@@ -350,14 +350,14 @@
 
                                           <div class="input-group" v-if="form.correlativo_charly">
                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                            <textarea class="form-control" style="width: 80%;" rows="2" placeholder="Cuerpo Charlie" type="text" v-model="form.cuerpo_charly" @input="form.cuerpo_charly = $event.target.value.toUpperCase()" ></textarea>
+                                            <textarea id="id_cuerpo_charly" class="form-control" style="width: 80%;" rows="2" placeholder="Cuerpo Charlie" type="text" v-model="form.cuerpo_charly" @input="form.cuerpo_charly = $event.target.value.toUpperCase()" ></textarea>
                                           </div>
 
                                           <br>
 
                                           <div class="input-group" v-if="form.correlativo_alfa">
                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                            <textarea class="form-control" style="width: 80%;" rows="2" placeholder="Cuerpo Alpha" type="text" v-model="form.cuerpo_alfa" @input="form.cuerpo_alfa = $event.target.value.toUpperCase()" ></textarea>
+                                            <textarea id="id_cuerpo_alfa" class="form-control" style="width: 80%;" rows="2" placeholder="Cuerpo Alpha" type="text" v-model="form.cuerpo_alfa" @input="form.cuerpo_alfa = $event.target.value.toUpperCase()" ></textarea>
                                           </div>
                                           <br>
 
@@ -385,12 +385,12 @@
                                          
                                           <div class="input-group">
                                             &nbsp;&nbsp;Instalación &nbsp;&nbsp;
-                                            <input class="input form-control" placeholder="Asunto" type="text" v-model="form.pib_asunto" @input="form.pib_asunto = $event.target.value.toUpperCase()" />
+                                            <input id="id_pib_asunto" class="input form-control" placeholder="Instalación" type="text" v-model="form.pib_asunto" @input="form.pib_asunto = $event.target.value.toUpperCase()" />
                                           </div>
 
                                           <div class="input-group">
                                             &nbsp;&nbsp;Estado&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                            <input class="input form-control" placeholder="Estado del asunto" type="text" v-model="form.pib_estado_asunto" @input="form.pib_estado_asunto = $event.target.value.toUpperCase()" />
+                                            <input id="id_pib_estado_asunto" class="input form-control" placeholder="Estado del asunto" type="text" v-model="form.pib_estado_asunto" @input="form.pib_estado_asunto = $event.target.value.toUpperCase()" />
                                           </div>
 
                                           <br>
@@ -537,7 +537,7 @@
   <!-- [[form.fecha_deposito.substring(8,)]][[form.hora_deposito]] [[form.remitente]] <br> -->
   ([[form.correlativo_alfa]] [[form.model_tiponotam]] [[form.model_destino_notam_alfa]] <br>
   Q) SLLF/Q[[form.model_asunto]][[form.model_estado_asunto]]/[[form.model_tipo]]/[[form.model_nbo]]/[[form.model_alcance]]/[[form.nivel_inf]]/[[form.nivel_sup]]/[[form.model_coordenadas.split(" ")[2] ]][[form.radio]] <br>
-  A) [[form.lugar]] B) [[form.desde_fecha.substring(2,).replace("-","").replace("-","")]][[form.desde_hora]] C) [[form.hasta_fecha.substring(2,).replace("-","").replace("-","")]][[form.hasta_hora]] [[ form.estimado[form.estimado.length -1] ]] <br>
+  A) [[form.lugar]] B) [[form.desde_fecha.substring(2,).replace("-","").replace("-","")]][[form.desde_hora]] C) [[form.hasta_fecha.substring(2,).replace("-","").replace("-","")]][[form.hasta_hora]] [[ form.estimado[form.estimado.length -1] ]]   [[ form.permanente[form.permanente.length -1] ]] <br>
   <span v-if="form.casilla_d"> D) [[form.casilla_d]] <br> </span>
   E) [[form.cuerpo_alfa]]
   <span v-if="form.limite_inferior"> <br> F) [[form.limite_inferior]] </span>
@@ -569,24 +569,24 @@
                                   <div style="width: 100%;">
                                     <form class="form-group" id="data_srv_id" action="{% url 'view_post_crear_notam' %}" method="POST"  enctype="multipart/form-data">
                                       {% csrf_token %}
-                                       <!-- tipo  > -->  <input style="display:none;" type="text" name="tipo" v-model="data_srv.tipo"><!--    <br>  -->
-                                       <!-- notam_header  > -->  <input style="display:none;" type="text" name="notam_header" v-model="data_srv.notam_header"><!--    <br>  -->
-                                       <!-- notam_destino  > -->  <input style="display:none;" type="text" name="notam_destino" v-model="data_srv.destino_notam"><!--    <br>  -->
-                                       <!-- amhs1  > -->  <input style="display:none;" type="text" name="amhs1" v-model="data_srv.amhs1"><!--    <br>  -->
-                                       <!-- amhs2  > -->  <input style="display:none;" type="text" name="amhs2" v-model="data_srv.amhs2"><!--     <br>  -->
-                                       <!-- resumen  > -->  <input style="display:none;" type="text" name="resumen" v-model="data_srv.resumen"><!--    <br>  -->
-                                       <!-- aplica_a  > -->  <input style="display:none;" type="text" name="aplica_a" v-model="data_srv.aplica_a"><!--    <br>  -->
-                                       <!-- valido_desde   > --> <input style="display:none;" type="text" name="valido_desde" v-model="data_srv.valido_desde"><!--    <br>  -->
-                                       <!-- valido_hasta   > --> <input style="display:none;" type="text" name="valido_hasta" v-model="data_srv.valido_hasta"><!--    <br>  -->
-                                       <!-- mensaje  > -->  <input style="display:none;" type="text" name="mensaje" v-model="data_srv.mensaje"><!--    <br>  -->
-                                       <!-- mensaje_charly  > -->  <input style="display:none;" type="text" name="mensaje_charly" v-model="data_srv.mensaje_charly"><!--    <br>  -->
-                                       <!-- mensaje_alfa  > -->  <input style="display:none;" type="text" name="mensaje_alfa" v-model="data_srv.mensaje_alfa"><!--    <br>  -->
-                                       <!-- asunto  > -->  <input style="display:none;" type="text" name="asunto" v-model="data_srv.asunto"><!--    <br>  -->
-                                       <!-- estado_asunto  > -->  <input style="display:none;" type="text" name="estado_asunto" v-model="data_srv.estado_asunto"><!--    <br>  -->
-                                       <!-- pib_pulicar  > -->  <input style="display:none;" type="text" name="pib_publicar" v-model="data_srv.pib_publicar"><!--    <br>  -->
-                                       <!-- estimado  > -->  <input style="display:none;" type="text" name="estimado" v-model="data_srv.estimado_srv"><!--    <br>  -->
-                                       <!-- permanente  > -->  <input style="display:none;" type="text" name="permanente" v-model="data_srv.permanente_srv"><!--    <br>  -->
-                                       <!-- antecedente  > -->  <input style="display:none;" type="text" name="antecedente" v-model="data_srv.antecedente_notam"><!--    <br>  -->
+                                        <!-- tipo  > -->   <input style="display: none;" type="text" name="tipo" v-model="data_srv.tipo">  <!--   <br>   -->
+                                        <!-- notam_header  > -->   <input style="display: none;" type="text" name="notam_header" v-model="data_srv.notam_header">  <!--   <br>   -->
+                                        <!-- notam_destino  > -->   <input style="display: none;" type="text" name="notam_destino" v-model="data_srv.destino_notam">  <!--   <br>   -->
+                                        <!-- amhs1  > -->   <input style="display: none;" type="text" name="amhs1" v-model="data_srv.amhs1">  <!--   <br>   -->
+                                        <!-- amhs2  > -->   <input style="display: none;" type="text" name="amhs2" v-model="data_srv.amhs2">   <!--   <br>   -->
+                                        <!-- resumen  > -->   <input style="display: none;" type="text" name="resumen" v-model="data_srv.resumen">  <!--   <br>   -->
+                                        <!-- aplica_a  > -->   <input style="display: none;" type="text" name="aplica_a" v-model="data_srv.aplica_a">  <!--   <br>   -->
+                                        <!-- valido_desde   > -->  <input style="display: none;" type="text" name="valido_desde" v-model="data_srv.valido_desde">  <!--   <br>   -->
+                                        <!-- valido_hasta   > -->  <input style="display: none;" type="text" name="valido_hasta" v-model="data_srv.valido_hasta">  <!--   <br>   -->
+                                        <!-- mensaje  > -->   <input style="display: none;" type="text" name="mensaje" v-model="data_srv.mensaje">  <!--   <br>   -->
+                                        <!-- mensaje_charly  > -->   <input style="display: none;" type="text" name="mensaje_charly" v-model="data_srv.mensaje_charly">  <!--   <br>   -->
+                                        <!-- mensaje_alfa  > -->   <input style="display: none;" type="text" name="mensaje_alfa" v-model="data_srv.mensaje_alfa">  <!--   <br>   -->
+                                        <!-- asunto  > -->   <input style="display: none;" type="text" name="asunto" v-model="data_srv.asunto">  <!--   <br>   -->
+                                        <!-- estado_asunto  > -->   <input style="display: none;" type="text" name="estado_asunto" v-model="data_srv.estado_asunto">  <!--   <br>   -->
+                                        <!-- pib_pulicar  > -->   <input style="display: none;" type="text" name="pib_publicar" v-model="data_srv.pib_publicar">  <!--   <br>   -->
+                                        <!-- estimado  > -->   <input style="display: none;" type="text" name="estimado" v-model="data_srv.estimado_srv">  <!--   <br>   -->
+                                        <!-- permanente  > -->   <input style="display: none;" type="text" name="permanente" v-model="data_srv.permanente_srv">  <!--   <br>   -->
+                                        <!-- antecedente  > -->   <input style="display: none;" type="text" name="antecedente" v-model="data_srv.antecedente_notam">  <!--   <br>   -->
                                       
                                       <input class="btn btn-outline-dark" type="file" name="formulario_oaci" id="id_formulario_oaci" required style="height: 30%; font-size: 15px; width: 80%;">
 
@@ -1231,6 +1231,11 @@
         if (this.form.permanente.length==2) {
           this.form.hasta_hora="";
           this.form.hasta_fecha="";
+          document.querySelector('#id_fecha_hasta').disabled=true;
+          document.querySelector('#id_hora_hasta').disabled=true;
+        }else{
+          document.querySelector('#id_fecha_hasta').disabled=false;
+          document.querySelector('#id_hora_hasta').disabled=false;
         }
       },
       // ************************************** //
@@ -1241,8 +1246,10 @@
         var charCode = (evt.which) ? evt.which : evt.keyCode;
         if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) {
           evt.preventDefault();
+          // SI ES LETRA -> HACEMOS ALGO
         } else {
           id='#'+String(evt.target.id);
+          
 
           switch (String(evt.target.id)) {
             case 'id_nivel_inf':
@@ -1544,7 +1551,7 @@
         vector_descripcion_fraseologia =this.buscar_descripcion_estado_asunto(cod_estado).split('/');
 
         this.form.pib_estado_asunto= vector_descripcion_fraseologia[0];
-        this.form.cuerpo_charly= vector_descripcion_fraseologia[1]+ " "+ vector_descripcion_fraseologia[1];
+        this.form.cuerpo_charly= this.buscar_descripcion_dentro_asunto(this.form.model_asunto).split('/')[1]+ " "+ vector_descripcion_fraseologia[1];
       },
       buscar_descripcion_estado_asunto(cod_estado){
 
@@ -1604,7 +1611,6 @@
         if (this.form.limite_inferior) {
           this.data_srv.mensaje_charly = this.data_srv.mensaje_charly +"F) "+this.form.limite_inferior +"G) "+this.form.limite_superior;
           this.data_srv.mensaje_alfa = this.data_srv.mensaje_alfa +"F) "+this.form.limite_inferior +"G) "+this.form.limite_superior;
-          swalfa
         }
         if (!sw) {
           this.data_srv.mensaje_charly="E) "+this.form.cuerpo_charly;
@@ -1753,7 +1759,7 @@
           sw_vacio_alfa_destino=false;
 
           // ************* VALIDAR ALFA DESTINO
-          if (valid_alfa_format.test(app_vue.form.model_destino_notam_charly) ) {
+          if (valid_alfa_format.test(app_vue.form.model_destino_notam_alfa) ) {
             sw_formato_alfa_destino=true;
             document.querySelector('#id_alfa_destino').style.borderColor="";
           }else{
@@ -1784,7 +1790,7 @@
               document.querySelector('#id_alfa_destino').style.borderColor="";
             }
           }
-
+/*
           if (sw_vacio_charly_destino && sw_vacio_alfa_destino) {
               document.querySelector('#id_charly_destino').style.borderColor="red";
               document.querySelector('#id_charly_destino').scrollIntoView({block:"center",behavior:"smooth"});
@@ -1793,7 +1799,7 @@
               document.querySelector('#id_alfa_destino').scrollIntoView({block:"center",behavior:"smooth"});
               sw_srv_to_send=false;
           }
-
+*/
           if( (sw_vacio_alfa_origen && sw_vacio_alfa_destino) && (sw_vacio_charly_origen && sw_vacio_charly_destino) ){
             document.querySelector('#id_charly_origen').style.borderColor="red";
             document.querySelector('#id_charly_origen').scrollIntoView({block:"center",behavior:"smooth"});
@@ -1871,17 +1877,61 @@
         document.querySelector('#id_hora_desde').style.borderColor="";
       }
 
-      // ************* VALIDAR C)
-      if(!valid_time_24.test(app_vue.form.hasta_hora)){
-        document.querySelector('#id_hora_hasta').style.borderColor="red";
-        document.querySelector('#id_hora_hasta').scrollIntoView({block:"center",behavior:"smooth"});
-        sw_srv_to_send=false;
+      // ************* VALIDAR C
+      if(app_vue.form.permanente.length<2){
+        if(!valid_time_24.test(app_vue.form.hasta_hora)){
+          document.querySelector('#id_hora_hasta').style.borderColor="red";
+          document.querySelector('#id_hora_hasta').scrollIntoView({block:"center",behavior:"smooth"});
+          sw_srv_to_send=false;
+        }else{
+          document.querySelector('#id_hora_hasta').style.borderColor="";
+        }
       }else{
         document.querySelector('#id_hora_hasta').style.borderColor="";
       }
 
+      // ************* VALIDANDO CUERPO DE MENSAJE CHARLY 
+      if (app_vue.form.cuerpo_charly.length == 0 && app_vue.form.correlativo_charly.length >0  ) {
+        document.querySelector('#id_cuerpo_charly').style.borderColor="red";
+        document.querySelector('#id_cuerpo_charly').scrollIntoView({block:"center",behavior:"smooth"});
+        sw_srv_to_send=false;
+      }else{
+        try {
+          document.querySelector('#id_cuerpo_charly').style.borderColor="";
+        } catch (error) {
+          console.error('sin id_cuerpo_charly');
+        }
+      }
+      // ************* VALIDANDO CUERPO DE MENSAJE ALFA
+      if ( app_vue.form.correlativo_alfa.length >0 && app_vue.form.cuerpo_alfa.length == 0) {
+        document.querySelector('#id_cuerpo_alfa').style.borderColor="red";
+        document.querySelector('#id_cuerpo_alfa').scrollIntoView({block:"center",behavior:"smooth"});
+        sw_srv_to_send=false;
+      }else{
+        try {
+          document.querySelector('#id_cuerpo_alfa').style.borderColor="";
+        } catch (error) {
+          console.error('sin id_cuerpo_alfa');
+        }
+      }
+
 
       // ************* VALIDAR SI CHARLY ORIGEN ES DISTINTO DE VACIO => INSTALACION Y ESTADO DEE SER DISTINOTO DE VACIO
+      if (app_vue.form.pib_asunto.length == 0 && app_vue.form.correlativo_charly.length >0  ) {
+        document.querySelector('#id_pib_asunto').style.borderColor="red";
+        document.querySelector('#id_pib_asunto').scrollIntoView({block:"center",behavior:"smooth"});
+        sw_srv_to_send=false;
+      }else{
+        document.querySelector('#id_pib_asunto').style.borderColor="";
+      }
+
+      if (app_vue.form.pib_estado_asunto.length == 0 && app_vue.form.correlativo_charly.length >0  ) {
+        document.querySelector('#id_pib_estado_asunto').style.borderColor="red";
+        document.querySelector('#id_pib_estado_asunto').scrollIntoView({block:"center",behavior:"smooth"});
+        sw_srv_to_send=false;
+      }else{
+        document.querySelector('#id_pib_estado_asunto').style.borderColor="";
+      }
 
       // ************* VALIDAR CHARLY O ALFA DEBE ESTAR LLENO
 
@@ -2193,7 +2243,7 @@
         this.datos_formulario.permanente = app_vue.form.permanente[app_vue.form.permanente.length -1];
 
         this.datos_formulario.horario = app_vue.form.casilla_d;
-        this.datos_formulario.texto_notam = app_vue.form.cuerpo_charly+" \n\n E) "+app_vue.form.cuerpo_alfa;
+        this.datos_formulario.texto_notam = app_vue.form.cuerpo_charly; //+" \n\n E) "+app_vue.form.cuerpo_alfa;
         this.datos_formulario.limite_inferior_casilla = app_vue.form.limite_inferior;
         this.datos_formulario.limite_superior_casilla = app_vue.form.limite_superior;
 

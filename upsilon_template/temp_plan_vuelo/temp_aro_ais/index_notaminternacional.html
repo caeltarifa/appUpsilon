@@ -292,19 +292,17 @@
 
 
     <div class="buttons">
-        <!-- <div class="butFrame bounce">
-            <a href="{% url 'view_codigos_abreviaturas' %}">
-                <img src="http://www.neodigital.com.au/thumbnailsmall/Button6.jpg" />
-                <div class="butHeading">HISTORIAL PIB</div>
-            </a>
-        </div> -->
-
-       
-
         <div class="butFrame bounce">
             <a href="{% url 'view_codigos_abreviaturas' %}">
                 <img src="{% static 'icons-panel/book.png' %}" />
                 <div class="butHeading">CODIGOS Y ABREVIATURAS</div>
+            </a>
+        </div>
+
+        <div class="butFrame bounce">
+            <a href="{% url 'view_mapa_notam_search' %}">
+                <img src="{% static 'icons-panel/search_document.png' %}" />
+                <div class="butHeading">BUSCADOR NOTAM</div>
             </a>
         </div>
     </div>
@@ -318,6 +316,12 @@
             </a>
         </div>
 
+        <div class="butFrame bounce">
+            <a href="{% url 'view_estadistica_notam' %}">
+                <img src="{% static 'icons-panel/estadisticas.png' %}" />
+                <div class="butHeading">ESTADISTICA</div>
+            </a>
+        </div>
         
     </div>
 

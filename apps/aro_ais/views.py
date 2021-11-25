@@ -31,6 +31,9 @@ from apps.plan_vuelo.models import Notam_trafico_alfa_repla as Amhs_alfa_repla
 from apps.plan_vuelo.models import Notam_trafico_alfa_cancel as Amhs_alfa_cancel
 from apps.plan_vuelo.models import Notam_trafico_alfa_new as Amhs_alfa_new
 
+
+
+from appUpsilon.views import estadisticas_charly_new,estadisticas_alfa_new, estadisticas_charly_repla, estadisticas_alfa_repla
 # Create your views here.
 
 
@@ -46,6 +49,7 @@ from apps.aro_ais.models import  Letra_asunto,Asunto,Estado_asunto
 
 from apps.trabajadoresATS.models import TrabajadoresATS, CuentasATS
 
+from django.contrib.auth.decorators import login_required
 
 #LIBRARY FOR CAST "['A','B','C']" TO  ['A','B','C'] (list element)
 import ast
@@ -105,7 +109,7 @@ def view_new_notam(request):
     if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='AISNACIONAL').exists():
         lista_letras = Letra_asunto.objects.all().order_by('id_letra')
 
-        lista_georeferencias = Aeropuerto.objects.raw( "(select aeropuerto, icao, fuente, geo_arp AS georef   from plan_vuelo_aeropuerto  inner join (VALUES ('ARP')) AS t (fuente)  on geo_arp not like %(nil)s and aeropuerto <> 39)  union  (select aeropuerto, icao, fuente, geo_vor AS georef  from plan_vuelo_aeropuerto  inner join (VALUES ('VOR')) AS t (fuente)  on geo_vor not like %(nil)s)   union  (select aeropuerto, icao, fuente, geo_ils AS georef  from plan_vuelo_aeropuerto  inner join (VALUES ('ILS')) AS t (fuente)  on geo_ils not like %(nil)s)   union  (select aeropuerto, icao, fuente, geo_ils_gp_dme AS georef  from plan_vuelo_aeropuerto  inner join (VALUES ('ILS_GP_DME')) AS t (fuente)  on geo_ils_gp_dme not like %(nil)s)  union  (select aeropuerto, icao, fuente, geo_l AS georef  from plan_vuelo_aeropuerto  inner join (VALUES ('L')) AS t (fuente)  on geo_l not like %(nil)s)   union  (select aeropuerto, icao, fuente, geo_gpe_dme AS georef  from plan_vuelo_aeropuerto  inner join (VALUES ('GPE_DME')) AS t (fuente)  on geo_gpe_dme not like %(nil)s)   union  (select aeropuerto, icao, fuente, geo_marcador AS georef  from plan_vuelo_aeropuerto  inner join (VALUES ('MM')) AS t (fuente)  on geo_marcador not like %(nil)s)   union  (select aeropuerto, icao, fuente, geo_ndb AS georef  from plan_vuelo_aeropuerto  inner join (VALUES ('NDB')) AS t (fuente)  on geo_ndb not like %(nil)s)   union  (select aeropuerto, icao, iata AS fuente, geo_arp AS georef  from plan_vuelo_aeropuerto  where iata like 'SLLF')  order by icao asc, fuente asc" , { 'nil' : "NIL"} )
+        lista_georeferencias = Aeropuerto.objects.raw( "(select aeropuerto, icao, fuente, geo_arp AS georef   from plan_vuelo_aeropuerto  inner join (VALUES ('ARP')) AS t (fuente)  on geo_arp not like %(nil)s and aeropuerto <> 39)  union  (select aeropuerto, icao, fuente, geo_vor AS georef  from plan_vuelo_aeropuerto  inner join (VALUES ('VOR')) AS t (fuente)  on geo_vor not like %(nil)s)   union  (select aeropuerto, icao, fuente, geo_ils AS georef  from plan_vuelo_aeropuerto  inner join (VALUES ('ILS')) AS t (fuente)  on geo_ils not like %(nil)s)   union  (select aeropuerto, icao, fuente, geo_ils_gp_dme AS georef  from plan_vuelo_aeropuerto  inner join (VALUES ('ILS_GP_DME')) AS t (fuente)  on geo_ils_gp_dme not like %(nil)s)  union  (select aeropuerto, icao, fuente, geo_l AS georef  from plan_vuelo_aeropuerto  inner join (VALUES ('L')) AS t (fuente)  on geo_l not like %(nil)s)   union  (select aeropuerto, icao, fuente, ils_llz AS georef from plan_vuelo_aeropuerto  inner join (VALUES ('ILS_LLZ')) AS t (fuente)  on ils_llz not like %(nil)s) union (select aeropuerto, icao, fuente, ils_loc AS georef from plan_vuelo_aeropuerto  inner join (VALUES ('ILS_LOC')) AS t (fuente)  on ils_loc not like %(nil)s) union (select aeropuerto, icao, fuente, dvor_dme AS georef from plan_vuelo_aeropuerto  inner join (VALUES ('DVOR_DME')) AS t (fuente)  on dvor_dme  not like %(nil)s)   union  (select aeropuerto, icao, fuente, geo_mm AS georef  from plan_vuelo_aeropuerto  inner join (VALUES ('MM')) AS t (fuente)  on geo_mm not like %(nil)s)   union  (select aeropuerto, icao, fuente, geo_ndb AS georef  from plan_vuelo_aeropuerto  inner join (VALUES ('NDB')) AS t (fuente)  on geo_ndb not like %(nil)s)   union  (select aeropuerto, icao, iata AS fuente, geo_arp AS georef  from plan_vuelo_aeropuerto  where iata like 'SLLF')  order by icao asc, fuente asc" , { 'nil' : "NIL"} )
 
         for geo in lista_georeferencias:
             if 'SLLF' in geo.fuente:
@@ -125,7 +129,7 @@ def view_new_notam_2(request):
     if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='AISNACIONAL').exists():
         lista_letras = Letra_asunto.objects.all().order_by('id_letra')
 
-        lista_georeferencias = Aeropuerto.objects.raw( "(select aeropuerto, icao, fuente, geo_arp AS georef   from plan_vuelo_aeropuerto  inner join (VALUES ('ARP')) AS t (fuente)  on geo_arp not like %(nil)s and aeropuerto <> 39)  union  (select aeropuerto, icao, fuente, geo_vor AS georef  from plan_vuelo_aeropuerto  inner join (VALUES ('VOR')) AS t (fuente)  on geo_vor not like %(nil)s)   union  (select aeropuerto, icao, fuente, geo_ils AS georef  from plan_vuelo_aeropuerto  inner join (VALUES ('ILS')) AS t (fuente)  on geo_ils not like %(nil)s)   union  (select aeropuerto, icao, fuente, geo_ils_gp_dme AS georef  from plan_vuelo_aeropuerto  inner join (VALUES ('ILS_GP_DME')) AS t (fuente)  on geo_ils_gp_dme not like %(nil)s)  union  (select aeropuerto, icao, fuente, geo_l AS georef  from plan_vuelo_aeropuerto  inner join (VALUES ('L')) AS t (fuente)  on geo_l not like %(nil)s)   union  (select aeropuerto, icao, fuente, geo_gpe_dme AS georef  from plan_vuelo_aeropuerto  inner join (VALUES ('GPE_DME')) AS t (fuente)  on geo_gpe_dme not like %(nil)s)   union  (select aeropuerto, icao, fuente, geo_marcador AS georef  from plan_vuelo_aeropuerto  inner join (VALUES ('MM')) AS t (fuente)  on geo_marcador not like %(nil)s)   union  (select aeropuerto, icao, fuente, geo_ndb AS georef  from plan_vuelo_aeropuerto  inner join (VALUES ('NDB')) AS t (fuente)  on geo_ndb not like %(nil)s)   union  (select aeropuerto, icao, iata AS fuente, geo_arp AS georef  from plan_vuelo_aeropuerto  where iata like 'SLLF')  order by icao asc, fuente asc" , { 'nil' : "NIL"} )
+        lista_georeferencias = Aeropuerto.objects.raw( "(select aeropuerto, icao, fuente, geo_arp AS georef   from plan_vuelo_aeropuerto  inner join (VALUES ('ARP')) AS t (fuente)  on geo_arp not like %(nil)s and aeropuerto <> 39)  union  (select aeropuerto, icao, fuente, geo_vor AS georef  from plan_vuelo_aeropuerto  inner join (VALUES ('VOR')) AS t (fuente)  on geo_vor not like %(nil)s)   union  (select aeropuerto, icao, fuente, geo_ils AS georef  from plan_vuelo_aeropuerto  inner join (VALUES ('ILS')) AS t (fuente)  on geo_ils not like %(nil)s)   union  (select aeropuerto, icao, fuente, geo_ils_gp_dme AS georef  from plan_vuelo_aeropuerto  inner join (VALUES ('ILS_GP_DME')) AS t (fuente)  on geo_ils_gp_dme not like %(nil)s)  union  (select aeropuerto, icao, fuente, geo_l AS georef  from plan_vuelo_aeropuerto  inner join (VALUES ('L')) AS t (fuente)  on geo_l not like %(nil)s)   union  (select aeropuerto, icao, fuente, ils_llz AS georef from plan_vuelo_aeropuerto  inner join (VALUES ('ILS_LLZ')) AS t (fuente)  on ils_llz not like %(nil)s) union (select aeropuerto, icao, fuente, ils_loc AS georef from plan_vuelo_aeropuerto  inner join (VALUES ('ILS_LOC')) AS t (fuente)  on ils_loc not like %(nil)s) union (select aeropuerto, icao, fuente, dvor_dme AS georef from plan_vuelo_aeropuerto  inner join (VALUES ('DVOR_DME')) AS t (fuente)  on dvor_dme  not like %(nil)s)   union  (select aeropuerto, icao, fuente, geo_mm AS georef  from plan_vuelo_aeropuerto  inner join (VALUES ('MM')) AS t (fuente)  on geo_mm not like %(nil)s)   union  (select aeropuerto, icao, fuente, geo_ndb AS georef  from plan_vuelo_aeropuerto  inner join (VALUES ('NDB')) AS t (fuente)  on geo_ndb not like %(nil)s)   union  (select aeropuerto, icao, iata AS fuente, geo_arp AS georef  from plan_vuelo_aeropuerto  where iata like 'SLLF')  order by icao asc, fuente asc" , { 'nil' : "NIL"} )
 
         for geo in lista_georeferencias:
             if 'SLLF' in geo.fuente:
@@ -333,13 +337,14 @@ def serializar_notam_banco_charly(notam):
     try:
         return {
             'titulo':'NOTAM CHARLIE',
+            'aftn2': notam.aftn2,
             'id_mensaje': notam.id_mensaje,
             'idnotam': notam.idnotam,
             'resumen': notam.resumen,
             'aplica_a': notam.aplica_a,
             'valido_desde': notam.valido_desde,
             'valido_hasta': notam.valido_hasta,
-            'mensaje': notam.mensaje,
+            'mensaje': notam.mensaje+')',
             'es_pib': notam.es_pib,
             'asunto': notam.asunto,
             'estado_asunto': notam.estado_asunto,
@@ -356,7 +361,7 @@ def serializar_notam_banco_charly(notam):
             'aplica_a': notam.aplica_a,
             'valido_desde': notam.valido_desde,
             'valido_hasta': notam.valido_hasta,
-            'mensaje': notam.mensaje,
+            'mensaje': notam.mensaje+')',
             'asunto': notam.asunto,
             'estado_asunto': notam.estado_asunto,
             'antecedente': notam.antecedente,
@@ -413,10 +418,12 @@ def view_notam_modal_alfa(request, id_notam):
         
         if Banco_alfa_new.objects.filter(id_mensaje_a_n=id_notam).exists():
             dato_notam = Banco_alfa_new.objects.extra(select={'id_mensaje':'id_mensaje_a_n'}).get(id_mensaje_a_n=id_notam)
+        
         if Banco_alfa_repla.objects.filter(id_mensaje_a_r=id_notam).exists():
-            dato_notam = Banco_alfa_repla.objects.extra(select={'id_mensaje':'id_mensaje_a_r'}).get(id_mensaje_a_n=id_notam)
+            dato_notam = Banco_alfa_repla.objects.extra(select={'id_mensaje':'id_mensaje_a_r'}).get(id_mensaje_a_r=id_notam)
+        
         if Banco_alfa_cancel.objects.filter(id_mensaje_a_c=id_notam).exists():
-            dato_notam = Banco_alfa_cancel.objects.extra(select={'id_mensaje':'id_mensaje_a_c'}).get(id_mensaje_a_n=id_notam)
+            dato_notam = Banco_alfa_cancel.objects.extra(select={'id_mensaje':'id_mensaje_a_c'}).get(id_mensaje_a_c=id_notam)
 
         dic={
                     'lat' : '1658S',  
@@ -531,7 +538,7 @@ def view_api_notam_search_string(request):
                 lista_notam_amhs = [ serializar_notam_banco_amhs_general(notam, titulo) for notam in lista_notam_amhs]
                 sw=True
             
-            return render(request, 'temp_plan_vuelo/temp_aro_ais/modal_mensaje_query_string.html',{'notam_amhs':lista_notam_amhs, 'area':dic })
+            return render(request, 'temp_plan_vuelo/temp_aro_ais/modal_mensaje_query_string_after_search.html',{'notam_amhs':lista_notam_amhs, 'area':dic })
             #return HttpResponse(json.dumps(lista_notam_amhs), content_type='application/json')
             
         if "cuerpomsj" in get_tipo:
@@ -554,7 +561,7 @@ def view_api_notam_search_string(request):
                 lista_notam_amhs = [ serializar_notam_banco_amhs_general(notam, titulo) for notam in lista_notam_amhs]
                 sw=True
             
-            return render(request, 'temp_plan_vuelo/temp_aro_ais/modal_mensaje_query_string.html',{'notam_amhs':lista_notam_amhs, 'area':dic})
+            return render(request, 'temp_plan_vuelo/temp_aro_ais/modal_mensaje_query_string_after_search.html',{'notam_amhs':lista_notam_amhs, 'area':dic})
             #return HttpResponse(json.dumps(lista_notam_amhs), content_type='application/json')
             
 
@@ -562,11 +569,18 @@ def view_api_notam_search_string(request):
             sw=False
             notam_amhs=[{'titulo':'SIN RESULTADOS'}]
             titulo="AMHS: NOTAM CHARLIE"
+            #### BUSCANDO EN EL TRAFICO AMHS
             if Amhs_charly_cancel.objects.filter(idnotam__startswith='('+get_parametro).exists():
                 notam_amhs = Amhs_charly_cancel.objects.extra(select={'id_mensaje':'id_mensaje_c_c'}).filter(idnotam__startswith='('+get_parametro)[0]
                 notam_amhs = serializar_notam_banco_amhs_general(notam_amhs, titulo)
                 notam_amhs = [notam_amhs]
                 sw = True
+            if Amhs_charly_cancel.objects.filter(idnotam__startswith='('+get_parametro).exists():
+                notam_amhs = Amhs_charly_cancel.objects.extra(select={'id_mensaje':'id_mensaje_c_c'}).filter(idnotam__startswith='('+get_parametro)[0]
+                notam_amhs = serializar_notam_banco_amhs_general(notam_amhs, titulo)
+                notam_amhs = [notam_amhs]
+                sw = True
+
 
             if not sw and Amhs_charly_repla.objects.filter(idnotam__startswith='('+get_parametro).exists():
                 notam_amhs = Amhs_charly_repla.objects.extra(select={'id_mensaje':'id_mensaje_c_r'}).filter(idnotam__startswith='('+get_parametro)[0]
@@ -579,13 +593,31 @@ def view_api_notam_search_string(request):
                 notam_amhs = serializar_notam_banco_amhs_general(notam_amhs, titulo)
                 notam_amhs = [notam_amhs]
                 sw=True
-            return render(request, 'temp_plan_vuelo/temp_aro_ais/modal_mensaje_query_string.html',{'notam_amhs':notam_amhs, 'area':dic})
+
+
+            #### BUSCANDO EN EL BANCO NOF
+            sw_banco_nof=False
+            if Banco_charly_new.objects.filter(id_mensaje_c_n=get_parametro).exists():
+                sw_banco_nof=True
+                notam_banco = Banco_charly_new.objects.extra(select={'id_mensaje':'id_mensaje_c_n'}).get(id_mensaje_c_n=get_parametro)
+            if Banco_charly_repla.objects.filter(id_mensaje_c_r=get_parametro).exists():
+                sw_banco_nof=True
+                notam_banco = Banco_charly_repla.objects.extra(select={'id_mensaje':'id_mensaje_c_r'}).get(id_mensaje_c_r=get_parametro)
+            if Banco_charly_cancel.objects.filter(id_mensaje_c_c=get_parametro).exists():
+                sw_banco_nof=True
+                notam_banco = Banco_charly_cancel.objects.extra(select={'id_mensaje':'id_mensaje_c_c'}).get(id_mensaje_c_c=get_parametro)
+            
+            if sw_banco_nof:
+                notam_banco = serializar_notam_banco_charly(notam_banco)
+            else:
+                notam_banco = []
+            return render(request, 'temp_plan_vuelo/temp_aro_ais/modal_mensaje_query_string_after_search.html',{'notam_amhs':notam_amhs, 'notam_banco':notam_banco, 'area':dic})
             #return HttpResponse(json.dumps(notam_amhs), content_type='application/json')
 
         if "alpha" in get_tipo:
             sw=False
             notam_amhs=[{'titulo':'SIN RESULTADOS'}]
-            titulo="AMHS: NOTAM CHARLIE"
+            titulo="AMHS: NOTAM ALPHA"
             if Amhs_alfa_cancel.objects.filter(idnotam__icontains=get_parametro).exists():
                 notam_amhs = Amhs_alfa_cancel.objects.extra(select={'id_mensaje':'id_mensaje_a_c'}).filter(idnotam__icontains=get_parametro)[0]
                 notam_amhs = serializar_notam_banco_amhs_general(notam_amhs, titulo)
@@ -603,24 +635,53 @@ def view_api_notam_search_string(request):
                 notam_amhs = serializar_notam_banco_amhs_general(notam_amhs, titulo)
                 notam_amhs = [notam_amhs]
                 sw=True
-            return render(request, 'temp_plan_vuelo/temp_aro_ais/modal_mensaje_query_string.html',{'notam_amhs':notam_amhs, 'area':dic})
+            
+            #### BUSCANDO EN EL BANCO NOF
+            sw_banco_nof=False
+            if Banco_alfa_new.objects.filter(id_mensaje_a_n=get_parametro).exists():
+                sw_banco_nof=True
+                notam_banco = Banco_alfa_new.objects.extra(select={'id_mensaje':'id_mensaje_a_n'}).get(id_mensaje_a_n=get_parametro)
+            if Banco_alfa_repla.objects.filter(id_mensaje_a_r=get_parametro).exists():
+                sw_banco_nof=True
+                notam_banco = Banco_alfa_repla.objects.extra(select={'id_mensaje':'id_mensaje_a_r'}).get(id_mensaje_a_r=get_parametro)
+            if Banco_alfa_cancel.objects.filter(id_mensaje_a_c=get_parametro).exists():
+                sw_banco_nof=True
+                notam_banco = Banco_alfa_cancel.objects.extra(select={'id_mensaje':'id_mensaje_a_c'}).get(id_mensaje_a_c=get_parametro)
+            
+            if sw_banco_nof:
+                notam_banco = serializar_notam_banco_charly(notam_banco)
+            else:
+                notam_banco = []
+
+            return render(request, 'temp_plan_vuelo/temp_aro_ais/modal_mensaje_query_string_after_search.html',{'notam_amhs':notam_amhs, 'notam_banco':notam_banco, 'area':dic})
             #return HttpResponse(json.dumps(notam_amhs), content_type='application/json')
     
-        return render(request, 'temp_plan_vuelo/temp_aro_ais/modal_mensaje_query_string.html',{'notam_amhs':[], 'area':dic})
+        return render(request, 'temp_plan_vuelo/temp_aro_ais/modal_mensaje_query_string_after_search.html',{'notam_amhs':[], 'area':dic})
         #return HttpResponse(json.dumps([]), content_type='application/json')
     else:
         return redirect('login')
 
 def serializar_notam_banco_amhs_general(notam, titulo):
+    if 'D) ' in notam.mensaje:
+        casilla_d , casilla_e = notam.mensaje.split('E) ')
+        casilla_e = 'E) '+ casilla_e
+    else:
+        casilla_d=""
+        casilla_e=notam.mensaje
     return {
         'titulo':titulo,
+        'aftn1': notam.aftn2,
         'id_mensaje': notam.id_mensaje,
+        'aftn1': notam.aftn1,
+        'aftn2': notam.aftn2,
         'idnotam': notam.idnotam,
         'resumen': notam.resumen,
         'aplica_a': notam.aplica_a,
         'valido_desde': notam.valido_desde,
         'valido_hasta': notam.valido_hasta,
         'mensaje': notam.mensaje,
+        'casilla_d': casilla_d,
+        'casilla_e': casilla_e,
     }
 
 
@@ -1021,7 +1082,7 @@ def view_post_crear_notam(request):
                 'post_aplica_a' : str(request.POST.get('aplica_a')),
                 'post_valido_desde' : str(request.POST.get('valido_desde')),
                 'post_valido_hasta' : str(request.POST.get('valido_hasta')),
-                'post_mensaje' : str(request.POST.get('mensaje')),
+                #'post_mensaje' : str(request.POST.get('mensaje')),
 
                 'post_mensaje_charly' : str(request.POST.get('mensaje_charly')),
                 'post_mensaje_alfa' : str(request.POST.get('mensaje_alfa')),
@@ -1031,7 +1092,7 @@ def view_post_crear_notam(request):
                 'post_estimado' : str(request.POST.get('estimado')),
                 'post_permanente' : str(request.POST.get('permanente')),
                 'antecedente' : str(request.POST.get('antecedente')),
-                #'formulario_oaci' : "var_file",
+                'formulario_oaci' : "var_file",
             }
 
             if notam_destino:
@@ -1057,28 +1118,21 @@ def view_post_crear_notam(request):
 
 
 
-            ############ CONTROL DE ID_NOTAM           
+            ########### CONTROL DE ID_NOTAM           
             if id_charly:
                 if 'NOTAMN' in post_tipo:
                     guardar_nuevo_charly(id_charly, inf_constante, post_pib_publicar, var_file)
-
                 if 'NOTAMR' in post_tipo:
                     guardar_repla_charly(id_charly, charly_destino, inf_constante, post_pib_publicar, var_file)
-#
                 if 'NOTAMC' in post_tipo:
                     guardar_cancel_charly(id_charly, charly_destino, inf_constante, var_file)
-
-            
             if id_alfa:
                 if 'NOTAMN' in post_tipo:
                     guardar_nuevo_alfa(id_alfa, inf_constante, var_file)
-
                 if 'NOTAMR' in post_tipo:
                     guardar_repla_alfa(id_alfa, alfa_destino, inf_constante, var_file)
-#
                 if 'NOTAMC' in post_tipo:
                     guardar_cancel_alfa(id_alfa, alfa_destino, inf_constante, var_file)
-            
             
             ############ CONTROL DE ID_NOTAM           
 
@@ -1120,7 +1174,7 @@ def guardar_nuevo_charly(id_charly, inf_constante, post_pib_publicar, var_file):
     
     banco_charly.antecedente = inf_constante['antecedente']
     
-    banco_charly.form_oaci = var_file #inf_constante['formulario_oaci']
+    banco_charly.form_oaci = var_file 
 
     banco_charly.save()
 
@@ -1201,9 +1255,9 @@ def guardar_nuevo_alfa(id_alfa, inf_constante, var_file):
     banco_alfa.estado_asunto = inf_constante['post_estado_asunto']
 
     banco_alfa.antecedente = inf_constante['antecedente']
-
-    banco_alfa.form_oaci = var_file #inf_constante['formulario_oaci']
-
+#
+    banco_alfa.form_oaci = var_file 
+#
     banco_alfa.save()
 
 def guardar_repla_alfa(id_alfa, notam_destino, inf_constante, var_file):
@@ -1334,7 +1388,7 @@ def serializar_georef( geo ):
 
 
 
-########################### API PARA RECUPERAR DATOS DE NOTAM PASADO Y PASAR AL FORMYULARIO NOTAM ####################################3
+########################### (FUENTE BANCO DE DATOS NOF) API PARA RECUPERAR DATOS DE NOTAM PASADO Y PASAR AL FORMYULARIO NOTAM ####################################3
 def view_api_redirect_notam(request):
     if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='TODOS_SERVICIOS').exists():
         # buscar notams
@@ -1368,7 +1422,45 @@ def view_api_redirect_notam(request):
         return HttpResponse(json.dumps({'error':"no encontrado"}), content_type='application/json')
     else:
         return redirect('login')
+
+
+
+########################### (FUENTE AMHS) API PARA RECUPERAR DATOS DE NOTAM PASADO Y PASAR AL FORMYULARIO NOTAM ####################################3
+def view_api_redirect_notam_amhs(request):
+    if request.user.is_authenticated and request.user.is_active  and request.user.groups.filter(name='TODOS_SERVICIOS').exists():
+        # buscar notams
+        get_codigo_notam = '('+ str(request.GET.get('codigo_notam')).upper()
         
+        if "C" in get_codigo_notam:
+            
+            if Amhs_charly_new.objects.filter(idnotam__startswith=get_codigo_notam).exists():
+                notam_recuperado = Amhs_charly_new.objects.get(idnotam__startswith=get_codigo_notam)
+                return HttpResponse(json.dumps(segmentar_notam_charly_amhs(notam_recuperado)), content_type='application/json')
+            else:
+                if Amhs_charly_repla.objects.filter(idnotam__startswith=get_codigo_notam).exists():
+                    notam_recuperado = Amhs_charly_repla.objects.filter(idnotam__startswith=get_codigo_notam).first()
+                    return HttpResponse(json.dumps(segmentar_notam_charly_amhs(notam_recuperado)), content_type='application/json')
+                else:
+                    if Amhs_charly_cancel.objects.filter(idnotam__startswith=get_codigo_notam).exists():
+                        notam_recuperado = Amhs_charly_cancel.objects.get(idnotam__startswith=get_codigo_notam)
+                        return HttpResponse(json.dumps(segmentar_notam_charly_amhs(notam_recuperado)), content_type='application/json')
+        ####-------------------####-------------------####-------------------####-------------------####-------------------
+        if "A" in get_codigo_notam:
+            if Amhs_alfa_new.objects.filter(idnotam__startswith=get_codigo_notam).exists():
+                notam_recuperado = Amhs_alfa_new.objects.get(idnotam__startswith=get_codigo_notam)
+                return HttpResponse(json.dumps(segmentar_notam_alfa(notam_recuperado)), content_type='application/json')
+            else:
+                if Amhs_alfa_repla.objects.filter(idnotam__startswith=get_codigo_notam).exists():
+                    notam_recuperado = Amhs_alfa_repla.objects.get(idnotam__startswith=get_codigo_notam)
+                    return HttpResponse(json.dumps(segmentar_notam_alfa(notam_recuperado)), content_type='application/json')
+                else:
+                    if Amhs_alfa_cancel.objects.filter(idnotam__startswith=get_codigo_notam).exists():
+                        notam_recuperado = Amhs_alfa_cancel.objects.filter(idnotam__startswith=get_codigo_notam)
+                        return HttpResponse(json.dumps(segmentar_notam_alfa(notam_recuperado)), content_type='application/json')
+        return HttpResponse(json.dumps({'error':"no encontrado"}), content_type='application/json')
+    else:
+        return redirect('login')
+
 
 
 def segmentar_notam_charly(notam):
@@ -1399,15 +1491,103 @@ def segmentar_notam_charly(notam):
         'pib_estado_asunto': notam.estado_asunto,
         
     }
-    if len(notam.mensaje.split("D) ")) > 2:
+    if notam.valido_hasta:
+        recuperado['hasta_fecha'] = '20'+notam.valido_hasta.split(" ")[1][0:6][0:2] +'-'+ notam.valido_hasta.split(" ")[1][0:6][2:4] +'-'+ notam.valido_hasta.split(" ")[1][0:6][4:6]
+        recuperado['hasta_hora'] = notam.valido_hasta.split(" ")[1][6:]
+
+    if len(notam.mensaje.split("D) ")) >= 2:
+        casilla_d , casilla_e = notam.mensaje.split("D) ")[1].split("E) ")
+        
+    else:
+        casilla_d = ""
+        casilla_e = notam.mensaje.split("E) ")[1]
+
+    cuerpo2 = casilla_e
+    
+
+
+    if len(cuerpo2.split("F) ")) >= 2:
+        casilla_e , casilla_f = cuerpo2.split(" F) ")
+        casilla_f, casilla_g = casilla_f.split("G) ")
+        
+    else:
+        casilla_f = ''
+        casilla_g= ""
+
+    recuperado['casilla_d'] =casilla_d
+    recuperado['cuerpo2'] = casilla_e
+
+    recuperado['casilla_f'] =casilla_f
+    recuperado['casilla_g'] =casilla_g
+    return recuperado
+
+
+
+def segmentar_notam_charly_amhs(notam):
+    #########################################################################################################
+    fir, codigo_q, tipo, nbo, alcance, niv_inf, niv_sup, coordenadas = notam.resumen.split(' ')[1].split('/')
+    coordenadas, radio = coordenadas[:-4], coordenadas[-3:]
+    #########################################################################################################
+    recuperado = {
+        'model_tiponotam' : notam.idnotam.split(' ')[1],
+        'model_titulo_asunto' : codigo_q[1],
+        'model_asunto' : codigo_q[1:3],
+        'model_estado_asunto' : codigo_q[3:5],
+        'model_tipo' : tipo,
+        'model_nbo' : nbo,
+        'model_alcance' : alcance,
+        'nivel_inf' : niv_inf,
+        'nivel_sup' : niv_sup,
+        'model_coordenadas' : coordenadas,
+        'radio' : radio,
+        'lugar' : notam.aplica_a.split(' ')[1],
+        'desde_fecha' : '20'+notam.valido_desde.split(" ")[1][0:6][0:2] +'-'+ notam.valido_desde.split(" ")[1][0:6][2:4] +'-'+  notam.valido_desde.split(" ")[1][0:6][4:6] ,
+        'desde_hora' : notam.valido_desde.split(" ")[1][6:].replace(';;',''),
+        'hasta_fecha':'',
+        'hasta_hora':'',
+        'casilla_f' : '',
+        'casilla_g' : '',
+        
+    }
+
+    if 'EST' in notam.valido_hasta:
+        recuperado['estimado'] = True
+    else:
+        recuperado['estimado'] = False
+    
+    if 'PERM' in notam.valido_hasta:
+        recuperado['permanente'] = True
+    else:
+        recuperado['permanente'] = False
+    
+    
+    if notam.valido_hasta:
+        recuperado['hasta_fecha'] = '20'+notam.valido_hasta.split(" ")[1][0:6][0:2] +'-'+ notam.valido_hasta.split(" ")[1][0:6][2:4] +'-'+ notam.valido_hasta.split(" ")[1][0:6][4:6]
+        recuperado['hasta_hora'] = notam.valido_hasta.split(" ")[1][6:]
+
+    if len(notam.mensaje.split("D) ")) >= 2:
         casilla_d , casilla_e = notam.mensaje.split("D) ")[1].split("E) ")
     else:
         casilla_d = ""
         casilla_e = notam.mensaje.split("E) ")[1]
-    
+
     cuerpo2 = casilla_e
+    
+
+
+    if len(cuerpo2.split("F) ")) >= 2:
+        casilla_e , casilla_f = cuerpo2.split(" F) ")
+        casilla_f, casilla_g = casilla_f.split("G) ")
+    else:
+        casilla_f = ''
+        casilla_g= ""
+
     recuperado['casilla_d'] =casilla_d
-    recuperado['cuerpo2'] = cuerpo2
+    recuperado['cuerpo2'] = casilla_e
+
+    recuperado['casilla_f'] =casilla_f
+    recuperado['casilla_g'] =casilla_g.replace(")","")
+
     return recuperado
 
 def segmentar_notam_alfa(notam):
@@ -1415,3 +1595,40 @@ def segmentar_notam_alfa(notam):
      'a':'a'   
     }
 ########################### API PARA RECUPERAR DATOS DE NOTAM PASADO Y PASAR AL FORMYULARIO NOTAM ####################################3
+@login_required()
+def view_estadistica_notam(request):
+    areas = [
+            {'data': estadisticas_charly_new(),
+                'name': 'Charlie N'
+            },
+
+            {'data': estadisticas_alfa_new(),
+                'name': 'Alpha N'
+            }
+        ]
+
+    areas1 = [
+        {'data': estadisticas_charly_repla(),
+            'name': 'Charlie RPLC'
+        },
+        {'data': estadisticas_alfa_repla(),
+            'name': 'Alpha RPLC'
+        }
+    ]
+    areas2 = {
+        "2013-02-10": 11,
+        "2013-02-11": 6,
+        "2013-02-12": 3,
+        "2013-02-13": 2,
+        "2013-02-14": 5, "2013-02-15": 3, "2013-02-16": 8, "2013-02-17": 6, "2013-02-18": 6, "2013-02-19": 12, "2013-02-20": 5, "2013-02-21": 5, "2013-02-22": 3, "2013-02-23": 1, "2013-02-24": 10, "2013-02-25": 1, "2013-02-26": 3, "2013-02-27": 2, "2013-02-28": 3, "2013-03-01": 2, "2013-03-02": 8}
+
+    areas3 = {
+        "2013-02-10": 11,
+        "2013-02-11": 6,
+        "2013-02-12": 3,
+        "2013-02-13": 2,
+        "2013-02-14": 5, "2013-02-15": 3, "2013-02-16": 8, "2013-02-17": 6, "2013-02-18": 6, "2013-02-19": 12, "2013-02-20": 5, "2013-02-21": 5, "2013-02-22": 3, "2013-02-23": 1, "2013-02-24": 10, "2013-02-25": 1, "2013-02-26": 3, "2013-02-27": 2, "2013-02-28": 3, "2013-03-01": 2, "2013-03-02": 8}
+    return render(request, 'temp_plan_vuelo/temp_aro_ais/estadisticas_notam.html', locals())# ,{'equipo_trabajo': equipo_coordinacion} )#,'metar':metar} )
+
+def view_mapa_notam_search(request):
+    return render(request, 'temp_plan_vuelo/temp_aro_ais/mapa_notam_search.html')# ,{'equipo_trabajo': equipo_coordinacion} )#,'metar':metar} )

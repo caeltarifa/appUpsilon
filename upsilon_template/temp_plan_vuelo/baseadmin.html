@@ -466,6 +466,19 @@
                                     <ul class="nav navbar-nav float-right">
                                         <li class="dropdown dropdown-user nav-item">
                                             <a class="dropdown-toggle nav-link dropdown-user-link"
+                                                href="{% url 'admin:index' %}" target="_blank">
+                                                <span class="avatar avatar-online" id="id_notificacion_metar">
+                                                    <span class="material-icons">
+                                                        settings
+                                                    </span>
+                                                </span>
+                                            </a>
+
+                                        </li>
+                                    </ul>
+                                    <ul class="nav navbar-nav float-right">
+                                        <li class="dropdown dropdown-user nav-item">
+                                            <a class="dropdown-toggle nav-link dropdown-user-link"
                                                 href="{% url 'view_new_notam' %}" target="_blank">
                                                 <span class="avatar avatar-online" id="id_notificacion_metar">
                                                     <span class="material-icons">
@@ -1218,37 +1231,6 @@
             }
         }
     </script>
-
-
-
-
-
-    <!--
-    <script>
-        $(function() {
-            $('a[href*=#_]').click(function() {
-                if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') &&
-                    location.hostname == this.hostname) {
-
-                    var $target = $(this.hash);
-
-                    $target = $target.length && $target || $('[name=' + this.hash.slice(1) + ']');
-
-                    if ($target.length) {
-
-                        var targetOffset = $target.offset().top;
-
-                        $('html,body').animate({
-                            scrollTop: targetOffset
-                        }, 1000);
-
-                        return false;
-                    }
-                }
-            });
-        });
-    </script>
--->
 
 </body>
 
