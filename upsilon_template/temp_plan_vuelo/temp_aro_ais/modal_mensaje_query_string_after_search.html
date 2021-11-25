@@ -1,0 +1,207 @@
+{% load template_tags %}
+
+<!-- SE RECIBE aero, plan, detalles de la ficha, ruta del fpl, rutas all, puntosall   -->
+<div class="modal-dialog  modal-dialog-centered modal-xl " role="document" style="width: 62.5%; margin:auto;">
+    <div class="modal-content">
+
+
+        <div class="modal-body">
+
+            <section id="MSJ" class="section-bg">
+                <div class="container-fluid">
+
+                    <div class="section-header" style="text-align:center;">
+                        <br>
+
+                        <h2 class="section-title">
+                            {% block titulomodal %}
+                            Resultado de la busqueda
+                            {% endblock titulomodal %}
+                        </h2>
+                    </div>
+                    <br><br><br>
+                    <div class="row">
+                        <div class=" wow fadeInLeft">
+                            <div id="accordion" class="panel-group">
+
+                                {% for notam in notam_amhs %}
+                                <h4>
+                                    {{notam.titulo}}
+                                </h4>
+                                <br>
+                                {{notam.aftn1}} <br>
+                                {{notam.aftn2}} <br>
+
+                                &nbsp;&nbsp;{{notam.idnotam}} <br>
+                                &nbsp;&nbsp;{{notam.resumen}} <br>
+                                &nbsp;&nbsp;{{notam.aplica_a}} 
+                                    {% with notam.valido_desde|replace:";;," as valido_desde %}
+                                        &nbsp;&nbsp;{{valido_desde}}
+                                    {% endwith %}
+                                
+                                    
+                                    {% if notam.valido_hasta  %}
+                                        &nbsp;&nbsp;{{notam.valido_hasta}} <br>
+                                    {% endif %}
+                                        
+                                {% if notam.casilla_d %}
+                                &nbsp;&nbsp;{{notam.casilla_d}}
+                                <br>
+                                {% endif %}
+
+                                    {% with notam.casilla_e|split:"F) " as vector_casilla_e %}
+                                        &nbsp;&nbsp;{{vector_casilla_e.0}} 
+                                        {% if vector_casilla_e.1 %}
+                                            <br>
+                                            &nbsp;&nbsp;F) {{vector_casilla_e.1}}
+                                        {% endif %}
+                                    {% endwith %}
+
+                                {% endfor %}
+                            </div>
+                            <br>
+                            <div id="accordion_notam_nof" class="panel-group">
+
+                                <!-- {% for key , value in notam_amhs.items %}
+                                    {{key}} {{value}}<br>
+                                {% endfor %} -->
+
+                                
+                                {% if notam_banco %}
+                                <h4>Banco NOF</h4>
+                                {% for key , value in notam_banco.items %}
+                                    
+                                    {% if key == 'asunto' %}
+                                    {% else %}
+                                        {% if key == 'estado_asunto' %}
+                                        {% else %}
+                                            {% if key == 'es_pib' %}
+                                            {% else %}
+                                                {% if key == 'id_mensaje' %}
+                                                {% else %}
+                                                    {% if key == 'titulo' %}
+                                                    {% else %}
+                                                        {% if key == 'antecedente' %}
+                                                        {% else %}
+                                                            {% if key == 'form_oaci' %}
+                                                            {% else %}
+                                                                {% if key == 'pib_publicar' %}
+                                                                {% else %}
+                                                                    {% if key == 'aplica_a' %}
+                                                                        &nbsp;&nbsp;{{value}}
+                                                                    {% else %}
+                                                                        {% if key == 'valido_desde' %}
+                                                                            &nbsp;&nbsp;{{value}}
+                                                                        {% else %}
+                                                                            {% if key == 'valido_hasta' %}
+                                                                                &nbsp;&nbsp;{{value}} <br>
+                                                                            {% else %}
+                                                                                {% if key == 'mensaje' %}
+                                                                                    {% with value|split:"E) " as vector_cuerpo %}
+                                                                                        {% if vector_cuerpo.0 %}
+                                                                                        &nbsp;&nbsp;{{vector_cuerpo.0}}
+                                                                                            <br>
+                                                                                            {% endif %}
+                                                                                        &nbsp;&nbsp;E) {{vector_cuerpo.1}}
+                                                                                    {% endwith %}
+                                                                                {% else %}
+                                                                                        &nbsp;&nbsp;{{value}} <br>
+                                                                                {% endif %}
+                                                                            {% endif %}
+                                                                        {% endif %}
+                                                                    {% endif %}
+                                                                {% endif %}
+                                                            {% endif %}
+                                                        {% endif %}
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endif %}
+                                        
+
+                                    {% if key == 'pib_publicar' and key %}
+                                        <br>
+                                        <h4>PIB publicado</h4>
+                                            {% for x,y  in notam_banco.items %}
+                                                {% if not forloop.first %}
+                                                    {% if x == 'asunto' %}
+                                                    <strong>Instalación: </strong>
+                                                    {{y}}
+                                                    <br>
+                                                    <br>
+                                                    {% endif %}
+                                                    {% if x == 'pib_publicar' %}
+                                                    {{y}}
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endfor %}
+                                        <br>
+                                        
+                                    {% endif %}
+                                    
+                        
+                                    
+
+
+                                {% endfor %}
+                                {% else %}
+                                <h4>Banco NOF: Sin resultados</h4>
+                                {% endif %}
+
+
+
+                                <br>
+                            </div>
+
+
+
+                        </div>
+
+
+
+
+
+                        <!-- <div class="col-lg-6  wow fadeInRight">
+                                <div class="containerpib">
+                                    <div id="accordion" class="panel-group">
+                                        <div id='map' style="z-index:0; border-radius: 25px 25px 25px ;position: absolute; top: -55px; bottom: 0; margin-right:5px; width: 500px; height:500px;"></div>
+                                    </div>
+                                </div>
+                            </div> -->
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+        <div class="modal-footer">
+            <br><br>
+            <br><br>
+            <br><br>
+            <button class="btn btn-info " onclick="print_notam()"  type="button" style="z-index:900;">
+                <span class="material-icons">
+                    print
+                </span>
+            </button>
+            <button class="btn btn-danger" type="button" data-dismiss="modal" style="z-index:900;">Cerrar</button>
+        </div>
+
+    </div>
+</div>
+
+
+
+<script>
+    function print_notam() {
+        var prtContent = document.getElementById("accordion_notam_nof");
+        var WinPrint = window.open('', '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
+        WinPrint.document.write(prtContent.innerHTML);
+        WinPrint.document.close();
+        WinPrint.focus();
+        WinPrint.print();
+        WinPrint.close();
+    }
+</script>
