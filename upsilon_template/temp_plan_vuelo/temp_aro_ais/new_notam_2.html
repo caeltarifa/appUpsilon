@@ -265,7 +265,7 @@
                                             </select>
 
                                             <input class="input form-control" placeholder="Fecha deposito" type="date" v-model="form.fecha_deposito" />
-                                            <input class="input form-control" placeholder="HR DEPOSITO" type="text" v-model="form.hora_deposito"/>
+                                            <input class="input form-control" placeholder="HR DEPOSITO" type="text" v-model="form.hora_deposito" maxlength="4"  @keyup="isNumber($event)"/>
                                             <input class="input form-control" placeholder="REMITENTE" type="text" v-model="form.remitente" @input="form.remitente = $event.target.value.toUpperCase()" maxlength="8" />
 
                                             </div>
@@ -287,7 +287,7 @@
 
                                             <div class="input-group" v-if="form.model_tiposerie == 'CHARLIE' || form.model_tiposerie == 'CHARLIE&ALPHA' ">
                                             <input @keyup="validar_id_charly_origen($event)" id="id_charly_origen" class="input form-control" placeholder="C0001/21" type="text" v-model="form.correlativo_charly" v-on:keyup.enter="buscar_correlativo_charly" maxlength="8" @input="form.correlativo_charly = $event.target.value.toUpperCase()" />
-                                            >>><input @keyup="validar_id_charly_destino($event)" id="id_charly_destino" v-if="form.model_tiponotam == 'NOTAMR' || form.model_tiponotam == 'NOTAMC' " v-model="form.model_destino_notam_charly" @input="form.model_destino_notam_charly = $event.target.value.toUpperCase()" class="input form-control" placeholder="NOTAM charlie a cambiar" type="text" minlength="8" maxlength="8" v-on:keyup.enter="buscar_notam_pasado_charly" />
+                                            >>><input @keyup="validar_id_charly_destino($event)" id="id_charly_destino" v-if="form.model_tiponotam == 'NOTAMR' || form.model_tiponotam == 'NOTAMC' " v-model="form.model_destino_notam_charly" @input="form.model_destino_notam_charly = $event.target.value.toUpperCase()" class="input form-control" placeholder="NOTAM charlie a cambiar" type="text" minlength="8" maxlength="8" />
                                             </div>
 
                                             <div class="input-group" v-if="form.model_tiposerie == 'ALPHA' || form.model_tiposerie == 'CHARLIE&ALPHA' ">
@@ -429,10 +429,10 @@
 
                                             <div class="input-group">
                                             &nbsp;&nbsp;F) &nbsp;&nbsp;&nbsp;
-                                            <input class="input form-control" placeholder="Limite inf" type="text" v-model="form.limite_inferior" @input="form.limite_inferior = $event.target.value.toUpperCase()" />
+                                            <input class="input form-control" placeholder="Limite inf" type="text" v-model="form.limite_inferior" @input="form.limite_inferior = $event.target.value.toUpperCase()"  maxlength="3"/>
                                                                                         
                                             &nbsp;&nbsp;G) &nbsp;&nbsp;
-                                            <input class="input form-control" placeholder="Limite sup" type="text" v-model="form.limite_superior" @input="form.limite_superior = $event.target.value.toUpperCase()" />
+                                            <input class="input form-control" placeholder="Limite sup" type="text" v-model="form.limite_superior" @input="form.limite_superior = $event.target.value.toUpperCase()" maxlength="12" />
                                             </div>
 
                                         </div>
@@ -531,7 +531,7 @@ E) [[form.cuerpo_alfa]]
 
                               
 
-                                  <div style="width: 100%;">
+                                  <div v-if="form.model_tiponotam" style="width: 100%;" >
                                     <form class="form-group" id="data_srv_id" action="{% url 'view_post_crear_notam' %}" method="POST"  enctype="multipart/form-data">
                                       {% csrf_token %}
                                         tipo  >   <input type="text" name="tipo" v-model="data_srv.tipo">    <br>
@@ -766,7 +766,7 @@ E) [[form.cuerpo_alfa]]
 
           //------------------------------------------------------------------------------------------------------------------------------------
           model_prioridad:"GG",
-          prioridad: ['GG','FF','KK','SS','AA'],
+          prioridad: ['GG','FF','KK','SS','DD'],
           fecha_deposito: new Date().toISOString().slice(0,10),
           hora_deposito: new Date().toISOString().slice(11,16).replace(':',''),
           remitente:"SLLPYNYX",
@@ -881,12 +881,6 @@ E) [[form.cuerpo_alfa]]
     
     //created(){},
     methods: {
-      fakeSubmit() {
-          this.showSubmitFeedback = true;
-          setTimeout(() => {
-              this.showSubmitFeedback = false;
-          }, 3000);
-      },
       //-----------------------------------------------------------------------------------
       buscar_correlativo_charly: function() {
         (async() => {
@@ -947,13 +941,12 @@ E) [[form.cuerpo_alfa]]
                 }
               }
             );
-
         }else{
           swal({
             icon:"warning",
             title: "Advertencia",
-            text: "Verifique el correlativo NOTAM",
-            timer: 1500,
+            text: "Introduzca NOTAM válido",
+            timer: 1000,
           });
         }
       },
@@ -1035,6 +1028,10 @@ E) [[form.cuerpo_alfa]]
                     'fraseologia_estado': '',
                     'id_estado_asunto': response.data.model_estado_asunto
                 }];
+
+                this.form.hora_deposito=response.data.hora_deposito;
+                this.form.fecha_deposito=response.data.fecha_deposito;
+
                 this.form.model_estado_asunto = response.data.model_estado_asunto;
 
                 this.form.model_tipo = response.data.model_tipo;
@@ -1042,7 +1039,7 @@ E) [[form.cuerpo_alfa]]
                 this.form.model_alcance = response.data.model_alcance;
                 this.form.nivel_inf = response.data.nivel_inf;
                 this.form.nivel_sup = response.data.nivel_sup;
-                this.form.model_coordenadas = response.data.model_coordenadas;
+                this.form.model_coordenadas = response.data.lugar + ' NN ' + response.data.model_coordenadas ;
                 this.form.radio = response.data.radio;
                 this.form.lugar = response.data.lugar;
                 this.form.desde_fecha = response.data.desde_fecha;
@@ -1063,7 +1060,7 @@ E) [[form.cuerpo_alfa]]
                 }
             );
         },
-            /////////////////////////////////////////////////////////////////////////////////////////
+      /////////////////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -1756,21 +1753,31 @@ E) [[form.cuerpo_alfa]]
       // ********** INICIO DE LA VALIDACION 
       sw_srv_to_send=true;
 
+      app_vue.notam_charly_repetido();
+      app_vue.notam_alfa_repetido();
+
 
       switch (app_vue.form.model_tiponotam) {
         case 'NOTAMN':
             switch (app_vue.form.model_tiposerie) {
               case 'CHARLIE':
                 app_vue.validar_notam_charlie_origen_x();
+                
+                app_vue.notam_charly_repetido();
                 break;
                 
               case 'ALPHA':
                 app_vue.validar_notam_alpha_origen_x();
+                
+                app_vue.notam_charly_repetido();
                 break;
             
               default:
                 app_vue.validar_notam_charlie_origen_x();
                 app_vue.validar_notam_alpha_origen_x();
+
+                app_vue.notam_charly_repetido();
+                app_vue.notam_alfa_repetido();
                 break;
             }  
 
@@ -1780,16 +1787,20 @@ E) [[form.cuerpo_alfa]]
           switch (app_vue.form.model_tiposerie) {
             case 'CHARLIE':
               app_vue.validar_notam_charlie_origen_x();
-              app_vue.validar_notam_charlie_
+              app_vue.validar_notam_charlie_destino_x();
               break;
               
             case 'ALPHA':
-            console.log(app_vue.validar_antecedente_x() )
-            
-            break;
+              app_vue.validar_notam_alpha_destino_x();
+              app_vue.validar_notam_alpha_destino_x();
+              break;
           
             default:
-            console.log(app_vue.validar_antecedente_x() )
+              app_vue.validar_notam_charlie_origen_x();
+              app_vue.validar_notam_charlie_destino_x();
+
+              app_vue.validar_notam_alpha_origen_x();
+              app_vue.validar_notam_alpha_destino_x();
               break;
           }
 
@@ -1798,17 +1809,21 @@ E) [[form.cuerpo_alfa]]
         default:
           switch (app_vue.form.model_tiposerie) {
             case 'CHARLIE':
-            console.log(app_vue.validar_antecedente_x() )
-              
+              app_vue.validar_notam_charlie_origen_x();            
+              app_vue.validar_notam_charlie_destino_x();
               break;
               
             case 'ALPHA':
-            console.log(app_vue.validar_antecedente_x() )
-            
+              app_vue.validar_notam_alpha_origen_x();
+              app_vue.validar_notam_alpha_destino_x();
             break;
           
             default:
-            console.log(app_vue.validar_antecedente_x() )
+              app_vue.validar_notam_charlie_origen_x();
+              app_vue.validar_notam_charlie_destino_x();
+
+              app_vue.validar_notam_alpha_origen_x();
+              app_vue.validar_notam_alpha_destino_x();
               break;
           }
           break;
@@ -1872,6 +1887,7 @@ E) [[form.cuerpo_alfa]]
         datos_formulario:
         {
           indicador_prioridad: "GG",
+          hora_deposito:"0000",
           direccion: "TODAS LAS DIRECCIONES AMHS DESTINO",
           fecha_hora_deposito: "2103251200",
           indicador_remitente: "SLLPYNYX",
@@ -2742,8 +2758,8 @@ E) [[form.cuerpo_alfa]]
             body: [
               //FILA 1: CUERPO DEL MENSAJE E)
               {
-                cell1: { content: this.datos_formulario.dato_charly_amhs + "\n \n", styles: { halign: 'left', valign: 'middle', cellPadding: 0.1 } },
-                cell2: { content: this.datos_formulario.dato_alfa_amhs + "\n \n", styles: { halign: 'left', valign: 'middle', cellPadding: 0.1 } },
+                cell1: { content: this.datos_formulario.dato_charly_amhs.length>0? this.datos_formulario.fecha_hora_deposito + ' ' + this.datos_formulario.indicador_remitente + this.datos_formulario.dato_charly_amhs + "\n \n":'', styles: { halign: 'left', valign: 'middle', cellPadding: 0.1,fontSize:8 } },
+                cell2: { content: this.datos_formulario.dato_alfa_amhs.length>0? this.datos_formulario.fecha_hora_deposito + ' ' + this.datos_formulario.indicador_remitente + this.datos_formulario.dato_alfa_amhs + "\n \n":'', styles: { halign: 'left', valign: 'middle', cellPadding: 0.1 ,fontSize:8} },
               },
             ],
             margin: { left: 0.5, top: 1.25, bottom: 0, }

@@ -2,7 +2,7 @@ from django.conf.urls import url, include
 from django.urls import path, re_path
 
 # ARO AIS ################################################################################################################
-from apps.aro_ais.views import view_admin_ais, view_panel_aroaislp, view_panel_notaminternacional
+from apps.aro_ais.views import view_admin_ais, view_panel_aroaislp, view_panel_notaminternacional, view_revisar_alfa_antes_guardar, view_revisar_charly_antes_guardar
 from apps.aro_ais.views import view_pib_automatizado, view_archivar_pib, view_publicarguardar_pib, view_pib_tiemporeal,view_pibupdate_tiemporeal
 
 from apps.aro_ais.views import view_pib_tiemporeal2
@@ -56,6 +56,10 @@ from apps.aro_ais.views import view_api_redirect_notam_amhs
 
 from apps.aro_ais.views import view_mapa_notam_search
 from apps.aro_ais.views import view_estadistica_notam
+
+#REVISAR NOTAM ANTESDE GUARDAR
+from apps.aro_ais.views import view_revisar_charly_antes_guardar
+from apps.aro_ais.views import view_revisar_alfa_antes_guardar
 
 urlpatterns = [
     path('',view_panel_aroaislp, name="view_panel_aroaislp"),
@@ -137,6 +141,12 @@ urlpatterns = [
     
     path('mapanotam/', view_mapa_notam_search, name="view_mapa_notam_search"), #
     path('estadisticanotam/', view_estadistica_notam, name="view_estadistica_notam"), #
+
+    #API VERIFICAR SI ES REPETIDO ALFA O CHARLY
+    path('integridadnotam/', view_revisar_charly_antes_guardar, name="view_revisar_charly_antes_guardar"), #
+    path('integridadnotam/', view_revisar_alfa_antes_guardar, name="view_revisar_alfa_antes_guardar"), #
+    # FIN API
+
     
 
     

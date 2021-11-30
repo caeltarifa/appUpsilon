@@ -93,6 +93,8 @@ def view_pagina_principal(request):
         if request.user.groups.filter(name='AISNACIONAL').exists():
             if request.user.username in 'SLLPYNYX@AASANA':
                 return redirect('view_panel_notaminternacional')
+            if request.user.username in 'SLLPYOYX@AASANA':
+                return redirect('view_panel_notaminternacional')
             
         if request.user.username in 'SLLPZPZX@AASANA':
             return redirect('view_panel_aroaislp')

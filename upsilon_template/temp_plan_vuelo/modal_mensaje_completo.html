@@ -21,28 +21,48 @@
                             <div class="col-lg-6  wow fadeInLeft">
                                 <div class="containerpib">
                                     <div id="accordion" class="panel-group">
+                                        
                                         {% for key , value in data.items %}
+
                                             {% if key == 'pib_publicar' and key %}
+                                            <br>
                                             <h4>PIB publicado</h4>
                                             {% endif %}
 
                                             {% if key == 'antecedente' and key %}
+                                            <br>
                                             <h4>Antecedente</h4>
                                             {% endif %}
 
                                             {% if key == 'form_oaci' and key %}
                                                 <h4>
-                                                    <a target="_blank" href="http://upsilon.aasana.ga{{value}}">Formulario OACI</a>
+                                                    <a class="btn btn-outline-info" target="_blank" href="http://upsilon.aasana.ga{{value}}">Formulario OACI</a>
                                                 </h4>
                                             {% endif %}
-                                            
 
                                             {% if not forloop.first %}
-                                            {{value}} 
-                                            <br>
+                                            
+                                            {% if key != 'id_mensaje' %}
+                                            
+                                                {% if key != 'form_oaci' %}
+                                                
+                                                    
+                                                    {% if key != 'es_pib' %}
+                                                        
+                                                        {% if key != 'asunto' %}
+                                                            {% if key != 'estado_asunto' %}
+                                                                {{value}} 
+                                                                <br>
+                                                            {% endif %}
+                                                        {% endif %}
+                                                            
+                                                    {% endif %}
+                                                        
+                                                {% endif %}
+                                                
                                             {% endif %}
-                                            
-                                            
+                                                
+                                            {% endif %}
                                                 
                                         {% endfor %}
                                         <br>
@@ -169,7 +189,7 @@
               //style: 'mapbox://styles/mapbox/streets-v11',
               style: 'mapbox://styles/caelt/ckgljytdo02dj19pnnzqpr7sc',
               center: [longitude, latitude],
-              zoom: 10,
+              zoom: 8,
               minZoom: 7,
               maxZoom: 15,
             });

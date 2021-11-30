@@ -1293,7 +1293,7 @@ def guardar_cancel_alfa(id_alfa, notam_destino, inf_constante, var_file):
     banco_alfa.id_mensaje_a_c = id_alfa
     banco_alfa.aftn1 = inf_constante['post_amhs1']
     banco_alfa.aftn2 = inf_constante['post_amhs2']
-    banco_alfa.idnotam = '('+id_alfa + ' NOTAMNC ' + notam_destino
+    banco_alfa.idnotam = '('+id_alfa + ' NOTAMC ' + notam_destino
     banco_alfa.resumen = inf_constante['post_resumen']
     banco_alfa.aplica_a = inf_constante['post_aplica_a']
     banco_alfa.valido_desde = inf_constante['post_valido_desde']
@@ -1526,9 +1526,11 @@ def segmentar_notam_charly(notam):
 def segmentar_notam_charly_amhs(notam):
     #########################################################################################################
     fir, codigo_q, tipo, nbo, alcance, niv_inf, niv_sup, coordenadas = notam.resumen.split(' ')[1].split('/')
-    coordenadas, radio = coordenadas[:-4], coordenadas[-3:]
+    coordenadas, radio = coordenadas[:-4], coordenadas[-4:]
     #########################################################################################################
     recuperado = {
+        'hora_deposito': notam.aftn2.split(' ')[0][2:],
+        'fecha_deposito': str(notam.ingresado).split(' ')[0],
         'model_tiponotam' : notam.idnotam.split(' ')[1],
         'model_titulo_asunto' : codigo_q[1],
         'model_asunto' : codigo_q[1:3],
@@ -1632,3 +1634,47 @@ def view_estadistica_notam(request):
 
 def view_mapa_notam_search(request):
     return render(request, 'temp_plan_vuelo/temp_aro_ais/mapa_notam_search.html')# ,{'equipo_trabajo': equipo_coordinacion} )#,'metar':metar} )
+
+# API DE REVISAR QUE NO SE REPITA CORRELATIVO AL GUARDAR
+@login_required()
+def view_revisar_charly_antes_guardar(request):
+    qs_charly_new = Banco_charly_new.objects.values('id_mensaje_c_n')
+    qs_charly_new = [ notam['id_mensaje_c_n'] for notam in qs_charly_new ]
+
+    qs_charly_repla = Banco_charly_repla.objects.values('id_mensaje_c_r')
+    qs_charly_repla = [ notam['id_mensaje_c_r'] for notam in qs_charly_repla ]
+
+    qs_charly_cancel = Banco_charly_cancel.objects.values('id_mensaje_c_c')
+    qs_charly_cancel = [ notam['id_mensaje_c_c'] for notam in qs_charly_cancel ]
+
+    qs_charly_new += qs_charly_repla + qs_charly_cancel
+
+    get_correlativo = str(request.GET.get('charly_correlativo')).upper()
+
+    if get_correlativo in qs_charly_new:
+        return HttpResponse(json.dumps([{'repetido':True}]), content_type='application/json')
+    else:
+        return HttpResponse(json.dumps([{'repetido':False}]), content_type='application/json')
+
+@login_required()
+def view_revisar_alfa_antes_guardar(request):
+    qs_alfa_new = Banco_alfa_new.objects.values('id_mensaje_a_n')
+    qs_alfa_new = [ notam['id_mensaje_a_n'] for notam in qs_alfa_new ]
+
+    qs_alfa_repla = Banco_alfa_repla.objects.values('id_mensaje_a_r')
+    qs_alfa_repla = [ notam['id_mensaje_a_r'] for notam in qs_alfa_repla ]
+
+    qs_alfa_cancel = Banco_alfa_cancel.objects.values('id_mensaje_a_c')
+    qs_alfa_cancel = [ notam['id_mensaje_a_c'] for notam in qs_alfa_cancel ]
+
+    qs_alfa_new += qs_alfa_repla + qs_alfa_cancel
+
+    get_correlativo = str(request.GET.get('alfa_correlativo')).upper()
+
+    if get_correlativo in qs_alfa_new:
+        return HttpResponse(json.dumps([{'repetido':True}]), content_type='application/json')
+    else:
+        return HttpResponse(json.dumps([{'repetido':False}]), content_type='application/json')
+# FIN DE LA API
+
+    
