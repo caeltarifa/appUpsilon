@@ -1092,7 +1092,7 @@ def view_post_crear_notam(request):
                 'post_estimado' : str(request.POST.get('estimado')),
                 'post_permanente' : str(request.POST.get('permanente')),
                 'antecedente' : str(request.POST.get('antecedente')),
-                'formulario_oaci' : "var_file",
+                'responsable' : str(request.POST.get('responsable')),
             }
 
             if notam_destino:
@@ -1121,18 +1121,18 @@ def view_post_crear_notam(request):
             ########### CONTROL DE ID_NOTAM           
             if id_charly:
                 if 'NOTAMN' in post_tipo:
-                    guardar_nuevo_charly(id_charly, inf_constante, post_pib_publicar, var_file)
+                    guardar_nuevo_charly(id_charly, inf_constante, post_pib_publicar, var_file, id_alfa)
                 if 'NOTAMR' in post_tipo:
-                    guardar_repla_charly(id_charly, charly_destino, inf_constante, post_pib_publicar, var_file)
+                    guardar_repla_charly(id_charly, charly_destino, inf_constante, post_pib_publicar, var_file, id_alfa)
                 if 'NOTAMC' in post_tipo:
-                    guardar_cancel_charly(id_charly, charly_destino, inf_constante, var_file)
+                    guardar_cancel_charly(id_charly, charly_destino, inf_constante, var_file, id_alfa)
             if id_alfa:
                 if 'NOTAMN' in post_tipo:
-                    guardar_nuevo_alfa(id_alfa, inf_constante, var_file)
+                    guardar_nuevo_alfa(id_alfa, inf_constante, var_file, id_charly)
                 if 'NOTAMR' in post_tipo:
-                    guardar_repla_alfa(id_alfa, alfa_destino, inf_constante, var_file)
+                    guardar_repla_alfa(id_alfa, alfa_destino, inf_constante, var_file, id_charly)
                 if 'NOTAMC' in post_tipo:
-                    guardar_cancel_alfa(id_alfa, alfa_destino, inf_constante, var_file)
+                    guardar_cancel_alfa(id_alfa, alfa_destino, inf_constante, var_file, id_charly)
             
             ############ CONTROL DE ID_NOTAM           
 
@@ -1147,7 +1147,7 @@ def view_post_crear_notam(request):
 
 
 ## FUNCIONES PARA GUARDAR NOTAM CLASIFICADO
-def guardar_nuevo_charly(id_charly, inf_constante, post_pib_publicar, var_file):
+def guardar_nuevo_charly(id_charly, inf_constante, post_pib_publicar, var_file, correlativo_alfa):
     banco_charly=Banco_charly_new()
 
     banco_charly.id_mensaje_c_n = id_charly
@@ -1173,12 +1173,15 @@ def guardar_nuevo_charly(id_charly, inf_constante, post_pib_publicar, var_file):
     banco_charly.pib_publicar = post_pib_publicar
     
     banco_charly.antecedente = inf_constante['antecedente']
+
+    banco_charly.responsable = inf_constante['responsable']
+    banco_charly.correlativo_alfa = correlativo_alfa
     
     banco_charly.form_oaci = var_file 
 
     banco_charly.save()
 
-def guardar_repla_charly(id_charly, notam_destino, inf_constante, post_pib_publicar, var_file):
+def guardar_repla_charly(id_charly, notam_destino, inf_constante, post_pib_publicar, var_file, correlativo_alfa):
     banco_charly=Banco_charly_repla()
 
     banco_charly.id_mensaje_c_r = id_charly
@@ -1204,12 +1207,15 @@ def guardar_repla_charly(id_charly, notam_destino, inf_constante, post_pib_publi
     banco_charly.pib_publicar = post_pib_publicar
     
     banco_charly.antecedente = inf_constante['antecedente']
+
+    banco_charly.responsable = inf_constante['responsable']
+    banco_charly.correlativo_alfa = correlativo_alfa
     
     banco_charly.form_oaci = var_file #inf_constante['formulario_oaci']
 
     banco_charly.save()
 
-def guardar_cancel_charly(id_charly, notam_destino, inf_constante, var_file):
+def guardar_cancel_charly(id_charly, notam_destino, inf_constante, var_file, correlativo_alfa):
     banco_charly=Banco_charly_cancel()
 
     banco_charly.id_mensaje_c_c = id_charly
@@ -1226,6 +1232,9 @@ def guardar_cancel_charly(id_charly, notam_destino, inf_constante, var_file):
     banco_charly.estado_asunto = inf_constante['post_estado_asunto']
 
     banco_charly.antecedente = inf_constante['antecedente']
+
+    banco_charly.responsable = inf_constante['responsable']
+    banco_charly.correlativo_alfa = correlativo_alfa
         
     banco_charly.form_oaci = var_file #inf_constante['formulario_oaci']
 
@@ -1233,7 +1242,7 @@ def guardar_cancel_charly(id_charly, notam_destino, inf_constante, var_file):
 
 #######################################
 #######
-def guardar_nuevo_alfa(id_alfa, inf_constante, var_file):
+def guardar_nuevo_alfa(id_alfa, inf_constante, var_file, correlativo_charly):
     banco_alfa=Banco_alfa_new()
 
     banco_alfa.id_mensaje_a_n = id_alfa
@@ -1255,12 +1264,14 @@ def guardar_nuevo_alfa(id_alfa, inf_constante, var_file):
     banco_alfa.estado_asunto = inf_constante['post_estado_asunto']
 
     banco_alfa.antecedente = inf_constante['antecedente']
-#
+    
+    banco_alfa.responsable = inf_constante['responsable']
+    banco_alfa.correlativo_charly = correlativo_charly
+
     banco_alfa.form_oaci = var_file 
-#
     banco_alfa.save()
 
-def guardar_repla_alfa(id_alfa, notam_destino, inf_constante, var_file):
+def guardar_repla_alfa(id_alfa, notam_destino, inf_constante, var_file, correlativo_charly):
     banco_alfa=Banco_alfa_repla()
 
     banco_alfa.id_mensaje_a_r = id_alfa
@@ -1282,12 +1293,15 @@ def guardar_repla_alfa(id_alfa, notam_destino, inf_constante, var_file):
     banco_alfa.estado_asunto = inf_constante['post_estado_asunto']
 
     banco_alfa.antecedente = inf_constante['antecedente']
+    
+    banco_alfa.responsable = inf_constante['responsable']
+    banco_alfa.correlativo_charly = correlativo_charly
 
     banco_alfa.form_oaci = var_file #inf_constante['formulario_oaci']
 
     banco_alfa.save()
 
-def guardar_cancel_alfa(id_alfa, notam_destino, inf_constante, var_file):
+def guardar_cancel_alfa(id_alfa, notam_destino, inf_constante, var_file, correlativo_charly):
     banco_alfa=Banco_alfa_cancel()
 
     banco_alfa.id_mensaje_a_c = id_alfa
@@ -1304,6 +1318,9 @@ def guardar_cancel_alfa(id_alfa, notam_destino, inf_constante, var_file):
     banco_alfa.estado_asunto = inf_constante['post_estado_asunto']
 
     banco_alfa.antecedente = inf_constante['antecedente']
+
+    banco_alfa.responsable = inf_constante['responsable']
+    banco_alfa.correlativo_charly = correlativo_charly
 
     banco_alfa.form_oaci = var_file #inf_constante['formulario_oaci']
 
@@ -1434,7 +1451,7 @@ def view_api_redirect_notam_amhs(request):
         if "C" in get_codigo_notam:
             
             if Amhs_charly_new.objects.filter(idnotam__startswith=get_codigo_notam).exists():
-                notam_recuperado = Amhs_charly_new.objects.get(idnotam__startswith=get_codigo_notam)
+                notam_recuperado = Amhs_charly_new.objects.filter(idnotam__startswith=get_codigo_notam).first()
                 return HttpResponse(json.dumps(segmentar_notam_charly_amhs(notam_recuperado)), content_type='application/json')
             else:
                 if Amhs_charly_repla.objects.filter(idnotam__startswith=get_codigo_notam).exists():
@@ -1442,20 +1459,20 @@ def view_api_redirect_notam_amhs(request):
                     return HttpResponse(json.dumps(segmentar_notam_charly_amhs(notam_recuperado)), content_type='application/json')
                 else:
                     if Amhs_charly_cancel.objects.filter(idnotam__startswith=get_codigo_notam).exists():
-                        notam_recuperado = Amhs_charly_cancel.objects.get(idnotam__startswith=get_codigo_notam)
+                        notam_recuperado = Amhs_charly_cancel.objects.filter(idnotam__startswith=get_codigo_notam).first()
                         return HttpResponse(json.dumps(segmentar_notam_charly_amhs(notam_recuperado)), content_type='application/json')
         ####-------------------####-------------------####-------------------####-------------------####-------------------
         if "A" in get_codigo_notam:
             if Amhs_alfa_new.objects.filter(idnotam__startswith=get_codigo_notam).exists():
-                notam_recuperado = Amhs_alfa_new.objects.get(idnotam__startswith=get_codigo_notam)
+                notam_recuperado = Amhs_alfa_new.objects.filter(idnotam__startswith=get_codigo_notam).first()
                 return HttpResponse(json.dumps(segmentar_notam_alfa(notam_recuperado)), content_type='application/json')
             else:
                 if Amhs_alfa_repla.objects.filter(idnotam__startswith=get_codigo_notam).exists():
-                    notam_recuperado = Amhs_alfa_repla.objects.get(idnotam__startswith=get_codigo_notam)
+                    notam_recuperado = Amhs_alfa_repla.objects.filter(idnotam__startswith=get_codigo_notam).first()
                     return HttpResponse(json.dumps(segmentar_notam_alfa(notam_recuperado)), content_type='application/json')
                 else:
                     if Amhs_alfa_cancel.objects.filter(idnotam__startswith=get_codigo_notam).exists():
-                        notam_recuperado = Amhs_alfa_cancel.objects.filter(idnotam__startswith=get_codigo_notam)
+                        notam_recuperado = Amhs_alfa_cancel.objects.filter(idnotam__startswith=get_codigo_notam).first()
                         return HttpResponse(json.dumps(segmentar_notam_alfa(notam_recuperado)), content_type='application/json')
         return HttpResponse(json.dumps({'error':"no encontrado"}), content_type='application/json')
     else:

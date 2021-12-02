@@ -294,7 +294,7 @@
       },
       search_rqn_notam: async function (parametro) {
         parametro = parametro.toUpperCase();
-        const url = 'http://upsilon.aasana.ga/rqn_notam/' + "?rqn_notam=" + parametro;
+        const url = 'https://upsilon.aasana.ga/rqn_notam/' + "?rqn_notam=" + parametro;
 
         await axios.get(url).then(response => {
           this.request.array_list = response.data.request_rqn;

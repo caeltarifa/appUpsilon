@@ -22,6 +22,15 @@ from apps.plan_vuelo.models import Notam_trafico_alfa_repla
 from apps.plan_vuelo.models import Notam_trafico_alfa_cancel
 
 
+from apps.aro_ais.models import Notam_trafico_charly_new as Banco_charly_new
+from apps.aro_ais.models import Notam_trafico_charly_repla as Banco_charly_repla
+from apps.aro_ais.models import Notam_trafico_charly_cancel as Banco_charly_cancel
+
+from apps.aro_ais.models import Notam_trafico_alfa_new as Banco_alfa_new
+from apps.aro_ais.models import Notam_trafico_alfa_repla as Banco_alfa_repla
+from apps.aro_ais.models import Notam_trafico_alfa_cancel as Banco_alfa_cancel
+
+
 
 
 from django.contrib.auth.models import Group
@@ -549,11 +558,13 @@ def aun_es_valido(cadena):
 def eliminar_notam_del_pib(correlativo, tipo):
     Pib_tiempo_real.objects.filter(id_notam_pib__startswith='('+correlativo).delete()
     if 'NOTAMN' in tipo:
-        Notam_trafico_charly_new.objects.filter(
-            idnotam__startswith='('+correlativo).update(es_pib=False)
+        charlie_new = Banco_charly_new.objects.get(id_mensaje_c_n=correlativo)
+        charlie_new.es_pib=False
+        charlie_new.save()
     else:
-        Notam_trafico_charly_repla.objects.filter(
-            idnotam__startswith='('+correlativo).update(vigente=False)
+        charlie_repla = Banco_charly_repla.objects.get(id_mensaje_c_r=correlativo)
+        charlie_repla.es_pib = False
+        charlie_repla.save()
     return False
 
 
@@ -1018,31 +1029,34 @@ def api_get_notam_aeropuerto(request):
     if request.method == "GET":
         # get_abreviatura = str(request.GET.dict()['abreviatura'])
         airport = str(request.GET.get('airport')).upper()
-        try:
-            if len(airport) <= 4 and ( Aeropuerto.objects.filter(icao=airport).exists() or 'SLLF' in airport) :
-                lista_notam_charly = Notam_trafico_charly_new.objects.raw("select * from (select id_mensaje_c_n, split_part(idnotam, '/', 1) as correl, idnotam, resumen, aplica_a, valido_desde, valido_hasta, mensaje, ingresado from plan_vuelo_notam_trafico_charly_new where aplica_a like %(icao)s limit 20) as T_A union select *  from  (select id_mensaje_c_r, split_part(idnotam, '/', 1) as correl, idnotam, resumen, aplica_a, valido_desde, valido_hasta, mensaje, ingresado from plan_vuelo_notam_trafico_charly_repla where aplica_a like %(icao)s limit 20) AS T_B union select *  from  (select id_mensaje_c_c, split_part(idnotam, '/', 1) as correl, idnotam, resumen, aplica_a, valido_desde, valido_hasta, mensaje, ingresado from plan_vuelo_notam_trafico_charly_cancel where aplica_a like %(icao)s limit 20) AS T_C order by ingresado desc limit 20", {'icao':'%'+airport} )
-
-                lista_notam_alfa = Notam_trafico_alfa_new.objects.raw("select * from (select id_mensaje_a_n, split_part(idnotam, '/', 1) as correl, idnotam, resumen, aplica_a, valido_desde, valido_hasta, mensaje, ingresado from plan_vuelo_notam_trafico_alfa_new where aplica_a like %(icao)s limit 20) as T_A union select *  from  (select id_mensaje_a_r, split_part(idnotam, '/', 1) as correl, idnotam, resumen, aplica_a, valido_desde, valido_hasta, mensaje, ingresado from plan_vuelo_notam_trafico_alfa_repla where aplica_a like %(icao)s limit 20) AS T_B union select *  from  (select id_mensaje_a_c, split_part(idnotam, '/', 1) as correl, idnotam, resumen, aplica_a, valido_desde, valido_hasta, mensaje, ingresado from plan_vuelo_notam_trafico_alfa_cancel where aplica_a like %(icao)s limit 20) AS T_C order by ingresado desc limit 20", {'icao':'%'+airport} )
-                #####
-                lista_notam_charly = [ serializarNotam(notam_c) for notam_c in lista_notam_charly ]
-                lista_notam_alfa = [ serializarNotam(notam_a) for notam_a in lista_notam_alfa ]
-                #####
-                devolucion = {
-                    'lista_notam_charly': lista_notam_charly,
-                    'lista_notam_alfa': lista_notam_alfa,
-                }
-                return HttpResponse(json.dumps(devolucion), content_type='application/json')
-            else:
-                return HttpResponse(json.dumps([{'icao_error':airport}]), content_type='application/json')
+        #try:
+        if len(airport) <= 4 and ( Aeropuerto.objects.filter(icao=airport).exists() or 'SLLF' in airport) :
+            #lista_notam_charly = Notam_trafico_charly_new.objects.raw("select * from (select id_mensaje_c_n, split_part(idnotam, '/', 1) as correl, idnotam, resumen, aplica_a, valido_desde, valido_hasta, mensaje, ingresado from plan_vuelo_notam_trafico_charly_new where aplica_a like %(icao)s limit 20) as T_A union select *  from  (select id_mensaje_c_r, split_part(idnotam, '/', 1) as correl, idnotam, resumen, aplica_a, valido_desde, valido_hasta, mensaje, ingresado from plan_vuelo_notam_trafico_charly_repla where aplica_a like %(icao)s limit 20) AS T_B union select *  from  (select id_mensaje_c_c, split_part(idnotam, '/', 1) as correl, idnotam, resumen, aplica_a, valido_desde, valido_hasta, mensaje, ingresado from plan_vuelo_notam_trafico_charly_cancel where aplica_a like %(icao)s limit 20) AS T_C order by ingresado desc limit 20", {'icao':'%'+airport} )
+            qs_charly_new = Banco_charly_new.objects.extra(select={'id_mensaje':'id_mensaje_c_n'}).filter(es_pib=True, aplica_a=str('A) '+airport))
+            qs_charly_repla = Banco_charly_repla.objects.extra(select={'id_mensaje':'id_mensaje_c_r'}).filter(es_pib=True, aplica_a=str('A) '+airport))
+            lista_notam_charly = qs_charly_new.union(qs_charly_repla).order_by('-id_mensaje')
+            #lista_notam_alfa = Notam_trafico_alfa_new.objects.raw("select * from (select id_mensaje_a_n, split_part(idnotam, '/', 1) as correl, idnotam, resumen, aplica_a, valido_desde, valido_hasta, mensaje, ingresado from plan_vuelo_notam_trafico_alfa_new where aplica_a like %(icao)s limit 20) as T_A union select *  from  (select id_mensaje_a_r, split_part(idnotam, '/', 1) as correl, idnotam, resumen, aplica_a, valido_desde, valido_hasta, mensaje, ingresado from plan_vuelo_notam_trafico_alfa_repla where aplica_a like %(icao)s limit 20) AS T_B union select *  from  (select id_mensaje_a_c, split_part(idnotam, '/', 1) as correl, idnotam, resumen, aplica_a, valido_desde, valido_hasta, mensaje, ingresado from plan_vuelo_notam_trafico_alfa_cancel where aplica_a like %(icao)s limit 20) AS T_C order by ingresado desc limit 20", {'icao':'%'+airport} )
+            lista_notam_alfa = Notam_trafico_alfa_new.objects.raw("select * from (select id_mensaje_a_n, split_part(idnotam, '/', 1) as id_mensaje, idnotam, resumen, aplica_a, valido_desde, valido_hasta, mensaje, ingresado from plan_vuelo_notam_trafico_alfa_new where aplica_a like %(icao)s limit 20) as T_A union select *  from  (select id_mensaje_a_r, split_part(idnotam, '/', 1) as correl, idnotam, resumen, aplica_a, valido_desde, valido_hasta, mensaje, ingresado from plan_vuelo_notam_trafico_alfa_repla where aplica_a like %(icao)s limit 20) AS T_B union select *  from  (select id_mensaje_a_c, split_part(idnotam, '/', 1) as correl, idnotam, resumen, aplica_a, valido_desde, valido_hasta, mensaje, ingresado from plan_vuelo_notam_trafico_alfa_cancel where aplica_a like %(icao)s limit 20) AS T_C order by ingresado desc limit 20", {'icao':'%'+airport} )
+            #####
+            lista_notam_charly = [ serializarNotam(notam_c) for notam_c in lista_notam_charly ]
+            lista_notam_alfa = [ serializarNotam(notam_a) for notam_a in lista_notam_alfa ]
+            #####
+            devolucion = {
+                'lista_notam_charly': lista_notam_charly,
+                'lista_notam_alfa': lista_notam_alfa,
+            }
+            return HttpResponse(json.dumps(devolucion), content_type='application/json')
+        else:
+            return HttpResponse(json.dumps([{'icao_error':airport}]), content_type='application/json')
                 
-        except:
-            return HttpResponse(json.dumps([{'Error en db': airport}]), content_type='application/json')
+        #except:
+        #    return HttpResponse(json.dumps([{'Error en db': airport}]), content_type='application/json')
     else:
         return HttpResponse(json.dumps([{'msj': "GET method no valid"}]), content_type='application/json')
 
 def serializarNotam(notam):
     return {
-        'correl' : notam.correl,
+        'correl' : notam.id_mensaje,
         'idnotam' : notam.idnotam,
         'resumen' : notam.resumen,
         'aplica_a' : notam.aplica_a,

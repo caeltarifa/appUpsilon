@@ -173,17 +173,17 @@
                                     <!--RADIO BUTTON SELECT TIPO DE NOTAM -->
                                     <div class="subscription-container">
                                         
-                                        <input type="radio" name="radio" id="option1" value="NOTAMN" v-model="form.model_tiponotam" checked="checked">
+                                        <input type="radio" name="radio" id="option1" value="NOTAMN" v-model="form.model_tiponotam" checked="checked" >
                                         <label for="option1" class="subscription__button">
                                             <h6 class="subscription__title">NOTAMN</h6>
                                         </label>
                                         
-                                        <input type="radio" name="radio" id="option2" value="NOTAMR" v-model="form.model_tiponotam">
+                                        <input type="radio" name="radio" id="option2" value="NOTAMR" v-model="form.model_tiponotam"  >
                                         <label for="option2" class="subscription__button">
                                             <h6 class="subscription__title">NOTAMR</h6>
                                         </label>
                                         
-                                        <input type="radio" name="radio" id="option3" value="NOTAMC" v-model="form.model_tiponotam">
+                                        <input type="radio" name="radio" id="option3" value="NOTAMC" v-model="form.model_tiponotam"  >
                                         <label for="option3" class="subscription__button">
                                             <h6 class="subscription__title">NOTAMC</h6>
                                         </label>
@@ -196,17 +196,17 @@
                                 <div class="row justify-content-center input-group" v-if="form.model_tiponotam" >
                                     <!--RADIO BUTTON SELECT SERIE DE NOTAM-->
                                     <div class="subscription-container">
-                                        <input type="radio" name="t_radio2" id="option1x" value="CHARLIE" v-model="form.model_tiposerie">
+                                        <input type="radio" name="t_radio2" id="option1x" value="CHARLIE" v-model="form.model_tiposerie" @click="activar_el_formulario()">
                                         <label for="option1x" class="subscription__button">
                                             <h6 class="subscription__title">CHARLIE</h6>
                                         </label>
 
-                                        <input type="radio" name="t_radio2" id="option2x" value="ALPHA" v-model="form.model_tiposerie">
+                                        <input type="radio" name="t_radio2" id="option2x" value="ALPHA" v-model="form.model_tiposerie" @click="activar_el_formulario()">
                                         <label for="option2x" class="subscription__button">
                                             <h6 class="subscription__title">ALPHA</h6>
                                         </label>
 
-                                        <input type="radio" name="t_radio2" id="option3x" value="CHARLIE&ALPHA" v-model="form.model_tiposerie">
+                                        <input type="radio" name="t_radio2" id="option3x" value="CHARLIE&ALPHA" v-model="form.model_tiposerie" @click="activar_el_formulario()">
                                         <label for="option3x" class="subscription__button">
                                             <h6 class="subscription__title">CHARLIE & ALPHA</h6>
                                         </label>
@@ -532,7 +532,8 @@ E) [[form.cuerpo_alfa]]
                               
 
                                   <div v-if="form.model_tiponotam" style="width: 100%;" >
-                                    <form class="form-group" id="data_srv_id" action="{% url 'view_post_crear_notam' %}" method="POST"  enctype="multipart/form-data">
+<!--                                     <div  style="width: 100%;" >
+ -->                                    <form class="form-group" id="data_srv_id" action="{% url 'view_post_crear_notam' %}" method="POST"  enctype="multipart/form-data">
                                       {% csrf_token %}
                                         tipo  >   <input type="text" name="tipo" v-model="data_srv.tipo">    <br>
                                         notam_header  >   <input type="text" name="notam_header" v-model="data_srv.notam_header">    <br>
@@ -551,6 +552,7 @@ E) [[form.cuerpo_alfa]]
                                         estimado  >   <input type="text" name="estimado" v-model="data_srv.estimado_srv">    <br>
                                         permanente  >   <input type="text" name="permanente" v-model="data_srv.permanente_srv">    <br>
                                         antecedente  >   <input type="text" name="antecedente" v-model="data_srv.antecedente_notam">    <br>
+                                        responsable  >   <input type="text" name="responsable" v-model="data_srv.responsable">    <br>
                                       
                                       <input class="btn btn-outline-dark" type="file" name="formulario_oaci" id="id_formulario_oaci" required style="height: 30%; font-size: 15px; width: 80%;">
 
@@ -876,6 +878,8 @@ E) [[form.cuerpo_alfa]]
           estimado_srv:"",
           permanente_srv:"",
           antecedente_notam:"",
+
+          responsable:"",
         }
     },
     
@@ -1565,6 +1569,8 @@ E) [[form.cuerpo_alfa]]
         } catch (error) {
           this.data_srv.pib_publicar = "";
         }
+
+        this.data_srv.responsable = this.form.oficial_notam;
       },
     
       obtener_codigo_charly_amhs: function() {
@@ -1720,6 +1726,117 @@ E) [[form.cuerpo_alfa]]
           }
       },
 
+      activar_el_formulario: function(){
+        const form = document.querySelector('#data_srv_id')
+
+form.addEventListener('submit', event => {
+
+  event.preventDefault();
+  // ********** INICIO DE LA VALIDACION 
+  sw_srv_to_send=true;
+
+  //app_vue.notam_charly_repetido();
+  //app_vue.notam_alfa_repetido();
+
+
+  switch (app_vue.form.model_tiponotam) {
+    case 'NOTAMN':
+        switch (app_vue.form.model_tiposerie) {
+          case 'CHARLIE':
+            app_vue.validar_notam_charlie_origen_x();
+            
+            //app_vue.notam_charly_repetido();
+            break;
+            
+          case 'ALPHA':
+            app_vue.validar_notam_alpha_origen_x();
+            
+            //app_vue.notam_charly_repetido();
+            break;
+        
+          default:
+            app_vue.validar_notam_charlie_origen_x();
+            app_vue.validar_notam_alpha_origen_x();
+
+            //app_vue.notam_charly_repetido();
+            //app_vue.notam_alfa_repetido();
+            break;
+        }  
+
+      break;
+    
+    case 'NOTAMR':
+      switch (app_vue.form.model_tiposerie) {
+        case 'CHARLIE':
+          app_vue.validar_notam_charlie_origen_x();
+          app_vue.validar_notam_charlie_destino_x();
+          break;
+          
+        case 'ALPHA':
+          app_vue.validar_notam_alpha_destino_x();
+          app_vue.validar_notam_alpha_destino_x();
+          break;
+      
+        default:
+          app_vue.validar_notam_charlie_origen_x();
+          app_vue.validar_notam_charlie_destino_x();
+
+          app_vue.validar_notam_alpha_origen_x();
+          app_vue.validar_notam_alpha_destino_x();
+          break;
+      }
+
+    break;
+  
+    default:
+      switch (app_vue.form.model_tiposerie) {
+        case 'CHARLIE':
+          app_vue.validar_notam_charlie_origen_x();            
+          app_vue.validar_notam_charlie_destino_x();
+          break;
+          
+        case 'ALPHA':
+          app_vue.validar_notam_alpha_origen_x();
+          app_vue.validar_notam_alpha_destino_x();
+        break;
+      
+        default:
+          app_vue.validar_notam_charlie_origen_x();
+          app_vue.validar_notam_charlie_destino_x();
+
+          app_vue.validar_notam_alpha_origen_x();
+          app_vue.validar_notam_alpha_destino_x();
+          break;
+      }
+      break;
+  }
+
+
+  if(sw_srv_to_send){
+    swal('¿ Guardar en banco NOTAM ?' , {
+        buttons: true,
+    }).then( val => {
+      if (val ) {
+        app_vue.guardar_notam()
+        form.submit();
+      }
+    });
+  }
+
+}
+)
+
+
+
+      }
+
+
+
+
+
+
+
+
       
     },  
     
@@ -1745,107 +1862,7 @@ E) [[form.cuerpo_alfa]]
 
 
 <script>
-    const form = document.querySelector('#data_srv_id')
-
-    form.addEventListener('submit', event => {
-
-      event.preventDefault();
-      // ********** INICIO DE LA VALIDACION 
-      sw_srv_to_send=true;
-
-      app_vue.notam_charly_repetido();
-      app_vue.notam_alfa_repetido();
-
-
-      switch (app_vue.form.model_tiponotam) {
-        case 'NOTAMN':
-            switch (app_vue.form.model_tiposerie) {
-              case 'CHARLIE':
-                app_vue.validar_notam_charlie_origen_x();
-                
-                app_vue.notam_charly_repetido();
-                break;
-                
-              case 'ALPHA':
-                app_vue.validar_notam_alpha_origen_x();
-                
-                app_vue.notam_charly_repetido();
-                break;
-            
-              default:
-                app_vue.validar_notam_charlie_origen_x();
-                app_vue.validar_notam_alpha_origen_x();
-
-                app_vue.notam_charly_repetido();
-                app_vue.notam_alfa_repetido();
-                break;
-            }  
-
-          break;
-        
-        case 'NOTAMR':
-          switch (app_vue.form.model_tiposerie) {
-            case 'CHARLIE':
-              app_vue.validar_notam_charlie_origen_x();
-              app_vue.validar_notam_charlie_destino_x();
-              break;
-              
-            case 'ALPHA':
-              app_vue.validar_notam_alpha_destino_x();
-              app_vue.validar_notam_alpha_destino_x();
-              break;
-          
-            default:
-              app_vue.validar_notam_charlie_origen_x();
-              app_vue.validar_notam_charlie_destino_x();
-
-              app_vue.validar_notam_alpha_origen_x();
-              app_vue.validar_notam_alpha_destino_x();
-              break;
-          }
-
-        break;
-      
-        default:
-          switch (app_vue.form.model_tiposerie) {
-            case 'CHARLIE':
-              app_vue.validar_notam_charlie_origen_x();            
-              app_vue.validar_notam_charlie_destino_x();
-              break;
-              
-            case 'ALPHA':
-              app_vue.validar_notam_alpha_origen_x();
-              app_vue.validar_notam_alpha_destino_x();
-            break;
-          
-            default:
-              app_vue.validar_notam_charlie_origen_x();
-              app_vue.validar_notam_charlie_destino_x();
-
-              app_vue.validar_notam_alpha_origen_x();
-              app_vue.validar_notam_alpha_destino_x();
-              break;
-          }
-          break;
-      }
-
-
-      if(sw_srv_to_send){
-        swal('¿ Guardar en banco NOTAM ?' , {
-            buttons: true,
-        }).then( val => {
-          if (val ) {
-            app_vue.guardar_notam()
-            form.submit();
-          }
-        });
-      }
-
-
-
-      
-    }
-  )
+    
 </script>
 
 

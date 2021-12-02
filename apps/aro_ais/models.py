@@ -330,6 +330,11 @@ class Notam_trafico_charly_repla(models.Model):
     form_oaci = models.FileField(upload_to='documents-%Y-%m-%d/', blank=True, null=True)
 
     ingresado = models.DateTimeField(default=datetime.now, blank=True, null=True)
+
+    correlativo_alfa = models.CharField(max_length=8,blank=True, null=True)
+
+    responsable = models.CharField(max_length=28,blank=True, null=True)
+
     def __str__(self):
         return '{}'.format(self.idnotam)
     class Meta:
@@ -353,6 +358,11 @@ class Notam_trafico_charly_cancel(models.Model):
     form_oaci = models.FileField(upload_to='documents-%Y-%m-%d/', blank=True, null=True)
 
     ingresado = models.DateTimeField(default=datetime.now, blank=True, null=True)
+
+    correlativo_alfa = models.CharField(max_length=8,blank=True, null=True)
+    
+    responsable = models.CharField(max_length=28,blank=True, null=True)
+    
     def __str__(self):
         return '{}'.format(self.idnotam)
     class Meta:
@@ -367,7 +377,7 @@ class Notam_trafico_charly_new(models.Model):
     valido_desde = models.CharField(max_length=20) #B
     valido_hasta = models.CharField(max_length=20) #C
     mensaje = models.CharField(max_length=1200)
-    es_pib = models.BooleanField(default=False)
+    es_pib = models.BooleanField(default=True)
 
     perm = models.BooleanField(default=False)
     est = models.BooleanField(default=False)
@@ -383,6 +393,10 @@ class Notam_trafico_charly_new(models.Model):
 
     ingresado = models.DateTimeField(default=datetime.now, blank=True, null=True)
     
+    correlativo_alfa = models.CharField(max_length=8,blank=True, null=True)
+
+    responsable = models.CharField(max_length=28,blank=True, null=True)
+
     def __str__(self):
         return '{}'.format(self.idnotam)
     class Meta:
@@ -411,6 +425,11 @@ class Notam_trafico_alfa_repla(models.Model):
     form_oaci = models.FileField(upload_to='documents-%Y-%m-%d/', blank=True, null=True)
 
     ingresado = models.DateTimeField(default=datetime.now, blank=True, null=True)
+    
+    correlativo_charly = models.CharField(max_length=8,blank=True, null=True)
+    
+    responsable = models.CharField(max_length=28,blank=True, null=True)
+
     def __str__(self):
         return '{}'.format(self.idnotam)
     class Meta:
@@ -434,6 +453,11 @@ class Notam_trafico_alfa_cancel(models.Model):
     form_oaci = models.FileField(upload_to='documents-%Y-%m-%d/', blank=True, null=True)
 
     ingresado = models.DateTimeField(default=datetime.now, blank=True, null=True)
+    
+    correlativo_charly = models.CharField(max_length=8,blank=True, null=True)
+    
+    responsable = models.CharField(max_length=28,blank=True, null=True)
+
     def __str__(self):
         return '{}'.format(self.idnotam)
     class Meta:
@@ -462,6 +486,10 @@ class Notam_trafico_alfa_new(models.Model):
 
     ingresado = models.DateTimeField(default=datetime.now, blank=True, null=True)
     
+    correlativo_charly = models.CharField(max_length=8,blank=True, null=True)
+    
+    responsable = models.CharField(max_length=28,blank=True, null=True)
+
     def __str__(self):
         return '{}'.format(self.idnotam)
     class Meta:

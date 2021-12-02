@@ -31,7 +31,7 @@ SECRET_KEY = 'sb%@$i%e)zwtv=v_-p$^tc@%=%^kt7@becs*s0*m&tkhq^wp5c'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['212.115.109.148','upsilon.aasana.ga', 'upsilon.aasana.bo']
+ALLOWED_HOSTS = ['212.115.109.148','upsilon.aasana.ga','upsilon.aasana.bo']
 
 GEOIP_PATH=os.path.join(BASE_DIR, 'geoip2')
 

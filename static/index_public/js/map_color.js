@@ -151,7 +151,7 @@ function initmap() {
         componente.sw_a=true;
         componente.cambiando_titulo(icao);
         
-        const path = 'http://upsilon.aasana.ga/icao_notam/' + '?airport='+icao;
+        const path = 'https://upsilon.aasana.ga/icao_notam/' + '?airport='+icao;
         
         axios.get(path).then((respuesta) => {
         componente.recibiendo_datos_db( respuesta.data.lista_notam_charly, respuesta.data.lista_notam_alfa );
